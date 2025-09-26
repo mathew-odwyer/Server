@@ -9,6 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* [#1: Web API Backend](https://github.com/softwareantics/Server/pull/1)
+* Web API Backend ([#1](https://github.com/softwareantics/Server/pull/1))
 
 [Unreleased]: https://github.com/softwareantics/Server/compare/HEAD
