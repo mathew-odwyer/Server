@@ -9,7 +9,7 @@
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](https://github.com/mathew-odwyer/Server/actions)
 [![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server?include_prereleases)](https://github.com/mathew-odwyer/Server/releases)
 
-[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
+![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
 </div>
 
@@ -18,6 +18,8 @@
 Mantanimus is a work-in-progress 2D top-down online role-playing game set in a medieval fantasy world. Experience real-time multiplayer gameplay with smooth movement and secure networking infrastructure.
 
 > 🎮 This project showcases full-stack game server development capabilities, demonstrating expertise in distributed systems, real-time networking, and secure architecture.
+
+<img width="1282" height="752" alt="Screenshot 2025-09-27 002412" src="https://github.com/user-attachments/assets/b08b891f-cfc9-417f-b13c-85ccf00f8964" />
 
 ## ✨ Key Features
 
@@ -69,10 +71,11 @@ Mantanimus is a work-in-progress 2D top-down online role-playing game set in a m
 
 ### Installation
 
+> [!WARNING]  
+> Don't clone the repository as the client is not open-source due to external licensing requirements. Ensure you download the [latest release](https://github.com/mathew-odwyer/Server/releases) if you wish to play the game.
+
 1. Download latest release
    - Get the latest release from [GitHub Releases](https://github.com/mathew-odwyer/Server/releases).
-   > [!NOTE]
-   > Don't clone the repository as the client is not open-source due to external licensing requirements. Ensure you download the [latest release](https://github.com/mathew-odwyer/Server/releases) if you wish to play the game.
 
 2. Configure environment
    - Copy `.env.example` to `.env`.
