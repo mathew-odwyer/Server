@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Web API Backend [#1] by [@mathewodwyer]
+* Web API Backend [#1] by [@mathew-odwyer]
 
 [Unreleased]: https://github.com/softwareantics/Server/compare/HEAD
 [#1]: https://github.com/softwareantics/Server/pull/1
