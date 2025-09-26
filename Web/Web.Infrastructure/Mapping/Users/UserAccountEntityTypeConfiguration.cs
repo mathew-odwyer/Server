@@ -1,0 +1,29 @@
+// <copyright file="UserAccountEntityTypeConfiguration.cs" company="Software Antics">
+//   Copyright (c) Software Antics. All rights reserved.
+// </copyright>
+
+namespace Web.Infrastructure.Mapping.Users;
+
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Web.Domain.Entities.Users;
+
+/// <summary>
+/// Configures the <see cref="UserAccount"/> entity.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public sealed class UserAccountEntityTypeConfiguration : IEntityTypeConfiguration<UserAccount>
+{
+    /// <inheritdoc/>
+    public void Configure(EntityTypeBuilder<UserAccount> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder
+            .HasMany(u => u.Players)
+            .WithOne(p => p.UserAccount)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}

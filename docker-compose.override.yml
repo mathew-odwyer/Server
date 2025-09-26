@@ -1,0 +1,10 @@
+services:
+  caddy:
+    volumes:
+      - "${APPDATA}/Caddy/certificate:/data/caddy/pki/authorities/local/"
+
+  database:
+    ports:
+        - "1433:1433"
+    env_file:
+      - .env

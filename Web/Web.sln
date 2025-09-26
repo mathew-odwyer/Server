@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		Dockerfile = Dockerfile
+		GlobalSuppressions.cs = GlobalSuppressions.cs
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Domain", "Web.Domain\Web.Domain.csproj", "{65AEB8E7-DCAB-42E1-9E72-29747BA16802}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Application", "Web.Application\Web.Application.csproj", "{B3F61D7F-E71D-45B5-B8F0-B3D986DE174A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{4CC9D2DA-5E33-4378-A250-7A04626DD748}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Infrastructure", "Web.Infrastructure\Web.Infrastructure.csproj", "{1F9DC75C-265B-443F-AED5-F11226005727}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{BF4C8117-4035-4098-BE7F-40CD0C31E9B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Presentation", "Web.Presentation\Web.Presentation.csproj", "{D7179F27-C0F4-45FC-A31E-14DCECD3C4FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65AEB8E7-DCAB-42E1-9E72-29747BA16802}.Debug|x64.ActiveCfg = Debug|x64
+		{65AEB8E7-DCAB-42E1-9E72-29747BA16802}.Debug|x64.Build.0 = Debug|x64
+		{65AEB8E7-DCAB-42E1-9E72-29747BA16802}.Release|x64.ActiveCfg = Release|x64
+		{65AEB8E7-DCAB-42E1-9E72-29747BA16802}.Release|x64.Build.0 = Release|x64
+		{B3F61D7F-E71D-45B5-B8F0-B3D986DE174A}.Debug|x64.ActiveCfg = Debug|x64
+		{B3F61D7F-E71D-45B5-B8F0-B3D986DE174A}.Debug|x64.Build.0 = Debug|x64
+		{B3F61D7F-E71D-45B5-B8F0-B3D986DE174A}.Release|x64.ActiveCfg = Release|x64
+		{B3F61D7F-E71D-45B5-B8F0-B3D986DE174A}.Release|x64.Build.0 = Release|x64
+		{1F9DC75C-265B-443F-AED5-F11226005727}.Debug|x64.ActiveCfg = Debug|x64
+		{1F9DC75C-265B-443F-AED5-F11226005727}.Debug|x64.Build.0 = Debug|x64
+		{1F9DC75C-265B-443F-AED5-F11226005727}.Release|x64.ActiveCfg = Release|x64
+		{1F9DC75C-265B-443F-AED5-F11226005727}.Release|x64.Build.0 = Release|x64
+		{D7179F27-C0F4-45FC-A31E-14DCECD3C4FC}.Debug|x64.ActiveCfg = Debug|x64
+		{D7179F27-C0F4-45FC-A31E-14DCECD3C4FC}.Debug|x64.Build.0 = Debug|x64
+		{D7179F27-C0F4-45FC-A31E-14DCECD3C4FC}.Release|x64.ActiveCfg = Release|x64
+		{D7179F27-C0F4-45FC-A31E-14DCECD3C4FC}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{65AEB8E7-DCAB-42E1-9E72-29747BA16802} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B3F61D7F-E71D-45B5-B8F0-B3D986DE174A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{1F9DC75C-265B-443F-AED5-F11226005727} = {4CC9D2DA-5E33-4378-A250-7A04626DD748}
+		{D7179F27-C0F4-45FC-A31E-14DCECD3C4FC} = {BF4C8117-4035-4098-BE7F-40CD0C31E9B3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80EEFBF6-4135-44F2-959A-CF0EF93B4C32}
+	EndGlobalSection
+EndGlobal

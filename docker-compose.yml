@@ -1,0 +1,76 @@
+name: mantanimus
+
+services:
+  caddy:
+    container_name: caddy
+    image: mantanimus-caddy
+    build: 
+      context: ./Caddy
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+    volumes:
+      - "caddy_data:/data"
+      - "caddy_config:/config"
+      - "./Caddy/Caddyfile:/etc/caddy/Caddyfile"
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-k", "http://localhost/"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+
+  web:
+    container_name: web
+    image: mantanimus-web
+    build:
+      context: ./Web
+      dockerfile: Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+      caddy:
+        condition: service_healthy
+    networks:
+      - network
+    expose:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+  database:
+    container_name: database
+    image: mantanimus-database
+    build:
+      context: ./Web/Web.Infrastructure
+      dockerfile: Dockerfile
+    volumes:
+      - db_data:/var/opt/mssql
+      - data-protection-keys:/root/.aspnet/DataProtection-Keys
+    networks:
+      - network
+    expose:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "sqlcmd -S localhost -U sa -P \"$${SA_PASSWORD}\" -Q \"SELECT 1\" -C"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
+  data-protection-keys:
+  db_data:
+    driver: local
