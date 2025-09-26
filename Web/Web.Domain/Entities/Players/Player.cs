@@ -12,13 +12,29 @@ using Web.Domain.Entities.Users;
 /// <seealso cref="AuditableEntityBase" />
 public sealed class Player : AuditableEntityBase
 {
+    private string? name;
+
     /// <summary>
     /// Gets or sets a <see cref="string"/> that represents the name of the <see cref="Player"/>.
     /// </summary>
     /// <value>
     /// The <see cref="string"/> that represents the name of the <see cref="Player"/>.
     /// </value>
-    public required string Name { get; set; }
+    public required string Name
+    {
+        get
+        {
+            return this.name!;
+        }
+
+        set
+        {
+            this.name = value;
+            this.NormalizedName = this.name.ToUpperInvariant();
+        }
+    }
+
+    public string NormalizedName { get; private set; } = null!;
 
     /// <summary>
     /// Gets the <see cref="Users.UserAccount"/> that owns this <see cref="Player"/>.

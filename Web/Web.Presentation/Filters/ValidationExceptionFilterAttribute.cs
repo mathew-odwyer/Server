@@ -19,6 +19,11 @@ internal sealed class ValidationExceptionFilterAttribute : ExceptionFilterAttrib
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        if (context.ExceptionHandled)
+        {
+            return;
+        }
+
         if (context.Exception is ValidationException exception)
         {
             var details = new ValidationProblemDetails(exception.Errors ?? new Dictionary<string, string[]>())

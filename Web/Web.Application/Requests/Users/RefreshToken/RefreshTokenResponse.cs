@@ -4,6 +4,4 @@
 
 namespace Web.Application.Requests.Users.RefreshToken;
 
-using Web.Application.Services.Users;
-
-public sealed record RefreshTokenResponse(JwtToken Token);
+public sealed record RefreshTokenResponse(string AccessToken, string RefreshToken);

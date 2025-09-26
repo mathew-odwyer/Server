@@ -12,10 +12,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Web.Application.Contexts;
+using Web.Application.Contexts.Players;
 using Web.Application.Contexts.Users;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
 using Web.Infrastructure.Contexts;
+using Web.Infrastructure.Contexts.Players;
 using Web.Infrastructure.Contexts.Users;
 using Web.Infrastructure.Services.Users;
 
@@ -89,7 +91,10 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
+        services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         services.AddScoped<IUserSessionTokenRepository, UserSessionTokenRepository>();
+
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
 
         services.AddScoped<IUserAccountService, UserAccountService>();
         services.AddScoped<IUserAccountTokenService, UserAccountTokenService>();

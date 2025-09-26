@@ -19,6 +19,11 @@ internal sealed class ForbiddenAccessExceptionFilterAttribute : ExceptionFilterA
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        if (context.ExceptionHandled)
+        {
+            return;
+        }
+
         if (context.Exception is ForbiddenAccessException)
         {
             var details = new ProblemDetails

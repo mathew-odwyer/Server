@@ -18,6 +18,11 @@ internal sealed class InvalidModelStateExceptionFilterAttribute : ExceptionFilte
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        if (context.ExceptionHandled)
+        {
+            return;
+        }
+
         if (!context.ModelState.IsValid)
         {
             var details = new ValidationProblemDetails(context.ModelState)

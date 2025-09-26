@@ -18,12 +18,13 @@ internal sealed class PlayerEntityTypeConfiguration : AuditableEntityTypeConfigu
     public override void Configure(EntityTypeBuilder<Player> builder)
     {
         builder
-            .Property(p => p.Name)
-            .IsRequired();
+            .HasIndex(p => p.NormalizedName)
+            .IsUnique();
 
         builder
-            .HasIndex(p => p.Name)
-            .IsUnique();
+            .Property(p => p.Name)
+            .IsRequired()
+            .HasMaxLength(12);
 
         base.Configure(builder);
     }

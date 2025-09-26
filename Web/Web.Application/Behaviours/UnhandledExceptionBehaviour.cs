@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Web.Application.Exceptions;
 
 /// <summary>
 /// Provides a pipeline behaviour that is used to log unhandled exceptions.
@@ -54,7 +55,7 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Unhandled Exception for Request {Name} {Request}", typeof(TRequest).Name, request);
-            throw;
+            throw new UnhandledBehaviourException("An unhandled exception occurred.", ex);
         }
     }
 }

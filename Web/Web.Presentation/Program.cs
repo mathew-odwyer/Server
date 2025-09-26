@@ -2,8 +2,9 @@ namespace Web.Presentation;
 
 using Web.Infrastructure;
 
-////        - Documentation
-////        - Unit Tests
+////        - Player/Get(name)
+////        - Player/Update(name, x, y)
+////        - Player/Delete(name)
 ////        - Push to master and create issues
 
 //// ISSUES:
@@ -14,7 +15,8 @@ using Web.Infrastructure;
 ////    - Do I need to hash refresh token before sending it to the user?
 ////    - Remove dependency of Identity from Domain and Application
 ////    - Set the created by and modified by to the user account that actually made the changes and use a system admin GUID if it wasn't a user.
-////    - Likely fix up the LogoutUserRequestHandler to return responses based on errors, etc.
+////        - Documentation
+////        - Unit Tests
 
 /// <summary>
 /// The Web API application.

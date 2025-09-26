@@ -85,6 +85,8 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
 
         this.logger.LogInformation("Refreshed JWT for user: '{Username}'.", activeSession.UserAccount.UserName);
 
-        return Result.Ok(new RefreshTokenResponse(jwt));
+        return Result.Ok(new RefreshTokenResponse(
+            AccessToken: jwt.AccessToken,
+            RefreshToken: jwt.RefreshToken));
     }
 }

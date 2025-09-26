@@ -47,5 +47,9 @@ internal sealed class UnitOfWork : IUnitOfWork
         {
             throw new DatabaseUpdateConcurrencyException("A concurrency conflict occurred while saving changes.", ex);
         }
+        catch (DbUpdateException ex)
+        {
+            throw new DatabaseUpdateException("A database update exception occurred while saving changes.", ex);
+        }
     }
 }

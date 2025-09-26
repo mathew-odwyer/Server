@@ -62,11 +62,7 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
 
-        if (environment.IsDevelopment())
-        {
-            application.UseDeveloperExceptionPage();
-        }
-        else
+        if (!environment.IsDevelopment())
         {
             application.UseHsts();
         }
@@ -122,6 +118,7 @@ internal sealed class Startup
             x.Filters.Add<InvalidModelStateExceptionFilterAttribute>();
             x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
             x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
+            x.Filters.Add<UnhandledExceptionFilterAttribute>();
         });
 
         services.AddRazorPages();

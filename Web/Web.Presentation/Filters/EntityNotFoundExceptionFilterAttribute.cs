@@ -19,6 +19,11 @@ internal sealed class EntityNotFoundExceptionFilterAttribute : ExceptionFilterAt
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        if (context.ExceptionHandled)
+        {
+            return;
+        }
+
         if (context.Exception is EntityNotFoundException exception)
         {
             var details = new ProblemDetails
