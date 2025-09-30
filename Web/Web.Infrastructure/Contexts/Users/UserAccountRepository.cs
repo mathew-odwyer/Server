@@ -20,6 +20,8 @@ public sealed class UserAccountRepository : IUserAccountRepository
 
     public async Task<UserAccount?> GetByIdAsync(string identifier, CancellationToken cancellationToken = default)
     {
-        return await this.context.Set<UserAccount>().FirstOrDefaultAsync(x => x.Id == identifier, cancellationToken).ConfigureAwait(false);
+        return await this.context.Set<UserAccount>()
+            .FirstOrDefaultAsync(x => x.Id == identifier, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

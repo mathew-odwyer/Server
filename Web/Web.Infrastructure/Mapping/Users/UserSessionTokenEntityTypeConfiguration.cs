@@ -41,8 +41,9 @@ public sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTyp
             .IsConcurrencyToken();
 
         builder
-            .HasOne(x => x.UserAccount)
+            .HasOne<UserAccount>()
             .WithMany()
+            .HasForeignKey(x => x.UserAccountId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

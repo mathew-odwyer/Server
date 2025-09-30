@@ -2,7 +2,7 @@
 //   Copyright (c) Software Antics. All rights reserved.
 // </copyright>
 
-namespace Web.Application.Requests.Players;
+namespace Web.Application.Requests.Players.CreatePlayer;
 
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,10 +13,11 @@ using Web.Application.Contexts;
 using Web.Application.Contexts.Players;
 using Web.Application.Contexts.Users;
 using Web.Application.Exceptions;
+using Web.Application.Exceptions.Database;
 using Web.Domain.Entities.Players;
 using Web.Domain.Entities.Users;
 
-public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerRequest, Result<CreatePlayerResponse>>
+public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerRequest, Result>
 {
     private readonly ILogger<CreatePlayerRequestHandler> logger;
 
@@ -38,7 +39,7 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
         this.userAccountRepository = userAccountRepository ?? throw new ArgumentNullException(nameof(userAccountRepository));
     }
 
-    public async Task<Result<CreatePlayerResponse>> Handle(CreatePlayerRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreatePlayerRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -61,7 +62,7 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
 
         var player = new Player()
         {
-            UserAccount = userAccount,
+            UserAccountId = userAccount.Id,
             Name = request.Name,
         };
 
@@ -80,9 +81,6 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
 
         this.logger.LogInformation("Player '{Name}' created for user with ID: '{UserAccountId}'", player.Name, request.UserAccountId);
 
-        return Result.Ok(new CreatePlayerResponse()
-        {
-            Username = player.Name
-        });
+        return Result.Ok();
     }
 }

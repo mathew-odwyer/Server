@@ -31,6 +31,7 @@ internal sealed class EntityNotFoundExceptionFilterAttribute : ExceptionFilterAt
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                 Title = "The specified resource was not found.",
                 Detail = exception.Message,
+                Status = StatusCodes.Status404NotFound,
             };
 
             context.Result = new NotFoundObjectResult(details);

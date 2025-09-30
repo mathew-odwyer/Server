@@ -13,7 +13,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Web.Application.Options.Security;
 using Web.Application.Services.Users;
-using Web.Domain.Entities.Users;
 
 internal sealed class UserAccountTokenService : IUserAccountTokenService
 {
@@ -29,12 +28,12 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
         this.options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
-    public JwtToken GenerateJwt(UserAccount userAccount)
+    public JwtToken GenerateJwt(JwtParameters parameters)
     {
-        ArgumentNullException.ThrowIfNull(userAccount);
+        ArgumentNullException.ThrowIfNull(parameters);
 
         var sessionId = GenerateSessionId();
-        string accessToken = this.GenerateAccessToken(userAccount, sessionId);
+        string accessToken = this.GenerateAccessToken(parameters, sessionId);
         string refreshToken = this.GenerateRefreshToken();
 
         return new JwtToken(
@@ -57,17 +56,17 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
         return Guid.NewGuid();
     }
 
-    private string GenerateAccessToken(UserAccount userAccount, Guid sessionId)
+    private string GenerateAccessToken(JwtParameters parameters, Guid sessionId)
     {
-        ArgumentNullException.ThrowIfNull(userAccount);
+        ArgumentNullException.ThrowIfNull(parameters);
 
-        this.logger.LogInformation("Generating JWT for user: {Username}", userAccount.UserName);
+        this.logger.LogInformation("Generating JWT for user: {Username}", parameters.Username);
 
         var claims = new[]
         {
-            new Claim("identifier", userAccount.Id),
+            new Claim("identifier", parameters.UserAccountId),
             new Claim("session", sessionId.ToString()),
-            new Claim("username", userAccount.UserName!),
+            new Claim("username", parameters.Username),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.options.Value.Secret));
@@ -80,7 +79,7 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
             expires: DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
             signingCredentials: credentials);
 
-        this.logger.LogInformation("Successfully generated JWT token for user: {Username}", userAccount.UserName);
+        this.logger.LogInformation("Successfully generated JWT token for user: {Username}", parameters.Username);
 
         var handler = new JwtSecurityTokenHandler();
         string secureToken = handler.WriteToken(token);

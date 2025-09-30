@@ -2,12 +2,12 @@
 //   Copyright (c) Software Antics. All rights reserved.
 // </copyright>
 
-namespace Web.Application.Requests.Players;
+namespace Web.Application.Requests.Players.CreatePlayer;
 
 using FluentResults;
 using MediatR;
 
-public sealed class CreatePlayerRequest : IRequest<Result<CreatePlayerResponse>>
+public sealed class CreatePlayerRequest : IRequest<Result>
 {
     public required string UserAccountId { get; init; }
 

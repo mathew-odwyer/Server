@@ -8,11 +8,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using Web.Application.Exceptions;
 
 /// <summary>
-/// Provides a pipeline behaviour that is used to log unhandled exceptions.
+/// Provides a pipeline behaviour that is used to handle unhandled exceptions.
 /// </summary>
 /// <typeparam name="TRequest">
 /// The type of the request.
@@ -25,22 +23,10 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
     where TRequest : IRequest<TResponse>
 {
     /// <summary>
-    /// The logger.
-    /// </summary>
-    private readonly ILogger<UnhandledExceptionBehaviour<TRequest, TResponse>> logger;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="UnhandledExceptionBehaviour{TRequest, TResponse}"/> class.
     /// </summary>
-    /// <param name="logger">
-    /// Specifies an <see cref="ILogger{TCategoryName}"/> that represents the logger.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="logger"/> is <c>null</c>.
-    /// </exception>
-    public UnhandledExceptionBehaviour(ILogger<UnhandledExceptionBehaviour<TRequest, TResponse>> logger)
+    public UnhandledExceptionBehaviour()
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc/>
@@ -52,10 +38,9 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
         {
             return await next(cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            this.logger.LogError(ex, "Unhandled Exception for Request {Name} {Request}", typeof(TRequest).Name, request);
-            throw new UnhandledBehaviourException("An unhandled exception occurred.", ex);
+            throw;
         }
     }
 }

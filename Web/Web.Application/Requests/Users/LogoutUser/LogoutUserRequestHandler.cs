@@ -11,7 +11,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Web.Application.Contexts;
 using Web.Application.Contexts.Users;
-using Web.Application.Exceptions;
+using Web.Application.Exceptions.Database;
 
 public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest, Result>
 {
@@ -28,11 +28,6 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
-        this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
-    }
-
-    public LogoutUserRequestHandler(IUserSessionTokenRepository userSessionTokenRepository)
-    {
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
     }
 
@@ -60,7 +55,7 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
         {
             // Lets keep this here just incase someone attempts to spoof tokens.
             // There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context.
-            this.logger.LogError(ex, "Failed to logout from active session for user: {Username}", activeSession.UserAccount.UserName);
+            this.logger.LogError(ex, "Failed to logout from active session for user with ID: {UserAccountId}", activeSession.UserAccountId);
             return Result.Fail("Logout failed due to a system error.");
         }
 

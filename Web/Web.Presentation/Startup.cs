@@ -114,11 +114,11 @@ internal sealed class Startup
 
         services.AddControllersWithViews(x =>
         {
-            x.Filters.Add<ValidationExceptionFilterAttribute>();
-            x.Filters.Add<InvalidModelStateExceptionFilterAttribute>();
-            x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
-            x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
             x.Filters.Add<UnhandledExceptionFilterAttribute>();
+            x.Filters.Add<InvalidModelStateExceptionFilterAttribute>();
+            x.Filters.Add<ValidationExceptionFilterAttribute>();
+            x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
+            x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
         });
 
         services.AddRazorPages();
@@ -152,7 +152,5 @@ internal sealed class Startup
 
         services.AddApplicationServices(this.Configuration);
         services.AddInfrastructureServices(this.Configuration);
-
-        services.AddControllers();
     }
 }

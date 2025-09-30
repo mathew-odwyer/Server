@@ -2,7 +2,7 @@
 //   Copyright (c) Software Antics. All rights reserved.
 // </copyright>
 
-namespace Web.Application.Requests.Players;
+namespace Web.Application.Requests.Players.CreatePlayer;
 
 using FluentValidation;
 using Web.Application.Validators.Users;

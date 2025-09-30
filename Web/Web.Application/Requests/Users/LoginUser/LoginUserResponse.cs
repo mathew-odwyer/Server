@@ -3,4 +3,5 @@
 // </copyright>
 
 namespace Web.Application.Requests.Users.LoginUser;
+
 public sealed record LoginUserResponse(string AccessToken, string RefreshToken);

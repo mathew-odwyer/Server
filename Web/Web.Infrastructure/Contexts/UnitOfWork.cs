@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Web.Application.Contexts;
-using Web.Application.Exceptions;
+using Web.Application.Exceptions.Database;
 
 /// <summary>
 /// Provides the implementation of the unit of work pattern to manage repository instances and coordinate changes to the database.

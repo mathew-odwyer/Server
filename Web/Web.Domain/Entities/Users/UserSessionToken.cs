@@ -14,5 +14,5 @@ public sealed class UserSessionToken : AuditableEntityBase
 
     public required Guid SessionId { get; init; }
 
-    public required UserAccount UserAccount { get; init; }
+    public required string UserAccountId { get; init; }
 }

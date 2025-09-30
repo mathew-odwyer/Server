@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Web.Application.Contexts;
 using Web.Application.Contexts.Users;
-using Web.Application.Exceptions;
+using Web.Application.Exceptions.Database;
 using Web.Application.Options.Security;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
@@ -79,11 +79,15 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
             return Result.Fail("You must logout of your current session first.");
         }
 
-        var jwt = this.userAccountTokenService.GenerateJwt(result.Value);
+        var parameters = new JwtParameters(
+            UserAccountId: result.Value.Id,
+            Username: result.Value.UserName!);
+
+        var jwt = this.userAccountTokenService.GenerateJwt(parameters);
 
         var userSessionToken = new UserSessionToken()
         {
-            UserAccount = result.Value,
+            UserAccountId = result.Value.Id,
             HashedRefreshToken = this.userAccountTokenService.HashRefreshToken(jwt.RefreshToken),
             ExpirationDate = DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
             SessionId = jwt.SessionId,

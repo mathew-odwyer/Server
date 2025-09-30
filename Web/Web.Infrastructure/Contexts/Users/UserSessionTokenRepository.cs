@@ -22,9 +22,8 @@ internal sealed class UserSessionTokenRepository : Repository<UserSessionToken>,
 
         return await this.Query()
             .Where(x =>
-                x.UserAccount.Id == userAccountId &&
+                x.UserAccountId == userAccountId &&
                 x.ExpirationDate > DateTime.UtcNow)
-            .Include(x => x.UserAccount)
             .OrderByDescending(x => x.ExpirationDate)
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);

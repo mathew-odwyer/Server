@@ -4,8 +4,6 @@
 
 namespace Web.Domain.Entities.Players;
 
-using Web.Domain.Entities.Users;
-
 /// <summary>
 /// Represents a player.
 /// </summary>
@@ -13,6 +11,8 @@ using Web.Domain.Entities.Users;
 public sealed class Player : AuditableEntityBase
 {
     private string? name;
+
+    public bool IsDeleted { get; set; }
 
     /// <summary>
     /// Gets or sets a <see cref="string"/> that represents the name of the <see cref="Player"/>.
@@ -36,13 +36,7 @@ public sealed class Player : AuditableEntityBase
 
     public string NormalizedName { get; private set; } = null!;
 
-    /// <summary>
-    /// Gets the <see cref="Users.UserAccount"/> that owns this <see cref="Player"/>.
-    /// </summary>
-    /// <value>
-    /// The <see cref="Users.UserAccount"/> that owns this <see cref="Player"/>.
-    /// </value>
-    public required UserAccount UserAccount { get; init; }
+    public required string UserAccountId { get; init; }
 
     /// <summary>
     /// Gets or sets an <see cref="int"/> that represents the X-coordinate of the <see cref="Player"/>.

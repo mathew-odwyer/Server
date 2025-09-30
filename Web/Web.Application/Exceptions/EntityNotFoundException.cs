@@ -56,7 +56,7 @@ public sealed class EntityNotFoundException : Exception
     /// Specifies an <see cref="object"/> representing the key of the entity that was not found.
     /// </param>
     public EntityNotFoundException(string name, object key)
-        : base($"Entity \"{name}\" ({key}) was not found.")
+        : base($"Entity '{name}' ({key}) was not found.")
     {
     }
 }

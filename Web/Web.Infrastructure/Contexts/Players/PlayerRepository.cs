@@ -4,6 +4,7 @@
 
 namespace Web.Infrastructure.Contexts.Players;
 
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -20,14 +21,22 @@ internal sealed class PlayerRepository : Repository<Player>, IPlayerRepository
     public async Task<Player?> GetPlayerByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         return await this.Query()
-            .FirstOrDefaultAsync(x => x.NormalizedName == name.ToUpperInvariant(), cancellationToken)
+            .FirstOrDefaultAsync(x => x.NormalizedName == name.ToUpperInvariant() && !x.IsDeleted, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<Player>?> GetPlayersByUserAccountId(string userAccountId, CancellationToken cancellationToken)
+    {
+        return await this.Query()
+            .Where(x => x.UserAccountId == userAccountId && !x.IsDeleted)
+            .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
     }
 
     public async Task<bool> IsPlayerExists(string name, CancellationToken cancellationToken = default)
     {
         return await this.Query()
-            .AnyAsync(x => x.NormalizedName == name.ToUpperInvariant(), cancellationToken)
+            .AnyAsync(x => x.NormalizedName == name.ToUpperInvariant() && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
     }
 }

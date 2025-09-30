@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Web.Application.Behaviours;
 using Web.Application.Options.Security;
+using Web.Application.Profiles.Players;
 using Web.Application.Profiles.Users;
 
 /// <summary>
@@ -43,7 +44,11 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddAutoMapper(x => x.AddProfile<UserProfile>());
+        services.AddAutoMapper(x =>
+        {
+            x.AddProfile<UserProfile>();
+            x.AddProfile<PlayerProfile>();
+        });
 
         services.AddMediatR(x =>
         {

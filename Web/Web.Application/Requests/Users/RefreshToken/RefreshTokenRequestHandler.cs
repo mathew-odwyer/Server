@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Web.Application.Contexts;
 using Web.Application.Contexts.Users;
 using Web.Application.Exceptions;
+using Web.Application.Exceptions.Database;
 using Web.Application.Options.Security;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
@@ -24,6 +25,8 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
 
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
+    private readonly IUserAccountRepository userAccountRepository;
+
     private readonly IUserAccountTokenService userAccountTokenService;
 
     private readonly IUserSessionTokenRepository userSessionTokenRepository;
@@ -33,10 +36,12 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         IOptions<JwtOptions> options,
         IUserAccountTokenService userAccountTokenService,
         IUnitOfWorkFactory unitOfWorkFactory,
+        IUserAccountRepository userAccountRepository,
         IUserSessionTokenRepository userSessionTokenRepository)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.options = options ?? throw new ArgumentNullException(nameof(options));
+        this.userAccountRepository = userAccountRepository ?? throw new ArgumentNullException(nameof(userAccountRepository));
         this.userAccountTokenService = userAccountTokenService ?? throw new ArgumentNullException(nameof(userAccountTokenService));
         this.unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
@@ -60,13 +65,25 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         // Expire the old session before creating a new one - just to be safe and enforce single-session logins.
         activeSession.ExpirationDate = DateTime.UtcNow;
 
-        this.logger.LogInformation("Generating new access and refresh tokens for user: '{Username}'", activeSession.UserAccount.UserName);
+        this.logger.LogInformation("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", activeSession.UserAccountId);
 
-        var jwt = this.userAccountTokenService.GenerateJwt(activeSession.UserAccount);
+        var userAccount = await this.userAccountRepository.GetByIdAsync(activeSession.UserAccountId, cancellationToken).ConfigureAwait(false);
+
+        if (userAccount == null)
+        {
+            this.logger.LogError("Failed to locate user account with ID: '{UserAccountId}'", activeSession.UserAccountId);
+            throw new EntityNotFoundException(nameof(UserAccount), activeSession.UserAccountId);
+        }
+
+        var parameters = new JwtParameters(
+            UserAccountId: userAccount.Id,
+            Username: userAccount.UserName!);
+
+        var jwt = this.userAccountTokenService.GenerateJwt(parameters);
 
         var newSessionToken = new UserSessionToken()
         {
-            UserAccount = activeSession.UserAccount,
+            UserAccountId = userAccount.Id,
             HashedRefreshToken = this.userAccountTokenService.HashRefreshToken(jwt.RefreshToken),
             ExpirationDate = DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
             SessionId = jwt.SessionId,
@@ -83,7 +100,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
             return Result.Fail("Invalid or expired refresh token.");
         }
 
-        this.logger.LogInformation("Refreshed JWT for user: '{Username}'.", activeSession.UserAccount.UserName);
+        this.logger.LogInformation("Refreshed JWT for user with ID: '{UserAccountId}'.", activeSession.UserAccountId);
 
         return Result.Ok(new RefreshTokenResponse(
             AccessToken: jwt.AccessToken,

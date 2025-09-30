@@ -22,7 +22,8 @@ public sealed class UserAccountEntityTypeConfiguration : IEntityTypeConfiguratio
 
         builder
             .HasMany(u => u.Players)
-            .WithOne(p => p.UserAccount)
+            .WithOne()
+            .HasForeignKey(p => p.UserAccountId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

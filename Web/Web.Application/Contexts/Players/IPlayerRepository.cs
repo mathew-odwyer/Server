@@ -10,5 +10,7 @@ public interface IPlayerRepository : IRepository<Player>
 {
     Task<Player?> GetPlayerByNameAsync(string name, CancellationToken cancellationToken = default);
 
+    Task<IEnumerable<Player>?> GetPlayersByUserAccountId(string userAccountId, CancellationToken cancellationToken);
+
     Task<bool> IsPlayerExists(string name, CancellationToken cancellationToken = default);
 }

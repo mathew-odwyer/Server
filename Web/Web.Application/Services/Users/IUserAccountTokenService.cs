@@ -3,17 +3,18 @@
 // </copyright>
 
 namespace Web.Application.Services.Users;
-
-using Web.Domain.Entities.Users;
-
 public sealed record JwtToken(
     string AccessToken,
     string RefreshToken,
     Guid SessionId);
 
+public sealed record JwtParameters(
+    string UserAccountId,
+    string Username);
+
 public interface IUserAccountTokenService
 {
-    JwtToken GenerateJwt(UserAccount userAccount);
+    JwtToken GenerateJwt(JwtParameters parameters);
 
     string HashRefreshToken(string refreshToken);
 }

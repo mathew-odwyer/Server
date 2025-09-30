@@ -2,18 +2,18 @@ namespace Web.Presentation.Filters;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Web.Application.Exceptions;
 
-internal sealed class UnhandledExceptionFilterAttribute : IExceptionFilter
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+internal sealed class UnhandledExceptionFilterAttribute : ExceptionFilterAttribute
 {
-    private readonly ILogger<UnhandledExceptionFilterAttribute> logger;
-
     public UnhandledExceptionFilterAttribute(ILogger<UnhandledExceptionFilterAttribute> logger)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public void OnException(ExceptionContext context)
+    public ILogger<UnhandledExceptionFilterAttribute> Logger { get; }
+
+    public override void OnException(ExceptionContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -22,17 +22,14 @@ internal sealed class UnhandledExceptionFilterAttribute : IExceptionFilter
             return;
         }
 
-        // If this is from the unhandled exception behaviour, don't log the exception twice.
-        if (context.Exception is not UnhandledBehaviourException)
-        {
-            this.logger.LogError(context.Exception, "An unexpected error occurred.");
-        }
+        this.Logger.LogError(context.Exception, "An unexpected error occurred.");
 
         var response = new ProblemDetails
         {
             Title = "Internal Server Error",
             Detail = "An unexpected error occurred. Please try again later.",
             Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
+            Status = StatusCodes.Status500InternalServerError,
         };
 
         context.Result = new ObjectResult(response)
