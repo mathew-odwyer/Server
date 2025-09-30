@@ -4,9 +4,12 @@
 
 namespace Web.Domain.Entities;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 /// Represents an abstract base class for entities that need auditing information, including tracking creation and modification details.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public abstract class AuditableEntityBase : EntityBase
 {
     /// <summary>

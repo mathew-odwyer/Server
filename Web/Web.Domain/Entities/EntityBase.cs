@@ -4,9 +4,12 @@
 
 namespace Web.Domain.Entities;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 /// Represents the base class for entities that require a unique identifier.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public abstract class EntityBase
 {
     /// <summary>

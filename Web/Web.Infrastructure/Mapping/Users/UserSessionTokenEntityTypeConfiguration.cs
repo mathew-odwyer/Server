@@ -36,7 +36,7 @@ public sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTyp
         // This tells EF Core to include RowVersion in the WHERE clause when updating.
         // If two processes try to expire the same token at the same time the first succeeds.
         builder
-            .Property(x => x.RowVersion)
+            .Property<byte[]>("RowVersion")
             .IsRowVersion()
             .IsConcurrencyToken();
 

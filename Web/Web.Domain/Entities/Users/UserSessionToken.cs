@@ -10,8 +10,6 @@ public sealed class UserSessionToken : AuditableEntityBase
 
     public required string HashedRefreshToken { get; init; }
 
-    public byte[] RowVersion { get; private set; } = [];
-
     public required Guid SessionId { get; init; }
 
     public required string UserAccountId { get; init; }
