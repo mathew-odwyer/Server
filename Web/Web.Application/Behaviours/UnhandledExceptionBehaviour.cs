@@ -19,7 +19,7 @@ using MediatR;
 /// The type of the response.
 /// </typeparam>
 [ExcludeFromCodeCoverage(Justification = "Behaviour")]
-public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     /// <summary>

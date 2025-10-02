@@ -4,8 +4,10 @@
 
 namespace Web.Application.Requests.Players.UpdatePlayer;
 
+using System.Diagnostics.CodeAnalysis;
 using MediatR;
 
+[ExcludeFromCodeCoverage]
 public sealed class UpdatePlayerRequest : IRequest
 {
     public required string UserAccountId { get; init; }

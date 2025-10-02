@@ -4,9 +4,11 @@
 
 namespace Web.Application.Requests.Users.RefreshToken;
 
+using System.Diagnostics.CodeAnalysis;
 using FluentResults;
 using MediatR;
 
+[ExcludeFromCodeCoverage]
 public sealed class RefreshTokenRequest : IRequest<Result<RefreshTokenResponse>>
 {
     public required string UserAccountId { get; init; }

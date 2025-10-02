@@ -103,7 +103,7 @@ internal sealed class UserAccountService : IUserAccountService
 
         if (!result.Succeeded)
         {
-            string errors = string.Join(", ", result.Errors.Select(x => x.Description));
+            var errors = result.Errors.Select(x => x.Description);
             this.logger.LogWarning("Failed to register user with username: '{Username}': {Error}", username, errors);
             return Result.Fail(errors);
         }

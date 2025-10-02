@@ -4,6 +4,9 @@
 
 namespace Web.Application.Exceptions.Players;
 
+using System.Diagnostics.CodeAnalysis;
+
+[ExcludeFromCodeCoverage]
 public sealed class PlayerUpdateException : Exception
 {
     public PlayerUpdateException()

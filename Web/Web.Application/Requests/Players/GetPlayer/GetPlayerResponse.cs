@@ -4,6 +4,8 @@
 
 namespace Web.Application.Requests.Players.GetPlayer;
 
+using System.Diagnostics.CodeAnalysis;
 using Web.Application.DTOs.Players;
 
+[ExcludeFromCodeCoverage]
 public sealed record GetPlayerResponse(PlayerDto Player);

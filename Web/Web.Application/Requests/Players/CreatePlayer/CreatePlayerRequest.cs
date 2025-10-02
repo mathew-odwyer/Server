@@ -4,12 +4,12 @@
 
 namespace Web.Application.Requests.Players.CreatePlayer;
 
+using System.Diagnostics.CodeAnalysis;
 using FluentResults;
 using MediatR;
 
-public sealed class CreatePlayerRequest : IRequest<Result>
-{
-    public required string UserAccountId { get; init; }
-
-    public required string Name { get; init; }
-}
+[ExcludeFromCodeCoverage]
+public sealed record CreatePlayerRequest(
+    string UserAccountId,
+    string Name)
+    : IRequest<Result>;

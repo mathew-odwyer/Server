@@ -23,11 +23,9 @@ public sealed class PlayerController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = new CreatePlayerRequest()
-        {
-            Name = requestDto.Name,
-            UserAccountId = this.User.FindFirstValue("identifier")!,
-        };
+        var request = new CreatePlayerRequest(
+            Name: requestDto.Name,
+            UserAccountId: this.User.FindFirstValue("identifier")!);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 

@@ -21,7 +21,7 @@ internal sealed class PlayerRepository : Repository<Player>, IPlayerRepository
     public async Task<Player?> GetPlayerByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         return await this.Query()
-            .FirstOrDefaultAsync(x => x.NormalizedName == name.ToUpperInvariant() && !x.IsDeleted, cancellationToken)
+            .FirstOrDefaultAsync(x => x.Name == name && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -36,7 +36,7 @@ internal sealed class PlayerRepository : Repository<Player>, IPlayerRepository
     public async Task<bool> IsPlayerExists(string name, CancellationToken cancellationToken = default)
     {
         return await this.Query()
-            .AnyAsync(x => x.NormalizedName == name.ToUpperInvariant() && !x.IsDeleted, cancellationToken)
+            .AnyAsync(x => x.Name == name && !x.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
     }
 }

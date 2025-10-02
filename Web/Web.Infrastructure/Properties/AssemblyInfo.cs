@@ -3,7 +3,6 @@
 // </copyright>
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(false)]
@@ -11,5 +10,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Web.Infrastructure")]
 [assembly: AssemblyDescription("The infrastructure layer of the Web API.")]
 [assembly: Guid("83EF9481-4D07-4F5B-9954-769E36BD85CA")]
-[assembly: InternalsVisibleTo("Web.Tests")]
-[assembly: InternalsVisibleTo("Web.Integrations")]

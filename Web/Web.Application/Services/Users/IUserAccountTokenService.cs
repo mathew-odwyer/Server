@@ -3,11 +3,16 @@
 // </copyright>
 
 namespace Web.Application.Services.Users;
+
+using System.Diagnostics.CodeAnalysis;
+
+[ExcludeFromCodeCoverage]
 public sealed record JwtToken(
     string AccessToken,
     string RefreshToken,
     Guid SessionId);
 
+[ExcludeFromCodeCoverage]
 public sealed record JwtParameters(
     string UserAccountId,
     string Username);

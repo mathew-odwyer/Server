@@ -10,8 +10,6 @@ namespace Web.Domain.Entities.Players;
 /// <seealso cref="AuditableEntityBase" />
 public sealed class Player : AuditableEntityBase
 {
-    private string? name;
-
     public bool IsDeleted { get; set; }
 
     /// <summary>
@@ -20,21 +18,7 @@ public sealed class Player : AuditableEntityBase
     /// <value>
     /// The <see cref="string"/> that represents the name of the <see cref="Player"/>.
     /// </value>
-    public required string Name
-    {
-        get
-        {
-            return this.name!;
-        }
-
-        set
-        {
-            this.name = value;
-            this.NormalizedName = this.name.ToUpperInvariant();
-        }
-    }
-
-    public string NormalizedName { get; private set; } = null!;
+    public required string Name { get; init; }
 
     public required string UserAccountId { get; init; }
 

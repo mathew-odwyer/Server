@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("Web API")]
 [assembly: AssemblyCompany("Software Antics")]
@@ -16,3 +17,4 @@ using System.Reflection;
 #else
 [assembly: AssemblyConfiguration("Release")]
 #endif
+[assembly: InternalsVisibleTo("Web.Tests")]

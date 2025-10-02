@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 /// The type of the response.
 /// </typeparam>
 [ExcludeFromCodeCoverage]
-public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     /// <summary>

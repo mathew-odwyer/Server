@@ -4,6 +4,9 @@
 
 namespace Web.Application.Exceptions.Database;
 
+using System.Diagnostics.CodeAnalysis;
+
+[ExcludeFromCodeCoverage]
 public sealed class DatabaseUpdateException : Exception
 {
     public DatabaseUpdateException()

@@ -4,10 +4,12 @@
 
 namespace Web.Application.Profiles.Players;
 
+using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Web.Application.DTOs.Players;
 using Web.Domain.Entities.Players;
 
+[ExcludeFromCodeCoverage]
 public sealed class PlayerProfile : Profile
 {
     public PlayerProfile()

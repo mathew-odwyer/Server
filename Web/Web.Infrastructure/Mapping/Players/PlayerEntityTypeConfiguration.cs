@@ -18,7 +18,7 @@ internal sealed class PlayerEntityTypeConfiguration : AuditableEntityTypeConfigu
     public override void Configure(EntityTypeBuilder<Player> builder)
     {
         builder
-            .HasIndex(p => p.NormalizedName)
+            .HasIndex(p => p.Name)
             .IsUnique();
 
         builder

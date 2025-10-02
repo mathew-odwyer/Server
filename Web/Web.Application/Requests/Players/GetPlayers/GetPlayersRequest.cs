@@ -4,8 +4,10 @@
 
 namespace Web.Application.Requests.Players.GetPlayers;
 
+using System.Diagnostics.CodeAnalysis;
 using MediatR;
 
+[ExcludeFromCodeCoverage]
 public sealed class GetPlayersRequest : IRequest<GetPlayersResponse>
 {
     public required string UserAccountId { get; init; }

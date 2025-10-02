@@ -4,4 +4,7 @@
 
 namespace Web.Application.Requests.Users.RefreshToken;
 
+using System.Diagnostics.CodeAnalysis;
+
+[ExcludeFromCodeCoverage]
 public sealed record RefreshTokenResponse(string AccessToken, string RefreshToken);

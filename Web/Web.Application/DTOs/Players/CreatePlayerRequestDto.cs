@@ -4,4 +4,10 @@
 
 namespace Web.Application.DTOs.Players;
 
-public sealed record CreatePlayerRequestDto(string Name);
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+
+[ExcludeFromCodeCoverage]
+public sealed record CreatePlayerRequestDto(
+    [Required(ErrorMessage = "Name is required.")]
+    string Name);
