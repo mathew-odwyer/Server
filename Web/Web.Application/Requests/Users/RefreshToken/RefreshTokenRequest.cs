@@ -9,9 +9,6 @@ using FluentResults;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
-public sealed class RefreshTokenRequest : IRequest<Result<RefreshTokenResponse>>
-{
-    public required string UserAccountId { get; init; }
-
-    public required string RefreshToken { get; init; }
-}
+public sealed record RefreshTokenRequest(
+    string UserAccountId,
+    string RefreshToken) : IRequest<Result<RefreshTokenResponse>>;

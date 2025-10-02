@@ -43,11 +43,9 @@ public sealed class PlayerController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = new DeletePlayerRequest()
-        {
-            Name = requestDto.Name,
-            UserAccountId = this.User.FindFirstValue("identifier")!,
-        };
+        var request = new DeletePlayerRequest(
+            Name: requestDto.Name,
+            UserAccountId: this.User.FindFirstValue("identifier")!);
 
         await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
         return this.NoContent();
@@ -59,11 +57,9 @@ public sealed class PlayerController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = new GetPlayerRequest()
-        {
-            Name = requestDto.Name,
-            UserAccountId = this.User.FindFirstValue("identifier")!,
-        };
+        var request = new GetPlayerRequest(
+            Name: requestDto.Name,
+            UserAccountId: this.User.FindFirstValue("identifier")!);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
@@ -79,10 +75,8 @@ public sealed class PlayerController : ApiControllerBase
     [Authorize]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
     {
-        var request = new GetPlayersRequest()
-        {
-            UserAccountId = this.User.FindFirstValue("identifier")!,
-        };
+        var request = new GetPlayersRequest(
+            UserAccountId: this.User.FindFirstValue("identifier")!);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
@@ -100,13 +94,11 @@ public sealed class PlayerController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = new UpdatePlayerRequest()
-        {
-            UserAccountId = this.User.FindFirstValue("identifier")!,
-            Name = requestDto.Name,
-            X = requestDto.X,
-            Y = requestDto.Y,
-        };
+        var request = new UpdatePlayerRequest(
+            UserAccountId: this.User.FindFirstValue("identifier")!,
+            Name: requestDto.Name,
+            X: requestDto.X,
+            Y: requestDto.Y);
 
         await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 

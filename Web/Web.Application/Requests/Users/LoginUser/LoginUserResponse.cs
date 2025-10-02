@@ -7,4 +7,6 @@ namespace Web.Application.Requests.Users.LoginUser;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-public sealed record LoginUserResponse(string AccessToken, string RefreshToken);
+public sealed record LoginUserResponse(
+    string AccessToken,
+    string RefreshToken);

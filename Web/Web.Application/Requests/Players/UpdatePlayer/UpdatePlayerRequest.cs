@@ -8,13 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
-public sealed class UpdatePlayerRequest : IRequest
-{
-    public required string UserAccountId { get; init; }
-
-    public required string Name { get; init; }
-
-    public int? X { get; init; }
-
-    public int? Y { get; init; }
-}
+public sealed record UpdatePlayerRequest(
+    string UserAccountId,
+    string Name,
+    int? X,
+    int? Y) : IRequest;

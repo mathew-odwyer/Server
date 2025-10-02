@@ -9,9 +9,6 @@ using FluentResults;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
-public sealed class LoginUserRequest : IRequest<Result<LoginUserResponse>>
-{
-    public required string Username { get; init; }
-
-    public required string Password { get; init; }
-}
+public sealed record LoginUserRequest(
+    string Username,
+    string Password) : IRequest<Result<LoginUserResponse>>;

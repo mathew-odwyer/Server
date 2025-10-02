@@ -8,7 +8,4 @@ using System.Diagnostics.CodeAnalysis;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
-public sealed class GetPlayersRequest : IRequest<GetPlayersResponse>
-{
-    public required string UserAccountId { get; init; }
-}
+public sealed record GetPlayersRequest(string UserAccountId) : IRequest<GetPlayersResponse>;

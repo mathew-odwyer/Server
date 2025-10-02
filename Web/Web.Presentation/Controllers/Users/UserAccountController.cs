@@ -40,10 +40,8 @@ public sealed class UserAccountController : ApiControllerBase
     [Authorize]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken = default)
     {
-        var request = new LogoutUserRequest()
-        {
-            UserAccountId = this.User.FindFirstValue("identifier")!,
-        };
+        var request = new LogoutUserRequest(
+            UserAccountId: this.User.FindFirstValue("identifier")!);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
@@ -61,11 +59,9 @@ public sealed class UserAccountController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = new RefreshTokenRequest()
-        {
-            UserAccountId = this.User.FindFirstValue("identifier")!,
-            RefreshToken = requestDto.RefreshToken,
-        };
+        var request = new RefreshTokenRequest(
+            UserAccountId: this.User.FindFirstValue("identifier")!,
+            RefreshToken: requestDto.RefreshToken);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 

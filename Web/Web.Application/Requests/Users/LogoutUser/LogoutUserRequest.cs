@@ -9,7 +9,5 @@ using FluentResults;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
-public sealed class LogoutUserRequest : IRequest<Result>
-{
-    public required string UserAccountId { get; init; }
-}
+public sealed record LogoutUserRequest(
+    string UserAccountId) : IRequest<Result>;
