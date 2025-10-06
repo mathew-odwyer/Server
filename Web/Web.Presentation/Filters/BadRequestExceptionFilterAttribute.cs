@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Web.Application.Exceptions;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-public sealed class BadRequestExceptionFilterAttribute : ExceptionFilterAttribute
+internal sealed class BadRequestExceptionFilterAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext context)
     {

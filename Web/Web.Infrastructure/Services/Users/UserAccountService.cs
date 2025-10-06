@@ -4,7 +4,6 @@
 
 namespace Web.Infrastructure.Services.Users;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,6 @@ using Web.Domain.Entities.Users;
 /// <summary>
 /// Provides an implementation of <see cref="IUserAccountService"/> for managing user accounts using ASP.NET Core Identity.
 /// </summary>
-[ExcludeFromCodeCoverage]
 internal sealed class UserAccountService : IUserAccountService
 {
     /// <summary>

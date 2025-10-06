@@ -4,7 +4,6 @@
 
 namespace Web.Infrastructure.Mapping.Users;
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Entities.Users;
@@ -12,7 +11,6 @@ using Web.Domain.Entities.Users;
 /// <summary>
 /// Configures the <see cref="UserAccount"/> entity.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public sealed class UserAccountEntityTypeConfiguration : IEntityTypeConfiguration<UserAccount>
 {
     /// <inheritdoc/>

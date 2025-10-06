@@ -8,8 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Entities.Users;
 
+/// <summary>
+/// Configures the <see cref="UserSessionToken"/> entity.
+/// </summary>
+/// <seealso cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
 public sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserSessionToken>
 {
+    /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<UserSessionToken> builder)
     {
         base.Configure(builder);

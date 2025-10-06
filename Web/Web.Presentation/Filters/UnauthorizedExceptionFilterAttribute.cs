@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Web.Application.Exceptions;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-public sealed class UnauthorizedExceptionFilterAttribute : ExceptionFilterAttribute
+internal sealed class UnauthorizedExceptionFilterAttribute : ExceptionFilterAttribute
 {
     /// <inheritdoc/>
     public override void OnException(ExceptionContext context)

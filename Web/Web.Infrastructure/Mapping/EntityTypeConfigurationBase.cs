@@ -4,7 +4,6 @@
 
 namespace Web.Infrastructure.Mapping;
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Entities;
@@ -12,7 +11,6 @@ using Web.Domain.Entities;
 /// <summary>
 /// Configures the <see cref="EntityBase"/> entity.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public abstract class EntityTypeConfigurationBase<TEntity> : IEntityTypeConfiguration<TEntity>
     where TEntity : EntityBase
 {

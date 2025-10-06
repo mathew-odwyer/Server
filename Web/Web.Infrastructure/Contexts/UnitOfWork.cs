@@ -11,32 +11,15 @@ using Microsoft.EntityFrameworkCore;
 using Web.Application.Contexts;
 using Web.Application.Exceptions.Database;
 
-/// <summary>
-/// Provides the implementation of the unit of work pattern to manage repository instances and coordinate changes to the database.
-/// </summary>
-[ExcludeFromCodeCoverage]
 internal sealed class UnitOfWork : IUnitOfWork
 {
-    /// <summary>
-    /// The database context.
-    /// </summary>
     private readonly DbContext? context;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
-    /// </summary>
-    /// <param name="context">
-    /// Specifies a <see cref="DbContext"/> instance to use for data operations.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="context"/> is <c>null</c>.
-    /// </exception>
     public UnitOfWork(DbContext context)
     {
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    /// <inheritdoc/>
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
         try

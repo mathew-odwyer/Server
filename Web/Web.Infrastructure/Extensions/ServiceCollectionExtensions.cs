@@ -4,7 +4,6 @@
 
 namespace Web.Infrastructure.Extensions;
 
-using System.Diagnostics.CodeAnalysis;
 using FluentEmail.MailKitSmtp;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +23,6 @@ using Web.Infrastructure.Services.Users;
 /// <summary>
 /// Provides extension methods for configuring infrastructure services in the dependency injection container.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     /// <summary>

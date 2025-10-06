@@ -5,15 +5,13 @@
 namespace Web.Infrastructure.Mapping;
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Entities;
 
 /// <summary>
-///   Configures the <see cref="AuditableEntityBase"/> entity.
+/// Configures the <see cref="AuditableEntityBase"/> entity.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public abstract class AuditableEntityTypeConfigurationBase<TEntity> : EntityTypeConfigurationBase<TEntity>
     where TEntity : AuditableEntityBase
 {

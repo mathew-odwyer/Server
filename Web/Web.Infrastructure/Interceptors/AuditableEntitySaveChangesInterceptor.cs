@@ -5,7 +5,6 @@
 namespace Web.Infrastructure.Interceptors;
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -15,7 +14,6 @@ using Web.Domain.Entities;
 /// <summary>
 /// Intercepts save changes operations to update auditing fields for entities that inherit from <see cref="AuditableEntityBase"/>.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
     /// <inheritdoc/>

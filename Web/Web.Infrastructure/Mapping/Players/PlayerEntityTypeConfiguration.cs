@@ -4,14 +4,12 @@
 
 namespace Web.Infrastructure.Mapping.Players;
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Entities.Players;
 
 /// <summary>
 /// Configures the <see cref="Player"/> entity.
 /// </summary>
-[ExcludeFromCodeCoverage]
 internal sealed class PlayerEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<Player>
 {
     /// <inheritdoc/>

@@ -6,6 +6,8 @@ namespace Web.Application.Validators.Users;
 
 using FluentValidation;
 
+//// TODO: Unit Tests
+
 /// <summary>
 /// Provides an implementation of <see cref="AbstractValidator{T}"/> that validates username strength and format.
 /// </summary>

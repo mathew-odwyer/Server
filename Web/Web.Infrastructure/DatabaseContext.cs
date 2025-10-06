@@ -1,7 +1,6 @@
 namespace Web.Infrastructure;
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Web.Domain.Entities.Users;
@@ -10,7 +9,6 @@ using Web.Infrastructure.Interceptors;
 /// <summary>
 /// Represents the database context for the application.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public sealed class DatabaseContext : IdentityDbContext<UserAccount>
 {
     /// <summary>

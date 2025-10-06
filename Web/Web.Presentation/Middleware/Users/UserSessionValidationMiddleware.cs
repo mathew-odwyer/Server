@@ -3,7 +3,7 @@ namespace Web.Presentation.Middleware.Users;
 using System.Security.Claims;
 using Web.Application.Contexts.Users;
 
-public sealed class UserSessionValidationMiddleware
+internal sealed class UserSessionValidationMiddleware
 {
     private readonly ILogger<UserSessionValidationMiddleware> logger;
 

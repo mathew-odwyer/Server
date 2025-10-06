@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Web.Application.Contexts.Users;
 using Web.Domain.Entities.Users;
 
-public sealed class UserAccountRepository : IUserAccountRepository
+internal sealed class UserAccountRepository : IUserAccountRepository
 {
     private readonly DbContext context;
 
