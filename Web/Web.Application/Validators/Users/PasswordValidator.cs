@@ -7,8 +7,6 @@ namespace Web.Application.Validators.Users;
 using System.Linq;
 using FluentValidation;
 
-//// TODO: Unit tests
-
 /// <summary>
 /// Provides an implementation of <see cref="AbstractValidator{T}"/> that validates password strength.
 /// </summary>

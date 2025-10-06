@@ -9,8 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MediatR;
 
-//// TODO: Determine whether this is even required.
-
 /// <summary>
 /// Provides a pipeline behaviour that is used to handle unhandled exceptions.
 /// </summary>

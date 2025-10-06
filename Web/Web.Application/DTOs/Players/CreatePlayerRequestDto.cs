@@ -6,6 +6,7 @@ namespace Web.Application.DTOs.Players;
 
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Web.Domain.Entities.Players;
 
 /// <summary>
 /// Represents the data transfer object used to create a new <see cref="Player"/>.

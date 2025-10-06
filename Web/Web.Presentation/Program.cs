@@ -6,9 +6,6 @@ namespace Web.Presentation;
 
 using Web.Infrastructure;
 
-//// TODO: Unit Tests
-//// TODO: API Documentation
-
 /// <summary>
 /// The Web API application.
 /// </summary>
