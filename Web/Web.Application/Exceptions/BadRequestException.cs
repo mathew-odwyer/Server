@@ -4,12 +4,15 @@
 
 namespace Web.Application.Exceptions;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 /// Represents an exception that is thrown when a request is invalid or cannot be processed due to client error.
 /// </summary>
 /// <remarks>
 /// The <see cref="BadRequestException"/> is used to indicate a client-side error resulting in an HTTP 400 Bad Request response, typically caused by malformed input, missing data, or validation failures.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 public sealed class BadRequestException : Exception
 {
     /// <summary>

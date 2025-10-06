@@ -4,12 +4,15 @@
 
 namespace Web.Application.Exceptions;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 /// Represents an exception that is thrown when a request is made without proper authentication or when authentication fails.
 /// </summary>
 /// <remarks>
 /// The <see cref="UnauthorizedException"/> is used to indicate an HTTP 401 Unauthorized response, typically occurring when a user is not authenticated or the provided credentials are invalid.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 public sealed class UnauthorizedException : Exception
 {
     /// <summary>

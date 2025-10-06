@@ -17,15 +17,55 @@ using Web.Application.Exceptions.Players;
 using Web.Domain.Entities.Players;
 using Web.Domain.Entities.Users;
 
+/// <summary>
+/// Provides a request handler used to create a new <see cref="Player"/> for the current <see cref="UserAccount"/>.
+/// </summary>
 public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerRequest>
 {
+    /// <summary>
+    /// The logger.
+    /// </summary>
     private readonly ILogger<CreatePlayerRequestHandler> logger;
 
+    /// <summary>
+    /// The player repository, used to add a new player to the database.
+    /// </summary>
     private readonly IPlayerRepository playerRepository;
 
+    /// <summary>
+    /// The unit of work factory.
+    /// </summary>
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
+    /// <summary>
+    /// The user account repository, used to find the correct <see cref="UserAccount"/>.
+    /// </summary>
     private readonly IUserAccountRepository userAccountRepository;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreatePlayerRequestHandler"/> class.
+    /// </summary>
+    /// <param name="logger">
+    /// The logger.
+    /// </param>
+    /// <param name="unitOfWorkFactory">
+    /// The unit of work factory.
+    /// </param>
+    /// <param name="playerRepository">
+    /// The player repository, used to add a new player to the database.
+    /// </param>
+    /// <param name="userAccountRepository">
+    /// The user account repository, used to find the correct <see cref="UserAccount"/>.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when one of the following parameters is <c>null</c>:
+    /// <list type="bullet">
+    ///   <item><description>logger</description></item>
+    ///   <item><description>unitOfWorkFactory</description></item>
+    ///   <item><description>playerRepository</description></item>
+    ///   <item><description>userAccountRepository</description></item>
+    /// </list>
+    /// </exception>
 
     public CreatePlayerRequestHandler(
         ILogger<CreatePlayerRequestHandler> logger,
@@ -39,6 +79,7 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
         this.userAccountRepository = userAccountRepository ?? throw new ArgumentNullException(nameof(userAccountRepository));
     }
 
+    /// <inheritdoc/>
     public async Task Handle(CreatePlayerRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
