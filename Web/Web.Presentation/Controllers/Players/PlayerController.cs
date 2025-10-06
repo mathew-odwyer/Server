@@ -27,14 +27,8 @@ public sealed class PlayerController : ApiControllerBase
             Name: requestDto.Name,
             UserAccountId: this.User.FindFirstValue("identifier")!);
 
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-
-        if (response.IsFailed)
-        {
-            return this.BadRequest(response.Errors);
-        }
-
-        return this.Ok();
+        await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        return this.NoContent();
     }
 
     [HttpDelete]
@@ -62,12 +56,6 @@ public sealed class PlayerController : ApiControllerBase
             UserAccountId: this.User.FindFirstValue("identifier")!);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-
-        if (response == null)
-        {
-            return this.BadRequest();
-        }
-
         return this.Ok(response);
     }
 
@@ -79,12 +67,6 @@ public sealed class PlayerController : ApiControllerBase
             UserAccountId: this.User.FindFirstValue("identifier")!);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-
-        if (response == null)
-        {
-            return this.BadRequest();
-        }
-
         return this.Ok(response);
     }
 
@@ -101,7 +83,6 @@ public sealed class PlayerController : ApiControllerBase
             Y: requestDto.Y);
 
         await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-
         return this.NoContent();
     }
 }

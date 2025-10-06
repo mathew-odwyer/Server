@@ -1,4 +1,4 @@
-// <copyright file="EntityNotFoundExceptionFilterAttribute.cs" company="Software Antics">
+// <copyright file="UnauthorizedExceptionFilterAttribute.cs" company="Software Antics">
 //   Copyright (c) Software Antics. All rights reserved.
 // </copyright>
 
@@ -8,11 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Web.Application.Exceptions;
 
-/// <summary>
-/// A filter attribute that handles not found exceptions by returning a 404 Not Found response with details.
-/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-internal sealed class EntityNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
+public sealed class UnauthorizedExceptionFilterAttribute : ExceptionFilterAttribute
 {
     /// <inheritdoc/>
     public override void OnException(ExceptionContext context)
@@ -24,17 +21,17 @@ internal sealed class EntityNotFoundExceptionFilterAttribute : ExceptionFilterAt
             return;
         }
 
-        if (context.Exception is EntityNotFoundException exception)
+        if (context.Exception is UnauthorizedException exception)
         {
             var details = new ProblemDetails
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-                Title = "Entity Not Found",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1",
+                Title = "Unauthorized",
                 Detail = exception.Message,
-                Status = StatusCodes.Status404NotFound,
+                Status = StatusCodes.Status401Unauthorized,
             };
 
-            context.Result = new NotFoundObjectResult(details);
+            context.Result = new ObjectResult(details);
             context.ExceptionHandled = true;
         }
     }

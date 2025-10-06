@@ -19,13 +19,13 @@ public sealed class PlayerDeleteException : Exception
     {
     }
 
-    public PlayerDeleteException(string userAccountId, string name, Exception? innerException)
-        : base($"Failed to delete player with name: '{name}' for user with ID: '{userAccountId}'", innerException)
+    public PlayerDeleteException(string message, Exception? innerException)
+        : base(message, innerException)
     {
     }
 
-    public PlayerDeleteException(string message, Exception? innerException)
-        : base(message, innerException)
+    public PlayerDeleteException(string userAccountId, string name, Exception? innerException)
+        : base($"Failed to delete player with name: '{name}' for user with ID: '{userAccountId}'", innerException)
     {
     }
 }

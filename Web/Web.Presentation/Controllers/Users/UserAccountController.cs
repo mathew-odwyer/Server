@@ -28,12 +28,7 @@ public sealed class UserAccountController : ApiControllerBase
         var request = this.Mapper.Map<LoginUserRequest>(requestDto);
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        if (response.IsFailed)
-        {
-            return this.Unauthorized(response.Errors);
-        }
-
-        return this.Ok(response.Value);
+        return this.Ok(response);
     }
 
     [HttpPost]
@@ -43,14 +38,8 @@ public sealed class UserAccountController : ApiControllerBase
         var request = new LogoutUserRequest(
             UserAccountId: this.User.FindFirstValue("identifier")!);
 
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-
-        if (response.IsFailed)
-        {
-            return this.Unauthorized(response.Errors);
-        }
-
-        return this.Ok();
+        await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        return this.NoContent();
     }
 
     [HttpPost]
@@ -64,38 +53,17 @@ public sealed class UserAccountController : ApiControllerBase
             RefreshToken: requestDto.RefreshToken);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-
-        if (response.IsFailed)
-        {
-            return this.Unauthorized(response.Errors);
-        }
-
-        return this.Ok(response.Value);
+        return this.Ok(response);
     }
 
-    /// <summary>
-    /// Registers a new user account.
-    /// </summary>
-    /// <param name="requestDto">
-    /// The registration data transfer object containing the user's email address, username, and password.
-    /// </param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>
-    /// An <see cref="IActionResult"/> representing the outcome of the registration.
-    /// </returns>
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequestDto requestDto, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
         var request = this.Mapper.Map<RegisterUserRequest>(requestDto);
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        if (response.IsFailed)
-        {
-            return this.BadRequest(response.Errors);
-        }
-
-        return this.Ok();
+        return this.NoContent();
     }
 }

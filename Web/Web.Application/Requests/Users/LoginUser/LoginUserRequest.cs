@@ -5,10 +5,9 @@
 namespace Web.Application.Requests.Users.LoginUser;
 
 using System.Diagnostics.CodeAnalysis;
-using FluentResults;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
 public sealed record LoginUserRequest(
     string Username,
-    string Password) : IRequest<Result<LoginUserResponse>>;
+    string Password) : IRequest<LoginUserResponse>;

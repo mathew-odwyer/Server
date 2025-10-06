@@ -119,6 +119,9 @@ internal sealed class Startup
             x.Filters.Add<ValidationExceptionFilterAttribute>();
             x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
             x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
+            x.Filters.Add<ConflictExceptionFilterAttribute>();
+            x.Filters.Add<BadRequestExceptionFilterAttribute>();
+            x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
         });
 
         services.AddRazorPages();

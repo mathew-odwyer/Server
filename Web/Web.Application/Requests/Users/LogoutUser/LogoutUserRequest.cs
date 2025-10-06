@@ -5,9 +5,8 @@
 namespace Web.Application.Requests.Users.LogoutUser;
 
 using System.Diagnostics.CodeAnalysis;
-using FluentResults;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
 public sealed record LogoutUserRequest(
-    string UserAccountId) : IRequest<Result>;
+    string UserAccountId) : IRequest;

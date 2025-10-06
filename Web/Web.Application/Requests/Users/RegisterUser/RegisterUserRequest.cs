@@ -5,7 +5,6 @@
 namespace Web.Application.Requests.Users.RegisterUser;
 
 using System.Diagnostics.CodeAnalysis;
-using FluentResults;
 using MediatR;
 
 /// <summary>
@@ -15,4 +14,4 @@ using MediatR;
 public sealed record RegisterUserRequest
     (string EmailAddress,
     string Username,
-    string Password) : IRequest<Result>;
+    string Password) : IRequest;

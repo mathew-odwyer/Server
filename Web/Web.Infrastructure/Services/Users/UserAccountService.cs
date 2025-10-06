@@ -6,9 +6,9 @@ namespace Web.Infrastructure.Services.Users;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Web.Application.Exceptions;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
 
@@ -56,7 +56,7 @@ internal sealed class UserAccountService : IUserAccountService
         this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
     }
 
-    public async Task<Result<UserAccount>> LoginUserAsync(string username, string password)
+    public async Task<UserAccount> LoginUserAsync(string username, string password)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
@@ -68,7 +68,7 @@ internal sealed class UserAccountService : IUserAccountService
         if (userAccount == null)
         {
             this.logger.LogWarning("Login failed: user not found for user: '{Username}'", username);
-            return Result.Fail($"Invalid Credentials. Please check your details and try again.");
+            throw new UnauthorizedException("Invalid credentials. Please check your details and try again.");
         }
 
         var result = await this.signInManager.CheckPasswordSignInAsync(userAccount, password, false).ConfigureAwait(false);
@@ -76,15 +76,15 @@ internal sealed class UserAccountService : IUserAccountService
         if (!result.Succeeded)
         {
             this.logger.LogWarning("Login failed: invalid password for user: '{Username}'", username);
-            return Result.Fail($"Invalid Credentials. Please check your details and try again.");
+            throw new UnauthorizedException("Invalid credentials. Please check your details and try again.");
         }
 
         this.logger.LogInformation("Login succeeded for user: '{Username}'", username);
-        return Result.Ok(userAccount);
+        return userAccount;
     }
 
     /// <inheritdoc/>
-    public async Task<Result<UserAccount>> RegisterUserAsync(string emailAddress, string username, string password)
+    public async Task<UserAccount> RegisterUserAsync(string emailAddress, string username, string password)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(emailAddress);
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
@@ -92,23 +92,24 @@ internal sealed class UserAccountService : IUserAccountService
 
         this.logger.LogInformation("Attempting to register user with username: '{Username}'", username);
 
-        var user = new UserAccount
+        var userAccount = new UserAccount
         {
             UserName = username,
             Email = emailAddress,
             EmailConfirmed = false,
         };
 
-        var result = await this.userManager.CreateAsync(user, password).ConfigureAwait(false);
+        var result = await this.userManager.CreateAsync(userAccount, password).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
-            var errors = result.Errors.Select(x => x.Description);
+            string errors = string.Join("\n", result.Errors.Select(x => x.Description));
+
             this.logger.LogWarning("Failed to register user with username: '{Username}': {Error}", username, errors);
-            return Result.Fail(errors);
+            throw new ConflictException(result.Errors.ToDictionary(x => x.Code, x => x.Description));
         }
 
         this.logger.LogInformation("Successfully registered user with username: '{Username}'", username);
-        return Result.Ok(user);
+        return userAccount;
     }
 }

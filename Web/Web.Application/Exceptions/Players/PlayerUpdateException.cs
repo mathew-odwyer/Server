@@ -19,13 +19,13 @@ public sealed class PlayerUpdateException : Exception
     {
     }
 
-    public PlayerUpdateException(string userAccountId, string name, Exception? innerException)
-    : base($"Failed to update player with name: '{name}' for user with ID: '{userAccountId}'", innerException)
+    public PlayerUpdateException(string message, Exception innerException)
+        : base(message, innerException)
     {
     }
 
-    public PlayerUpdateException(string message, Exception innerException)
-        : base(message, innerException)
+    public PlayerUpdateException(string userAccountId, string name, Exception? innerException)
+        : base($"Failed to update player with name: '{name}' for user with ID: '{userAccountId}'", innerException)
     {
     }
 }

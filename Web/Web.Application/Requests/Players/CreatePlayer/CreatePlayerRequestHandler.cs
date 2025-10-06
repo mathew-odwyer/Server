@@ -6,7 +6,6 @@ namespace Web.Application.Requests.Players.CreatePlayer;
 
 using System.Threading;
 using System.Threading.Tasks;
-using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Web.Application.Contexts;
@@ -14,10 +13,11 @@ using Web.Application.Contexts.Players;
 using Web.Application.Contexts.Users;
 using Web.Application.Exceptions;
 using Web.Application.Exceptions.Database;
+using Web.Application.Exceptions.Players;
 using Web.Domain.Entities.Players;
 using Web.Domain.Entities.Users;
 
-public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerRequest, Result>
+public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerRequest>
 {
     private readonly ILogger<CreatePlayerRequestHandler> logger;
 
@@ -39,7 +39,7 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
         this.userAccountRepository = userAccountRepository ?? throw new ArgumentNullException(nameof(userAccountRepository));
     }
 
-    public async Task<Result> Handle(CreatePlayerRequest request, CancellationToken cancellationToken)
+    public async Task Handle(CreatePlayerRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -57,7 +57,7 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
         if (playerExists)
         {
             this.logger.LogInformation("Player already exists with name: '{Name}'", request.Name);
-            return Result.Fail($"Player already exists with name: '{request.Name}'");
+            throw new ConflictException($"Player already exists with name: '{request.Name}'");
         }
 
         var player = new Player()
@@ -76,11 +76,9 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
         catch (DatabaseUpdateException ex)
         {
             this.logger.LogError(ex, "Failed to create new player for user with ID: {UserAccountId}", userAccount.Id);
-            return Result.Fail("Failed to create new player, please try again in a few moments.");
+            throw new PlayerCreateException(request.UserAccountId, request.Name, ex);
         }
 
         this.logger.LogInformation("Player '{Name}' created for user with ID: '{UserAccountId}'", player.Name, request.UserAccountId);
-
-        return Result.Ok();
     }
 }

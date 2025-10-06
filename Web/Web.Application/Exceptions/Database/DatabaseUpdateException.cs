@@ -19,11 +19,6 @@ public sealed class DatabaseUpdateException : Exception
     {
     }
 
-    public DatabaseUpdateException(Exception innerException)
-        : base("A database update exception occurred.", innerException)
-    {
-    }
-
     public DatabaseUpdateException(string message, Exception? innerException)
         : base(message, innerException)
     {

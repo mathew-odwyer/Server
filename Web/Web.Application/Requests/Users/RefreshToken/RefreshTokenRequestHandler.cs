@@ -5,7 +5,6 @@
 namespace Web.Application.Requests.Users.RefreshToken;
 
 using System.Threading;
-using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,7 +16,7 @@ using Web.Application.Options.Security;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
 
-public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, Result<RefreshTokenResponse>>
+public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, RefreshTokenResponse>
 {
     private readonly ILogger<RefreshTokenRequestHandler> logger;
 
@@ -47,7 +46,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
     }
 
-    public async Task<Result<RefreshTokenResponse>> Handle(RefreshTokenRequest request, CancellationToken cancellationToken = default)
+    public async Task<RefreshTokenResponse> Handle(RefreshTokenRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -59,7 +58,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
             activeSession.CreatedOn.AddDays(this.options.Value.RefreshTokenExpiryDays) < DateTime.UtcNow)
         {
             this.logger.LogWarning("Invalid or expired resfresh token for user with ID: '{UserAccountId}'", request.UserAccountId);
-            return Result.Fail("Invalid or expired refresh token.");
+            throw new UnauthorizedException("Invalid or expired refresh token.");
         }
 
         // Expire the old session before creating a new one - just to be safe and enforce single-session logins.
@@ -97,13 +96,13 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         catch (DatabaseUpdateConcurrencyException)
         {
             this.logger.LogWarning("Concurrent refresh attempt detected for token {Token}", request.RefreshToken);
-            return Result.Fail("Invalid or expired refresh token.");
+            throw new UnauthorizedException("Invalid or expired refresh token.");
         }
 
         this.logger.LogInformation("Refreshed JWT for user with ID: '{UserAccountId}'.", activeSession.UserAccountId);
 
-        return Result.Ok(new RefreshTokenResponse(
+        return new RefreshTokenResponse(
             AccessToken: jwt.AccessToken,
-            RefreshToken: jwt.RefreshToken));
+            RefreshToken: jwt.RefreshToken);
     }
 }

@@ -5,7 +5,6 @@
 namespace Web.Application.Requests.Users.RegisterUser;
 
 using System.Threading;
-using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Web.Application.Services.Users;
@@ -13,11 +12,7 @@ using Web.Application.Services.Users;
 /// <summary>
 /// Handles <see cref="RegisterUserRequest"/> messages to register new user accounts.
 /// </summary>
-/// <remarks>
-/// Uses <see cref="IUserAccountService"/> to perform registration and logs outcomes.
-/// Returns a <see cref="Result"/> indicating success or failure, with error details if applicable.
-/// </remarks>
-public sealed class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, Result>
+public sealed class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest>
 {
     /// <summary>
     /// The logger.
@@ -49,39 +44,19 @@ public sealed class RegisterUserRequestHandler : IRequestHandler<RegisterUserReq
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
     }
 
-    /// <summary>
-    /// Handles the registration of a new user account.
-    /// </summary>
-    /// <param name="request">
-    /// The registration request containing user credentials.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A token to monitor for cancellation requests.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result"/> indicating the outcome of the registration.
-    /// On failure, contains error messages describing the reason(s).
-    /// </returns>
-    public async Task<Result> Handle(RegisterUserRequest request, CancellationToken cancellationToken = default)
+    /// <inheritdoc/>
+    public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         this.logger.LogInformation("Handling user registration for new user: '{Username}'", request.Username);
 
-        var result = await this.userAccountService.RegisterUserAsync(
+        await this.userAccountService.RegisterUserAsync(
             emailAddress: request.EmailAddress,
             username: request.Username,
             password: request.Password)
             .ConfigureAwait(false);
 
-        if (result.IsFailed)
-        {
-            this.logger.LogWarning("User registration failed for username: {Username}", request.Username);
-            return Result.Fail(result.Errors.Select(x => x.Message));
-        }
-
         this.logger.LogInformation("User registration succeeded for username: {Username}", request.Username);
-
-        return Result.Ok();
     }
 }

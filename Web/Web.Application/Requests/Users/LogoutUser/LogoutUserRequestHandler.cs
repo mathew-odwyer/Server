@@ -6,14 +6,14 @@ namespace Web.Application.Requests.Users.LogoutUser;
 
 using System.Threading;
 using System.Threading.Tasks;
-using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Web.Application.Contexts;
 using Web.Application.Contexts.Users;
+using Web.Application.Exceptions;
 using Web.Application.Exceptions.Database;
 
-public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest, Result>
+public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest>
 {
     private readonly ILogger<LogoutUserRequestHandler> logger;
 
@@ -31,7 +31,7 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
     }
 
-    public async Task<Result> Handle(LogoutUserRequest request, CancellationToken cancellationToken)
+    public async Task Handle(LogoutUserRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -43,7 +43,7 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
         if (activeSession == null)
         {
             this.logger.LogError("Failed to locate active session for user with ID: '{UserAccountId}'", request.UserAccountId);
-            return Result.Fail("Failed to locate an active session.");
+            throw new InvalidOperationException($"Failed to locate an active session for user with ID: '{request.UserAccountId}'");
         }
 
         try
@@ -56,9 +56,7 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
             // Lets keep this here just incase someone attempts to spoof tokens.
             // There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context.
             this.logger.LogError(ex, "Failed to logout from active session for user with ID: {UserAccountId}", activeSession.UserAccountId);
-            return Result.Fail("Logout failed due to a system error.");
+            throw new UnauthorizedException("Logout failed due to a system error.", ex);
         }
-
-        return Result.Ok();
     }
 }

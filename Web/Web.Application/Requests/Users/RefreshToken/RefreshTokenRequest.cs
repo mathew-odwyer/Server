@@ -5,10 +5,9 @@
 namespace Web.Application.Requests.Users.RefreshToken;
 
 using System.Diagnostics.CodeAnalysis;
-using FluentResults;
 using MediatR;
 
 [ExcludeFromCodeCoverage]
 public sealed record RefreshTokenRequest(
     string UserAccountId,
-    string RefreshToken) : IRequest<Result<RefreshTokenResponse>>;
+    string RefreshToken) : IRequest<RefreshTokenResponse>;

@@ -5,7 +5,6 @@
 namespace Web.Tests.Application.Requests.Users.RegisterUser;
 
 using System.Threading.Tasks;
-using FluentResults;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;

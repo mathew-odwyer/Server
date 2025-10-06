@@ -6,18 +6,18 @@ namespace Web.Application.Requests.Users.LoginUser;
 
 using System.Threading;
 using System.Threading.Tasks;
-using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Web.Application.Contexts;
 using Web.Application.Contexts.Users;
+using Web.Application.Exceptions;
 using Web.Application.Exceptions.Database;
 using Web.Application.Options.Security;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
 
-public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, Result<LoginUserResponse>>
+public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, LoginUserResponse>
 {
     private readonly ILogger<LoginUserRequestHandler> logger;
 
@@ -47,7 +47,7 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
     }
 
-    public async Task<Result<LoginUserResponse>> Handle(LoginUserRequest request, CancellationToken cancellationToken = default)
+    public async Task<LoginUserResponse> Handle(LoginUserRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -56,38 +56,30 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
 
         this.logger.LogInformation("Handling login request for user: '{Username}'...", username);
 
-        var result = await this.userAccountService.LoginUserAsync(
+        var userAccount = await this.userAccountService.LoginUserAsync(
             username: username,
             password: password)
             .ConfigureAwait(false);
 
-        if (result.IsFailed)
-        {
-            string errors = string.Join(", ", result.Errors.Select(x => x.Message));
-            this.logger.LogWarning("Login failed for user: '{Username}': {Error}", username, errors);
-
-            return Result.Fail(errors);
-        }
-
         var work = this.unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(result.Value.Id, cancellationToken).ConfigureAwait(false);
+        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
 
         // If there's currently an active sesion, reject the login.
         if (activeSession != null)
         {
-            this.logger.LogInformation("Session already active for user: '{Username}'", result.Value.UserName);
-            return Result.Fail("You must logout of your current session first.");
+            this.logger.LogInformation("Session already active for user: '{Username}'", userAccount.UserName);
+            throw new UnauthorizedException("You must logout of your current session first.");
         }
 
         var parameters = new JwtParameters(
-            UserAccountId: result.Value.Id,
-            Username: result.Value.UserName!);
+            UserAccountId: userAccount.Id,
+            Username: userAccount.UserName!);
 
         var jwt = this.userAccountTokenService.GenerateJwt(parameters);
 
         var userSessionToken = new UserSessionToken()
         {
-            UserAccountId = result.Value.Id,
+            UserAccountId = userAccount.Id,
             HashedRefreshToken = this.userAccountTokenService.HashRefreshToken(jwt.RefreshToken),
             ExpirationDate = DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
             SessionId = jwt.SessionId,
@@ -103,13 +95,13 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
             // There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context.
             // So let's just be extra safe here.
             this.logger.LogError(ex, "Failed to persist login session for {Username}", username);
-            return Result.Fail("Login failed due to a system error. Please try again.");
+            throw new UnauthorizedException("Login failed due to a system error, please try again in a few moments.", ex);
         }
 
         this.logger.LogInformation("Login succeeded for user: {Username}", request.Username);
 
-        return Result.Ok(new LoginUserResponse(
+        return new LoginUserResponse(
             AccessToken: jwt.AccessToken,
-            RefreshToken: jwt.RefreshToken));
+            RefreshToken: jwt.RefreshToken);
     }
 }
