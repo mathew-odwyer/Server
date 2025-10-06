@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Web.Domain.Entities.Players;
 
 /// <summary>
-/// Represents a user account with various properties related to authentication and user details.
+/// Represents a user account.
 /// </summary>
 /// <seealso cref="IdentityUser" />
 public sealed class UserAccount : IdentityUser

@@ -10,6 +10,12 @@ namespace Web.Domain.Entities.Players;
 /// <seealso cref="AuditableEntityBase" />
 public sealed class Player : AuditableEntityBase
 {
+    /// <summary>
+    /// Gets or sets a value indicating whether this <see cref="Player"/> is deleted.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this <see cref="Player"/> is deleted; otherwise, <c>false</c>.
+    /// </value>
     public bool IsDeleted { get; set; }
 
     /// <summary>
@@ -20,6 +26,12 @@ public sealed class Player : AuditableEntityBase
     /// </value>
     public required string Name { get; init; }
 
+    /// <summary>
+    /// Gets a <see cref="string"/> that represents the user account identifier that is associated with this <see cref="Player"/>.
+    /// </summary>
+    /// <value>
+    /// A <see cref="string"/> that represents the user account identifier that is associated with this <see cref="Player"/>.
+    /// </value>
     public required string UserAccountId { get; init; }
 
     /// <summary>

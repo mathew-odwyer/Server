@@ -18,6 +18,7 @@ public sealed class UserAccountRepository : IUserAccountRepository
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
+    /// <inheritdoc/>
     public async Task<UserAccount?> GetByIdAsync(string identifier, CancellationToken cancellationToken = default)
     {
         return await this.context.Set<UserAccount>()

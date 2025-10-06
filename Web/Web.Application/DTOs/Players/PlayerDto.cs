@@ -4,12 +4,23 @@
 
 namespace Web.Application.DTOs.Players;
 
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Web.Domain.Entities.Players;
 
+/// <summary>
+/// Represents a player within the system.
+/// </summary>
+/// <param name="Name">
+/// The unique name of the <see cref="Player"/>.
+/// </param>
+/// <param name="X">
+/// The current X-coordinate of the <see cref="Player"/>.
+/// </param>
+/// <param name="Y">
+/// The current Y-coordinate of the <see cref="Player"/>.
+/// </param>
 [ExcludeFromCodeCoverage]
 public sealed record PlayerDto(
-    [Required(ErrorMessage = "Name is required.")]
     string Name,
     int X,
     int Y);

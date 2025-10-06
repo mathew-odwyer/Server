@@ -6,18 +6,87 @@ namespace Web.Application.DTOs.Users;
 
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Web.Domain.Entities.Users;
 
 /// <summary>
-/// Data transfer object for user registration requests.
+/// Represents the data transfer object used to register a new user account.
 /// </summary>
 /// <param name="EmailAddress">
-/// The user's email address. Must be provided and conform to a valid email format.
+/// The email address associated with the new <see cref="UserAccount"/>.
+/// <list type="bullet">
+///     <item>
+///         <description>
+///             Cannot be <c>null</c> or empty.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must be a valid email address format (e.g., <c>name@example.com</c>).
+///         </description>
+///     </item>
+/// </list>
 /// </param>
 /// <param name="Username">
-/// The desired username for the new account. Must be provided.
+/// The desired username for the new <see cref="UserAccount"/>.
+/// <para>Validation rules:</para>
+/// <list type="bullet">
+///     <item>
+///         <description>
+///             Cannot be <c>null</c>, empty, or consist only of whitespace characters.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must be at least 3 characters long.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must be no more than 12 characters long.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Can only contain alphanumeric characters, hyphens (<c>-</c>), or underscores (<c>_</c>).
+///         </description>
+///     </item>
+/// </list>
 /// </param>
 /// <param name="Password">
-/// The password for the new account. Must be provided and at least 12 characters long.
+/// The password used to secure the new <see cref="UserAccount"/>.
+/// <para>Validation rules:</para>
+/// <list type="bullet">
+///     <item>
+///         <description>
+///             Cannot be <c>null</c> or empty.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must be at least 12 characters long.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must contain at least one uppercase letter.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must contain at least one lowercase letter.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must contain at least one numeric character.
+///         </description>
+///     </item>
+///     <item>
+///         <description>
+///             Must contain at least one special (non-alphanumeric) character.
+///         </description>
+///     </item>
+/// </list>
 /// </param>
 [ExcludeFromCodeCoverage]
 public sealed record RegisterUserRequestDto(
@@ -26,6 +95,8 @@ public sealed record RegisterUserRequestDto(
     string EmailAddress,
 
     [Required(ErrorMessage = "Username is required.")]
+    [MinLength(3)]
+    [MaxLength(12)]
     string Username,
 
     [Required(ErrorMessage = "Password is required.")]

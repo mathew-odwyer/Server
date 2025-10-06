@@ -25,7 +25,7 @@ internal sealed class PlayerRepository : Repository<Player>, IPlayerRepository
             .ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<Player>?> GetPlayersByUserAccountId(string userAccountId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Player>> GetPlayersByUserAccountId(string userAccountId, CancellationToken cancellationToken)
     {
         return await this.Query()
             .Where(x => x.UserAccountId == userAccountId && !x.IsDeleted)

@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MediatR;
 
+//// TODO: Determine whether this is even required.
+
 /// <summary>
 /// Provides a pipeline behaviour that is used to handle unhandled exceptions.
 /// </summary>
@@ -18,17 +20,10 @@ using MediatR;
 /// <typeparam name="TResponse">
 /// The type of the response.
 /// </typeparam>
-[ExcludeFromCodeCoverage(Justification = "Behaviour")]
+[ExcludeFromCodeCoverage]
 public sealed class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UnhandledExceptionBehaviour{TRequest, TResponse}"/> class.
-    /// </summary>
-    public UnhandledExceptionBehaviour()
-    {
-    }
-
     /// <inheritdoc/>
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
     {
