@@ -60,13 +60,12 @@ public sealed class CreatePlayerRequestHandler : IRequestHandler<CreatePlayerReq
     /// <exception cref="ArgumentNullException">
     /// Thrown when one of the following parameters is <c>null</c>:
     /// <list type="bullet">
-    ///   <item><description>logger</description></item>
-    ///   <item><description>unitOfWorkFactory</description></item>
-    ///   <item><description>playerRepository</description></item>
-    ///   <item><description>userAccountRepository</description></item>
+    ///   <item><description><paramref name="logger"/></description></item>
+    ///   <item><description><paramref name="unitOfWorkFactory"/></description></item>
+    ///   <item><description><paramref name="playerRepository"/></description></item>
+    ///   <item><description><paramref name="userAccountRepository"/></description></item>
     /// </list>
     /// </exception>
-
     public CreatePlayerRequestHandler(
         ILogger<CreatePlayerRequestHandler> logger,
         IUnitOfWorkFactory unitOfWorkFactory,

@@ -12,8 +12,8 @@ using Web.Domain.Entities.Users;
 /// <summary>
 /// Represents a request used to create a new <see cref="Player"/>
 /// </summary>
-/// <seealso cref="MediatR.IRequest" />
-/// <seealso cref="MediatR.IBaseRequest" />
+/// <seealso cref="IRequest" />
+/// <seealso cref="IBaseRequest" />
 /// <param name="UserAccountId">
 /// The user account identifier that matches the <see cref="UserAccount"/> that wishes to create a new <see cref="Player"/>.
 /// </param>

@@ -6,8 +6,14 @@ namespace Web.Application.Requests.Players.GetPlayer;
 
 using FluentValidation;
 
+/// <summary>
+/// Provides validation for a <see cref="GetPlayerRequest"/>.
+/// </summary>
 public sealed class GetPlayerRequestValidator : AbstractValidator<GetPlayerRequest>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GetPlayerRequestValidator"/> class.
+    /// </summary>
     public GetPlayerRequestValidator()
     {
         this.RuleFor(x => x.UserAccountId)

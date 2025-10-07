@@ -14,15 +14,48 @@ using Web.Application.Exceptions;
 using Web.Application.Exceptions.Database;
 using Web.Application.Exceptions.Players;
 using Web.Domain.Entities.Players;
+using Web.Domain.Entities.Users;
 
+/// <summary>
+/// Provides a request handler used to delete an existing <see cref="Player"/> from the current <see cref="UserAccount"/>.
+/// </summary>
 public sealed class DeletePlayerRequestHandler : IRequestHandler<DeletePlayerRequest>
 {
+    /// <summary>
+    /// The logger.
+    /// </summary>
     private readonly ILogger<DeletePlayerRequestHandler> logger;
 
+    /// <summary>
+    /// The player repository, used to fetch the player to be deleted.
+    /// </summary>
     private readonly IPlayerRepository playerRepository;
 
+    /// <summary>
+    /// The unit of work factory.
+    /// </summary>
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeletePlayerRequestHandler"/> class.
+    /// </summary>
+    /// <param name="logger">
+    /// The logger.
+    /// </param>
+    /// <param name="unitOfWorkFactory">
+    /// The unit of work factory.
+    /// </param>
+    /// <param name="playerRepository">
+    /// The player repository, used to fetch the player to be deleted.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when one of the following parameters is <c>null</c>:
+    /// <list type="bullet">
+    ///   <item><description><paramref name="logger"/></description></item>
+    ///   <item><description><paramref name="unitOfWorkFactory"/></description></item>
+    ///   <item><description><paramref name="playerRepository"/></description></item>
+    /// </list>
+    /// </exception>
     public DeletePlayerRequestHandler(
         ILogger<DeletePlayerRequestHandler> logger,
         IUnitOfWorkFactory unitOfWorkFactory,
@@ -33,6 +66,7 @@ public sealed class DeletePlayerRequestHandler : IRequestHandler<DeletePlayerReq
         this.playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
     }
 
+    /// <inheritdoc/>
     public async Task Handle(DeletePlayerRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);

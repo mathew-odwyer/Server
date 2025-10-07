@@ -6,8 +6,14 @@ namespace Web.Application.Requests.Players.DeletePlayer;
 
 using FluentValidation;
 
+/// <summary>
+/// Provides validation for a <see cref="DeletePlayerRequest"/>.
+/// </summary>
 public sealed class DeletePlayerRequestValidator : AbstractValidator<DeletePlayerRequest>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeletePlayerRequestValidator"/> class.
+    /// </summary>
     public DeletePlayerRequestValidator()
     {
         this.RuleFor(x => x.UserAccountId)
