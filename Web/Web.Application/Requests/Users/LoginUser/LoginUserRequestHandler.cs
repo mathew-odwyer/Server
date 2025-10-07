@@ -73,6 +73,17 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
     /// <param name="userSessionTokenRepository">
     /// The user session token repository, used to add a <see cref="UserSessionToken"/> when the login is successful.
     /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when one of the following parameters is <c>null</c>:
+    /// <list type="bullet">
+    ///   <item><description><paramref name="logger"/></description></item>
+    ///   <item><description><paramref name="options"/></description></item>
+    ///   <item><description><paramref name="userAccountService"/></description></item>
+    ///   <item><description><paramref name="userAccountTokenService"/></description></item>
+    ///   <item><description><paramref name="unitOfWorkFactory"/></description></item>
+    ///   <item><description><paramref name="userSessionTokenRepository"/></description></item>
+    /// </list>
+    /// </exception>
     public LoginUserRequestHandler(
         ILogger<LoginUserRequestHandler> logger,
         IOptions<JwtOptions> options,

@@ -6,8 +6,14 @@ namespace Web.Application.Requests.Users.LogoutUser;
 
 using FluentValidation;
 
+/// <summary>
+/// Provides validation for a <see cref="LogoutUserRequest"/>.
+/// </summary>
 public sealed class LogoutUserRequestValidator : AbstractValidator<LogoutUserRequest>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LogoutUserRequestValidator"/> class.
+    /// </summary>
     public LogoutUserRequestValidator()
     {
         this.RuleFor(x => x.UserAccountId)
