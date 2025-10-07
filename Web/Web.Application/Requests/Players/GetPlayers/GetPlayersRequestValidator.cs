@@ -6,6 +6,9 @@ namespace Web.Application.Requests.Players.GetPlayers;
 
 using FluentValidation;
 
+/// <summary>
+/// Provides validation for a <see cref="GetPlayersRequest"/>.
+/// </summary>
 public sealed class GetPlayersRequestValidator : AbstractValidator<GetPlayersRequest>
 {
     public GetPlayersRequestValidator()
