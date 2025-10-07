@@ -4,7 +4,6 @@
 
 namespace Web.Presentation.Controllers.Users;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +16,6 @@ using Web.Application.Requests.Users.RegisterUser;
 /// <summary>
 /// API controller for user account operations, such as registration and login.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public sealed class UserAccountController : ApiControllerBase
 {
     [HttpPost]

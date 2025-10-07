@@ -20,7 +20,7 @@ using Web.Presentation.Middleware.Users;
 /// <summary>
 /// Provides a class that configures services and the HTTP request pipeline.
 /// </summary>
-[ExcludeFromCodeCoverage]
+
 internal sealed class Startup
 {
     /// <summary>

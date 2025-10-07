@@ -4,14 +4,12 @@
 
 namespace Web.Presentation.Controllers.Health;
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 
 /// <summary>
 /// Provides endpoints for health checks of the API.
 /// </summary>
 /// <seealso cref="ApiControllerBase" />
-[ExcludeFromCodeCoverage]
 public sealed class HealthController : ApiControllerBase
 {
     /// <summary>
