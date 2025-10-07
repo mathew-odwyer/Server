@@ -5,7 +5,17 @@
 namespace Web.Application.Requests.Users.LoginUser;
 
 using System.Diagnostics.CodeAnalysis;
+using Web.Domain.Entities.Users;
 
+/// <summary>
+/// Represents a response that contain tokens used to authorized a <see cref="UserAccount"/>.
+/// </summary>
+/// <param name="AccessToken">
+/// The access token used to handle authorization.
+/// </param>
+/// <param name="RefreshToken">
+/// The refresh token used to handle refreshing the access and refresh tokens.
+/// </param>
 [ExcludeFromCodeCoverage]
 public sealed record LoginUserResponse(
     string AccessToken,

@@ -17,20 +17,62 @@ using Web.Application.Options.Security;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
 
+/// <summary>
+/// Provides a request handler used used to authenticate and enforce single-session login for a potential <see cref="UserAccount"/>.
+/// </summary>
 public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, LoginUserResponse>
 {
+    /// <summary>
+    /// The logger.
+    /// </summary>
     private readonly ILogger<LoginUserRequestHandler> logger;
 
+    /// <summary>
+    /// The JWT options used when generating a JSON Web Token.
+    /// </summary>
     private readonly IOptions<JwtOptions> options;
 
+    /// <summary>
+    /// The unit of work factory.
+    /// </summary>
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
+    /// <summary>
+    /// The user account service, used to attempt to login.
+    /// </summary>
     private readonly IUserAccountService userAccountService;
 
+    /// <summary>
+    /// The user account token service, used to generate a <see cref="UserSessionToken"/> and ensure single-session login.
+    /// </summary>
     private readonly IUserAccountTokenService userAccountTokenService;
 
+    /// <summary>
+    /// The user session token repository, used to add a <see cref="UserSessionToken"/> when the login is successful.
+    /// </summary>
     private readonly IUserSessionTokenRepository userSessionTokenRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoginUserRequestHandler"/> class.
+    /// </summary>
+    /// <param name="logger">
+    /// The logger.
+    /// </param>
+    /// <param name="options">
+    /// The JWT options used when generating a JSON Web Token.
+    /// </param>
+    /// <param name="userAccountService">
+    /// The user account service, used to attempt to login.
+    /// </param>
+    /// <param name="userAccountTokenService">
+    /// The user account token service, used to generate a <see cref="UserSessionToken"/> and ensure single-session login.
+    /// </param>
+    /// <param name="unitOfWorkFactory">
+    /// The unit of work factory.
+    /// </param>
+    /// <param name="userSessionTokenRepository">
+    /// The user session token repository, used to add a <see cref="UserSessionToken"/> when the login is successful.
+    /// </param>
     public LoginUserRequestHandler(
         ILogger<LoginUserRequestHandler> logger,
         IOptions<JwtOptions> options,
@@ -47,6 +89,7 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
     }
 
+    /// <inheritdoc/>
     public async Task<LoginUserResponse> Handle(LoginUserRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
