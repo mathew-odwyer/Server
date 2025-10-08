@@ -1,0 +1,25 @@
+// <copyright file="PlayerEntityTypeConfiguration.cs" company="Software Antics">
+//   Copyright (c) Software Antics. All rights reserved.
+// </copyright>
+
+namespace Web.Infrastructure.Mapping.Players;
+
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Web.Domain.Entities.Players;
+
+internal sealed class PlayerEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<Player>
+{
+    public override void Configure(EntityTypeBuilder<Player> builder)
+    {
+        builder
+            .HasIndex(p => p.Name)
+            .IsUnique();
+
+        builder
+            .Property(p => p.Name)
+            .IsRequired()
+            .HasMaxLength(12);
+
+        base.Configure(builder);
+    }
+}

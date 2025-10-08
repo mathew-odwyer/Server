@@ -1,0 +1,445 @@
+{
+	"info": {
+		"_postman_id": "b34b5b91-74bd-4363-bdd6-5520f51b085b",
+		"name": "Mantanimus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46660260",
+		"_collection_link": "https://mathew-1006931.postman.co/workspace/Mathew's-Workspace~fcbe9946-cf4c-4ba7-8b05-d158de554783/collection/46660260-b34b5b91-74bd-4363-bdd6-5520f51b085b?action=share&source=collection_link&creator=46660260"
+	},
+	"item": [
+		{
+			"name": "UserAccount",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"tdkr80\",\r\n    \"password\": \"aaafewAafewafewa!a1@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/UserAccount/Login",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"UserAccount",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"tdkr80\",\r\n    \"emailAddress\": \"mathew.odwrfyer@outlook.com\",\r\n    \"password\": \"aaafewAafewafewa!a1@\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/UserAccount/Register",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"UserAccount",
+								"Register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": \"yUBdInPwrtQ0RcYElDFKAgOEMrIrUMzr5fBZe00/FIQ=\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/UserAccount/RefreshToken",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"UserAccount",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/UserAccount/Logout",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"UserAccount",
+								"Logout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Username\": \"tdkr80\",\r\n    \"Email\": \"mathew.odwyer@mantanimus.com.au\"\r\n}"
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/Health/Get",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"Health",
+								"Get"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Players",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"tdkr50\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/Player/Create",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"Player",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/Player/Get?name=tdkr50",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"Player",
+								"Get"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "tdkr50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/Player/GetAll",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"Player",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"tdkr50\",\r\n    \"x\": 120,\r\n    \"y\": 130\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/Player/Update",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"Player",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"tdkr50\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gateway.mantanimus.com.au/api/Player/Delete",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"mantanimus",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"Player",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "AccessToken",
+			"value": ""
+		}
+	]
+}

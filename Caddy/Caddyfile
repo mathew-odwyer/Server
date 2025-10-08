@@ -1,0 +1,8 @@
+http://localhost {
+    respond "OK"
+}
+
+https://gateway.mantanimus.com.au {
+    tls internal
+    reverse_proxy web:8080
+}
