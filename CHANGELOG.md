@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Web API Backend [#1] by [@mathew-odwyer]
 
-[Unreleased]: https://github.com/softwareantics/Server/compare/HEAD
-[#1]: https://github.com/softwareantics/Server/pull/1
+[Unreleased]: https://github.com/mathew-odwyer/Server/compare/HEAD
+[#1]: https://github.com/mathew-odwyer/Server/pull/1
 
 [@mathew-odwyer]: https://github.com/mathew-odwyer
