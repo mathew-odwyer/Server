@@ -11,6 +11,9 @@ using FluentValidation;
 /// </summary>
 public sealed class GetPlayersRequestValidator : AbstractValidator<GetPlayersRequest>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GetPlayersRequestValidator"/> class.
+    /// </summary>
     public GetPlayersRequestValidator()
     {
         this.RuleFor(x => x.UserAccountId)

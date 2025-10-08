@@ -7,16 +7,8 @@ namespace Web.Application.Validators.Users;
 using System.Linq;
 using FluentValidation;
 
-//// TODO: Unit Tests
-
-/// <summary>
-/// Provides an implementation of <see cref="AbstractValidator{T}"/> that validates password strength.
-/// </summary>
 internal sealed class PasswordValidator : AbstractValidator<string>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PasswordValidator"/> class.
-    /// </summary>
     internal PasswordValidator()
     {
         this.RuleFor(x => x)

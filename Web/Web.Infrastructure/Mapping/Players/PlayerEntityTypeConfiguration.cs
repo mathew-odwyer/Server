@@ -7,12 +7,8 @@ namespace Web.Infrastructure.Mapping.Players;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.Domain.Entities.Players;
 
-/// <summary>
-/// Configures the <see cref="Player"/> entity.
-/// </summary>
 internal sealed class PlayerEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<Player>
 {
-    /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<Player> builder)
     {
         builder

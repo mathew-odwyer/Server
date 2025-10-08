@@ -36,18 +36,6 @@ public sealed class ConflictException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="ConflictException"/> class.
     /// </summary>
-    /// <param name="errors">
-    /// The errors that caused the exception.
-    /// </param>
-    public ConflictException(IDictionary<string, string> errors)
-       : base("One or more conflicts occurred.")
-    {
-        this.Errors = errors;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ConflictException"/> class.
-    /// </summary>
     /// <param name="message">
     /// The error message that explains the reason for the exception.
     /// </param>
@@ -58,12 +46,4 @@ public sealed class ConflictException : Exception
         : base(message, innerException)
     {
     }
-
-    /// <summary>
-    /// Gets the errors that caused this <see cref="ConflictException"/>.
-    /// </summary>
-    /// <value>
-    /// The errors that caused this <see cref="ConflictException"/>.
-    /// </value>
-    public IDictionary<string, string>? Errors { get; }
 }

@@ -8,13 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Web.Application.Exceptions;
 
-/// <summary>
-/// A filter attribute that handles validation exceptions by returning a 400 Bad Request response with validation details.
-/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
 internal sealed class ValidationExceptionFilterAttribute : ExceptionFilterAttribute
 {
-    /// <inheritdoc/>
     public override void OnException(ExceptionContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

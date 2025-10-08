@@ -7,13 +7,8 @@ namespace Web.Presentation.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-/// <summary>
-/// A filter attribute that handles invalid model state by returning a 400 Bad Request response with validation details.
-/// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
 internal sealed class InvalidModelStateExceptionFilterAttribute : ExceptionFilterAttribute
 {
-    /// <inheritdoc/>
     public override void OnException(ExceptionContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

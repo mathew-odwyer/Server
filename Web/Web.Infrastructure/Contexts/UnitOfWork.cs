@@ -5,7 +5,6 @@
 namespace Web.Infrastructure.Contexts;
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Web.Application.Contexts;

@@ -6,17 +6,8 @@ namespace Web.Presentation;
 
 using Web.Infrastructure;
 
-/// <summary>
-/// The Web API application.
-/// </summary>
 internal static class Program
 {
-    /// <summary>
-    /// Defines the entry point of the application.
-    /// </summary>
-    /// <param name="args">
-    /// The arguments.
-    /// </param>
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +16,7 @@ internal static class Program
         startup.ConfigureServices(builder.Services);
 
         var application = builder.Build();
-        startup.Configure(application, builder.Environment);
+        Startup.Configure(application, builder.Environment);
 
         using (var scope = application.Services.CreateScope())
         {

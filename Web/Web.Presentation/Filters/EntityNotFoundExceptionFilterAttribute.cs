@@ -8,13 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Web.Application.Exceptions;
 
-/// <summary>
-/// A filter attribute that handles not found exceptions by returning a 404 Not Found response with details.
-/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
 internal sealed class EntityNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
 {
-    /// <inheritdoc/>
     public override void OnException(ExceptionContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

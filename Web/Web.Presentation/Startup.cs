@@ -4,7 +4,6 @@
 
 namespace Web.Presentation;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,47 +16,16 @@ using Web.Infrastructure.Extensions;
 using Web.Presentation.Filters;
 using Web.Presentation.Middleware.Users;
 
-/// <summary>
-/// Provides a class that configures services and the HTTP request pipeline.
-/// </summary>
-
 internal sealed class Startup
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Startup"/> class.
-    /// </summary>
-    /// <param name="configuration">
-    /// Specififes an <see cref="IConfiguration"/> that represents the application configuration.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="configuration"/> is null.
-    /// </exception>
     public Startup(IConfiguration configuration)
     {
         this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    /// <summary>
-    /// Gets the configuration.
-    /// </summary>
-    /// <value>
-    /// The configuration.
-    /// </value>
     public IConfiguration Configuration { get; }
 
-    /// <summary>
-    /// Configures the HTTP request pipeline.
-    /// </summary>
-    /// <param name="application">
-    /// The application builder.
-    /// </param>
-    /// <param name="environment">
-    /// The web host environment.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="application"/> or <paramref name="environment"/> is null.
-    /// </exception>
-    public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
+    public static void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
     {
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
@@ -95,15 +63,6 @@ internal sealed class Startup
         });
     }
 
-    /// <summary>
-    /// Configures services for the application.
-    /// </summary>
-    /// <param name="services">
-    /// The service collection.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="services"/> is null.
-    /// </exception>
     public void ConfigureServices(IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);

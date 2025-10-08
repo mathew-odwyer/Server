@@ -30,24 +30,7 @@ internal sealed class ConflictExceptionFilterAttribute : ExceptionFilterAttribut
                 Status = StatusCodes.Status409Conflict,
             };
 
-            if (exception.Errors is not null)
-            {
-                // Extend ProblemDetails with a custom field
-                context.HttpContext.Items["errors"] = exception.Errors;
-            }
-
-            context.Result = new ObjectResult(new
-            {
-                type = details.Type,
-                title = details.Title,
-                status = details.Status,
-                detail = details.Detail,
-                errors = exception.Errors,
-            })
-            {
-                StatusCode = StatusCodes.Status409Conflict
-            };
-
+            context.Result = new ConflictObjectResult(details);
             context.ExceptionHandled = true;
         }
     }

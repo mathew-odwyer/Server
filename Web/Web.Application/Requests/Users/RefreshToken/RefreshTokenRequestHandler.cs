@@ -16,20 +16,73 @@ using Web.Application.Options.Security;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
 
+/// <summary>
+/// Provides a request handler used used to refresh the JSON Web Token for the current <see cref="UserAccount"/>.
+/// </summary>
 public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, RefreshTokenResponse>
 {
+    /// <summary>
+    /// The logger.
+    /// </summary>
     private readonly ILogger<RefreshTokenRequestHandler> logger;
 
+    /// <summary>
+    /// The options, used when refreshing the JSON Web Token.
+    /// </summary>
     private readonly IOptions<JwtOptions> options;
 
+    /// <summary>
+    /// The unit of work factory.
+    /// </summary>
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
+    /// <summary>
+    /// The user account repository, used to fetch the current <see cref="UserAccount"/>.
+    /// </summary>
     private readonly IUserAccountRepository userAccountRepository;
 
+    /// <summary>
+    /// The user account token service, used to generate a new JSON Web Token.
+    /// </summary>
     private readonly IUserAccountTokenService userAccountTokenService;
 
+    /// <summary>
+    /// The user session token repository, used to store the currently active session for the <see cref="UserAccount"/>.
+    /// </summary>
     private readonly IUserSessionTokenRepository userSessionTokenRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RefreshTokenRequestHandler"/> class.
+    /// </summary>
+    /// <param name="logger">
+    /// The logger.
+    /// </param>
+    /// <param name="options">
+    /// The options, used when refreshing the JSON Web Token.
+    /// </param>
+    /// <param name="userAccountTokenService">
+    /// The user account token service, used to generate a new JSON Web Token.
+    /// </param>
+    /// <param name="unitOfWorkFactory">
+    /// The unit of work factory.
+    /// </param>
+    /// <param name="userAccountRepository">
+    /// The user account repository, used to fetch the current <see cref="UserAccount"/>.
+    /// </param>
+    /// <param name="userSessionTokenRepository">
+    /// The user session token repository, used to store the currently active session for the <see cref="UserAccount"/>.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when one of the following parameters is <c>null</c>:
+    /// <list type="bullet">
+    ///   <item><description><paramref name="logger"/></description></item>
+    ///   <item><description><paramref name="options"/></description></item>
+    ///   <item><description><paramref name="userAccountTokenService"/></description></item>
+    ///   <item><description><paramref name="unitOfWorkFactory"/></description></item>
+    ///   <item><description><paramref name="userAccountRepository"/></description></item>
+    ///   <item><description><paramref name="userSessionTokenRepository"/></description></item>
+    /// </list>
+    /// </exception>
     public RefreshTokenRequestHandler(
         ILogger<RefreshTokenRequestHandler> logger,
         IOptions<JwtOptions> options,
@@ -46,6 +99,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
     }
 
+    /// <inheritdoc/>
     public async Task<RefreshTokenResponse> Handle(RefreshTokenRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);

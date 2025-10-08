@@ -11,7 +11,6 @@ using Web.Application.Exceptions;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
 internal sealed class UnauthorizedExceptionFilterAttribute : ExceptionFilterAttribute
 {
-    /// <inheritdoc/>
     public override void OnException(ExceptionContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

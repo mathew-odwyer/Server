@@ -6,16 +6,8 @@ namespace Web.Application.Validators.Users;
 
 using FluentValidation;
 
-//// TODO: Unit Tests
-
-/// <summary>
-/// Provides an implementation of <see cref="AbstractValidator{T}"/> that validates username strength and format.
-/// </summary>
 internal sealed class UsernameValidator : AbstractValidator<string>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UsernameValidator"/> class.
-    /// </summary>
     internal UsernameValidator()
     {
         this.RuleFor(x => x)

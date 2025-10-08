@@ -11,39 +11,14 @@ using Web.Application.Exceptions;
 using Web.Application.Services.Users;
 using Web.Domain.Entities.Users;
 
-/// <summary>
-/// Provides an implementation of <see cref="IUserAccountService"/> for managing user accounts using ASP.NET Core Identity.
-/// </summary>
 internal sealed class UserAccountService : IUserAccountService
 {
-    /// <summary>
-    /// The logger used for recording events and errors.
-    /// </summary>
     private readonly ILogger<UserAccountService> logger;
 
-    /// <summary>
-    /// The ASP.NET Core Identity sign-in manager for handling user logins.
-    /// </summary>
     private readonly SignInManager<UserAccount> signInManager;
 
-    /// <summary>
-    /// The ASP.NET Core Identity user manager for handling user persistence and validation.
-    /// </summary>
     private readonly UserManager<UserAccount> userManager;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserAccountService"/> class.
-    /// </summary>
-    /// <param name="logger">
-    /// The logger used for recording events and errors.
-    /// </param>
-    /// <param name="userManager">
-    /// The ASP.NET Core Identity user manager for handling user persistence and validation.
-    /// </param>
-    /// <param name="signInManager"></param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="logger"/> or <paramref name="userManager"/> is <c>null</c>.
-    /// </exception>
     public UserAccountService(
         ILogger<UserAccountService> logger,
         UserManager<UserAccount> userManager,
@@ -81,7 +56,6 @@ internal sealed class UserAccountService : IUserAccountService
         return userAccount;
     }
 
-    /// <inheritdoc/>
     public async Task<UserAccount> RegisterUserAsync(string emailAddress, string username, string password)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(emailAddress);
@@ -104,7 +78,7 @@ internal sealed class UserAccountService : IUserAccountService
             string errors = string.Join("\n", result.Errors.Select(x => x.Description));
 
             this.logger.LogWarning("Failed to register user with username: '{Username}': {Error}", username, errors);
-            throw new ConflictException(result.Errors.ToDictionary(x => x.Code, x => x.Description));
+            throw new ConflictException(errors);
         }
 
         this.logger.LogInformation("Successfully registered user with username: '{Username}'", username);

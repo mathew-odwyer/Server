@@ -6,7 +6,19 @@ namespace Web.Application.Requests.Users.RefreshToken;
 
 using System.Diagnostics.CodeAnalysis;
 using MediatR;
+using Web.Domain.Entities.Users;
 
+/// <summary>
+/// Represents a request used to refresh a JSON Web Token for an existing <see cref="UserAccount"/>.
+/// </summary>
+/// <seealso cref="IRequest{LoginUserResponse}" />
+/// <seealso cref="IBaseRequest" />
+/// <param name="UserAccountId">
+/// The user account identifier associated with the <see cref="UserAccount"/> that wishes to refresh their tokens.
+/// </param>
+/// <param name="RefreshToken">
+/// The refresh token used to refresh the JSON Web Token for the <see cref="UserAccount"/>.
+/// </param>
 [ExcludeFromCodeCoverage]
 public sealed record RefreshTokenRequest(
     string UserAccountId,
