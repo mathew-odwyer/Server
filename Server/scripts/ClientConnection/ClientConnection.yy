@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ClientConnection",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ClientConnection",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Packages/GMJsonRPC/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

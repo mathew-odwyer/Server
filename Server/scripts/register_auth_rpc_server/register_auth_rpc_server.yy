@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"register_auth_rpc_server",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"register_auth_rpc_server",
+  "parent":{
+    "name":"Auth",
+    "path":"folders/Scripts/Networking/Auth.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"register_health_rpc_server",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"register_health_rpc_server",
+  "parent":{
+    "name":"Health",
+    "path":"folders/Scripts/Networking/Health.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

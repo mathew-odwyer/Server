@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"RpcException",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"RpcException",
+  "parent":{
+    "name":"Exceptions",
+    "path":"folders/Packages/GMJsonRPC/Scripts/Exceptions.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
