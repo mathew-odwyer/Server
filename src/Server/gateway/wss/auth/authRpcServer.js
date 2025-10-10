@@ -7,6 +7,7 @@ import { UserAccountClient } from '../../../common/clients/index.js';
  */
 async function handleLoginRequest(params)
 {
+    console.debug(`Authenticating potential user: '${params.username}'...`);
     return await UserAccountClient.Login(params);
 }
 
@@ -17,6 +18,7 @@ async function handleLoginRequest(params)
  */
 async function handleRegisterRequest(params)
 {
+    console.debug(`Registering potential user: '${params.username}'...`);
     return await UserAccountClient.Register(params);
 }
 

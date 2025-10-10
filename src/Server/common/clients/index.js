@@ -11,11 +11,52 @@ const api = axios.create({
   },
 });
 
+function problemDetailsToJsonRpc(response)
+{
+    const status = response?.status ?? 500;
+    const body = response?.data ?? {};
+
+    return {
+        code: status,
+        message: body.title || 'Unknown Error',
+        data: {
+            detail: body.detail,
+            errors: body.errors ?? undefined,
+        },
+    };
+}
+
+api.interceptors.response.use(
+    response => response.data || undefined,
+    error => {
+        if (!error?.isAxiosError)
+        {
+            // Don't return unknown errors so we don't leak sensitive information.
+            console.error('An unexpected error occurred in HTTP client:', error && error.stack ? error.stack : error);
+            return Promise.reject({ code: -32603, message: 'An unexpected error occurred.' });
+        }
+
+        // Network/no response (timeout, DNS, etc.)
+        if (!error.response)
+        {
+            console.error('HTTP request failed with no response (network error):', error.message || error);
+
+            return Promise.reject({
+                code: -32603,
+                message: 'Network error while calling upstream service.',
+            });
+        }
+
+        return Promise.reject(problemDetailsToJsonRpc(error.response));
+    },
+)
+
 /**
  * @typedef {import('axios').AxiosResponse} AxiosResponse
  */
 
 /**
+ * @exports
  * @description Represents a login request data transfer object.
  * @typedef {Object} LoginUserRequestDto
  * @property {String} username - The username.
@@ -23,6 +64,7 @@ const api = axios.create({
  */
 
 /**
+ * @exports
  * @description Represents a login request data transfer object.
  * @typedef {Object} LoginUserResponseDto
  * @property {String} accessToken - The access token.
@@ -30,6 +72,7 @@ const api = axios.create({
  */
 
 /**
+ * @exports
  * @description Represents a login request data transfer object.
  * @typedef {Object} RegisterUserRequestDto
  * @property {String} username - The username.
@@ -80,6 +123,6 @@ export class UserAccountClient
      */
     static Register(dto)
     {
-        return api.post(this._loginUrl, dto);
+        return api.post(this._registerUrl, dto);
     }
 }
