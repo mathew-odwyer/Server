@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* JSON-RPC 2.0 Protocol Integration by [@mathew-odwyer]
 * Web API Backend [#1] by [@mathew-odwyer]
 
 [Unreleased]: https://github.com/mathew-odwyer/Server/compare/HEAD
