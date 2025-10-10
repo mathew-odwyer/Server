@@ -110,6 +110,7 @@ function Client(type) constructor
 			if (is_undefined(request))
 			{
 				show_debug_message($"Error: Failed to locate request handler for ID: '{rpc_id}'");
+				return;
 			}
 			
 			ds_map_delete(_request_to_handler_map, rpc_id);

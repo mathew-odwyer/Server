@@ -78,7 +78,7 @@ internal sealed class UserAccountService : IUserAccountService
             string errors = string.Join("\n", result.Errors.Select(x => x.Description));
 
             this.logger.LogWarning("Failed to register user with username: '{Username}': {Error}", username, errors);
-            throw new ConflictException(errors);
+            throw new BadRequestException(errors);
         }
 
         this.logger.LogInformation("Successfully registered user with username: '{Username}'", username);

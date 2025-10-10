@@ -12,5 +12,5 @@
 /// @description The server.
 _server = new Server(network_socket_tcp, server_port, server_max_clients);
 
-register_health_rpc_server(_server);
-register_auth_rpc_server(_server);
+_server.register_handler("health.ping", rpc_handle_health_ping_request);
+_server.register_handler("health.heartbeat", rpc_handle_health_heartbeat_request);

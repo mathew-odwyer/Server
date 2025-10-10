@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"rpc_handle_health_heartbeat_request",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rpc_handle_health_heartbeat_request",
+  "parent":{
+    "name":"Health",
+    "path":"folders/Scripts/Networking/TCP/Health.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

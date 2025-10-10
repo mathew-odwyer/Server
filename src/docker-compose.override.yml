@@ -3,6 +3,10 @@ services:
     volumes:
       - "${APPDATA}/Caddy/certificate:/data/caddy/pki/authorities/local/"
 
+  web:
+    ports:
+      - "8080:8080"
+
   database:
     ports:
         - "1433:1433"

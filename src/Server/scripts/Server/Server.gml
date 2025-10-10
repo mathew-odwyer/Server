@@ -131,7 +131,7 @@ function Server(type, port, max_clients) constructor
 		{
 			var result = method(self, handler)(params, connection, rpc_id);
 			
-			if (is_request)
+			if (is_request && !is_undefined(result))
 			{
 				connection.send_result(rpc_id, result);
 			}

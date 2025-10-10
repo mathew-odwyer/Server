@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureGroup>
+  <texture scale="1" mipsToGenerate="0" texwidth="256" texheight="256">default_0.bz2</texture>
+  <tpe x="0" y="0" tpage="default_0.bz2">fnt_main_Server_fnt_main.tpe</tpe>
+</TextureGroup>

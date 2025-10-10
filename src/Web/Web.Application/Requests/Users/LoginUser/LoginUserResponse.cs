@@ -5,6 +5,7 @@
 namespace Web.Application.Requests.Users.LoginUser;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using Web.Domain.Entities.Users;
 
 /// <summary>
@@ -18,5 +19,7 @@ using Web.Domain.Entities.Users;
 /// </param>
 [ExcludeFromCodeCoverage]
 public sealed record LoginUserResponse(
+    [property: JsonPropertyName("access_token")]
     string AccessToken,
+    [property: JsonPropertyName("refresh_token")]
     string RefreshToken);
