@@ -4,5 +4,5 @@ http://localhost {
 
 https://gateway.mantanimus.com.au {
     tls internal
-    reverse_proxy web:8080
+    reverse_proxy gateway:8080
 }
