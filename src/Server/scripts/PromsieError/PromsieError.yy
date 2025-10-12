@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"PromsieError",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PromsieError",
+  "parent":{
+    "name":"Promises",
+    "path":"folders/Extensions/GMCore/Scripts/Errors/Promises.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

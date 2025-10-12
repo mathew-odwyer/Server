@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Error",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Error",
+  "parent":{
+    "name":"Errors",
+    "path":"folders/Extensions/GMCore/Scripts/Errors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

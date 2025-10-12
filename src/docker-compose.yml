@@ -64,26 +64,6 @@ services:
       start_period: 5s
       timeout: 5s
 
-  gateway:
-    container_name: gateway
-    image: mantanimus-gateway
-    build:
-      context: ./Server
-      dockerfile: ./gateway/Dockerfile
-    expose:
-      - "8080:8080"
-    depends_on:
-      web:
-        condition: service_healthy
-    networks:
-      - network
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
-      interval: 5s
-      retries: 5
-      start_period: 5s
-      timeout: 5s
-
 networks:
   network:
     driver: bridge
