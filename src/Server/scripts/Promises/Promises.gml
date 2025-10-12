@@ -46,10 +46,11 @@ function Promise() constructor
             try
             {
                 var result = callback(_value);
-
-				// If the result is another promise, chain it.
+				
+				/// @feather disable GM1041
                 if (is_instanceof(result, Promise))
                 {
+					// If the result is another promise, chain it.
                     result
                         .next(method({promise}, function(value)
 						{
@@ -109,10 +110,9 @@ function Promise() constructor
             {
                 var result = callback(_value);
 
-				/// @feather disable GM1041
+				// If the result is another promise, chain it.
                 if (is_instanceof(result, Promise))
                 {
-					// If the result is another promise, chain it.
                     result
                         .next(method({promise}, function(value)
 						{
