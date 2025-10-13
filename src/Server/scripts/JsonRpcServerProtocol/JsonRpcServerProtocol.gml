@@ -2,10 +2,6 @@
 /// @param {Struct.Server} server The server instance to provide JSON-RPC 2.0 protocol.
 function JsonRpcServerProtocol(server) constructor
 {
-	/// @type {Struct.Logger}
-	/// @description The logger.
-	static _logger = new Logger(nameof(JsonRpcServerProtocol));
-	
 	/// @type {Struct.Server}
 	/// @description The server instance.
 	_server = server;
@@ -19,7 +15,7 @@ function JsonRpcServerProtocol(server) constructor
 	/// @param {Function} callback The function to execute when the method is received.
 	register = function(procedure, callback)
 	{
-		_logger.log(log_type.debug, $"Registering JSON-RPC 2.0 Request Handler for '{procedure}'...");
+		Logger.Log(log_type.information, $"Registering JSON-RPC 2.0 Request Handler for '{procedure}'...");
 		_request_to_handler_map[? procedure] = callback;
 	}
 	
@@ -163,7 +159,7 @@ function JsonRpcServerProtocol(server) constructor
 						.fail(method({notify, broadcast, connection, rpc_id}, function(error) {
 							if (!is_instanceof(error, RpcError))
 							{
-								_logger.log(log_type.error, $"Internal server error: {error}");
+								Logger.Log(log_type.error, $"[ERROR] Internal Server Error: {error}");
 					
 								connection.send({
 									jsonrpc: "2.0",
@@ -182,8 +178,10 @@ function JsonRpcServerProtocol(server) constructor
 								id: rpc_id,
 								error: {
 									code: -32000,
-									message: instanceof(error),
-									data: error,
+									message: error.message,
+									data: {
+										ex: error,
+									},
 								},
 							});
 						}));
@@ -196,7 +194,7 @@ function JsonRpcServerProtocol(server) constructor
 			{
 				if (!is_instanceof(ex, RpcError))
 				{
-					_logger.log(log_type.error, $"Internal server error: {ex.message}");
+					Logger.Log(log_type.error, $"[ERROR] Internal Server Error: {ex}");
 					
 					connection.send({
 						jsonrpc: "2.0",
@@ -215,8 +213,10 @@ function JsonRpcServerProtocol(server) constructor
 					id: rpc_id,
 					error: {
 						code: -32000,
-						message: instanceof(ex),
-						data: ex,
+						message: ex.message,
+						data: {
+							ex: ex,
+						},
 					},
 				});
 			}

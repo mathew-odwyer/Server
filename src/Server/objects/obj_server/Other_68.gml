@@ -5,6 +5,7 @@ var type = async_load[? "type"];
 switch (type)
 {
 	case network_type_connect:
+	case network_type_non_blocking_connect:
 		var connection = _server.add_connection(async_load[? "socket"]);
 		break;
 	

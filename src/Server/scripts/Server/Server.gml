@@ -3,13 +3,9 @@
 /// @param {Real} max_clients The maximum number of client connections.
 function Server(port, max_clients) constructor
 {
-	/// @type {Struct.Logger}
-	/// @description The logger.
-	_logger = new Logger(nameof(Server));
-	
 	/// @type {Id.Socket}
 	/// @description The underlying server socket.
-	_server = network_create_server(network_socket_tcp, port, max_clients);
+	_server = network_create_server(network_socket_ws, port, max_clients);
 
 	/// @type {Id.DsMap<Real, Struct.ClientConnection>}
 	/// @description The socket identifier to client connection map. 
@@ -20,7 +16,7 @@ function Server(port, max_clients) constructor
 		throw new SocketError("Failed to create network server socket.");
 	}
 	
-	_logger.log(log_type.information, $"Server listening on port: '{port}'");
+	Logger.Log(log_type.information, $"Server listening on port: '{port}'");
 	
 	/// @description Adds a new client connection to the server.
 	/// @param {Id.Socket} socket The socket identifier used to create the client connection.
@@ -30,7 +26,7 @@ function Server(port, max_clients) constructor
 		var connection = new ClientConnection(socket);
 		ds_map_add(_socket_to_connection_map, socket, connection);
 		
-		_logger.log(log_type.debug, $"Socket connected with ID: '{socket}'!");
+		Logger.Log(log_type.debug, $"Socket connected with ID: '{socket}'!");
 		
 		return connection;
 	}
@@ -46,7 +42,7 @@ function Server(port, max_clients) constructor
 			connection.disconnect();
 			ds_map_delete(_socket_to_connection_map, socket);
 			
-			_logger.log(log_type.debug, $"Socket disconnected with ID: '{socket}'");
+			Logger.Log(log_type.debug, $"Socket disconnected with ID: '{socket}'");
 		}
 	}
 	
@@ -64,7 +60,7 @@ function Server(port, max_clients) constructor
 	{
 		var connections = ds_map_values_to_array(_socket_to_connection_map);
 		
-		_logger.log(log_type.trace, $"Broadcasting message: '{message}'");
+		Logger.Log(log_type.trace, $"Broadcasting message: '{message}'");
 		
 		for (var i = 0; i < array_length(connections); i++)
 		{

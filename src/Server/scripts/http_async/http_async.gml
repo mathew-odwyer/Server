@@ -34,10 +34,6 @@ function http_async(url, type, body = {}, options = undefined)
 /// @description Provides functionality for registering and invoking HTTP body parsers based on `Content-Type` values.
 function HttpBodyParser() constructor
 {
-	/// @type {Struct.Logger}
-	/// @description The logger.
-	static _logger = new Logger(nameof(HttpBodyParser));
-	
 	/// @type {DsMap<String, Function>}
 	/// @description The content type to parser function map.
 	static _type_to_parser_map = ds_map_create();
@@ -69,7 +65,7 @@ function HttpBodyParser() constructor
 		
 		if (!Has(type))
 		{
-			_logger.log(log_type.warning, $"Failed to parse content for type: '{content_type}'");
+			Logger.Log(log_type.warning, $"Failed to parse content for type: '{content_type}'");
 			return {};
 		}
 		

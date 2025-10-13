@@ -1,10 +1,6 @@
 /// @description Represents the eventual completion (or failure) of an asynchronous operation and its resulting value.
 function Promise() constructor
 {
-	/// @type {Struct.Logger}
-	/// @description The logger.
-	static _logger = new Logger(nameof(Promise));
-	
 	/// @type {String}
 	/// @description The current state of the promise.
     _state = "pending";
@@ -47,7 +43,12 @@ function Promise() constructor
             {
                 var result = callback(_value);
 				
-				/// @feather disable GM1041
+				if (is_undefined(result))
+				{
+					promise.resolve(undefined);
+				}
+				
+				/// @feather ignore GM1041
                 if (is_instanceof(result, Promise))
                 {
 					// If the result is another promise, chain it.
@@ -92,7 +93,7 @@ function Promise() constructor
 		
 		if (length == 0)
 		{
-			_logger.log(log_type.warning, $"Unhandled Rejection: '{_value}'");
+			Logger.Log(log_type.warning, $"Unhandled Rejection: '{_value}'");
 			
 			if (debug_mode)
 			{
@@ -111,6 +112,7 @@ function Promise() constructor
                 var result = callback(_value);
 
 				// If the result is another promise, chain it.
+				/// @feather ignore GM1041
                 if (is_instanceof(result, Promise))
                 {
                     result

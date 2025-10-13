@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Promises",
+  "%Name":"http_parse_error",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Promises",
+  "name":"http_parse_error",
   "parent":{
-    "name":"Promises",
-    "path":"folders/Extensions/GMCore/Scripts/Promises.yy",
+    "name":"Errors",
+    "path":"folders/Scripts/Network/HTTP/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

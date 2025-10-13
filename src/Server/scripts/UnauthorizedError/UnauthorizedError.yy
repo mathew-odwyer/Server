@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"UnauthorizedError",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"UnauthorizedError",
+  "parent":{
+    "name":"Requests",
+    "path":"folders/Scripts/Errors/Requests.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

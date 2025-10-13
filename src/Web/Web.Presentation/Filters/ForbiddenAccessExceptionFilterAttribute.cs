@@ -27,6 +27,7 @@ internal sealed class ForbiddenAccessExceptionFilterAttribute : ExceptionFilterA
                 Status = StatusCodes.Status403Forbidden,
                 Title = "Forbidden",
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                Detail = "Access is forbidden",
             };
 
             context.Result = new ObjectResult(details);

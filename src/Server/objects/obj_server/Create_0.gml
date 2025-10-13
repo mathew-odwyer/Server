@@ -2,7 +2,7 @@
 
 /// @type {String}
 /// @description The Web API URL.
-#macro api_url "https://gateway.mantanimus.com.au"
+#macro api_url "http://web:8080"
 
 /// @type {Real}
 /// @description The server port number.
