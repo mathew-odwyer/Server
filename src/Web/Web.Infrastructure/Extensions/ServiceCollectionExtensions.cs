@@ -34,16 +34,20 @@ public static class ServiceCollectionExtensions
     /// <param name="configuration">
     /// Specifies an <see cref="IConfiguration"/> that represents the service used to retrieve configuration settings.
     /// </param>
+    /// <param name="connectionName">
+    /// The name of the connection string to be used for the database context.
+    /// </param>
     /// <returns>
     /// Returns the updated <see cref="IServiceCollection"/> with infrastructure services added.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="services"/> or <paramref name="configuration"/> parameters are <c>null</c>.
+    /// Thrown when <paramref name="services"/>, <paramref name="configuration"/> or <paramref name="connectionName"/> parameters are <c>null</c>.
     /// </exception>
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, string connectionName = "Docker")
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionName);
 
         services
             .AddIdentityApiEndpoints<UserAccount>()
@@ -57,7 +61,7 @@ public static class ServiceCollectionExtensions
         });
 
         services
-            .AddDbContext<DbContext, DatabaseContext>(x => x.UseSqlServer(configuration.GetConnectionString("Default"), o =>
+            .AddDbContext<DbContext, DatabaseContext>(x => x.UseSqlServer(configuration.GetConnectionString(connectionName), o =>
             {
                 o.EnableRetryOnFailure(
                     maxRetryCount: 5,

@@ -79,7 +79,6 @@ internal sealed class Startup
             x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
             x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
             x.Filters.Add<ConflictExceptionFilterAttribute>();
-            x.Filters.Add<BadRequestExceptionFilterAttribute>();
             x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
         });
 
@@ -113,6 +112,6 @@ internal sealed class Startup
         services.AddFluentValidationAutoValidation();
 
         services.AddApplicationServices(this.Configuration);
-        services.AddInfrastructureServices(this.Configuration);
+        services.AddInfrastructureServices(this.Configuration, "Local");
     }
 }

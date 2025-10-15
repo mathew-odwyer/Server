@@ -24,6 +24,7 @@ internal sealed class ValidationExceptionFilterAttribute : ExceptionFilterAttrib
         {
             var details = new ValidationProblemDetails(exception.Errors ?? new Dictionary<string, string[]>())
             {
+                Title = "Validation Error",
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                 Status = StatusCodes.Status400BadRequest,
             };

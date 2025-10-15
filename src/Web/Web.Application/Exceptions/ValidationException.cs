@@ -22,6 +22,17 @@ public sealed class ValidationException : Exception
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="ValidationException"/> class.
+    /// </summary>
+    /// <param name="errors">
+    /// The errors.
+    /// </param>
+    public ValidationException(IDictionary<string, string[]>? errors)
+    {
+        this.Errors = errors;
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ValidationException"/> class with a specified collection of validation failures.
     /// </summary>
     /// <param name="failures">

@@ -14,20 +14,18 @@ if (is_undefined(context))
 }
 
 var promise = context.promise;
-var options = context.options;
 var data = {};
 
-try
+if (is_string(result) && !string_empty(result))
 {
-	if (!is_undefined(result))
+	try
 	{
 		data = json_parse(result);
 	}
-}
-catch (ex)
-{
-	promise.reject(new HttpError("Invalid JSON Response"));
-	return;
+	catch (ex)
+	{
+		throw new HttpError($"Failed to parse incoming response for result: '{result}'");
+	}
 }
 
 if (status == 0 && http_status >= 200 && http_status <= 299)
@@ -35,19 +33,26 @@ if (status == 0 && http_status >= 200 && http_status <= 299)
 	promise.resolve({
 		status: http_status,
 		data: data,
-		options,
 	});
 }
 else
 {
 	if (status < 0 && http_status >= 200 && http_status <= 299)
 	{
-		http_status = 503;
+		http_status = 500;
+		
+		data = {
+			title: "Internal Server Error",
+			detail: "An unexpected error occurred. Please try again later.",
+			type: "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
+			status: 500,
+		};
+		
+		Logger.Log(log_type.warning, "Bad GML Status Code: Server likely unavailable.");
 	}
 		
 	promise.reject({
 		status: http_status,
 		data: data,
-		options: options,
 	});
 }

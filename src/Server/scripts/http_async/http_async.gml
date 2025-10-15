@@ -4,7 +4,7 @@
 /// @param {Struct} body The body to send (empty if none).
 /// @param {Struct} options The options to send with this request (bearer, etc).
 /// @returns {Struct.Promise} Returns the promise to be resolved by the HTTP client.
-function http_async(url, type, body = {}, options = undefined)
+function http_async(url, type, body = {}, options = {})
 {
 	/// @type {Id.DsMap}
 	/// @description The request to context map.

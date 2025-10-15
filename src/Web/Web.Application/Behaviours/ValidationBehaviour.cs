@@ -10,8 +10,8 @@ using MediatR;
 using ValidationException = Exceptions.ValidationException;
 
 [ExcludeFromCodeCoverage]
-internal sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-     where TRequest : IRequest<TResponse>
+public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+     where TRequest : notnull
 {
     private readonly IEnumerable<IValidator<TRequest>> validators;
 

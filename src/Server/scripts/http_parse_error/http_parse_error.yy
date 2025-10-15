@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"http_parse_error",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"http_parse_error",
+  "parent":{
+    "name":"HTTP",
+    "path":"folders/Extensions/GMCore/Scripts/HTTP.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

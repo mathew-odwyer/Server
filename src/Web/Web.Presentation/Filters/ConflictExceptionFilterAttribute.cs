@@ -25,7 +25,7 @@ internal sealed class ConflictExceptionFilterAttribute : ExceptionFilterAttribut
             var details = new ProblemDetails
             {
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8",
-                Title = "Conflict",
+                Title = "Conflict Error",
                 Detail = exception.Message,
                 Status = StatusCodes.Status409Conflict,
             };

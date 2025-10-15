@@ -75,10 +75,17 @@ internal sealed class UserAccountService : IUserAccountService
 
         if (!result.Succeeded)
         {
-            string errors = string.Join("\n", result.Errors.Select(x => x.Description));
+            // TODO: Fix up code to show "Duplicate Username" instead of "DuplicateUsername", etc.
+            var errors = result.Errors
+               .GroupBy(
+                   x => x.Code,
+                   x => x.Description)
+               .ToDictionary(
+                   x => x.Key,
+                   x => x.ToArray());
 
             this.logger.LogWarning("Failed to register user with username: '{Username}': {Error}", username, errors);
-            throw new BadRequestException(errors);
+            throw new ValidationException(errors);
         }
 
         this.logger.LogInformation("Successfully registered user with username: '{Username}'", username);

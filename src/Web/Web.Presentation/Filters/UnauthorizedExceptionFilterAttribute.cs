@@ -25,7 +25,7 @@ internal sealed class UnauthorizedExceptionFilterAttribute : ExceptionFilterAttr
             var details = new ProblemDetails
             {
                 Type = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1",
-                Title = "Unauthorized",
+                Title = "Unauthorized Error",
                 Detail = exception.Message,
                 Status = StatusCodes.Status401Unauthorized,
             };

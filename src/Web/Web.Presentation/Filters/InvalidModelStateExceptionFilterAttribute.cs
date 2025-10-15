@@ -22,6 +22,7 @@ internal sealed class InvalidModelStateExceptionFilterAttribute : ExceptionFilte
         {
             var details = new ValidationProblemDetails(context.ModelState)
             {
+                Title = "Invalid Model State Error",
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                 Status = StatusCodes.Status400BadRequest,
             };

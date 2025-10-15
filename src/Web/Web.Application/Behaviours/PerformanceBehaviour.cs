@@ -10,8 +10,8 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 [ExcludeFromCodeCoverage]
-internal sealed class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public sealed class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
     private readonly ILogger<PerformanceBehaviour<TRequest, TResponse>> logger;
 
@@ -36,7 +36,7 @@ internal sealed class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehav
 
         if (elapsed >= waitMs)
         {
-            this.logger.LogWarning("Long Running Request: {Name} ({Elapsed} milliseconds) {Request}", typeof(TRequest).Name, elapsed, request);
+            this.logger.LogWarning("Long Running Request: {Name} ({Elapsed} milliseconds)", typeof(TRequest).Name, elapsed);
         }
 
         return response;
