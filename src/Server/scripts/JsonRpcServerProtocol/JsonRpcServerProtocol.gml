@@ -15,7 +15,7 @@ function JsonRpcServerProtocol(server) constructor
 	/// @param {Function} callback The function to execute when the method is received.
 	register = function(procedure, callback)
 	{
-		Logger.Log(log_type.information, $"Registering JSON-RPC 2.0 Request Handler for '{procedure}'...");
+		Logger.Log(log_type.information, $"Registering request handler for '{procedure}'...");
 		_request_to_handler_map[? procedure] = callback;
 	}
 	

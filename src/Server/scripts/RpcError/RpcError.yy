@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"RpcError",
   "parent":{
-    "name":"Network",
-    "path":"folders/Extensions/GMCore/Scripts/Errors/Network.yy",
+    "name":"Errors",
+    "path":"folders/Scripts/Network/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

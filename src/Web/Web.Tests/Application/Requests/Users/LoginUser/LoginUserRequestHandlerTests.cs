@@ -124,7 +124,7 @@ internal sealed class LoginUserRequestHandlerTests
         await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        this.userAccountTokenService.Received(1).HashRefreshToken("RefreshToken");
+        this.userAccountTokenService.Received(1).HashSecureToken("RefreshToken");
     }
 
     [Test]
@@ -336,7 +336,7 @@ internal sealed class LoginUserRequestHandlerTests
 
         this.userAccountService.LoginUserAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(this.userAccount);
         this.userAccountTokenService.GenerateJwt(Arg.Any<JwtParameters>()).Returns(this.jwtToken);
-        this.userAccountTokenService.HashRefreshToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
+        this.userAccountTokenService.HashSecureToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
 
         this.handler = new LoginUserRequestHandler(
             this.logger,

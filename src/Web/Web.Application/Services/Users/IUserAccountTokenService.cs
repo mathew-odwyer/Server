@@ -51,13 +51,18 @@ public interface IUserAccountTokenService
     JwtToken GenerateJwt(JwtParameters parameters);
 
     /// <summary>
-    /// Hashes the specified <paramref name="refreshToken"/> for secure storage and comparison.
+    /// Genereates a new secure token.
     /// </summary>
-    /// <param name="refreshToken">
-    /// Specifies a <see cref="string"/> representing the refresh token to hash.
-    /// </param>
     /// <returns>
-    /// Returns a <see cref="string"/> representing the hashed refresh token.
+    /// Returns a <see cref="string"/> representing the generated secure token.
     /// </returns>
-    string HashRefreshToken(string refreshToken);
+    string GenerateSecureToken();
+
+    /// <summary>
+    /// Hashes the specified <paramref name="token"/> for secure storage and comparison.
+    /// </summary>
+    /// <returns>
+    /// Returns a <see cref="string"/> representing the hashed token.
+    /// </returns>
+    string HashSecureToken(string token);
 }

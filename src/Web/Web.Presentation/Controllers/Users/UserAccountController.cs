@@ -12,6 +12,7 @@ using Web.Application.Requests.Users.LoginUser;
 using Web.Application.Requests.Users.LogoutUser;
 using Web.Application.Requests.Users.RefreshToken;
 using Web.Application.Requests.Users.RegisterUser;
+using Web.Application.Requests.Users.ValidateUser;
 
 /// <summary>
 /// Provides API endpoints for managing user account operations, including registration, login, logout, and token refresh.
@@ -46,7 +47,7 @@ public sealed class UserAccountController : ApiControllerBase
     /// Specifies a <see cref="CancellationToken"/> used to observe cancellation requests.
     /// </param>
     /// <returns>
-    /// Returns an <see cref="IActionResult"/> containing an HTTP 200 (OK) response with the generated authentication token upon successful login.
+    /// Returns an <see cref="IActionResult"/> containing an HTTP 200 (OK) response with the generated client token upon successful login.
     /// </returns>
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginUserRequestDto requestDto, CancellationToken cancellationToken = default)
@@ -155,5 +156,16 @@ public sealed class UserAccountController : ApiControllerBase
         await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
         return this.NoContent();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Validate([FromBody] ValidateUserRequestDto requestDto, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(requestDto);
+
+        var request = this.Mapper.Map<ValidateUserRequest>(requestDto);
+        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+
+        return this.Ok(response);
     }
 }

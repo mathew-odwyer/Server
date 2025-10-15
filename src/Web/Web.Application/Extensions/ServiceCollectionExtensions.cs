@@ -60,6 +60,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddValidatedOptions<JwtOptions>(configuration);
+        services.AddValidatedOptions<ClientTokenOptions>(configuration);
 
         return services;
     }

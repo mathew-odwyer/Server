@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"HealthRpcServer",
+  "%Name":"TimeoutError",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"HealthRpcServer",
+  "name":"TimeoutError",
   "parent":{
-    "name":"Health",
-    "path":"folders/Scripts/Network/RPC/Health.yy",
+    "name":"Promises",
+    "path":"folders/Extensions/GMCore/Scripts/Errors/Promises.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

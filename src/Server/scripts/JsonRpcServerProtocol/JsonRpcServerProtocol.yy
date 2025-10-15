@@ -6,7 +6,7 @@
   "name":"JsonRpcServerProtocol",
   "parent":{
     "name":"JsonRpc",
-    "path":"folders/Scripts/Network/Protocols/JsonRpc.yy",
+    "path":"folders/Scripts/Network/Protocol/JsonRpc.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -30,16 +30,8 @@ function Logger() constructor
         {
             return;
         }
-        
-        LogFunction($"[{_get_log_type(LogLevel)}]: {text}");
-    }
-
-    /// @description Converts the specified `type` to a readable `string`.
-    /// @argument {Enum.log_type} type The log type to convert.
-    /// @returns {String} The specified `type` converted to a readable `string`.
-    static _get_log_type = function(type)
-    {
-        static type_to_name_map = [
+		
+		static _type_to_name_map = [
 		    [log_type.trace, "Trace"],
             [log_type.debug, "Debug"],
             [log_type.information, "Information"],
@@ -47,8 +39,8 @@ function Logger() constructor
             [log_type.error, "Error"],
             [log_type.critical, "Critical"],
         ];
-
-        return type_to_name_map[type][1];
+        
+        LogFunction($"[{_type_to_name_map[LogLevel][1]}]: {text}");
     }
 }
 

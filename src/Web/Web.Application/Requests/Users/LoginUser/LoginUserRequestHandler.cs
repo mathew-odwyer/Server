@@ -28,9 +28,9 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
     private readonly ILogger<LoginUserRequestHandler> logger;
 
     /// <summary>
-    /// The JWT options used when generating a JSON Web Token.
+    /// The client token options, used to configure the client token expiriration time.
     /// </summary>
-    private readonly IOptions<JwtOptions> options;
+    private readonly IOptions<ClientTokenOptions> options;
 
     /// <summary>
     /// The unit of work factory.
@@ -38,19 +38,19 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
     /// <summary>
-    /// The user account service, used to attempt to login.
+    /// The user account service, used to attempt to authenticate.
     /// </summary>
     private readonly IUserAccountService userAccountService;
 
     /// <summary>
-    /// The user account token service, used to generate a <see cref="UserSessionToken"/> and ensure single-session login.
+    /// The user account token service, used to generate a short-lived client token.
     /// </summary>
     private readonly IUserAccountTokenService userAccountTokenService;
 
     /// <summary>
-    /// The user session token repository, used to add a <see cref="UserSessionToken"/> when the login is successful.
+    /// The user client token repository, used to persist the client token.
     /// </summary>
-    private readonly IUserSessionTokenRepository userSessionTokenRepository;
+    private readonly IUserClientTokenRepository userClientTokenRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LoginUserRequestHandler"/> class.
@@ -58,20 +58,20 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
     /// <param name="logger">
     /// The logger.
     /// </param>
-    /// <param name="options">
-    /// The JWT options used when generating a JSON Web Token.
-    /// </param>
     /// <param name="userAccountService">
     /// The user account service, used to attempt to login.
     /// </param>
-    /// <param name="userAccountTokenService">
-    /// The user account token service, used to generate a <see cref="UserSessionToken"/> and ensure single-session login.
+    /// <param name="options">
+    /// The client token options, used to configure the client token expiriration time.
     /// </param>
     /// <param name="unitOfWorkFactory">
     /// The unit of work factory.
     /// </param>
-    /// <param name="userSessionTokenRepository">
-    /// The user session token repository, used to add a <see cref="UserSessionToken"/> when the login is successful.
+    /// <param name="userAccountTokenService">
+    /// The user account token service, used to generate a short-lived client token.
+    /// </param>
+    /// <param name="userClientTokenRepository">
+    /// The user client token repository, used to persist the client token.
     /// </param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when one of the following parameters is <c>null</c>:
@@ -79,25 +79,25 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
     ///   <item><description><paramref name="logger"/></description></item>
     ///   <item><description><paramref name="options"/></description></item>
     ///   <item><description><paramref name="userAccountService"/></description></item>
-    ///   <item><description><paramref name="userAccountTokenService"/></description></item>
     ///   <item><description><paramref name="unitOfWorkFactory"/></description></item>
-    ///   <item><description><paramref name="userSessionTokenRepository"/></description></item>
+    ///   <item><description><paramref name="userAccountTokenService"/></description></item>
+    ///   <item><description><paramref name="userClientTokenRepository"/></description></item>
     /// </list>
     /// </exception>
     public LoginUserRequestHandler(
         ILogger<LoginUserRequestHandler> logger,
-        IOptions<JwtOptions> options,
+        IOptions<ClientTokenOptions> options,
         IUserAccountService userAccountService,
-        IUserAccountTokenService userAccountTokenService,
         IUnitOfWorkFactory unitOfWorkFactory,
-        IUserSessionTokenRepository userSessionTokenRepository)
+        IUserAccountTokenService userAccountTokenService,
+        IUserClientTokenRepository userClientTokenRepository)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.options = options ?? throw new ArgumentNullException(nameof(options));
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
-        this.userAccountTokenService = userAccountTokenService ?? throw new ArgumentNullException(nameof(userAccountTokenService));
         this.unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
-        this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
+        this.userAccountTokenService = userAccountTokenService ?? throw new ArgumentNullException(nameof(userAccountTokenService));
+        this.userClientTokenRepository = userClientTokenRepository ?? throw new ArgumentNullException(nameof(userClientTokenRepository));
     }
 
     /// <inheritdoc/>
@@ -116,46 +116,31 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
             .ConfigureAwait(false);
 
         var work = this.unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
+        string token = this.userAccountTokenService.GenerateSecureToken();
 
-        // If there's currently an active sesion, reject the login.
-        if (activeSession != null)
-        {
-            this.logger.LogInformation("Session already active for user: '{Username}'", userAccount.UserName);
-            throw new UnauthorizedException("You must logout of your current session first.");
-        }
-
-        var parameters = new JwtParameters(
-            UserAccountId: userAccount.Id,
-            Username: userAccount.UserName!);
-
-        var jwt = this.userAccountTokenService.GenerateJwt(parameters);
-
-        var userSessionToken = new UserSessionToken()
+        var userClientToken = new UserClientToken()
         {
             UserAccountId = userAccount.Id,
-            HashedRefreshToken = this.userAccountTokenService.HashRefreshToken(jwt.RefreshToken),
-            ExpirationDate = DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
-            SessionId = jwt.SessionId,
+            HashedToken = this.userAccountTokenService.HashSecureToken(token),
+            ExpirationDate = DateTime.UtcNow.AddSeconds(this.options.Value.ClientTokenExpirySeconds),
         };
 
         try
         {
-            await this.userSessionTokenRepository.AddAsync(userSessionToken, cancellationToken).ConfigureAwait(false);
+            await this.userClientTokenRepository.AddAsync(userClientToken, cancellationToken).ConfigureAwait(false);
             await work.SaveAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (DatabaseUpdateConcurrencyException ex)
         {
             // There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context.
             // So let's just be extra safe here.
-            this.logger.LogError(ex, "Failed to persist login session for {Username}", username);
+            this.logger.LogError(ex, "Failed to persist client token for {Username}", username);
             throw new UnauthorizedException("Login failed due to a system error, please try again in a few moments.", ex);
         }
 
         this.logger.LogInformation("Login succeeded for user: {Username}", request.Username);
 
         return new LoginUserResponse(
-            AccessToken: jwt.AccessToken,
-            RefreshToken: jwt.RefreshToken);
+            ClientToken: token);
     }
 }

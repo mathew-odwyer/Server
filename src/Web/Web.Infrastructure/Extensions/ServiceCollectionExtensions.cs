@@ -91,6 +91,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         services.AddScoped<IUserSessionTokenRepository, UserSessionTokenRepository>();
+        services.AddScoped<IUserClientTokenRepository, UserClientTokenRepository>();
 
         services.AddScoped<IPlayerRepository, PlayerRepository>();
 

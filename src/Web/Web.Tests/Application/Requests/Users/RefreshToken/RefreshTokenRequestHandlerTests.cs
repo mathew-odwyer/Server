@@ -57,7 +57,7 @@ internal sealed class RefreshTokenRequestHandlerTests
         await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        this.userAccountTokenService.Received(2).HashRefreshToken(request.RefreshToken);
+        this.userAccountTokenService.Received(2).HashSecureToken(request.RefreshToken);
     }
 
     [Test]
@@ -422,7 +422,7 @@ internal sealed class RefreshTokenRequestHandlerTests
 
         this.userAccountRepository.GetByIdAsync(this.userAccount.Id).Returns(this.userAccount);
         this.userAccountTokenService.GenerateJwt(Arg.Any<JwtParameters>()).Returns(this.jwtToken);
-        this.userAccountTokenService.HashRefreshToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
+        this.userAccountTokenService.HashSecureToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
         this.userSessionTokenRepository.GetActiveSessionAsync(this.userAccount.Id, default).Returns(this.userSessionToken);
 
         this.handler = new RefreshTokenRequestHandler(

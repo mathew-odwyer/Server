@@ -108,7 +108,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(request.UserAccountId, cancellationToken).ConfigureAwait(false);
 
         if (activeSession == null ||
-            activeSession.HashedRefreshToken != this.userAccountTokenService.HashRefreshToken(request.RefreshToken) ||
+            activeSession.HashedRefreshToken != this.userAccountTokenService.HashSecureToken(request.RefreshToken) ||
             activeSession.CreatedOn.AddDays(this.options.Value.RefreshTokenExpiryDays) < DateTime.UtcNow)
         {
             this.logger.LogWarning("Invalid or expired resfresh token for user with ID: '{UserAccountId}'", request.UserAccountId);
@@ -137,7 +137,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         var newSessionToken = new UserSessionToken()
         {
             UserAccountId = userAccount.Id,
-            HashedRefreshToken = this.userAccountTokenService.HashRefreshToken(jwt.RefreshToken),
+            HashedRefreshToken = this.userAccountTokenService.HashSecureToken(jwt.RefreshToken),
             ExpirationDate = DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
             SessionId = jwt.SessionId,
         };

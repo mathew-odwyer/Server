@@ -12,11 +12,13 @@ function ClientConnection(socket) constructor
 	
 	/// @description Sends the specified `message` through the socket.
 	/// @param {Struct} message The `message` to send through the socket.
+	/// @returns {Bool} Returns `true` if the message was sent; otherwise, `false.
 	send = function(message)
 	{
 		buffer_seek(_write_buffer, buffer_seek_start, 0);
 		buffer_write(_write_buffer, buffer_string, json_stringify(message));
-		network_send_packet(_socket, _write_buffer, buffer_tell(_write_buffer));
+		
+		return network_send_packet(_socket, _write_buffer, buffer_tell(_write_buffer)) >= 0;
 	}
 	
 	/// @description Disconnects the client from the server.

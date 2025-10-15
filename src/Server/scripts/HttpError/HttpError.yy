@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"http_parse_error",
+  "%Name":"HttpError",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"http_parse_error",
+  "name":"HttpError",
   "parent":{
-    "name":"Errors",
-    "path":"folders/Scripts/Network/HTTP/Errors.yy",
+    "name":"Network",
+    "path":"folders/Extensions/GMCore/Scripts/Errors/Network.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -34,7 +34,7 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
 
         var sessionId = GenerateSessionId();
         string accessToken = this.GenerateAccessToken(parameters, sessionId);
-        string refreshToken = this.GenerateRefreshToken();
+        string refreshToken = this.GenerateSecureToken();
 
         return new JwtToken(
             AccessToken: accessToken,
@@ -42,9 +42,17 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
             SessionId: sessionId);
     }
 
-    public string HashRefreshToken(string refreshToken)
+    public string GenerateSecureToken()
     {
-        byte[] bytes = Encoding.UTF8.GetBytes(refreshToken);
+        byte[] bytes = RandomNumberGenerator.GetBytes(32);
+        string token = Convert.ToBase64String(bytes);
+
+        return token;
+    }
+
+    public string HashSecureToken(string token)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(token);
         byte[] hashedBytes = SHA256.HashData(bytes);
         string hashedCode = Convert.ToBase64String(hashedBytes);
 
@@ -85,17 +93,5 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
         string secureToken = handler.WriteToken(token);
 
         return secureToken;
-    }
-
-    private string GenerateRefreshToken()
-    {
-        this.logger.LogInformation("Generating refresh token...");
-
-        byte[] refreshTokenBytes = RandomNumberGenerator.GetBytes(32);
-        string refreshToken = Convert.ToBase64String(refreshTokenBytes);
-
-        this.logger.LogInformation("Refresh token generated!");
-
-        return refreshToken;
     }
 }
