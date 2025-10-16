@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(false)]
@@ -10,3 +11,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Mantanimus.Core.Application")]
 [assembly: AssemblyDescription("The application layer of the Web API.")]
 [assembly: Guid("E76F4DE6-B68D-4B10-8FD2-B4A28D03E297")]
+[assembly: InternalsVisibleTo("Mantanimus.Tests")]

@@ -7,6 +7,7 @@ namespace Mantanimus.Presentation;
 using System.Text;
 using Mantanimus.Core.Application.Extensions;
 using Mantanimus.Infrastructure.Extensions;
+using Mantanimus.Presentation.Factories;
 using Mantanimus.Presentation.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -59,13 +60,14 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(services);
 
         services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = true);
+        services.AddFluentValidationAutoValidation(x => x.OverrideDefaultResultFactoryWith<InvalidModelStateActionResultFactory>());
 
         services.AddLogging();
 
         services.AddControllersWithViews(x =>
         {
             x.Filters.Add<UnhandledExceptionFilterAttribute>();
-            x.Filters.Add<InvalidModelStateExceptionFilterAttribute>();
+            x.Filters.Add<InvalidModelStateActionFilterAttribute>();
             x.Filters.Add<ValidationExceptionFilterAttribute>();
             x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
             x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
@@ -99,7 +101,6 @@ internal sealed class Startup
 
         services.AddHttpContextAccessor();
         services.AddHealthChecks();
-        services.AddFluentValidationAutoValidation();
 
         services.AddApplicationServices(this.Configuration);
         services.AddInfrastructureServices(this.Configuration, "Local");

@@ -17,15 +17,6 @@ internal sealed class UsernameValidator : AbstractValidator<string>
             .Must(ContainsLegalCharacters).WithMessage("Name can only contain alphanumerical characters (and '-' or '_')");
     }
 
-    /// <summary>
-    /// Determines whether the username contains only legal characters.
-    /// </summary>
-    /// <param name="username">
-    /// Specifies a <see cref="string"/> representing the username to validate.
-    /// </param>
-    /// <returns>
-    /// Returns <see cref="bool"/> indicating whether the username contains only alphanumerical characters, '-' or '_'.
-    /// </returns>
     private static bool ContainsLegalCharacters(string username)
     {
         return username.All(x => char.IsLetterOrDigit(x) || x == '-' || x == '_');

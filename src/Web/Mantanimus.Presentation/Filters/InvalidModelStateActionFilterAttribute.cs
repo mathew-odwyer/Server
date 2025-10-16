@@ -7,16 +7,11 @@ namespace Mantanimus.Presentation.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-internal sealed class InvalidModelStateExceptionFilterAttribute : ExceptionFilterAttribute
+internal sealed class InvalidModelStateActionFilterAttribute : ActionFilterAttribute
 {
-    public override void OnException(ExceptionContext context)
+    public override void OnActionExecuting(ActionExecutingContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-
-        if (context.ExceptionHandled)
-        {
-            return;
-        }
 
         if (!context.ModelState.IsValid)
         {
@@ -35,7 +30,6 @@ internal sealed class InvalidModelStateExceptionFilterAttribute : ExceptionFilte
             };
 
             context.Result = new BadRequestObjectResult(details);
-            context.ExceptionHandled = true;
         }
     }
 }

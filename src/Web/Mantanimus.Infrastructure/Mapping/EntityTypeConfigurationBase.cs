@@ -9,10 +9,17 @@ using Mantanimus.Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-// TODO: Check if this can actually be internal or not.
-internal abstract class EntityTypeConfigurationBase<TEntity> : IEntityTypeConfiguration<TEntity>
+/// <summary>
+/// Provides configuration for entities that inherit from <see cref="EntityBase"/>.
+/// </summary>
+/// <typeparam name="TEntity">
+/// The type of the entity being configured, which must inherit from <see cref="EntityBase"/>.
+/// </typeparam>
+/// <seealso cref="IEntityTypeConfiguration{TEntity}"/>
+public abstract class EntityTypeConfigurationBase<TEntity> : IEntityTypeConfiguration<TEntity>
     where TEntity : EntityBase
 {
+    /// <inheritdoc/>
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
