@@ -50,8 +50,10 @@ public static class ServiceCollectionExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionName);
 
         services
-            .AddIdentityApiEndpoints<UserAccount>()
+            .AddIdentityCore<UserAccount>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<DatabaseContext>()
+            .AddSignInManager<SignInManager<UserAccount>>()
             .AddDefaultTokenProviders();
 
         services.Configure<IdentityOptions>(x =>
@@ -95,8 +97,6 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         services.AddScoped<IUserSessionTokenRepository, UserSessionTokenRepository>();
-        services.AddScoped<IUserClientTokenRepository, UserClientTokenRepository>();
-
         services.AddScoped<IPlayerRepository, PlayerRepository>();
 
         services.AddScoped<IUserAccountService, UserAccountService>();

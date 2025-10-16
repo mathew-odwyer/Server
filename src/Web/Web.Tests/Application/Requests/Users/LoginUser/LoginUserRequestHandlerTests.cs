@@ -278,7 +278,7 @@ internal sealed class LoginUserRequestHandlerTests
         // Assert
         this.userSessionTokenRepository.Received(1).AddAsync(
             Arg.Is<UserSessionToken>(token =>
-                token.UserAccountId == this.userAccount.Id &&
+                token.UserAccount == this.userAccount &&
                 token.HashedRefreshToken == this.userSessionToken.HashedRefreshToken &&
                 token.SessionId == this.jwtToken.SessionId &&
                 token.ExpirationDate > DateTime.UtcNow &&
@@ -321,7 +321,7 @@ internal sealed class LoginUserRequestHandlerTests
 
         this.userSessionToken = new UserSessionToken()
         {
-            UserAccountId = this.userAccount.Id,
+            UserAccount = this.userAccount,
             HashedRefreshToken = "HashedRefreshToken",
             SessionId = Guid.NewGuid(),
             ExpirationDate = DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),

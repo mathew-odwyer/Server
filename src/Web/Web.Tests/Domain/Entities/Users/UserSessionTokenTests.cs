@@ -12,6 +12,8 @@ internal sealed class UserSessionTokenTests
 {
     private readonly Guid sessionId = Guid.NewGuid();
 
+    private UserAccount userAccount;
+
     private UserSessionToken userSessionToken;
 
     [Test]
@@ -20,7 +22,7 @@ internal sealed class UserSessionTokenTests
         // Act and assert
         Assert.DoesNotThrow(() => new UserSessionToken()
         {
-            UserAccountId = "0",
+            UserAccount = new UserAccount(),
             SessionId = this.sessionId,
             HashedRefreshToken = "Test",
         });
@@ -83,28 +85,27 @@ internal sealed class UserSessionTokenTests
     public void Setup()
     {
         // Arrange
-        string userAccountId = "0";
         string hashedRefreshToken = "Test";
-        var sessionId = this.sessionId;
 
+        this.userAccount = new UserAccount();
         this.userSessionToken = new UserSessionToken()
         {
-            UserAccountId = userAccountId,
+            UserAccount = this.userAccount,
             HashedRefreshToken = hashedRefreshToken,
-            SessionId = sessionId,
+            SessionId = this.sessionId,
         };
     }
 
     [Test]
-    public void UserAccountIdShouldEqualZeroWhenInvoked()
+    public void UserAccountShouldEqualUserAccountWhenInvoked()
     {
         // Arrange
-        const string expected = "0";
+        var expected = this.userAccount;
 
         // Act
-        string actual = this.userSessionToken.UserAccountId;
+        var actual = this.userSessionToken.UserAccount;
 
         // Assert
-        Assert.That(actual, Is.EqualTo(expected));
+        Assert.That(actual, Is.SameAs(expected));
     }
 }

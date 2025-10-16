@@ -6,20 +6,14 @@ namespace Web.Application.Requests.Players.UpdatePlayer;
 
 using System.Diagnostics.CodeAnalysis;
 using MediatR;
+using Web.Application.Attributes;
 using Web.Domain.Entities.Players;
-using Web.Domain.Entities.Users;
 
 /// <summary>
 /// Represents a request used to update an existing <see cref="Player"/>.
 /// </summary>
 /// <seealso cref="IRequest" />
 /// <seealso cref="IBaseRequest" />
-/// <param name="UserAccountId">
-/// The user account identifier that matches the <see cref="UserAccount"/> who owns the <see cref="Player"/> being updated.
-/// </param>
-/// <param name="Name">
-/// The updated name of the <see cref="Player"/>.
-/// </param>
 /// <param name="X">
 /// The optional X-coordinate of the <see cref="Player"/>.
 /// </param>
@@ -27,9 +21,8 @@ using Web.Domain.Entities.Users;
 /// The optional Y-coordinate of the <see cref="Player"/>.
 /// </param>
 [ExcludeFromCodeCoverage]
+[Authorize]
 public sealed record UpdatePlayerRequest(
-    string UserAccountId,
-    string Name,
     int? X,
     int? Y)
     : IRequest;

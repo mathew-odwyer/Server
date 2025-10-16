@@ -61,8 +61,7 @@ internal sealed class GetPlayerRequestHandlerTests
     {
         // Arrange
         var request = new GetPlayerRequest(
-            UserAccountId: this.userAccount.Id,
-            Name: this.player.Name);
+            PlayerId: this.userAccount.Id);
 
         // Act
         await this.handler.Handle(request, default).ConfigureAwait(false);
@@ -76,8 +75,7 @@ internal sealed class GetPlayerRequestHandlerTests
     {
         // Arrange
         var request = new GetPlayerRequest(
-            UserAccountId: this.userAccount.Id,
-            Name: this.player.Name);
+            PlayerId: this.userAccount.Id);
 
         // Act
         var response = await this.handler.Handle(request, default).ConfigureAwait(false);
@@ -94,29 +92,16 @@ internal sealed class GetPlayerRequestHandlerTests
     }
 
     [Test]
-    public void HandleShouldThrowEntityNotFoundExceptionWhenGetPlayerByNameAsyncReturnsNull()
+    public void HandleShouldThrowEntityNotFoundExceptionWhenGetPlayerByUserAccountIdAsyncReturnsNull()
     {
         // Arrange
         this.playerRepository.ClearSubstitute();
 
         var request = new GetPlayerRequest(
-            UserAccountId: this.userAccount.Id,
-            Name: this.player.Name);
+            PlayerId: this.userAccount.Id);
 
         // Act and assert
         Assert.ThrowsAsync<EntityNotFoundException>(() => this.handler.Handle(request, default));
-    }
-
-    [Test]
-    public void HandleShouldThrowForbiddenAccessExceptionWhenUserAccountIdDoesNotMatchPlayerAccount()
-    {
-        // Arrange
-        var request = new GetPlayerRequest(
-            UserAccountId: "1",
-            Name: this.player.Name);
-
-        // Act
-        Assert.ThrowsAsync<ForbiddenAccessException>(() => this.handler.Handle(request, default));
     }
 
     [SetUp]
@@ -134,7 +119,7 @@ internal sealed class GetPlayerRequestHandlerTests
         this.player = new Player()
         {
             Name = "Player",
-            UserAccountId = this.userAccount.Id,
+            UserAccount = this.userAccount,
         };
 
         this.playerDto = new PlayerDto(
@@ -143,7 +128,7 @@ internal sealed class GetPlayerRequestHandlerTests
             Y: this.player.Y);
 
         this.mapper.Map<PlayerDto>(this.player).Returns(this.playerDto);
-        this.playerRepository.GetPlayerByNameAsync(this.player.Name, default).Returns(this.player);
+        this.playerRepository.GetPlayerByUserAccountId(this.player.Name, default).Returns(this.player);
 
         this.handler = new GetPlayerRequestHandler(this.logger, this.mapper, this.playerRepository);
     }

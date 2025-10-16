@@ -11,21 +11,13 @@ using Web.Domain.Entities.Players;
 /// Represents a user account.
 /// </summary>
 /// <seealso cref="IdentityUser" />
-public sealed class UserAccount : IdentityUser
+public class UserAccount : IdentityUser<Guid>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserAccount"/> class.
-    /// </summary>
-    public UserAccount()
-    {
-        this.Players = [];
-    }
-
-    /// <summary>
-    /// Gets the players associated with this <see cref="UserAccount"/>.
+    /// Gets the player linked to this <see cref="UserAccount"/>.
     /// </summary>
     /// <value>
-    /// The players associated with this <see cref="UserAccount"/>.
+    /// The player linked to this <see cref="UserAccount"/>.
     /// </value>
-    public ICollection<Player> Players { get; }
+    public virtual required Player Player { get; set; }
 }

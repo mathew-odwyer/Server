@@ -51,16 +51,16 @@ public sealed class PlayerUpdateException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="PlayerUpdateException"/> class.
     /// </summary>
-    /// <param name="userAccountId">
-    /// The user account identifier associated with the player.
+    /// <param name="id">
+    /// The player identifier.
     /// </param>
     /// <param name="name">The name of the player.
     /// </param>
     /// <param name="innerException">
     /// The exception that is the cause of the current exception, or a <c>null</c> reference if no inner exception is specified.
     /// </param>
-    public PlayerUpdateException(string userAccountId, string name, Exception? innerException)
-        : base($"Failed to update player with name: '{name}' for user with ID: '{userAccountId}'", innerException)
+    public PlayerUpdateException(Guid id, string name, Exception? innerException)
+        : base($"Failed to update player with name: '{name}' and ID: '{id}'", innerException)
     {
     }
 }

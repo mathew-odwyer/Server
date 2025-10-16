@@ -37,8 +37,6 @@ internal sealed class RefreshTokenRequestHandlerTests
 
     private UserAccount userAccount;
 
-    private IUserAccountRepository userAccountRepository;
-
     private IUserAccountTokenService userAccountTokenService;
 
     private UserSessionToken userSessionToken;
@@ -73,39 +71,6 @@ internal sealed class RefreshTokenRequestHandlerTests
 
         // Assert
         this.userAccountTokenService.Received(1).GenerateJwt(Arg.Any<JwtParameters>());
-    }
-
-    [Test]
-    public void HandleShouldThrowEntityNotFoundExceptionWhenUserAccountRepositoryGetByIdAsyncReturnsNull()
-    {
-        // Arrange
-        var request = new RefreshTokenRequest(
-            UserAccountId: this.userAccount.Id,
-            RefreshToken: this.jwtToken.RefreshToken);
-
-        this.userAccountRepository.GetByIdAsync(this.userAccount.Id, default).ReturnsNull();
-
-        // Act and assert
-        Assert.ThrowsAsync<EntityNotFoundException>(() => this.handler.Handle(request, default));
-    }
-
-    [Test]
-    public async Task HandleShouldInvokeUserAccountRepositoryGetByIdAsyncWhenWhenGetActiveSessionAsyncDoesNotReturnNull()
-    {
-        // Arrange
-        var request = new RefreshTokenRequest(
-            UserAccountId: this.userAccount.Id,
-            RefreshToken: this.jwtToken.RefreshToken);
-
-        // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-        // Assert
-        this.userAccountRepository.Received(1).GetByIdAsync(this.userAccount.Id, default);
-
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 
     [Test]
@@ -152,7 +117,7 @@ internal sealed class RefreshTokenRequestHandlerTests
         {
             HashedRefreshToken = this.userSessionToken.HashedRefreshToken,
             SessionId = this.userSessionToken.SessionId,
-            UserAccountId = this.userAccount.Id,
+            UserAccount = this.userAccount,
             CreatedOn = DateTime.UtcNow.AddDays(-100),
         };
 
@@ -174,7 +139,7 @@ internal sealed class RefreshTokenRequestHandlerTests
         {
             HashedRefreshToken = "Test",
             SessionId = this.userSessionToken.SessionId,
-            UserAccountId = this.userAccount.Id,
+            UserAccount = this.userAccount,
         };
 
         this.userSessionTokenRepository.GetActiveSessionAsync(this.userAccount.Id, default).Returns(userSessionToken);
@@ -220,42 +185,35 @@ internal sealed class RefreshTokenRequestHandlerTests
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
     {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(null, this.options, this.userAccountTokenService, this.unitOfWorkFactory, this.userAccountRepository, this.userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(null, this.options, this.userAccountTokenService, this.unitOfWorkFactory, this.userSessionTokenRepository));
     }
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenOptionsIsNull()
     {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, null, this.userAccountTokenService, this.unitOfWorkFactory, this.userAccountRepository, this.userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, null, this.userAccountTokenService, this.unitOfWorkFactory, this.userSessionTokenRepository));
     }
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull()
     {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, this.options, this.userAccountTokenService, null, this.userAccountRepository, this.userSessionTokenRepository));
-    }
-
-    [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull()
-    {
-        // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, this.options, this.userAccountTokenService, this.unitOfWorkFactory, null, this.userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, this.options, this.userAccountTokenService, null, this.userSessionTokenRepository));
     }
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountTokenServiceIsNull()
     {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, this.options, null, this.unitOfWorkFactory, this.userAccountRepository, this.userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, this.options, null, this.unitOfWorkFactory, this.userSessionTokenRepository));
     }
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUserSessionTokenRepositoryIsNull()
     {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, this.options, this.userAccountTokenService, this.unitOfWorkFactory, this.userAccountRepository, null));
+        Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequestHandler(this.logger, this.options, this.userAccountTokenService, this.unitOfWorkFactory, null));
     }
 
     [Test]
@@ -352,7 +310,6 @@ internal sealed class RefreshTokenRequestHandlerTests
 
         string expectedHashedRefreshToken = this.userSessionToken.HashedRefreshToken;
         var expectedSessionId = this.jwtToken.SessionId;
-        string expectedUserAccountId = this.userAccount.Id;
         double expectedExpiryMinutes = this.options.Value.AccessTokenExpiryMinutes;
 
         var utcNow = DateTime.UtcNow;
@@ -364,7 +321,7 @@ internal sealed class RefreshTokenRequestHandlerTests
         Assert.Multiple(() =>
         {
             Assert.That(addedSession, Is.Not.Null, "Expected a UserSessionToken to be added.");
-            Assert.That(addedSession!.UserAccountId, Is.EqualTo(expectedUserAccountId), "UserAccountId does not match.");
+            Assert.That(addedSession!.UserAccount, Is.SameAs(this.userAccount), "UserAccountId does not match.");
             Assert.That(addedSession.HashedRefreshToken, Is.EqualTo(expectedHashedRefreshToken), "HashedRefreshToken does not match.");
             Assert.That(addedSession.SessionId, Is.EqualTo(expectedSessionId), "SessionId does not match.");
             Assert.That(
@@ -380,7 +337,6 @@ internal sealed class RefreshTokenRequestHandlerTests
         this.logger = Substitute.For<ILogger<RefreshTokenRequestHandler>>();
         this.options = Substitute.For<IOptions<JwtOptions>>();
         this.unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
-        this.userAccountRepository = Substitute.For<IUserAccountRepository>();
         this.userAccountTokenService = Substitute.For<IUserAccountTokenService>();
         this.userSessionTokenRepository = Substitute.For<IUserSessionTokenRepository>();
         this.unitOfWork = Substitute.For<IUnitOfWork>();
@@ -406,7 +362,7 @@ internal sealed class RefreshTokenRequestHandlerTests
 
         this.userSessionToken = new UserSessionToken()
         {
-            UserAccountId = this.userAccount.Id,
+            UserAccount = this.userAccount,
             HashedRefreshToken = "HashedRefreshToken",
             SessionId = Guid.NewGuid(),
             ExpirationDate = DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
@@ -420,7 +376,6 @@ internal sealed class RefreshTokenRequestHandlerTests
 
         this.unitOfWorkFactory.CreateUnitOfWork().Returns(this.unitOfWork);
 
-        this.userAccountRepository.GetByIdAsync(this.userAccount.Id).Returns(this.userAccount);
         this.userAccountTokenService.GenerateJwt(Arg.Any<JwtParameters>()).Returns(this.jwtToken);
         this.userAccountTokenService.HashSecureToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
         this.userSessionTokenRepository.GetActiveSessionAsync(this.userAccount.Id, default).Returns(this.userSessionToken);
@@ -430,7 +385,6 @@ internal sealed class RefreshTokenRequestHandlerTests
             this.options,
             this.userAccountTokenService,
             this.unitOfWorkFactory,
-            this.userAccountRepository,
             this.userSessionTokenRepository);
     }
 }

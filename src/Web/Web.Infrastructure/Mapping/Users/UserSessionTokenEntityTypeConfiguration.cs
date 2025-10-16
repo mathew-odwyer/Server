@@ -11,8 +11,8 @@ using Web.Domain.Entities.Users;
 /// <summary>
 /// Configures the <see cref="UserSessionToken"/> entity.
 /// </summary>
-/// <seealso cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
-public sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserSessionToken>
+/// <seealso cref="EntityTypeConfigurationBase{TEntity}"/>
+public sealed class UserSessionTokenEntityTypeConfiguration : EntityTypeConfigurationBase<UserSessionToken>
 {
     /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<UserSessionToken> builder)
@@ -22,10 +22,6 @@ public sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTyp
         // Unique hashed refresh token (prevents reuse/duplication)
         builder
             .HasIndex(x => x.HashedRefreshToken)
-            .IsUnique();
-
-        builder
-            .HasIndex(x => x.SessionId)
             .IsUnique();
 
         builder
@@ -46,9 +42,13 @@ public sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTyp
             .IsConcurrencyToken();
 
         builder
-            .HasOne<UserAccount>()
-            .WithMany()
-            .HasForeignKey(x => x.UserAccountId)
+            .Property<Guid>("UserAccountId")
+            .IsRequired();
+
+        builder
+            .HasOne(x => x.UserAccount)
+            .WithMany() // <-- no collection on UserAccount
+            .HasForeignKey("UserAccountId")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

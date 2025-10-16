@@ -172,7 +172,7 @@ internal sealed class LogoutUserRequestHandlerTests
         {
             HashedRefreshToken = "HashedRefreshToken",
             SessionId = Guid.NewGuid(),
-            UserAccountId = this.userAccount.Id,
+            UserAccount = this.userAccount,
             ExpirationDate = DateTime.MinValue,
         };
 

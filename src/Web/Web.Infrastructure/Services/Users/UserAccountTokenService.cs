@@ -32,14 +32,12 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        var sessionId = GenerateSessionId();
-        string accessToken = this.GenerateAccessToken(parameters, sessionId);
+        string accessToken = this.GenerateAccessToken(parameters);
         string refreshToken = this.GenerateSecureToken();
 
         return new JwtToken(
             AccessToken: accessToken,
-            RefreshToken: refreshToken,
-            SessionId: sessionId);
+            RefreshToken: refreshToken);
     }
 
     public string GenerateSecureToken()
@@ -59,12 +57,7 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
         return hashedCode;
     }
 
-    private static Guid GenerateSessionId()
-    {
-        return Guid.NewGuid();
-    }
-
-    private string GenerateAccessToken(JwtParameters parameters, Guid sessionId)
+    private string GenerateAccessToken(JwtParameters parameters)
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
@@ -72,8 +65,7 @@ internal sealed class UserAccountTokenService : IUserAccountTokenService
 
         var claims = new[]
         {
-            new Claim("identifier", parameters.UserAccountId),
-            new Claim("session", sessionId.ToString()),
+            new Claim("identifier", parameters.UserAccountId.ToString()),
             new Claim("username", parameters.Username),
         };
 

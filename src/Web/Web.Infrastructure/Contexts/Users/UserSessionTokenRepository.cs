@@ -16,25 +16,13 @@ internal sealed class UserSessionTokenRepository : Repository<UserSessionToken>,
     {
     }
 
-    public async Task<UserSessionToken?> GetActiveSessionAsync(string userAccountId, CancellationToken cancellationToken = default)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(userAccountId);
-
-        return await this.Query()
-            .Where(x =>
-                x.UserAccountId == userAccountId &&
-                x.ExpirationDate > DateTime.UtcNow)
-            .OrderByDescending(x => x.ExpirationDate)
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
-    }
-
-    public async Task<UserSessionToken?> GetBySessionIdAsync(Guid sessionId, CancellationToken cancellationToken = default)
+    public async Task<UserSessionToken?> GetActiveSessionAsync(Guid userAccountId, CancellationToken cancellationToken = default)
     {
         return await this.Query()
             .Where(x =>
-                x.SessionId == sessionId &&
-                x.ExpirationDate > DateTime.UtcNow)
+                x.UserAccount.Id == userAccountId &&
+                x.ExpirationDate > DateTime.UtcNow &&
+                !x.IsRevoked)
             .OrderByDescending(x => x.ExpirationDate)
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);

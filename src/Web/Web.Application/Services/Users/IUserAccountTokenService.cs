@@ -13,13 +13,9 @@ namespace Web.Application.Services.Users;
 /// <param name="RefreshToken">
 /// Specifies a <see cref="string"/> representing the refresh token used to obtain new access tokens after expiration.
 /// </param>
-/// <param name="SessionId">
-/// Specifies a <see cref="Guid"/> representing the unique identifier of the user session associated with the token.
-/// </param>
 public sealed record JwtToken(
     string AccessToken,
-    string RefreshToken,
-    Guid SessionId);
+    string RefreshToken);
 
 /// <summary>
 /// Represents the parameters used to generate a JSON Web Token (JWT) for a user account.
@@ -31,7 +27,7 @@ public sealed record JwtToken(
 /// Specifies a <see cref="string"/> representing the username associated with the user account.
 /// </param>
 public sealed record JwtParameters(
-    string UserAccountId,
+    Guid UserAccountId,
     string Username);
 
 /// <summary>

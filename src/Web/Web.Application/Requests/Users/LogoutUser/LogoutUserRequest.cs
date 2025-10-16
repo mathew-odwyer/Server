@@ -6,6 +6,7 @@ namespace Web.Application.Requests.Users.LogoutUser;
 
 using System.Diagnostics.CodeAnalysis;
 using MediatR;
+using Web.Application.Attributes;
 using Web.Domain.Entities.Users;
 
 /// <summary>
@@ -13,9 +14,7 @@ using Web.Domain.Entities.Users;
 /// </summary>
 /// <seealso cref="IRequest{LoginUserResponse}" />
 /// <seealso cref="IBaseRequest" />
-/// <param name="UserAccountId">
-/// The user account identifier that refers to the <see cref="UserAccount"/> that wishes to logout.
-/// </param>
 [ExcludeFromCodeCoverage]
-public sealed record LogoutUserRequest(
-    string UserAccountId) : IRequest;
+[Authorize]
+public sealed record LogoutUserRequest()
+    : IRequest;

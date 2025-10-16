@@ -17,12 +17,5 @@ public sealed class UserAccountEntityTypeConfiguration : IEntityTypeConfiguratio
     public void Configure(EntityTypeBuilder<UserAccount> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
-
-        builder
-            .HasMany(u => u.Players)
-            .WithOne()
-            .HasForeignKey(p => p.UserAccountId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

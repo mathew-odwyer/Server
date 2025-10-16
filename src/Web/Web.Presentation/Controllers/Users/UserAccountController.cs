@@ -4,7 +4,6 @@
 
 namespace Web.Presentation.Controllers.Users;
 
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Application.DTOs.Users;
@@ -12,7 +11,6 @@ using Web.Application.Requests.Users.LoginUser;
 using Web.Application.Requests.Users.LogoutUser;
 using Web.Application.Requests.Users.RefreshToken;
 using Web.Application.Requests.Users.RegisterUser;
-using Web.Application.Requests.Users.ValidateUser;
 
 /// <summary>
 /// Provides API endpoints for managing user account operations, including registration, login, logout, and token refresh.
@@ -81,8 +79,7 @@ public sealed class UserAccountController : ApiControllerBase
     [Authorize]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken = default)
     {
-        var request = new LogoutUserRequest(
-            UserAccountId: this.User.FindFirstValue("identifier")!);
+        var request = new LogoutUserRequest();
 
         await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
         return this.NoContent();
@@ -116,7 +113,6 @@ public sealed class UserAccountController : ApiControllerBase
         ArgumentNullException.ThrowIfNull(requestDto);
 
         var request = new RefreshTokenRequest(
-            UserAccountId: this.User.FindFirstValue("identifier")!,
             RefreshToken: requestDto.RefreshToken);
 
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
@@ -156,16 +152,5 @@ public sealed class UserAccountController : ApiControllerBase
         await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
         return this.NoContent();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Validate([FromBody] ValidateUserRequestDto requestDto, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(requestDto);
-
-        var request = this.Mapper.Map<ValidateUserRequest>(requestDto);
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-
-        return this.Ok(response);
     }
 }

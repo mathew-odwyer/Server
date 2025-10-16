@@ -4,7 +4,8 @@
 
 namespace Web.Infrastructure.Contexts.Users;
 
-using System.Threading.Tasks;
+using System;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Web.Application.Contexts.Users;
 using Web.Domain.Entities.Users;
@@ -18,11 +19,8 @@ internal sealed class UserAccountRepository : IUserAccountRepository
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    /// <inheritdoc/>
-    public async Task<UserAccount?> GetByIdAsync(string identifier, CancellationToken cancellationToken = default)
+    public UserAccount? GetById(Guid id, CancellationToken cancellationToken = default)
     {
-        return await this.context.Set<UserAccount>()
-            .FirstOrDefaultAsync(x => x.Id == identifier, cancellationToken)
-            .ConfigureAwait(false);
+        return this.context.Set<UserAccount>().FirstOrDefault(x => x.Id == id);
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Web.Application.Exceptions;
 using Web.Application.Services.Users;
+using Web.Domain.Entities.Players;
 using Web.Domain.Entities.Users;
 
 internal sealed class UserAccountService : IUserAccountService
@@ -69,6 +70,10 @@ internal sealed class UserAccountService : IUserAccountService
             UserName = username,
             Email = emailAddress,
             EmailConfirmed = false,
+            Player = new Player()
+            {
+                Name = username,
+            },
         };
 
         var result = await this.userManager.CreateAsync(userAccount, password).ConfigureAwait(false);
@@ -84,7 +89,7 @@ internal sealed class UserAccountService : IUserAccountService
                    x => x.Key,
                    x => x.ToArray());
 
-            this.logger.LogWarning("Failed to register user with username: '{Username}': {Error}", username, errors);
+            this.logger.LogWarning("Failed to register user with username: '{Username}'", username);
             throw new ValidationException(errors);
         }
 

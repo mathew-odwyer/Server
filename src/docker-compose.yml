@@ -22,6 +22,56 @@ services:
       start_period: 10s
       timeout: 5s
 
+  redis:
+    container_name: mantanimus-redis
+    image: redis:latest
+    expose:
+      - "6379:6379"
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+  nats:
+    container_name: mantanimus-nats
+    image: nats:latest
+    expose:
+      - "4222:4222"
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/4222"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  gateway:
+    container_name: gateway
+    image: mantanimus-gateway
+    build:
+      context: ./Server
+      dockerfile: ./gateway/Dockerfile
+    expose:
+      - "8080:8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
   web:
     container_name: web
     image: mantanimus-web

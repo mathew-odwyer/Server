@@ -16,10 +16,6 @@ public sealed class RefreshTokenRequestValidator : AbstractValidator<RefreshToke
     /// </summary>
     public RefreshTokenRequestValidator()
     {
-        this.RuleFor(x => x.UserAccountId)
-            .NotEmpty()
-            .WithMessage("User account ID must not be empty.");
-
         this.RuleFor(request => request.RefreshToken)
             .NotEmpty()
             .WithMessage("Refresh token must not be empty.");

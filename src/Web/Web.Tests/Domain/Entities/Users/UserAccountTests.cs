@@ -20,16 +20,13 @@ internal sealed class UserAccountTests
     }
 
     [Test]
-    public void PlayersShouldBeEmptyWhenInvoked()
+    public void PlayerShouldReturnPlayerWhenInvoked()
     {
-        // Arrange
-        var players = this.userAccount.Players;
-
         // Act
-        int length = players.Count;
+        var actual = this.userAccount.Player;
 
         // Assert
-        Assert.That(length, Is.Zero);
+        Assert.That(actual, Is.Not.Null);
     }
 
     [SetUp]

@@ -65,26 +65,11 @@ internal sealed class UpdatePlayerRequestHandlerTests
     }
 
     [Test]
-    public void HanldeShouldThrowForbiddenAccessExceptionWhenUserAccountIdDoesNotMatchPlayerUserAccount()
-    {
-        // Arrange
-        var request = new UpdatePlayerRequest(
-            UserAccountId: "1",
-            Name: "Player",
-            X: 0,
-            Y: 0);
-
-        // Act and assert
-        Assert.ThrowsAsync<ForbiddenAccessException>(() => this.handler.Handle(request, default));
-    }
-
-    [Test]
     public async Task HandleShouldInvokeCreateUnitOfWorkWhenPlayerIsFound()
     {
         // Arrange
         var request = new UpdatePlayerRequest(
             UserAccountId: this.userAccount.Id,
-            Name: this.player.Name,
             X: 0,
             Y: 0);
 
@@ -101,7 +86,6 @@ internal sealed class UpdatePlayerRequestHandlerTests
         // Arrange
         var request = new UpdatePlayerRequest(
             UserAccountId: this.userAccount.Id,
-            Name: this.player.Name,
             X: 0,
             Y: 0);
 
@@ -117,7 +101,6 @@ internal sealed class UpdatePlayerRequestHandlerTests
         // Arrange
         var request = new UpdatePlayerRequest(
             UserAccountId: this.userAccount.Id,
-            Name: this.player.Name,
             X: null,
             Y: null);
 
@@ -138,7 +121,6 @@ internal sealed class UpdatePlayerRequestHandlerTests
         // Arrange
         var request = new UpdatePlayerRequest(
             UserAccountId: this.userAccount.Id,
-            Name: this.player.Name,
             X: 1,
             Y: 2);
 
@@ -159,7 +141,6 @@ internal sealed class UpdatePlayerRequestHandlerTests
         // Arrange
         var request = new UpdatePlayerRequest(
             UserAccountId: this.userAccount.Id,
-            Name: this.player.Name,
             X: 0,
             Y: 0);
 
@@ -175,12 +156,11 @@ internal sealed class UpdatePlayerRequestHandlerTests
     }
 
     [Test]
-    public void HandleShouldThrowEntityNotFoundExceptionWhenGetByPlayerNameAsyncReturnsNull()
+    public void HandleShouldThrowEntityNotFoundExceptionWhenGetByUserAccountAsyncReturnsNull()
     {
         // Arrange
         var request = new UpdatePlayerRequest(
             UserAccountId: this.userAccount.Id,
-            Name: "Player",
             X: 0,
             Y: 0);
 
@@ -208,11 +188,10 @@ internal sealed class UpdatePlayerRequestHandlerTests
         this.player = new Player()
         {
             Name = "Player",
-            UserAccountId = this.userAccount.Id,
+            UserAccount = this.userAccount,
         };
 
-        this.playerRepository.GetPlayerByNameAsync(this.player.Name, default).Returns(this.player);
-
+        this.playerRepository.GetPlayerByUserAccountId(this.userAccount.Id, default).Returns(this.player);
         this.handler = new UpdatePlayerRequestHandler(this.logger, this.unitOfWorkFactory, this.playerRepository);
     }
 }

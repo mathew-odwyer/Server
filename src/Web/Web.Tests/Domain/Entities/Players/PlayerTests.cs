@@ -6,15 +6,16 @@ namespace Web.Tests.Domain.Entities.Players;
 
 using NUnit.Framework;
 using Web.Domain.Entities.Players;
+using Web.Domain.Entities.Users;
 
 [TestFixture]
 internal sealed class PlayerTests
 {
     private readonly string name = "Player";
 
-    private readonly string userAccountId = Guid.NewGuid().ToString();
-
     private Player player;
+
+    private UserAccount userAccount;
 
     [Test]
     public void ConstructorShouldNotThrowExceptionWhenInvoked()
@@ -23,34 +24,8 @@ internal sealed class PlayerTests
         Assert.DoesNotThrow(() => new Player()
         {
             Name = this.name,
-            UserAccountId = this.userAccountId,
+            UserAccount = this.userAccount,
         });
-    }
-
-    [Test]
-    public void IsDeletedShouldReturnFalseWhenInvoked()
-    {
-        // Arrange
-
-        // Act
-        bool actual = this.player.IsDeleted;
-
-        // Assert
-        Assert.That(actual, Is.False);
-    }
-
-    [Test]
-    public void IsDeletedShouldReturnTrueWhenSetToTrue()
-    {
-        // Arrange
-        const bool expected = true;
-
-        // Act
-        this.player.IsDeleted = expected;
-        bool actual = this.player.IsDeleted;
-
-        // Assert
-        Assert.That(actual, Is.True);
     }
 
     [Test]
@@ -69,24 +44,26 @@ internal sealed class PlayerTests
     [SetUp]
     public void Setup()
     {
+        this.userAccount = new UserAccount();
+
         this.player = new Player()
         {
             Name = this.name,
-            UserAccountId = this.userAccountId,
+            UserAccount = this.userAccount,
         };
     }
 
     [Test]
-    public void UserAccountIdShouldReturnUserAccountIdWhenInvoked()
+    public void UserAccountShouldReturnUserAccountWhenInvoked()
     {
         // Arrange
-        string expected = this.userAccountId;
+        var expected = this.userAccount;
 
         // Act
-        string actual = this.player.UserAccountId;
+        var actual = this.player.UserAccount;
 
         // Assert
-        Assert.That(actual, Is.EqualTo(expected));
+        Assert.That(actual, Is.SameAs(expected));
     }
 
     [Test]

@@ -7,8 +7,8 @@ namespace Web.Domain.Entities.Users;
 /// <summary>
 /// Represents a user session (for single-session management).
 /// </summary>
-/// <seealso cref="AuditableEntityBase" />
-public sealed class UserSessionToken : AuditableEntityBase
+/// <seealso cref="EntityBase" />
+public class UserSessionToken : EntityBase
 {
     /// <summary>
     /// Gets or sets a <see cref="DateTime"/> that represents when the the session will expire.
@@ -30,21 +30,26 @@ public sealed class UserSessionToken : AuditableEntityBase
     public required string HashedRefreshToken { get; init; }
 
     /// <summary>
-    /// Gets a <see cref="Guid"/> that represents the user session identifier.
+    /// Gets a value indicating whether this session is revoked.
     /// </summary>
     /// <value>
-    /// A <see cref="Guid"/> that represents the user session identifier.
+    ///   <c>true</c> if this session is revoked; otherwise, <c>false</c>.
     /// </value>
-    /// <remarks>
-    /// Each user session is unique, as a result the session identifier is used to determine whether this session is current and active in middleware.
-    /// </remarks>
-    public required Guid SessionId { get; init; }
+    public bool IsRevoked { get; set; }
 
     /// <summary>
-    /// Gets a <see cref="string"/> that represents the user account identifier associated with this session.
+    /// Gets a <see cref="DateTime"/> that represents when the session started.
     /// </summary>
     /// <value>
-    /// A <see cref="string"/> that represents the user account identifier associated with this session.
+    /// The <see cref="DateTime"/> that represents when the session started.
     /// </value>
-    public required string UserAccountId { get; init; }
+    public DateTime StartDate { get; init; }
+
+    /// <summary>
+    /// Gets the user account associated with this session.
+    /// </summary>
+    /// <value>
+    /// The user account associated with this session.
+    /// </value>
+    public virtual required UserAccount UserAccount { get; init; }
 }

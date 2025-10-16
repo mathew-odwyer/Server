@@ -26,11 +26,10 @@ internal sealed class UserSessionValidationMiddleware
         if (context.User.Identity?.IsAuthenticated == true)
         {
             string? identifier = context.User.FindFirstValue("identifier");
-            string? session = context.User.FindFirstValue("session");
 
             // If the claims are null, empty or whitespace we can't proceed with validation.
             // However, because the user has authenticated, something has gone wrong so we should return a 401 Unauthorized.
-            if (string.IsNullOrWhiteSpace(identifier) || string.IsNullOrWhiteSpace(session) || !Guid.TryParse(session, out var sessionId))
+            if (string.IsNullOrWhiteSpace(identifier) || !Guid.TryParse(identifier, out var userAccountId))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
@@ -39,7 +38,7 @@ internal sealed class UserSessionValidationMiddleware
             this.logger.LogDebug("Validating active session for user {UserId} on path {Path}", identifier, context.Request.Path);
 
             // Finally, check whether the user has an active session.
-            var activeSession = await userSessionTokenRepository.GetBySessionIdAsync(sessionId, context.RequestAborted).ConfigureAwait(false);
+            var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccountId, context.RequestAborted).ConfigureAwait(false);
 
             // If they don't, we can assume they're not authorized to make the requset because either the JWT has expired or they've logged out.
             if (activeSession == null)

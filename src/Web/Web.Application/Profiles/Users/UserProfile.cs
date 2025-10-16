@@ -9,7 +9,6 @@ using AutoMapper;
 using Web.Application.DTOs.Users;
 using Web.Application.Requests.Users.LoginUser;
 using Web.Application.Requests.Users.RegisterUser;
-using Web.Application.Requests.Users.ValidateUser;
 
 [ExcludeFromCodeCoverage]
 internal sealed class UserProfile : Profile
@@ -18,6 +17,5 @@ internal sealed class UserProfile : Profile
     {
         this.CreateMap<RegisterUserRequestDto, RegisterUserRequest>();
         this.CreateMap<LoginUserRequestDto, LoginUserRequest>();
-        this.CreateMap<ValidateUserRequestDto, ValidateUserRequest>();
     }
 }

@@ -30,6 +30,11 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
     /// <summary>
+    /// The user account context, used to fetch the currently authenticated user.
+    /// </summary>
+    private readonly IUserAccountContext userAccountContext;
+
+    /// <summary>
     /// The user session token repository, used to expire the currently active session.
     /// </summary>
     private readonly IUserSessionTokenRepository userSessionTokenRepository;
@@ -46,22 +51,28 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
     /// <param name="userSessionTokenRepository">
     /// The user session token repository, used to expire the currently active session.
     /// </param>
+    /// <param name="userAccountContext">
+    /// The user account context, used to fetch the currently authenticated user.
+    /// </param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when one of the following parameters is <c>null</c>:
     /// <list type="bullet">
     ///   <item><description><paramref name="logger"/></description></item>
     ///   <item><description><paramref name="unitOfWorkFactory"/></description></item>
     ///   <item><description><paramref name="userSessionTokenRepository"/></description></item>
+    ///   <item><description><paramref name="userAccountContext"/></description></item>
     /// </list>
     /// </exception>
     public LogoutUserRequestHandler(
         ILogger<LogoutUserRequestHandler> logger,
         IUnitOfWorkFactory unitOfWorkFactory,
-        IUserSessionTokenRepository userSessionTokenRepository)
+        IUserSessionTokenRepository userSessionTokenRepository,
+        IUserAccountContext userAccountContext)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
         this.userSessionTokenRepository = userSessionTokenRepository ?? throw new ArgumentNullException(nameof(userSessionTokenRepository));
+        this.userAccountContext = userAccountContext ?? throw new ArgumentNullException(nameof(userAccountContext));
     }
 
     /// <inheritdoc/>
@@ -69,27 +80,29 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        this.logger.LogInformation("User logging out with ID: {UserAccountId}", request.UserAccountId);
+        var userAccount = this.userAccountContext.User;
+
+        this.logger.LogInformation("User logging out with ID: {UserAccountId}", userAccount!.Id);
 
         var work = this.unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(request.UserAccountId, cancellationToken).ConfigureAwait(false);
+        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
 
         if (activeSession == null)
         {
-            this.logger.LogError("Failed to locate active session for user with ID: '{UserAccountId}'", request.UserAccountId);
-            throw new InvalidOperationException($"Failed to locate an active session for user with ID: '{request.UserAccountId}'");
+            this.logger.LogError("Failed to locate active session for user with ID: '{UserAccountId}'", userAccount.Id);
+            throw new InvalidOperationException($"Failed to locate an active session for user with ID: '{userAccount.Id}'");
         }
 
         try
         {
-            activeSession.ExpirationDate = DateTime.UtcNow;
+            activeSession.IsRevoked = true;
             await work.SaveAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (DatabaseUpdateConcurrencyException ex)
         {
             // Lets keep this here just incase someone attempts to spoof tokens.
             // There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context.
-            this.logger.LogError(ex, "Failed to logout from active session for user with ID: {UserAccountId}", activeSession.UserAccountId);
+            this.logger.LogError(ex, "Failed to logout from active session for user with ID: {UserAccountId}", userAccount.Id);
             throw new ConflictException("Logout failed due to a system error.", ex);
         }
     }

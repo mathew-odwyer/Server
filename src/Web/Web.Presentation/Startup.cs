@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using Web.Application.Contexts;
 using Web.Application.Extensions;
 using Web.Infrastructure.Extensions;
+using Web.Presentation.Contexts;
 using Web.Presentation.Filters;
 using Web.Presentation.Middleware.Users;
 
@@ -113,5 +115,7 @@ internal sealed class Startup
 
         services.AddApplicationServices(this.Configuration);
         services.AddInfrastructureServices(this.Configuration, "Local");
+
+        services.AddScoped<IUserAccountContext, UserAccountContext>();
     }
 }

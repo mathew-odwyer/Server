@@ -52,6 +52,7 @@ public static class ServiceCollectionExtensions
 
         services.AddMediatR(x =>
         {
+            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehahviour<,>));
             x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
             x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
@@ -60,7 +61,6 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddValidatedOptions<JwtOptions>(configuration);
-        services.AddValidatedOptions<ClientTokenOptions>(configuration);
 
         return services;
     }
