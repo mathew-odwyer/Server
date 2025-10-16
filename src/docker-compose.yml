@@ -3,7 +3,7 @@ name: mantanimus
 services:
   caddy:
     container_name: caddy
-    image: mantanimus-caddy
+    image: caddy
     build: 
       context: ./Caddy
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
       timeout: 5s
 
   redis:
-    container_name: mantanimus-redis
+    container_name: redis
     image: redis:latest
     expose:
       - "6379:6379"
@@ -37,7 +37,7 @@ services:
       timeout: 5s
 
   nats:
-    container_name: mantanimus-nats
+    container_name: nats
     image: nats:latest
     expose:
       - "4222:4222"
@@ -49,28 +49,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
-
-  gateway:
-    container_name: gateway
-    image: mantanimus-gateway
-    build:
-      context: ./Server
-      dockerfile: ./gateway/Dockerfile
-    expose:
-      - "8080:8080"
-    depends_on:
-      redis:
-        condition: service_healthy
-      web:
-        condition: service_healthy
-    networks:
-      - network
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
-      interval: 5s
-      retries: 5
-      start_period: 5s
-      timeout: 5s
 
   web:
     container_name: web
