@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"HttpError",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"HttpError",
+  "parent":{
+    "name":"Network",
+    "path":"folders/Extensions/GMCore/Scripts/Errors/Network.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

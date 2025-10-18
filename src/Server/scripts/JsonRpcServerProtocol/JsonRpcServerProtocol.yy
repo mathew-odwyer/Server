@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"JsonRpcServerProtocol",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"JsonRpcServerProtocol",
+  "parent":{
+    "name":"JsonRpc",
+    "path":"folders/Extensions/GMCore/Scripts/Network/Protocol/JsonRpc.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
