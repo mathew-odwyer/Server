@@ -6,7 +6,7 @@
   "name":"http_async",
   "parent":{
     "name":"HTTP",
-    "path":"folders/Extensions/GMCore/Scripts/Network/HTTP.yy",
+    "path":"folders/Scripts/Network/HTTP.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

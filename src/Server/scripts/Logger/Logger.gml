@@ -10,7 +10,6 @@ enum log_type
 };
 
 /// @description Represents a logger.
-/// @argument {Function} log_func The function used when logging.
 function Logger() constructor
 {
     /// @type {Enum.log_type}

@@ -6,7 +6,7 @@
   "name":"Server",
   "parent":{
     "name":"Network",
-    "path":"folders/Extensions/GMCore/Scripts/Network.yy",
+    "path":"folders/Scripts/Network.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

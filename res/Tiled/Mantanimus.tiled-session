@@ -1,0 +1,33 @@
+{
+    "activeFile": "Maps/Bellmare/rm_bellmare_tavern.tmx",
+    "expandedProjectPaths": [
+        "Maps",
+        "Maps/Bellmare"
+    ],
+    "fileStates": {
+        "Maps/Bellmare/rm_bellmare_tavern.tmx": {
+            "scale": 4.398697916666666,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 120.03552187555503,
+                "y": 96.05115150079924
+            }
+        },
+        "Maps/Bellmare/rm_bellmare_tavern.tmx#ts_inside": {
+            "scaleInDock": 1
+        },
+        "Maps/Bellmare/rm_bellmare_tavern.tmx#ts_masking": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Entities/Fireplace/ts_fireplace.tsx": {
+            "scaleInDock": 1
+        }
+    },
+    "openFiles": [
+        "Maps/Bellmare/rm_bellmare_tavern.tmx"
+    ],
+    "project": "Mantanimus.tiled-project",
+    "recentFiles": [
+        "Maps/Bellmare/rm_bellmare_tavern.tmx"
+    ]
+}
