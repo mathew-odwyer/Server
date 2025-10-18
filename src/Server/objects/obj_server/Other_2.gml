@@ -1,5 +1,6 @@
 /// @description Setup unhandled exceptions.
 
+// TODO: Can this be moved into like a Configure script or something?
 Promise.UnhandledRejectionCallback = function(error)
 {
 	if (is_struct(error))

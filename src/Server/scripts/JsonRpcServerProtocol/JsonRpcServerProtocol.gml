@@ -128,7 +128,6 @@ function JsonRpcServerProtocol(server) constructor
 			return;
 		}
 		
-		
 		try
 		{
 			var result = handler(params, socket);

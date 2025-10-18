@@ -6,7 +6,7 @@
   "name":"RpcError",
   "parent":{
     "name":"Errors",
-    "path":"folders/Extensions/GMCore/Scripts/Network/Protocol/Errors.yy",
+    "path":"folders/Scripts/Network/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
