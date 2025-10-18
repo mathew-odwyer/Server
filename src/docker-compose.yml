@@ -3,7 +3,6 @@ name: mantanimus
 services:
   caddy:
     container_name: caddy
-    image: caddy
     build: 
       context: ./Caddy
       dockerfile: Dockerfile
@@ -22,37 +21,8 @@ services:
       start_period: 10s
       timeout: 5s
 
-  redis:
-    container_name: redis
-    image: redis:latest
-    expose:
-      - "6379:6379"
-    networks:
-      - network
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      interval: 5s
-      retries: 5
-      start_period: 5s
-      timeout: 5s
-
-  nats:
-    container_name: nats
-    image: nats:latest
-    expose:
-      - "4222:4222"
-    networks:
-      - network
-    healthcheck:
-      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/4222"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-
   web:
     container_name: web
-    image: mantanimus-web
     build:
       context: ./Web
       dockerfile: Dockerfile
@@ -74,13 +44,15 @@ services:
 
   database:
     container_name: database
-    image: mantanimus-database
     build:
-      context: ./Web/Web.Infrastructure
+      context: ./Web/Mantanimus.Infrastructure
       dockerfile: Dockerfile
     volumes:
       - db_data:/var/opt/mssql
       - data-protection-keys:/root/.aspnet/DataProtection-Keys
+    depends_on:
+      caddy:
+        condition: service_healthy
     networks:
       - network
     expose:
@@ -91,6 +63,40 @@ services:
       retries: 5
       start_period: 5s
       timeout: 5s
+
+  server:
+    container_name: server
+    build: 
+      context: ./Server/build
+      dockerfile: Dockerfile.Run
+    expose:
+      - "8080:8080"
+    networks:
+      - network
+    depends_on:
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: >
+        sh -c "echo | websocat -n --connect ws://localhost:8080 >/dev/null 2>&1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  builder:
+    container_name: builder
+    build:
+      context: ./Server
+      dockerfile: Dockerfile.Build
+    ports:
+      - "22:22"
+    # Required by fusermount
+    devices:
+      - /dev/fuse:/dev/fuse
+    # Be careful
+    cap_add:
+      - SYS_ADMIN
 
 networks:
   network:

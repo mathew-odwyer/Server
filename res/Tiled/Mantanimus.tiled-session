@@ -1,8 +1,8 @@
 {
     "activeFile": "Maps/Bellmare/rm_bellmare_tavern.tmx",
     "expandedProjectPaths": [
-        "Maps",
-        "Maps/Bellmare"
+        "Maps/Bellmare",
+        "Maps"
     ],
     "fileStates": {
         "Maps/Bellmare/rm_bellmare_tavern.tmx": {
@@ -10,7 +10,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 120.03552187555503,
-                "y": 96.05115150079924
+                "y": 95.59647149369486
             }
         },
         "Maps/Bellmare/rm_bellmare_tavern.tmx#ts_inside": {

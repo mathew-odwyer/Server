@@ -103,6 +103,6 @@ internal sealed class Startup
         services.AddHealthChecks();
 
         services.AddApplicationServices(this.Configuration);
-        services.AddInfrastructureServices(this.Configuration, "Local");
+        services.AddInfrastructureServices(this.Configuration);
     }
 }

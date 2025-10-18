@@ -22,7 +22,7 @@ function http_async(url, type, body = {}, options = {})
 	
 	if (struct_exists(options, "bearer"))
 	{
-		headers[? "Authorization"] = $"Bearer {options.bearer}";
+		headers[? "Authorization"] = $"Bearer {options[$ "bearer"]}";
 	}
 	
 	var promise = new Promise();

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"SocketError",
   "parent":{
-    "name":"Network",
-    "path":"folders/Extensions/GMCore/Scripts/Errors/Network.yy",
+    "name":"Sockets",
+    "path":"folders/Extensions/GMCore/Scripts/Errors/Sockets.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

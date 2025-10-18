@@ -206,7 +206,8 @@ function JsonRpcServerProtocol(server) constructor
 					
 					return;
 				}
-				
+
+				/// @localvar {Struct.Error} ex
 				connection.send({
 					jsonrpc: "2.0",
 					id: rpc_id,
