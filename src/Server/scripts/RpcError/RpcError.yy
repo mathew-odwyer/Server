@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"RpcError",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"RpcError",
+  "parent":{
+    "name":"Errors",
+    "path":"folders/Extensions/GMCore/Scripts/Network/Protocol/Errors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

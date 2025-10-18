@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Logger",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Logger",
+  "parent":{
+    "name":"Logging",
+    "path":"folders/Extensions/GMCore/Scripts/Logging.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

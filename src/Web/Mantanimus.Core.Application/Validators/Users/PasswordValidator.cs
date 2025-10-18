@@ -1,0 +1,41 @@
+// <copyright file="PasswordValidator.cs" company="Software Antics">
+//   Copyright (c) Software Antics. All rights reserved.
+// </copyright>
+
+namespace Mantanimus.Core.Application.Validators.Users;
+
+using FluentValidation;
+
+internal sealed class PasswordValidator : AbstractValidator<string>
+{
+    internal PasswordValidator()
+    {
+        this.RuleFor(x => x)
+            .NotEmpty().WithMessage("Password cannot be empty.")
+            .MinimumLength(12).WithMessage("Password must be at least 12 characters.")
+            .Must(ContainsUppercaseCharacter).WithMessage("Password must contain at least one uppercase character.")
+            .Must(ContainsLowercaseCharacter).WithMessage("Password must contain at least one lowercase character.")
+            .Must(ContainsNumber).WithMessage("Password must contain at least one number.")
+            .Must(ContainsSpecialCharacter).WithMessage("Password must contain at least one special character.");
+    }
+
+    private static bool ContainsLowercaseCharacter(string password)
+    {
+        return password.Any(char.IsLower);
+    }
+
+    private static bool ContainsNumber(string password)
+    {
+        return password.Any(char.IsDigit);
+    }
+
+    private static bool ContainsSpecialCharacter(string password)
+    {
+        return password.Any(x => !char.IsLetterOrDigit(x));
+    }
+
+    private static bool ContainsUppercaseCharacter(string password)
+    {
+        return password.Any(char.IsUpper);
+    }
+}

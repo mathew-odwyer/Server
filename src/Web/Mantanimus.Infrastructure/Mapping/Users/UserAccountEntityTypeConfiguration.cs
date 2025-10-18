@@ -1,0 +1,41 @@
+// <copyright file="UserAccountEntityTypeConfiguration.cs" company="Software Antics">
+//   Copyright (c) Software Antics. All rights reserved.
+// </copyright>
+
+namespace Mantanimus.Infrastructure.Mapping.Users;
+
+using Mantanimus.Core.Domain.Entities.Users;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+/// <summary>
+/// Configures the <see cref="UserAccount"/> entity.
+/// </summary>
+/// <see cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
+public sealed class UserAccountEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserAccount>
+{
+    /// <inheritdoc/>
+    public override void Configure(EntityTypeBuilder<UserAccount> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder
+            .HasIndex(x => x.Username)
+            .IsUnique();
+
+        builder
+            .HasIndex(x => x.EmailAddress)
+            .IsUnique();
+
+        builder
+            .Property(x => x.Username)
+            .HasMaxLength(12)
+            .IsRequired();
+
+        builder
+            .Property(x => x.EmailAddress)
+            .HasMaxLength(320)
+            .IsRequired();
+
+        base.Configure(builder);
+    }
+}
