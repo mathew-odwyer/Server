@@ -18,7 +18,7 @@ function ClientConnection(socket) constructor
 		buffer_seek(_write_buffer, buffer_seek_start, 0);
 		buffer_write(_write_buffer, buffer_string, json_stringify(message));
 		
-		return network_send_packet(_socket, _write_buffer, buffer_tell(_write_buffer)) >= 0;
+		return network_send_raw(_socket, _write_buffer, buffer_tell(_write_buffer)) >= 0;
 	}
 	
 	/// @description Disconnects the client from the server.

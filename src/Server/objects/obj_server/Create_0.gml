@@ -17,3 +17,6 @@ _server = new Server(server_port, server_max_clients);
 /// @type {Struct.JsonRpcServerProtocol}
 /// @description The protocol to be used by the server.
 _protocol = new JsonRpcServerProtocol(_server);
+
+rpc_health_register_callbacks();
+rpc_user_register_callbacks();

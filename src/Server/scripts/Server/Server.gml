@@ -5,7 +5,7 @@ function Server(port, max_clients) constructor
 {
 	/// @type {Id.Socket}
 	/// @description The underlying server socket.
-	_server = network_create_server(network_socket_ws, port, max_clients);
+	_server = network_create_server_raw(network_socket_ws, port, max_clients);
 
 	/// @type {Id.DsMap<Real, Struct.ClientConnection>}
 	/// @description The socket identifier to client connection map. 

@@ -5,6 +5,7 @@
 namespace Mantanimus.Presentation;
 
 using System.Text;
+using System.Text.Json;
 using Mantanimus.Core.Application.Extensions;
 using Mantanimus.Infrastructure.Extensions;
 using Mantanimus.Presentation.Factories;
@@ -73,7 +74,8 @@ internal sealed class Startup
             x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
             x.Filters.Add<ConflictExceptionFilterAttribute>();
             x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
-        });
+        })
+        .AddJsonOptions(x => x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
 
         services.AddRazorPages();
 

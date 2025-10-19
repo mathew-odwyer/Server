@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ValidationError",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ValidationError",
+  "parent":{
+    "name":"Errors",
+    "path":"folders/Scripts/Network/Errors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
