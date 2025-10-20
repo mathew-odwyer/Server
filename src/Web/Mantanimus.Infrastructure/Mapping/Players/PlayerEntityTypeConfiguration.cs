@@ -1,0 +1,39 @@
+// <copyright file="PlayerEntityTypeConfiguration.cs" company="Software Antics">
+//   Copyright (c) Software Antics. All rights reserved.
+// </copyright>
+
+namespace Mantanimus.Infrastructure.Mapping.Players;
+
+using Mantanimus.Core.Domain.Entities.Players;
+using Mantanimus.Core.Domain.Entities.Users;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+/// <summary>
+/// Configures the <see cref="UserSessionToken"/> entity.
+/// </summary>
+/// <seealso cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
+public sealed class PlayerEntityTypeConfiguration : EntityTypeConfigurationBase<Player>
+{
+    /// <inheritdoc/>
+    public override void Configure(EntityTypeBuilder<Player> builder)
+    {
+        builder
+            .HasIndex(p => p.Name)
+            .IsUnique();
+
+        builder
+            .Property(p => p.Name)
+            .IsRequired()
+            .HasMaxLength(12);
+
+        builder
+            .Property(x => x.X)
+            .IsRequired();
+
+        builder
+            .Property(x => x.Y)
+            .IsRequired();
+
+        base.Configure(builder);
+    }
+}

@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Mvc" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mantanimus.Infrastructure\Mantanimus.Infrastructure.csproj" />

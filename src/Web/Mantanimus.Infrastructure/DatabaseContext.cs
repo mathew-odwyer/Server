@@ -21,16 +21,10 @@ internal sealed class DatabaseContext : IdentityDbContext<IdentityUser<Guid>, Id
     {
         ArgumentNullException.ThrowIfNull(optionsBuilder);
 
+        optionsBuilder.UseLazyLoadingProxies();
+
         optionsBuilder.AddInterceptors(new AuditableEntitySaveChangesInterceptor());
 
-        // TODO: Gateway rpc-websockets server - (authRpcServer.js - auth.register)
-        //              - Ping
-        //              - Heartbeat
-        //              - POST UserAccount/Register w/ email, password, username.
-        //              - Forward the error (if any) from the rpc-server to the client with message: error.detail;
-        //              - On success, I guess just do nothing as it should be handled by the rpc-websockets library???
-
-        optionsBuilder.UseLazyLoadingProxies();
         base.OnConfiguring(optionsBuilder);
     }
 

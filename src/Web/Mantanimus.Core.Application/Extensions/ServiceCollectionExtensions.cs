@@ -9,6 +9,7 @@ using System.Reflection;
 using FluentValidation;
 using Mantanimus.Core.Application.Behaviours;
 using Mantanimus.Core.Application.Options.Security;
+using Mantanimus.Core.Application.Profiles.Players;
 using Mantanimus.Core.Application.Profiles.Users;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -41,7 +42,12 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        services.AddAutoMapper(x => x.AddProfile<UserProfile>());
+        services.AddAutoMapper(x =>
+        {
+            x.AddProfile<UserProfile>();
+            x.AddProfile<PlayerProfile>();
+        });
+
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddMediatR(x =>

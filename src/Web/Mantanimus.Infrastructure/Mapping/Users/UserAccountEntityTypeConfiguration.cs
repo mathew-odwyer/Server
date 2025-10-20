@@ -4,6 +4,7 @@
 
 namespace Mantanimus.Infrastructure.Mapping.Users;
 
+using Mantanimus.Core.Domain.Entities.Players;
 using Mantanimus.Core.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -35,6 +36,12 @@ public sealed class UserAccountEntityTypeConfiguration : AuditableEntityTypeConf
             .Property(x => x.EmailAddress)
             .HasMaxLength(320)
             .IsRequired();
+
+        // Shared primary key one-to-one relationship
+        builder
+            .HasOne(x => x.Player)
+            .WithOne()
+            .HasForeignKey<Player>(x => x.Id);
 
         base.Configure(builder);
     }

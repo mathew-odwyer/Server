@@ -10,10 +10,12 @@ using Mantanimus.Core.Application.Extensions;
 using Mantanimus.Infrastructure.Extensions;
 using Mantanimus.Presentation.Factories;
 using Mantanimus.Presentation.Filters;
+using Mantanimus.Presentation.Middleware.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 internal sealed class Startup
@@ -30,7 +32,12 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
 
-        if (!environment.IsDevelopment())
+        if (environment.IsDevelopment())
+        {
+            application.UseSwagger();
+            application.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Mantanimus API v1"));
+        }
+        else
         {
             application.UseHsts();
         }
@@ -38,7 +45,7 @@ internal sealed class Startup
         application.UseRouting();
 
         application.UseAuthentication();
-        ////application.UseMiddleware<UserSessionValidationMiddleware>();
+        application.UseMiddleware<UserSessionValidationMiddleware>();
         application.UseAuthorization();
 
         application.UseStaticFiles(new StaticFileOptions()
@@ -105,6 +112,44 @@ internal sealed class Startup
         services.AddHealthChecks();
 
         services.AddApplicationServices(this.Configuration);
-        services.AddInfrastructureServices(this.Configuration);
+        services.AddInfrastructureServices(this.Configuration, "Local");
+
+        services.AddEndpointsApiExplorer();
+
+        services.AddSwaggerGen(x =>
+        {
+            x.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Mantanimus API",
+                Version = "v1",
+                Description = "API documentation for Mantanimus."
+            });
+
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "Enter JWT Bearer token **_only_**",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            };
+
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                {
+                    securityScheme,
+                    Array.Empty<string>()
+                }
+            };
+
+            x.AddSecurityDefinition("Bearer", securityScheme);
+            x.AddSecurityRequirement(securityRequirement);
+        });
     }
 }

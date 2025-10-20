@@ -21,6 +21,8 @@ internal static class Program
         using (var scope = application.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+
+            db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
         }
 

@@ -4,6 +4,8 @@
 
 namespace Mantanimus.Core.Domain.Entities.Users;
 
+using Mantanimus.Core.Domain.Entities.Players;
+
 /// <summary>
 /// Represents a user account for an individual user within the system.
 /// </summary>
@@ -20,6 +22,14 @@ public class UserAccount : AuditableEntityBase
     /// The email address is normalized to uppercase to ensure consistency and uniqueness.
     /// </remarks>
     public required string EmailAddress { get; init; }
+
+    /// <summary>
+    /// Gets the player linked to this <see cref="UserAccount"/>.
+    /// </summary>
+    /// <value>
+    /// The player linked to this <see cref="UserAccount"/>.
+    /// </value>
+    public virtual required Player Player { get; set; }
 
     /// <summary>
     /// Gets a <see cref="string"/> representing the username associated with the user account.

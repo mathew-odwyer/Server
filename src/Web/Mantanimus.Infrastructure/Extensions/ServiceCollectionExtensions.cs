@@ -5,12 +5,16 @@
 namespace Mantanimus.Infrastructure.Extensions;
 
 using Mantanimus.Core.Application.Contexts.Users;
+using Mantanimus.Core.Application.Services.Security;
 using Mantanimus.Core.Application.Services.Users;
 using Mantanimus.Core.Application.Work;
+using Mantanimus.Core.Application.Work.Players;
 using Mantanimus.Core.Application.Work.Users;
 using Mantanimus.Infrastructure.Contexts.Users;
+using Mantanimus.Infrastructure.Services.Security;
 using Mantanimus.Infrastructure.Services.Users;
 using Mantanimus.Infrastructure.Work;
+using Mantanimus.Infrastructure.Work.Players;
 using Mantanimus.Infrastructure.Work.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -71,8 +75,14 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
         services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+        services.AddScoped<IUserSessionTokenRepository, UserSessionTokenRepository>();
+
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
 
         services.AddScoped<IUserRegistrar, UserRegistrar>();
+        services.AddScoped<IUserAuthenticator, UserAuthenticator>();
+        services.AddScoped<ISecureTokenFactory, SecureTokenFactory>();
+        services.AddScoped<ISecureTokenHasher, SecureTokenHasher>();
 
         services.AddScoped<IUserAccountContext, UserAccountContext>();
 

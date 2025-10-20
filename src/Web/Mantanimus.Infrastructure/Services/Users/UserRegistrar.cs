@@ -10,6 +10,7 @@ using Mantanimus.Core.Application.Exceptions.Database;
 using Mantanimus.Core.Application.Services.Users;
 using Mantanimus.Core.Application.Work;
 using Mantanimus.Core.Application.Work.Users;
+using Mantanimus.Core.Domain.Entities.Players;
 using Mantanimus.Core.Domain.Entities.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -69,6 +70,10 @@ internal sealed class UserRegistrar : IUserRegistrar
                 Id = identityUser.Id,
                 Username = username.ToUpperInvariant(),
                 EmailAddress = emailAddress.ToUpperInvariant(),
+                Player = new Player()
+                {
+                    Name = username,
+                },
             };
 
             await this.userAccountRepository.AddAsync(userAccount).ConfigureAwait(false);
