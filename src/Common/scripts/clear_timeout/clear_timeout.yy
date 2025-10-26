@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"clear_timeout",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"clear_timeout",
+  "parent":{
+    "name":"Timers",
+    "path":"folders/Extensions/GMUtilities/Scripts/Timers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

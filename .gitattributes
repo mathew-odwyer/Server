@@ -61,3 +61,12 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+# Ignore .yy files for language statistics
+*.yy linguist-generated=true
+ 
+# force LF for metadata files for merge simplicity
+*.gml text eol=lf
+*.yy text eol=lf
+*.yyp text eol=lf
+*.json text eol=lf

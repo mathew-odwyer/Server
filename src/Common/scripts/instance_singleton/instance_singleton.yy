@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"instance_singleton",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"instance_singleton",
+  "parent":{
+    "name":"Instances",
+    "path":"folders/Extensions/GMUtilities/Scripts/Instances.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

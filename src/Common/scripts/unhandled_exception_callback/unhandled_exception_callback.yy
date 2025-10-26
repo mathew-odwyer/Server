@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"unhandled_exception_callback",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"unhandled_exception_callback",
+  "parent":{
+    "name":"Errors",
+    "path":"folders/Extensions/GMUtilities/Scripts/Errors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

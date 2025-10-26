@@ -1,6 +1,6 @@
 <div align="center">
 
-# Mantanimus
+# Winterhaven
 
 [![Built with: ASP.NET](https://img.shields.io/badge/Built%20with-ASP.NET-512BD4)](https://dotnet.microsoft.com/apps/aspnet)
 [![Made with: GameMaker](https://img.shields.io/badge/Made%20with-GameMaker-000000)](https://gamemaker.io/)
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Mantanimus is a work-in-progress 2D top-down online role-playing game set in a medieval fantasy world. Experience real-time multiplayer gameplay with smooth movement and secure networking infrastructure.
+Winterhaven is a work-in-progress 2D top-down online role-playing game set in a medieval fantasy world. Experience real-time multiplayer gameplay with smooth movement and secure networking infrastructure.
 
 > 🎮 This project showcases full-stack game server development capabilities, demonstrating expertise in distributed systems, real-time networking, and secure architecture.
 
@@ -38,8 +38,6 @@ Mantanimus is a work-in-progress 2D top-down online role-playing game set in a m
 
 - **Technical Architecture**
   - Containerized microservices using Docker.
-  - Distributed caching with Redis.
-  - Cross-service communication with NATS.
   - MSSQL database with Entity Framework Core.
   - Real-time WebSocket communication.
 
@@ -57,8 +55,7 @@ Mantanimus is a work-in-progress 2D top-down online role-playing game set in a m
 |---------|-----------------|----------|
 | Web API | C#, ASP.NET Identity, EF Core | User authentication and data management. |
 | Database | MSSQL | Persistent data storage with code-first approach. |
-| Gateway | NodeJS | Client connection management and routing. |
-| Game Server | GameMaker Language (GML) | Real-time game logic processing. |
+| Server | GameMaker Language (GML) | Real-time game logic processing. |
 | Infrastructure | Caddy, Redis, NATS | Security, communication and caching. |
 
 ## 🚀 Getting Started
@@ -80,6 +77,7 @@ Mantanimus is a work-in-progress 2D top-down online role-playing game set in a m
 2. Configure environment
    - Copy `.env.example` to `.env`.
    - Copy `.appsettings.Example.json` to `appsettings.json`.
+   - Configure any required variables.
 
 3. Build and run services
    ```bash

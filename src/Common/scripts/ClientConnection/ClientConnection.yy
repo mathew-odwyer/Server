@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ClientConnection",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ClientConnection",
+  "parent":{
+    "name":"Network",
+    "path":"folders/Extensions/GMNetwork/Scripts/Network.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

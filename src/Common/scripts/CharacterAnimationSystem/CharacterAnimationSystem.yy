@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CharacterAnimationSystem",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CharacterAnimationSystem",
+  "parent":{
+    "name":"Animations",
+    "path":"folders/Common/Scripts/Animations.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
