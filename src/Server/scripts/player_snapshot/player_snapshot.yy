@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"player_snapshot",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"player_snapshot",
+  "parent":{
+    "name":"Snapshots",
+    "path":"folders/Scripts/Players/Snapshots.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

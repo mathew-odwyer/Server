@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CharacterCustomizationPart",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CharacterCustomizationPart",
+  "parent":{
+    "name":"Customization",
+    "path":"folders/Extensions/Common/Scripts/Customization.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

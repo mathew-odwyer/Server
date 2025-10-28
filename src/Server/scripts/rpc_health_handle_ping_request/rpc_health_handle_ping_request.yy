@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"rpc_health_handle_ping_request",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rpc_health_handle_ping_request",
+  "parent":{
+    "name":"Health",
+    "path":"folders/Scripts/Network/Servers/Health.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

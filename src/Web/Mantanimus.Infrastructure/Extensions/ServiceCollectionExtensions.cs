@@ -63,14 +63,21 @@ public static class ServiceCollectionExtensions
             x.SignIn.RequireConfirmedEmail = false;
         });
 
-        services
-            .AddDbContext<DbContext, DatabaseContext>(x => x.UseSqlServer(configuration.GetConnectionString(connectionName), o =>
-            {
-                o.EnableRetryOnFailure(
-                    maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorNumbersToAdd: null);
-            }), ServiceLifetime.Scoped);
+        if (connectionName == "Memory")
+        {
+            services.AddDbContext<DbContext, DatabaseContext>(x => x.UseInMemoryDatabase("Database"));
+        }
+        else
+        {
+            services
+                .AddDbContext<DbContext, DatabaseContext>(x => x.UseSqlServer(configuration.GetConnectionString(connectionName), o =>
+                {
+                    o.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null);
+                }), ServiceLifetime.Scoped);
+        }
 
         services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 

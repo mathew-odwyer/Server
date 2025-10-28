@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureGroup>
+  <texture scale="1" mipsToGenerate="0" texwidth="128" texheight="128">default_0.bz2</texture>
+  <tpe x="4" y="4" tpage="default_0.bz2">ts_masking_Server_output_tileset.tpe</tpe>
+  <tpe x="70" y="2" tpage="default_0.bz2">spr_ts_masking_Server_b4e40e74-042c-4cc8-8664-5ad50f2e099f.tpe</tpe>
+  <tpe x="106" y="2" tpage="default_0.bz2">spr_character_mask_Server_888e571e-adc1-40c5-8460-19396240f1b2.tpe</tpe>
+</TextureGroup>

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"AnimationSystem",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"AnimationSystem",
+  "parent":{
+    "name":"Animations",
+    "path":"folders/Extensions/Common/Scripts/Animations.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

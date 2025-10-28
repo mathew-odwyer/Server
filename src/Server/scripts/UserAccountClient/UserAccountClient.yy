@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"UserAccountClient",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"UserAccountClient",
+  "parent":{
+    "name":"Users",
+    "path":"folders/Scripts/Network/HTTP/Clients/Users.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -22,7 +22,6 @@ internal sealed class DatabaseContext : IdentityDbContext<IdentityUser<Guid>, Id
         ArgumentNullException.ThrowIfNull(optionsBuilder);
 
         optionsBuilder.UseLazyLoadingProxies();
-
         optionsBuilder.AddInterceptors(new AuditableEntitySaveChangesInterceptor());
 
         base.OnConfiguring(optionsBuilder);

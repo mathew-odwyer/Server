@@ -168,6 +168,7 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
 
         return new LoginUserResponse(
             AccessToken: jwt.AccessToken,
-            RefreshToken: jwt.RefreshToken);
+            RefreshToken: jwt.RefreshToken,
+            ExpirationDate: userSessionToken.ExpirationDate);
     }
 }

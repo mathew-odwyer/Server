@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"rpc_user_handle_login_request",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rpc_user_handle_login_request",
+  "parent":{
+    "name":"Users",
+    "path":"folders/Scripts/Network/Servers/Users.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
