@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Server",
+  "%Name":"SocketError",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Server",
+  "name":"SocketError",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMNetwork/Scripts.yy",
+    "name":"Errors",
+    "path":"folders/Extensions/GMNetwork/Scripts/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

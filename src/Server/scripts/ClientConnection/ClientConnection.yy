@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ClientConnection",
   "parent":{
-    "name":"Network",
-    "path":"folders/Extensions/GMNetwork/Scripts/Network.yy",
+    "name":"Scripts",
+    "path":"folders/Extensions/GMNetwork/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

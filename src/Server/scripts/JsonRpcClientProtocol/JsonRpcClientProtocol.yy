@@ -6,7 +6,7 @@
   "name":"JsonRpcClientProtocol",
   "parent":{
     "name":"JsonRpc",
-    "path":"folders/Extensions/GMNetwork/Scripts/Network/Protocols/JsonRpc.yy",
+    "path":"folders/Extensions/GMNetwork/Scripts/Protocols/JsonRpc.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

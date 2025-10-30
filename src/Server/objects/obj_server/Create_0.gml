@@ -24,11 +24,5 @@ _server = new Server(socket_type, server_port, server_max_clients);
 /// @description The protocol to be used by the server.
 _protocol = new JsonRpcServerProtocol(_server);
 
-/// @inheritdoc
-notify = _protocol.notify;
-
-_protocol.register("health.ping", rpc_health_handle_ping_request);
-_protocol.register("health.heartbeat", rpc_health_handle_heartbeat_request);
-
-_protocol.register("user.register", rpc_user_handle_register_request);
-_protocol.register("user.login", rpc_user_handle_login_request);
+_protocol.register("health.ping", health_ping);
+_protocol.register("health.heartbeat", health_heartbeat);

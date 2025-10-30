@@ -1,10 +1,6 @@
 /// @description Represents an event aggregator (pub-sub).
 function EventAggregator() constructor
 {
-	/// @type {Struct.Logger}
-	/// @description The logger.
-	static _logger = new Logger(nameof(EventAggregator));
-	
     /// @type {Array<Function>}
     /// @description Holds events and their subscribers.
     static _events = {};
@@ -14,8 +10,6 @@ function EventAggregator() constructor
     /// @param {Any} data The `data` associated with the event.
     static Publish = function(name, data = {})
     {
-		_logger.log(log_type.trace, $"Publishing '{name}'");
-		
         var subscribers = struct_get(_events, name);
 
         if (is_undefined(subscribers))
@@ -44,8 +38,6 @@ function EventAggregator() constructor
     /// @param {Function} callback The function to subscribe to the `event`.
     static Subscribe = function(identifier, name, callback)
     {
-		_logger.log(log_type.trace, $"'{identifier} is subscribing to '{name}'...");
-		
         if (!struct_exists(_events, name))
         {
             struct_set(_events, name, []);
@@ -66,8 +58,6 @@ function EventAggregator() constructor
 	    {
 	        return;
 	    }
-
-		_logger.log(log_type.trace, $"'{identifier}' is unsubscribing from '{name}'...");
 
 	    var filtered_subscribers = [];
 	    var length = array_length(subscribers);

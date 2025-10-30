@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Server",
+  "%Name":"PromiseGML",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Server",
+  "name":"PromiseGML",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMNetwork/Scripts.yy",
+    "name":"Promises",
+    "path":"folders/Extensions/GMUtilities/Scripts/Promises.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,3 +1,5 @@
+/// @description Provides a JSON-RPC 2.0 client-side protocol handler for a `Struct.Client`.
+/// @param {Function} send The function used to send messages through the socket.
 function JsonRpcClientProtocol(send) constructor
 {
 	/// @type {Struct.Logger}
@@ -38,40 +40,40 @@ function JsonRpcClientProtocol(send) constructor
 	/// @description Sends a JSON-RPC 2.0 request to the server.
 	/// @param {String} procedure The procedure to send to the server.
 	/// @param {Struct} params To the parameteres of the procedure to send to the server.
-	/// @param {Real} timeout_delay The number of seconds to pass before rejecting the `Struct.Promise`.
-	/// @returns {Struct.Promise} Returns the `Promise` associated with the call.
+	/// @param {Real} timeout_delay The timeout delay in seconds.
+	/// @returns {Struct.__Promise} Returns the `Promise` associated with the call.
 	call = function(procedure, params = {}, timeout_delay = 5)
 	{
-		static rpc_id = 0;
-		rpc_id++;
-		
-		var promise = new Promise();
-		var timeout = set_timeout(method({promise}, function() {
-			promise.reject(new Error("The request timed out."));
-		}), timeout_delay);
-		
-		promise
-			.next(method({timeout}, function(result)
-			{
-				clear_timeout(timeout);
-				return result;
-			}))
-			.fail(method({timeout}, function(error)
-			{
-				clear_timeout(timeout);
-				throw error;
-			}));
-		
 		var payload = {
 			jsonrpc: "2.0",
-			id: rpc_id,
+			id: generate_uuid(),
 			method: procedure,
 			params: params,
 		};
 		
-		_command_to_handler_map[$ rpc_id] = promise;
-		_send(payload);
+		var promise = new Promise(method({_command_to_handler_map, _send, payload, timeout_delay}, function(resolve, reject)
+		{
+			var timeout = call_later(timeout_delay, time_source_units_seconds, method({reject}, function()
+			{
+				reject(new TimeoutError("Timeout: Failed to receive respons from server."));
+			}));
+			
+			_command_to_handler_map[$ payload.id] = {
+				resolve: resolve,
+				reject: reject,
+				timeout: timeout,
+			};
+			
+			if (!_send(payload))
+			{
+				call_cancel(timeout);
+				struct_remove(_command_to_handler_map, payload.id);
+				
+				reject(new SocketError($"Failed to send request: '{payload.method}'"));
+			}
+		}));
 		
+		/// @feather ignore GM1045
 		return promise;
 	}
 	
@@ -110,21 +112,19 @@ function JsonRpcClientProtocol(send) constructor
 				return;
 			}
 			
+			call_cancel(promise.timeout);
 			struct_remove(_command_to_handler_map, rpc_id);
 			
-			if (is_instanceof(promise, Promise))
-			{
-				var result = struct_get(message, "result");
-				var error = struct_get(message, "error");
+			var result = struct_get(message, "result");
+			var error = struct_get(message, "error");
 				
-				if (!is_undefined(result))
-				{
-					promise.resolve(result);
-				}
-				else if (!is_undefined(error))
-				{
-					promise.reject(error);
-				}
+			if (!is_undefined(result))
+			{
+				promise.resolve(result);
+			}
+			else if (!is_undefined(error))
+			{
+				promise.reject(error);
 			}
 		}
 		else

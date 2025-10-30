@@ -115,7 +115,7 @@ function JsonRpcServerProtocol(server) constructor
 		{
 			var result = handler(params, connection);
 			
-			if (!is_instanceof(result, Promise))
+			if (!is_instanceof(result, __Promise))
 			{
 				if (is_request)
 				{

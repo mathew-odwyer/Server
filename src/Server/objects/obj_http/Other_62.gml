@@ -1,4 +1,4 @@
-/// @description Handle HTTP responses.
+/// @description Handle HTTP events.
 
 var request = async_load[? "id"];
 var result = async_load[? "result"];
@@ -21,7 +21,11 @@ if (is_undefined(context))
 }
 
 var data = {};
-var promise = context.promise;
+
+var resolve = context.resolve;
+var reject = context.reject;
+var timeout = context.timeout;
+
 var options = context.options;
 
 if (!string_empty(result))
@@ -39,7 +43,7 @@ if (!string_empty(result))
 if (status == 0 && http_status >= 200 && http_status <= 299)
 {
 	// Success
-	promise.resolve(data);
+	resolve(data);
 }
 else
 {
@@ -50,8 +54,10 @@ else
 	}
 	
 	// Failure
-	promise.reject(data);
+	reject(data);
 }
+
+call_cancel(timeout);
 
 /// @feather ignore once GM1041
 struct_remove(http_async.RequestToContextMap, request);

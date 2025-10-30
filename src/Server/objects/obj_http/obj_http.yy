@@ -10,7 +10,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"HTTP",
-    "path":"folders/Extensions/GMNetwork/Objects/Network/HTTP.yy",
+    "path":"folders/Extensions/GMNetwork/Objects/HTTP.yy",
   },
   "parentObjectId":null,
   "persistent":true,

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"date_create_datetime_iso8601",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"date_create_datetime_iso8601",
+  "parent":{
+    "name":"Time",
+    "path":"folders/Extensions/GMUtilities/Scripts/Time.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Server",
+  "%Name":"TimeoutError",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Server",
+  "name":"TimeoutError",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMNetwork/Scripts.yy",
+    "name":"Errors",
+    "path":"folders/Extensions/GMUtilities/Scripts/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Server",
+  "%Name":"health_ping",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Server",
+  "name":"health_ping",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMNetwork/Scripts.yy",
+    "name":"Health",
+    "path":"folders/Scripts/Health.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

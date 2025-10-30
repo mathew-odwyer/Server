@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Server",
+  "%Name":"generate_uuid",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Server",
+  "name":"generate_uuid",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMNetwork/Scripts.yy",
+    "name":"Security",
+    "path":"folders/Extensions/GMUtilities/Scripts/Security.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
