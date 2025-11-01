@@ -6,7 +6,7 @@
   "name":"health_ping",
   "parent":{
     "name":"Health",
-    "path":"folders/Scripts/Health.yy",
+    "path":"folders/Scripts/Network/Servers/Health.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

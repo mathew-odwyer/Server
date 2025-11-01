@@ -2,6 +2,10 @@
 /// @param {Id.Socket} socket The underlying socket connection.
 function ClientConnection(socket) constructor
 {
+	/// @type {Struct.Logger}
+	/// @description The logger.
+	static _logger = new Logger(nameof(ClientConnection));
+	
 	/// @type {Id.Socket}
 	/// @description The underlying socket connection.
 	_socket = socket;
@@ -48,6 +52,8 @@ function ClientConnection(socket) constructor
 		{
 			network_destroy(_socket);
 			_socket = -1;
+			
+			_logger.log(log_type.debug, $"Socket disconnected with ID: '{_socket}'");
 		}
 		
 		_is_disposed = true;

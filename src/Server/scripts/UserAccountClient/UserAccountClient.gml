@@ -10,13 +10,21 @@ function UserAccountClient(options) constructor
     /// @description The login user URL.
     static _login_url = $"{api_url}/api/UserAccount/Login";
 
-    /// @type {Struct}
+    /// @type {String}
+    /// @description The refresh token URL.
+    static _refresh_token_url = $"{api_url}/api/UserAccount/RefreshToken";
+
+    /// @type {String}
+    /// @description The refresh token URL.
+    static _logout_url = $"{api_url}/api/UserAccount/Logout";
+
+	/// @type {Struct}
     /// @description The client options
     _options = options;
 
     /// @description Registers a new user account.
     /// @param {Struct} dto The data transfer object containing the registration details.
-    /// @returns {Struct.Promise} Returns a promise that is resolved when the API responds.
+    /// @returns {Struct.__Promise} Returns a promise that is resolved when the API responds.
     register_async = function(dto)
     {
         return http_async(_register_url, "POST", dto, _options);
@@ -24,9 +32,24 @@ function UserAccountClient(options) constructor
 
     /// @description Authenticates a potential user.
     /// @param {Struct} dto The data transfer object containing the users credentials.
-    /// @returns {Struct.Promise} Returns a promise that is resolved when the API responds.
+    /// @returns {Struct.__Promise} Returns a promise that is resolved when the API responds.
     login_async = function(dto)
     {
         return http_async(_login_url, "POST", dto, _options);
+    }
+	
+    /// @description Refreshes the JWT for current user.
+    /// @param {Struct} dto The data transfer object containing the refresh token.
+    /// @returns {Struct.__Promise} Returns a promise that is resolved when the API responds.
+    refresh_token_async = function(dto)
+    {
+        return http_async(_refresh_token_url, "POST", dto, _options);
+    }
+	
+	/// @description Logs out the current user.
+    /// @returns {Struct.__Promise} Returns a promise that is resolved when the API responds.
+    logout_async = function()
+    {
+        return http_async(_logout_url, "POST", {}, _options);
     }
 }

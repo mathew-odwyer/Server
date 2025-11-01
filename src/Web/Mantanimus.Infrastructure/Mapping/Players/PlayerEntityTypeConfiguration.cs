@@ -6,6 +6,7 @@ namespace Mantanimus.Infrastructure.Mapping.Players;
 
 using Mantanimus.Core.Domain.Entities.Players;
 using Mantanimus.Core.Domain.Entities.Users;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 /// <summary>
@@ -28,11 +29,13 @@ public sealed class PlayerEntityTypeConfiguration : EntityTypeConfigurationBase<
 
         builder
             .Property(x => x.X)
-            .IsRequired();
+            .IsRequired()
+            .HasDefaultValue(128);
 
         builder
             .Property(x => x.Y)
-            .IsRequired();
+            .IsRequired()
+            .HasDefaultValue(128);
 
         base.Configure(builder);
     }

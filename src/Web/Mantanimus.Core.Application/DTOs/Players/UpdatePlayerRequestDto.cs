@@ -18,5 +18,5 @@ using Mantanimus.Core.Domain.Entities.Players;
 /// </param>
 [ExcludeFromCodeCoverage]
 public sealed record UpdatePlayerRequestDto(
-    int? X,
-    int? Y);
+    double? X,
+    double? Y);

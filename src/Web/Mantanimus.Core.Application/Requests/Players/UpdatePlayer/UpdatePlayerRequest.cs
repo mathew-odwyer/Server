@@ -23,6 +23,6 @@ using MediatR;
 [ExcludeFromCodeCoverage]
 [Authorize]
 public sealed record UpdatePlayerRequest(
-    int? X,
-    int? Y)
+    double? X,
+    double? Y)
     : IRequest;

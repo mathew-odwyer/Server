@@ -19,18 +19,18 @@ public class Player : AuditableEntityBase
     public required string Name { get; init; }
 
     /// <summary>
-    /// Gets or sets an <see cref="int"/> that represents the X-coordinate of the <see cref="Player"/>.
+    /// Gets or sets an <see cref="double"/> that represents the X-coordinate of the <see cref="Player"/>.
     /// </summary>
     /// <value>
-    /// The <see cref="int"/> that represents the X-coordinate of the <see cref="Player"/>.
+    /// The <see cref="double"/> that represents the X-coordinate of the <see cref="Player"/>.
     /// </value>
-    public int X { get; set; }
+    public double X { get; set; }
 
     /// <summary>
-    /// Gets or sets an <see cref="int"/> that represents the Y-coordinate of the <see cref="Player"/>.
+    /// Gets or sets an <see cref="double"/> that represents the Y-coordinate of the <see cref="Player"/>.
     /// </summary>
     /// <value>
-    /// The <see cref="int"/> that represents the Y-coordinate of the <see cref="Player"/>.
+    /// The <see cref="double"/> that represents the Y-coordinate of the <see cref="Player"/>.
     /// </value>
-    public int Y { get; set; }
+    public double Y { get; set; }
 }

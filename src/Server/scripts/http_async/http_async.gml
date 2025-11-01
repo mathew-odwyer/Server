@@ -3,7 +3,7 @@
 /// @param {String} type The method type (POST, GET, etc).
 /// @param {Struct} body The body to send (empty if none).
 /// @param {Struct} options The options to send with this request (bearer, etc).
-/// @returns {Struct.Promise} Returns the promise to be resolved by the HTTP client.
+/// @returns {Struct.__Promise} Returns the promise to be resolved by the HTTP client.
 function http_async(url, type, body = {}, options = {})
 {
 	/// @type {Struct.Logger}
@@ -45,5 +45,7 @@ function http_async(url, type, body = {}, options = {})
 	}));
 	
 	ds_map_destroy(headers);
+	
+	/// @feather ignore once GM1045
 	return promise;
 }

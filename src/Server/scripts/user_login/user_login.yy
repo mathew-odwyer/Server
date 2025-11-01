@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"user_login",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"user_login",
+  "parent":{
+    "name":"Users",
+    "path":"folders/Scripts/Network/Servers/Users.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

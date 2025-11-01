@@ -1,5 +1,7 @@
 /// @description Initialize services.
 
+/// @globalvar {Struct.Logger} Logger
+
 Logger.LogLevel = log_type.debug;
 
 exception_unhandled_handler(unhandled_exception_callback);

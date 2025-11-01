@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"user_refresh",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"user_refresh",
+  "parent":{
+    "name":"Users",
+    "path":"folders/Scripts/Network/Servers/Users.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

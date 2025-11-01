@@ -53,10 +53,7 @@ public sealed class PlayerController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = new UpdatePlayerRequest(
-            X: requestDto.X,
-            Y: requestDto.Y);
-
+        var request = this.Mapper.Map<UpdatePlayerRequest>(requestDto);
         await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
         return this.NoContent();
     }

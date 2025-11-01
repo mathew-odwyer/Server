@@ -16,11 +16,11 @@ using Mantanimus.Core.Domain.Entities.Users;
 /// <param name="RefreshToken">
 /// The refresh token used to obtain a new access token.
 /// </param>
-/// <param>
-/// The expiration date and time of the access token.
+/// <param name="ExpirationSeconds">
+/// The access token expiry (in seconds).
 /// </param>
 [ExcludeFromCodeCoverage]
 public sealed record LoginUserResponse(
     string AccessToken,
     string RefreshToken,
-    DateTime ExpirationDate);
+    double ExpirationSeconds);

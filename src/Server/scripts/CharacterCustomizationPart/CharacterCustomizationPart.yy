@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CharacterCustomizationPart",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CharacterCustomizationPart",
+  "parent":{
+    "name":"Customization",
+    "path":"folders/Extensions/Winterhaven/Scripts/Characters/Customization.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -26,7 +26,7 @@ function JsonRpcServerProtocol(server) constructor
 	/// @description Sends a JSON-RPC 2.0 notification to the specified `connection`.
 	/// @param {Struct.ClientConnection} connection The connection to send the notification through.
 	/// @param {String} procedure The procedure to send to the `connection`.
-	/// @param {Struct} params The parameters of the procedure to send to the `connection`
+	/// @param {Any} params The parameters of the procedure to send to the `connection`
 	notify = function(connection, procedure, params = {})
 	{
 		var payload = {

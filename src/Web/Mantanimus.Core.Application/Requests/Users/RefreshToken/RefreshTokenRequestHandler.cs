@@ -164,6 +164,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
 
         return new RefreshTokenResponse(
             AccessToken: jwt.AccessToken,
-            RefreshToken: jwt.RefreshToken);
+            RefreshToken: jwt.RefreshToken,
+            ExpirationSeconds: newSessionToken.ExpirationDate.Subtract(DateTime.UtcNow).TotalSeconds);
     }
 }
