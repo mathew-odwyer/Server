@@ -11,3 +11,5 @@ with (obj_player)
 }
 
 connection.cleanup();
+
+ds_queue_destroy(_action_queue);

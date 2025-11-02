@@ -1,7 +1,7 @@
 /// @description Logs out the user associated with the request.
 /// @param {Undefined} _ Unusued parameters.
 /// @param {Struct.ClientConnection} connection The client connection that sent the request.
-/// @returns {Struct.__Promise|Undefined} Returns a promise that resolves when the player logs out.
+/// @returns {Struct.__Promise} Returns a promise that resolves when the player logs out.
 function user_logout(_, connection)
 {
 	/// @type {Struct.Logger}

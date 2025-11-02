@@ -36,7 +36,10 @@ function user_login(credentials, connection)
 			
 			with (obj_player)
 			{
+				/// @feather ignore once GM1041
 				array_push(players, player_snapshot(self));
+				
+				/// @feather ignore once GM1041
 				obj_server.notify(self.connection, "player.create_remote", snapshot);
 			}
 			
