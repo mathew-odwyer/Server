@@ -21,7 +21,7 @@ function user_logout(_, connection)
 	var user_account_client = new UserAccountClient(client_options);
 	var player_client = new PlayerClient(client_options);
 
-	var player = player_get(connection);
+	var player = player_get_by_connection(connection);
 
 	var dto = {
 		x: player[$ "x"] ?? undefined,

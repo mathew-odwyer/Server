@@ -23,8 +23,6 @@ function CharacterCustomizer() constructor
     /// @param {Real} y The y-coordinate of the position to draw.
     draw = function(index, x, y)
     {
-		// TODO: see obj_character_base draw event
-		//			- Maybe move this into Client.
 		var draw_element = function(element, index, x, y)
 		{
 			var sprite = element.get_sprite();

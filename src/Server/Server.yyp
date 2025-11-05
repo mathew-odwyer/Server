@@ -136,7 +136,7 @@
     {"id":{"name":"Macros","path":"scripts/Macros/Macros.yy",},},
     {"id":{"name":"ObjectDisposedError","path":"scripts/ObjectDisposedError/ObjectDisposedError.yy",},},
     {"id":{"name":"player_action","path":"scripts/player_action/player_action.yy",},},
-    {"id":{"name":"player_get","path":"scripts/player_get/player_get.yy",},},
+    {"id":{"name":"player_get_by_connection","path":"scripts/player_get_by_connection/player_get_by_connection.yy",},},
     {"id":{"name":"player_snapshot","path":"scripts/player_snapshot/player_snapshot.yy",},},
     {"id":{"name":"PlayerClient","path":"scripts/PlayerClient/PlayerClient.yy",},},
     {"id":{"name":"PromiseGML","path":"scripts/PromiseGML/PromiseGML.yy",},},

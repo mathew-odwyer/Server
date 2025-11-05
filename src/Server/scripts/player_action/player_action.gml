@@ -3,7 +3,7 @@
 /// @param {Struct.ClientConnection} connection The client connection that sent the request.
 function player_action(queue, connection)
 {
-    var player = player_get(connection);
+    var player = player_get_by_connection(connection);
 
     if (player == noone)
     {
