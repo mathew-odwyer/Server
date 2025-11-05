@@ -32,15 +32,15 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v1","%Name":"connection","filters":[],"listItems":[],"multiselect":false,"name":"connection","rangeEnabled":false,"rangeMax":10,"rangeMin":0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"undefined","varType":4,},
+    {"$GMObjectProperty":"v1","%Name":"connection","filters":[],"listItems":[],"multiselect":false,"name":"connection","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"undefined","varType":4,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
-  "spriteMaskId":{
+  "spriteId":{
     "name":"spr_character_shadow_0_0",
     "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
   },
+  "spriteMaskId":null,
   "visible":true,
 }

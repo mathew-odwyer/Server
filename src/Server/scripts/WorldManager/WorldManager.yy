@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"WorldManager",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"WorldManager",
+  "parent":{
+    "name":"World",
+    "path":"folders/Extensions/Winterhaven/Scripts/World.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

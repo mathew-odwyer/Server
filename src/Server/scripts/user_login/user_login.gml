@@ -48,7 +48,7 @@ function user_login(credentials, connection)
 			
 			inst.name = player.name;
 			inst.connection = connection;
-			
+				
 			_logger.log(log_type.information, $"'{player.name}' logged in!");
 
 			return {

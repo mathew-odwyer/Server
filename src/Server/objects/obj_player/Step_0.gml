@@ -1,5 +1,7 @@
 /// @description Processes any required actions.
 
+WorldManager.LoadChunk(x, y);
+
 if (!ds_queue_empty(_action_queue))
 {
     var action = ds_queue_dequeue(_action_queue);   

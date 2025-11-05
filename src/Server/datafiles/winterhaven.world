@@ -1,0 +1,258 @@
+{
+    "maps": [
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 0,
+            "y": 0
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 512,
+            "y": 0
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1024,
+            "y": 0
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1536,
+            "y": 0
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2048,
+            "y": 0
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2560,
+            "y": 0
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 0,
+            "y": 512
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 512,
+            "y": 512
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1024,
+            "y": 512
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1536,
+            "y": 512
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2048,
+            "y": 512
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2560,
+            "y": 512
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 0,
+            "y": 1024
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 512,
+            "y": 1024
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1024,
+            "y": 1024
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1536,
+            "y": 1024
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2048,
+            "y": 1024
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2560,
+            "y": 1024
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 0,
+            "y": 1536
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 512,
+            "y": 1536
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1024,
+            "y": 1536
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1536,
+            "y": 1536
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2048,
+            "y": 1536
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2560,
+            "y": 1536
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 0,
+            "y": 2048
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 512,
+            "y": 2048
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1024,
+            "y": 2048
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1536,
+            "y": 2048
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2048,
+            "y": 2048
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2560,
+            "y": 2048
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 0,
+            "y": 2560
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 512,
+            "y": 2560
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_palace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1024,
+            "y": 2560
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_garden.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 1536,
+            "y": 2560
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_marketplace.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2048,
+            "y": 2560
+        },
+        {
+            "fileName": "Bellmare/rm_bellmare_city.tmx",
+            "height": 512,
+            "width": 512,
+            "x": 2560,
+            "y": 2560
+        }
+    ],
+    "onlyShowAdjacentMaps": false,
+    "type": "world"
+}

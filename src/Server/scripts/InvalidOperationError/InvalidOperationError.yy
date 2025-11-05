@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"InvalidOperationError",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"InvalidOperationError",
+  "parent":{
+    "name":"Errors",
+    "path":"folders/Extensions/GMUtilities/Scripts/Errors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
