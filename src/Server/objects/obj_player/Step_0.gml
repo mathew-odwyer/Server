@@ -1,4 +1,4 @@
-/// @description Processes any required actions.
+/// @description Update required animations and chunk loading.
 
 WorldManager.LoadChunk(x, y);
 
