@@ -2,7 +2,7 @@ http://localhost {
     respond "OK"
 }
 
-https://gateway.mantanimus.com.au {
+https://winterhaven.com.au {
     tls internal
     reverse_proxy server:8080
 }

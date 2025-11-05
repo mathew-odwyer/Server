@@ -2,7 +2,7 @@
 
 /// @type {String}
 /// @description The Web API url.
-#macro api_url "https://localhost:7256"
+#macro api_url "http://web:8080"
 
 /// @type {Constant.SocketType}
 /// @description The socket type.

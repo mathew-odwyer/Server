@@ -35,6 +35,7 @@ enqueue_actions = function(actions)
 /// @param {Any} params The parameters of the procedure to send to the `player`
 notify = function(procedure, params)
 {
+	/// @feather ignore once GM1041
     obj_server.notify(connection, procedure, params);
 }
 
