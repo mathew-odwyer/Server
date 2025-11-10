@@ -2,13 +2,13 @@
 
 # Winterhaven
 
+[Play Winterhaven MVP]()
+
 [![Built with: ASP.NET](https://img.shields.io/badge/Built%20with-ASP.NET-512BD4)](https://dotnet.microsoft.com/apps/aspnet)
 [![Made with: GameMaker](https://img.shields.io/badge/Made%20with-GameMaker-000000)](https://gamemaker.io/)
 [![Built with: Node.js](https://img.shields.io/badge/Built%20with-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](https://github.com/mathew-odwyer/Server/actions)
 [![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server?include_prereleases)](https://github.com/mathew-odwyer/Server/releases)
-
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
 </div>
@@ -25,11 +25,6 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 
 ### Current Implementation
 
-- **Multiplayer Experience**
-  - Register and login via the game client.
-  - Player movement with client-side prediction and server reconciliation.
-  - Global and private chat system with visual effects.
-
 - **Security Infrastructure**
   - ASP.NET Identity authentication.
   - JWT-based authorization.
@@ -41,11 +36,9 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
   - MSSQL database with Entity Framework Core.
   - Real-time WebSocket communication.
 
-- **Coming Soon**
-  - Real-time combat system with strategic mechanics
-  - Secure banking and inventory management
-  - Comprehensive skills progression system
-  - Player-driven economy with trading features
+- **Multiplayer Experience**
+  - Register and login via the game client.
+  - Player movement with client-side prediction and server reconciliation.
 
 ## 🏗️ Architecture
 
@@ -60,6 +53,9 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 
 ## 🚀 Getting Started
 
+> [!INFORMATION]
+> Are you an employer or just hoping to test out the game as quickly as possible? I've hosted in online in a test environment [here](). Just make an account and login.
+
 ### Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
@@ -68,16 +64,12 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 
 ### Installation
 
-> [!WARNING]  
-> Don't clone the repository as the client is not open-source due to external licensing requirements. Ensure you download the [latest release](https://github.com/mathew-odwyer/Server/releases) if you wish to play the game.
-
 1. Download latest release
    - Get the latest release from [GitHub Releases](https://github.com/mathew-odwyer/Server/releases).
 
 2. Configure environment
-   - Copy `.env.example` to `.env`.
-   - Copy `.appsettings.Example.json` to `appsettings.json`.
-   - Configure any required variables.
+   - There's a fair bit to get setup and running locally, feel free to DM me on [Discord]() if you're looking to get started quickly.
+   - I have plans in the future to automate through process through a CLI tool if my project gains enough traction.
 
 3. Build and run services
    ```bash
