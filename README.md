@@ -54,7 +54,7 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 ## 🚀 Getting Started
 
 > [!NOTE]  
-> Are you an employer or just hoping to test out the game as quickly as possible? I've hosted in online in a test environment [here](). Just make an account and login.
+> Are you an employer or just hoping to test out the game as quickly as possible? I've hosted it online in a test environment [here](). Just make an account and login.
 
 ### Prerequisites
 
@@ -68,7 +68,7 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
    - Get the latest release from [GitHub Releases](https://github.com/mathew-odwyer/Server/releases).
 
 2. Configure environment
-   - There's a fair bit to get setup and running locally, feel free to DM me on [Discord]() if you're looking to get started quickly.
+   - There's a fair bit to get setup and running locally, feel free to message me directly if you're looking to get started quickly (_@softwareantics_ on Discord).
    - I have plans in the future to automate through process through a CLI tool if my project gains enough traction.
 
 3. Build and run services
