@@ -53,7 +53,7 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 
 ## 🚀 Getting Started
 
-> [!INFORMATION]
+> [!NOTE]  
 > Are you an employer or just hoping to test out the game as quickly as possible? I've hosted in online in a test environment [here](). Just make an account and login.
 
 ### Prerequisites
