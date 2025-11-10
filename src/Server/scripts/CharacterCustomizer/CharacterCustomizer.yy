@@ -6,7 +6,7 @@
   "name":"CharacterCustomizer",
   "parent":{
     "name":"Customization",
-    "path":"folders/Extensions/Winterhaven/Scripts/Characters/Customization.yy",
+    "path":"folders/Extensions/Winterhaven/Scripts/Customization.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -6,7 +6,7 @@
   "name":"CharacterAnimationSystem",
   "parent":{
     "name":"Animations",
-    "path":"folders/Extensions/Winterhaven/Scripts/Characters/Animations.yy",
+    "path":"folders/Extensions/Winterhaven/Scripts/Animations.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

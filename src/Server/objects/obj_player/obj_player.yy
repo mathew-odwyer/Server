@@ -37,10 +37,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
+  "spriteId":null,
+  "spriteMaskId":{
     "name":"spr_character_shadow_0_0",
     "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
   },
-  "spriteMaskId":null,
   "visible":true,
 }

@@ -12,3 +12,7 @@ services:
         - "1433:1433"
     env_file:
       - .env
+
+  server:
+    env_file:
+      - .env

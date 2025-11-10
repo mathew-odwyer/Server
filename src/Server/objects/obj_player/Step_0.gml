@@ -1,6 +1,4 @@
-/// @description Update required animations and chunk loading.
-
-WorldManager.LoadChunk(x, y);
+/// @description Process action queue.
 
 if (!ds_queue_empty(_action_queue))
 {

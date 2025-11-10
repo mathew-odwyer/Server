@@ -13,7 +13,7 @@
   "out_tilevborder":2,
   "parent":{
     "name":"Masking",
-    "path":"folders/Extensions/Winterhaven/Tilesets/Masking.yy",
+    "path":"folders/Tilesets/Masking.yy",
   },
   "resourceType":"GMTileSet",
   "resourceVersion":"2.0",

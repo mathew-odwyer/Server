@@ -1,5 +1,11 @@
 /// @description Initialize default parameters.
 
+/*
+	TODO: Grid based movement (follow tut)
+		- Will need to_room and to_tile.
+	TODO: Remove tolerance crap, this should work with RPG crash course
+*/
+
 /// @description Enumerates the available character states. 
 enum character_state
 {
@@ -35,6 +41,24 @@ _move_y = 0;
 /// @type {Real}
 /// @description The last direction as an interger.
 _last_direction = 3;
+
+_move = function()
+{
+	var xinput = _move_x;
+	var yinput = _move_y;
+
+	var collidables = [obj_entity_base];
+
+	if (layer_exists("Collisions"))
+	{
+		var collisions_layer = layer_get_id("Collisions");
+	    var tilemap_id = layer_tilemap_get_id(collisions_layer);
+
+	    array_push(collidables, tilemap_id);
+	}
+	
+	move_and_collide(xinput, yinput, collidables);
+}
 
 /// @description Determines whether the character is currently moving.
 /// @returns {Bool} Returns `true` if the character is moving; otherwise, `false`.

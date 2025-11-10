@@ -5,7 +5,6 @@ enum state_type
     on_exit,
     on_step,
 	on_step_end,
-    on_draw,
 }
 
 /// @description Represents a state machine.
