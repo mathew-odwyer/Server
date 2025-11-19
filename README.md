@@ -35,10 +35,12 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
   - Containerized microservices using Docker.
   - MSSQL database with Entity Framework Core.
   - Real-time WebSocket communication.
+  - Clean architecture by design.
 
 - **Multiplayer Experience**
   - Register and login via the game client.
   - Player movement with client-side prediction and server reconciliation.
+  - Communicate with other players on the same server.
 
 ## 🏗️ Architecture
 
