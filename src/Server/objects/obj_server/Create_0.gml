@@ -36,3 +36,5 @@ _protocol.register("user.refresh", user_refresh);
 _protocol.register("user.logout", user_logout);
 
 _protocol.register("player.action", player_action);
+
+_protocol.register("chat.send_message", chat_send_message);

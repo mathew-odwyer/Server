@@ -7,11 +7,11 @@ services:
     ports:
       - "8080:8080"
 
-  database:
-    ports:
-        - "1433:1433"
-    env_file:
-      - .env
+  # database:
+  #   ports:
+  #       - "1433:1433"
+  #   env_file:
+  #     - .env
 
   server:
     env_file:

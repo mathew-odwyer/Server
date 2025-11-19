@@ -1,11 +1,5 @@
 /// @description Initialize default parameters.
 
-/*
-	TODO: Grid based movement (follow tut)
-		- Will need to_room and to_tile.
-	TODO: Remove tolerance crap, this should work with RPG crash course
-*/
-
 /// @description Enumerates the available character states. 
 enum character_state
 {
