@@ -6,7 +6,7 @@
 [![Made with: GameMaker](https://img.shields.io/badge/Made%20with-GameMaker-000000)](https://gamemaker.io/)
 [![Built with: Node.js](https://img.shields.io/badge/Built%20with-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 
-[![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server?include_prereleases)](https://github.com/mathew-odwyer/Server/releases)
+[![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server)](https://github.com/mathew-odwyer/Server/releases)
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
 </div>
