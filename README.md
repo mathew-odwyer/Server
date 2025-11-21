@@ -2,8 +2,6 @@
 
 # Winterhaven
 
-[Play Winterhaven MVP]()
-
 [![Built with: ASP.NET](https://img.shields.io/badge/Built%20with-ASP.NET-512BD4)](https://dotnet.microsoft.com/apps/aspnet)
 [![Made with: GameMaker](https://img.shields.io/badge/Made%20with-GameMaker-000000)](https://gamemaker.io/)
 [![Built with: Node.js](https://img.shields.io/badge/Built%20with-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
@@ -20,6 +18,19 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 > 🎮 This project showcases full-stack game server development capabilities, demonstrating expertise in distributed systems, real-time networking, and secure architecture.
 
 <img width="1282" height="752" alt="Screenshot 2025-09-27 002412" src="https://github.com/user-attachments/assets/b08b891f-cfc9-417f-b13c-85ccf00f8964" />
+
+## Play The MVP
+
+We have a simple MVP demo environment setup for people to test out Winterhaven in it's early stages. Below you'll find instructions to play:
+
+1. Download the clients latest release [here](https://github.com/mathew-odwyer/Server/releases).
+2. Extract `Client-x64.zip` and run the `Client` application.
+
+> [!NOTE]  
+> The game is **_not_** complete and is only hosted to showcase the project to potential employers whilst I'm looking for work. User account data **does not** persist and as a result, if the server crashes, your account will be deleted.
+
+> [!WARNING]  
+> In rare cases, you may not be able to register or login due to the hosts networking bandwidth limitations for their free tier; however, this issue only occurs in instances where the client is built and ran from GMs CLI; compiled instances of the client seem to be fine.
 
 ## ✨ Key Features
 
@@ -56,7 +67,7 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 ## 🚀 Getting Started
 
 > [!NOTE]  
-> Are you an employer or just hoping to test out the game as quickly as possible? I've hosted it online in a test environment [here](). Just make an account and login.
+> Are you an employer or just hoping to test out the game as quickly as possible? I've hosted it online in a test environment. All you need to do is [download](https://github.com/mathew-odwyer/Server/releases) the client, make an account and login.
 
 ### Prerequisites
 
@@ -66,8 +77,9 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 
 ### Installation
 
-1. Download latest release
+1. Download the latest release for the client.
    - Get the latest release from [GitHub Releases](https://github.com/mathew-odwyer/Server/releases).
+   - Please note that due to licensing requirements the client cannot be open-source.
 
 2. Configure environment
    - There's a fair bit to get setup and running locally, feel free to message me directly if you're looking to get started quickly (_@softwareantics_ on Discord).
