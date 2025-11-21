@@ -3,6 +3,7 @@ name: mantanimus
 services:
   caddy:
     container_name: caddy
+    image: mantanimus-caddy
     build: 
       context: ./Caddy
       dockerfile: Dockerfile
@@ -24,6 +25,7 @@ services:
 
   web:
     container_name: web
+    image: mantanimus-web
     build:
       context: ./Web
       dockerfile: Dockerfile
@@ -67,6 +69,7 @@ services:
 
   server:
     container_name: server
+    image: mantanimus-server
     build: 
       context: ./Server/build
       dockerfile: Dockerfile.Run
