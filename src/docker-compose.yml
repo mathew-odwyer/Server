@@ -7,6 +7,7 @@ services:
       context: ./Caddy
       dockerfile: Dockerfile
     ports:
+      - "80:80"
       - "443:443"
     volumes:
       - "caddy_data:/data"
@@ -84,19 +85,19 @@ services:
       retries: 5
       start_period: 5s
 
-  builder:
-    container_name: builder
-    build:
-      context: ./Server
-      dockerfile: Dockerfile.Build
-    ports:
-      - "22:22"
-    # Required by fusermount
-    devices:
-      - /dev/fuse:/dev/fuse
-    # Be careful
-    cap_add:
-      - SYS_ADMIN
+  # builder:
+  #   container_name: builder
+  #   build:
+  #     context: ./Server
+  #     dockerfile: Dockerfile.Build
+  #   ports:
+  #     - "22:22"
+  #   # Required by fusermount
+  #   devices:
+  #     - /dev/fuse:/dev/fuse
+  #   # Be careful
+  #   cap_add:
+  #     - SYS_ADMIN
 
 networks:
   network:
