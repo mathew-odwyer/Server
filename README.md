@@ -57,12 +57,14 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
 
 ### Core Services
 
-| Service | Technology Stack | Purpose |
-|---------|-----------------|----------|
-| Web API | C#, ASP.NET Identity, EF Core | User authentication and data management. |
-| Database | MSSQL | Persistent data storage with code-first approach. |
-| Server | GameMaker Language (GML) | Real-time game logic processing. |
-| Infrastructure | Caddy, Redis, NATS | Security, communication and caching. |
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| Client | GameMaker (GML) | Game rendering, input handling, client-side prediction |
+| Game Server | GameMaker (GML) | Real-time game logic, state authority, world simulation |
+| Web API | ASP.NET Core, C# | Authentication, user management, data persistence |
+| Database | MSSQL + EF Core | Player data, accounts, persistent storage |
+| Reverse Proxy | Caddy | SSL/TLS termination, routing |
+| Orchestration | Docker Compose | Container management, service coordination |
 
 ## 🚀 Getting Started
 
