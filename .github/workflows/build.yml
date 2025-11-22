@@ -28,7 +28,7 @@ jobs:
         run: dotnet build src/Web/Web.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test src/Tests/Web.Tests/Web.Tests.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test src/Web/Web.sln --configuration Release --no-build --verbosity normal
 
       - name: Publish
         run: dotnet publish src/Web/Web/Web.csproj --configuration Release --output src/Web/bin/Publish/net9.0 --no-build
