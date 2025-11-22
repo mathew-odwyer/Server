@@ -22,17 +22,10 @@ jobs:
         with:
           dotnet-version: "9.0.x"
 
-      - name: Restore
-        run: dotnet restore src/Web/Web.sln
-
-      - name: Publish
-        run: dotnet publish src/Web/Web.sln --configuration Release
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          files: src/Web/bin/x64/Release/net9.0/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
