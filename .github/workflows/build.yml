@@ -22,7 +22,7 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore src/Web/Web.sln
 
       - name: Build
         run: dotnet build src/Web/Web.sln --configuration Release --no-restore
