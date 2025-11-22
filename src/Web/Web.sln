@@ -12,23 +12,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mantanimus.Core.Domain", "Mantanimus.Core.Domain\Mantanimus.Core.Domain.csproj", "{C28C5A72-53D4-42E1-9B8D-B32903EBF870}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterhaven.Core.Domain", "Winterhaven.Core.Domain\Winterhaven.Core.Domain.csproj", "{C28C5A72-53D4-42E1-9B8D-B32903EBF870}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mantanimus.Core.Application", "Mantanimus.Core.Application\Mantanimus.Core.Application.csproj", "{1F5BF129-9F81-4FD1-8CD8-4B81BDFE5253}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterhaven.Core.Application", "Winterhaven.Core.Application\Winterhaven.Core.Application.csproj", "{1F5BF129-9F81-4FD1-8CD8-4B81BDFE5253}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{273E0EFA-9626-49F6-A6EA-968917FDB213}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mantanimus.Infrastructure", "Mantanimus.Infrastructure\Mantanimus.Infrastructure.csproj", "{03BE906F-D216-406E-8E20-FF946ADAC7E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterhaven.Infrastructure", "Winterhaven.Infrastructure\Winterhaven.Infrastructure.csproj", "{03BE906F-D216-406E-8E20-FF946ADAC7E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{25745774-5B20-4BAB-B341-F1B169663123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mantanimus.Presentation", "Mantanimus.Presentation\Mantanimus.Presentation.csproj", "{D6984DEE-1458-4700-9D90-52673A973ECF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterhaven.Presentation", "Winterhaven.Presentation\Winterhaven.Presentation.csproj", "{D6984DEE-1458-4700-9D90-52673A973ECF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C53BC9F3-AA69-4B9F-A253-DBCE186BAD2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mantanimus.Tests", "Mantanimus.Tests\Mantanimus.Tests.csproj", "{BEA9CED9-24D4-463A-B651-8CA6C1A99445}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterhaven.Tests", "Winterhaven.Tests\Winterhaven.Tests.csproj", "{BEA9CED9-24D4-463A-B651-8CA6C1A99445}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

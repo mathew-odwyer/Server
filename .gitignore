@@ -468,3 +468,4 @@ Temporary Items
 # GameMaker temporary files
 *.resource_order
 *.old
+docker-compose.override.yml

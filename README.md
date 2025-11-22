@@ -103,6 +103,15 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
 
 See [CHANGELOG.md](./CHANGELOG.md) for version history.
 
+## 🙏 Credits
+
+- [@meseta](https://github.com/meseta) - It seems like whenever I encounter an issue with NetCode, this man has a solution.
+- [@yellowafterlife](https://github.com/yellowafterlife) - Your PromiseGML implementation has saved me from multiple headaches.
+- [@Sidorakh] (https://github.com/Sidorakh) - HTTP.GML helped me get up and running quickly!
+- [@bscotch] (https://github.com/bscotch) - Stitch for VS Code is a godsend; _thank you_!
+
+_This project is dedicated to my dearly departed partner Bellamy, I love you level 7_.
+
 ## 📄 License
 
 Copyright © 2025 Mathew O'Dwyer. All rights reserved.

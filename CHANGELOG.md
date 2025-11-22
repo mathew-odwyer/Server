@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v.0.0.1] - 21-11-2025
+## [Unreleased] - DD-MM-YYYY
+
+## Added
+
+- [#TODODOO] - Build, Test and Release Github Actions (_by [@mathew-odwyer]_).
+
+## Changed
+
+- [#TODODOO] - Dockerfile Optimizations (_by [@mathew-odwyer]_).
+- [#TODODOO] - Project Cleanup (_by [@mathew-odwyer]_).
+
+## [v0.0.1] - 21-11-2025
 
 ### Added
 
@@ -17,7 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#7d843cc] - User Registration Flow (_by [@mathew-odwyer]_).
 - [#1] - Web API Infrastructure (_by [@mathew-odwyer]_).
 
-[v.0.0.1]: https://github.com/mathew-odwyer/Server/compare/MVP...HEAD
+[Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.2...HEAD
+[v0.0.1]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
 [#c26c3ec]: https://github.com/mathew-odwyer/Server/commit/c26c3ec7496bfa31ad649a16ae4c672f00ff22ee
 [#5b2c36a]: https://github.com/mathew-odwyer/Server/commit/5b2c36ae3bee22843d0136218220308f86a1a617
