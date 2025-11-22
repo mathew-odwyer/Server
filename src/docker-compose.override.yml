@@ -1,18 +1,45 @@
 services:
   caddy:
     volumes:
+      - ./Caddy/Development.Caddyfile:/etc/caddy/Caddyfile
       - "${APPDATA}/Caddy/certificate:/data/caddy/pki/authorities/local/"
 
   web:
     ports:
       - "8080:8080"
 
-  # database:
-  #   ports:
-  #       - "1433:1433"
-  #   env_file:
-  #     - .env
+  database:
+    ports:
+        - "1433:1433"
+    env_file:
+      - .env
 
   server:
     env_file:
       - .env
+
+  builder:
+    container_name: builder
+    image: winterhaven-builder
+    build:
+      context: ./Server
+      dockerfile: Dockerfile.Build
+    ports:
+      - "22:22"
+    # Required by fusermount
+    devices:
+      - /dev/fuse:/dev/fuse
+    # Be careful
+    cap_add:
+      - SYS_ADMIN
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
+  data-protection-keys:
+  db_data:
+    driver: local
