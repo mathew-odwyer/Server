@@ -28,7 +28,7 @@ jobs:
         run: dotnet build src/Web/Web.sln --configuration Release --no-restore
 
       - name: Publish Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web-api
           path: |
