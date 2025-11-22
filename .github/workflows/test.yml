@@ -22,7 +22,7 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Restore Web API
-        run: dotnet restore
+        run: dotnet restore src/Web/Web.sln
 
       - name: Run Web API Tests
         run: dotnet test src/Web/Winterhaven.Tests/Winterhaven.Tests.csproj --configuration Release
