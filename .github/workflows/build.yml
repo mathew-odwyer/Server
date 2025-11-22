@@ -30,3 +30,24 @@ jobs:
       - name: Test
         run: dotnet test src/Web/Web.sln --configuration Release --no-build --verbosity normal
 
+  # TODO: Change to ubuntu-latest if bscotch ever supports it.
+  # build_server:
+  #   runs-on: windows-2022
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         lfs: true
+
+  #     - name: Setup
+  #       id: igor
+  #       uses: bscotch/igor-setup@v1
+  #       with:
+  #         target-yyp: src/Server/Server.yyp
+  #         access-key: ${{ secrets.ACCESS_KEY }}
+
+  #     - name: Build
+  #       uses: bscotch/igor-build@v1
+  #       with:
+  #         yyp-path: src/Server/Server.yyp
+  #         user-dir: ${{ steps.igor.outputs.user-dir }}
