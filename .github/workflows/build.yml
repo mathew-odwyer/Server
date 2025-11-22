@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    types: [ ready_for_review ]
+    branches: [ "dev" ]
+
+jobs:
+  build_api:
+    name: Build and Test Web API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build src/Web/Web.sln --configuration Release --no-restore
+
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-api
+          path: |
+            src/Web/bin/Release/net9.0/**
+  
+  build_server:
+    name: Build Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
