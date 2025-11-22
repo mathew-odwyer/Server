@@ -30,12 +30,9 @@ jobs:
       - name: Test
         run: dotnet test src/Web/Web.sln --configuration Release --no-build --verbosity normal
 
-      - name: Publish
-        run: dotnet publish src/Web/Web.sln --configuration Release --output src/Web/bin/Publish/net9.0 --no-build
-
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: web-api
           path: |
-            src/Web/bin/Publish/net9.0/**
+            src/Web/bin/Release/net9.0/**
