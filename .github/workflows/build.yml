@@ -9,7 +9,7 @@ on:
 
 jobs:
   build_api:
-    name: Build and Test Web API
+    name: Build Web API
     runs-on: ubuntu-latest
 
     steps:
@@ -30,9 +30,3 @@ jobs:
       - name: Test
         run: dotnet test src/Web/Web.sln --configuration Release --no-build --verbosity normal
 
-      - name: Publish Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-api
-          path: |
-            src/Web/bin/x64/Release/net9.0/**
