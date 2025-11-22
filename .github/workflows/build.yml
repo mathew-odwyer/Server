@@ -35,4 +35,4 @@ jobs:
         with:
           name: web-api
           path: |
-            src/Web/bin/Release/net9.0/**
+            src/Web/bin/x64/Release/net9.0/**
