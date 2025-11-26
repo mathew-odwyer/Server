@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"http_async",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"http_async",
+  "parent":{
+    "name":"HTTP",
+    "path":"folders/Extensions/GMNetwork/Scripts/HTTP.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

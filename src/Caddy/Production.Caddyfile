@@ -1,0 +1,8 @@
+http://localhost {
+    respond "OK"
+}
+
+winterhaven-demo.duckdns.org {
+    tls mathew.odwyer@hotmail.com
+    reverse_proxy server:8080
+}

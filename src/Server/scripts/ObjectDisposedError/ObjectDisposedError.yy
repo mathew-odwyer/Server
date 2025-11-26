@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ObjectDisposedError",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ObjectDisposedError",
+  "parent":{
+    "name":"Errors",
+    "path":"folders/Extensions/GMUtilities/Scripts/Errors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

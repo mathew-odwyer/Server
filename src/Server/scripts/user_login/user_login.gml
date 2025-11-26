@@ -1,0 +1,60 @@
+/// @descriptions Authenticates an existing user account.
+/// @param {Struct} credentials The user account credentials.
+/// @param {Struct.ClientConnection} connection The client connection that sent the request.
+/// @returns {Struct.__Promise} Returns a promise that is resolved when the user logs in.
+function user_login(credentials, connection)
+{
+	/// @type {Struct.Logger}
+	/// @description The logger.
+	static _logger = new Logger(nameof(user_login));
+	
+	var user_account_client = new UserAccountClient({
+		jsonrpc_error: true,
+	});
+	
+	_logger.log(log_type.information, $"Authenticating user: '{credentials[$ "username"]}'");
+	
+	return user_account_client.login_async(credentials)
+		.next(method({connection, _logger}, function(result)
+		{
+			connection[$ "access_token"] = result[$ "access_token"];
+			connection[$ "refresh_token"] = result[$ "refresh_token"];
+			connection[$ "access_timer"] = call_later(result[$ "expiration_seconds"] ?? 0, time_source_units_seconds, connection.cleanup, false);
+			
+			var player_client = new PlayerClient({
+				jsonrpc_error: true,
+				bearer: connection[$ "access_token"],
+			});
+			
+			return player_client.get_async();
+		})).
+		next(method({connection, _logger}, function(result)
+		{
+			var player = result.player;
+			var snapshot = player_snapshot(player);
+			var players = [];
+			
+			with (obj_player)
+			{
+				/// @feather ignore once GM1041
+				array_push(players, player_snapshot(self));
+				
+				/// @feather ignore once GM1041
+				obj_server.notify(self.connection, "player.create_remote", snapshot);
+			}
+			
+			/// @type {Id.Instance.obj_player}
+			var inst = instance_create_layer(player.x, player.y, "Instances", obj_player);
+			
+			inst.name = player.name;
+			inst.connection = connection;
+				
+			_logger.log(log_type.information, $"'{player.name}' logged in!");
+
+			return {
+				player: player,
+				players: players,
+				refresh_token: connection[$ "refresh_token"],
+			};
+		}));
+}

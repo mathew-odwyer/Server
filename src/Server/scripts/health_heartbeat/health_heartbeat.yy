@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"health_heartbeat",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"health_heartbeat",
+  "parent":{
+    "name":"Health",
+    "path":"folders/Scripts/Network/Servers/Health.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
