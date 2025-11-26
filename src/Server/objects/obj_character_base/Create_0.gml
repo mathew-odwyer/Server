@@ -40,6 +40,12 @@ _move = function()
 {
 	var xinput = _move_x;
 	var yinput = _move_y;
+	
+	// Fix diag movement.
+	if (yinput != 0)
+	{
+		xinput *= 0.5;
+	}
 
 	var collidables = [obj_entity_base];
 
