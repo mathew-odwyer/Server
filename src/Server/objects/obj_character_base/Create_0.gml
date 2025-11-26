@@ -36,15 +36,19 @@ _move_y = 0;
 /// @description The last direction as an interger.
 _last_direction = 3;
 
-_move = function()
+/// @description Moves the character based on the current input.
+/// @param {Real} move_x The horizontal movement: (+) right, (-) left.
+/// @param {Real} move_y The vertical movement: (+) down, (-) up
+_move = function(move_x, move_y)
 {
-	var xinput = _move_x;
-	var yinput = _move_y;
-	
-	// Fix diag movement.
-	if (yinput != 0)
+	// If moving diagonally, normalize the movement vector.
+	if (move_x != 0 && move_y != 0)
 	{
-		xinput *= 0.5;
+		// Normalize diagonal movement to prevent faster movement.
+		var diag_modifier = 1 / sqrt(2);
+
+		move_x *= diag_modifier;
+		move_y *= diag_modifier;
 	}
 
 	var collidables = [obj_entity_base];
@@ -57,7 +61,7 @@ _move = function()
 	    array_push(collidables, tilemap_id);
 	}
 	
-	move_and_collide(xinput, yinput, collidables);
+	move_and_collide(move_x, move_y, collidables);
 }
 
 /// @description Determines whether the character is currently moving.
