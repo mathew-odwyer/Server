@@ -6,6 +6,33 @@ function chat_send_message(params, connection)
     /// @type {Struct.Logger}
     /// @description The logger.
     static _logger = new Logger(nameof(chat_send_message));
+	
+	/// @description Extracts an emote from the specified `message`.
+	/// @param {String} message The message to extract an emote from.
+	/// @returns {Enum.gui_emote_type|Real} Returns the emote type extracted from the message, or -1.
+	static _extract_emote = function(message)
+	{
+		switch (message)
+		{
+			case "/love":
+			case "/heart":
+				return gui_emote_type.heart;
+
+			case "/exclaim":
+			case "/oi":
+				return gui_emote_type.exclaim;
+				
+			case "/question":
+			case "/what":
+				return gui_emote_type.question;
+				
+			case "/...":
+			case "/ellipsis":
+				return gui_emote_type.ellipsis;
+		}
+		
+		return -1;
+	};
 
     var player = player_get_by_connection(connection);
 
@@ -24,9 +51,13 @@ function chat_send_message(params, connection)
 
     _logger.log(log_type.information, $"Player '{player.name}' sent chat message: '{message}'");
 
+	var content = string_lower(string_trim(message));
+	var emote = _extract_emote(content);
+
     var dto = {
-        name: string_lower(player.name),
-        message: string_lower(string_trim(message)),
+        sender: string_lower(player.name),
+        content: content,
+		emote: emote,
     };
 
     // Notify all connected players of the new chat message.

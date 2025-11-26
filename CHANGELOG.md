@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - DD-MM-YYYY
 
+### Added
+
+- [#47] - Chat UI and Emotes (_by [@mathew-odwyer]_).
+
 ### Changed
 
 - [#46] - Fixed Diagonal Movement (_by [@mathew-odwyer]_).
