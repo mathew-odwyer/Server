@@ -483,6 +483,35 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
+# Mac
+
+## General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Icon must end with two \r
+Icon
+
+## Thumbnails
+._*
+
+## Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+## Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
 # Application configuration files
 appsettings.json
 appsettings.*.json
@@ -496,3 +525,16 @@ Server.AppImage
 # Bin and obj folders
 bin/
 obj/
+
+# GameMaker temporary files
+*.resource_order
+*.old
+
+# If all of your sprite sources are in this repo you can stick a "!" in front of this to track this file. Otherwise this file is machine-specific and should be ignored.
+sprites.import.json
+# This is a cache file for speeding up subsequent pipeline operations. It should not be tracked in git.
+sprites.info.json
+
+# Docker compose stuff
+docker-compose.override.yml
+
