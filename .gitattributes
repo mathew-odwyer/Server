@@ -70,3 +70,6 @@
 *.yy text eol=lf
 *.yyp text eol=lf
 *.json text eol=lf
+
+# Shell scripts
+*.sh text eol=lf

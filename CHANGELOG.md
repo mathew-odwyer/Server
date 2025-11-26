@@ -7,14 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - DD-MM-YYYY
 
-## Added
+### Changed
 
-- [#TODODOO] - Build, Test and Release Github Actions (_by [@mathew-odwyer]_).
-
-## Changed
-
-- [#TODODOO] - Dockerfile Optimizations (_by [@mathew-odwyer]_).
-- [#TODODOO] - Project Cleanup (_by [@mathew-odwyer]_).
+- [#46] - Fixed Diagonal Movement (_by [@mathew-odwyer]_).
 
 ## [v0.0.1] - 21-11-2025
 
@@ -28,9 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#7d843cc] - User Registration Flow (_by [@mathew-odwyer]_).
 - [#1] - Web API Infrastructure (_by [@mathew-odwyer]_).
 
-[Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.2...HEAD
+[Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.1...HEAD
 [v0.0.1]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#46]: https://github.com/mathew-odwyer/Server/pull/46
 [#c26c3ec]: https://github.com/mathew-odwyer/Server/commit/c26c3ec7496bfa31ad649a16ae4c672f00ff22ee
 [#5b2c36a]: https://github.com/mathew-odwyer/Server/commit/5b2c36ae3bee22843d0136218220308f86a1a617
 [#86e2f36]: https://github.com/mathew-odwyer/Server/commits/86e2f36adba47be7753d333f4518d8c2e0dd8dc8
