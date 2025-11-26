@@ -483,5 +483,16 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
+# Application configuration files
 appsettings.json
 appsettings.*.json
+
+# Server application files
+Server.AppImage
+
+# Visual Studio Code settings folder
+.vscode/
+
+# Bin and obj folders
+bin/
+obj/
