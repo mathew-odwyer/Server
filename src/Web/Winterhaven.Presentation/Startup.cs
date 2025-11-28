@@ -128,7 +128,6 @@ internal sealed class Startup
                 return RateLimitPartition.GetFixedWindowLimiter(
                     partitionKey: context.User?.FindFirst("username")?.Value
                         ?? context.Request.Headers.Host.ToString()
-                        ?? context.Connection.RemoteIpAddress?.ToString()
                         ?? "unknown",
                     factory: partition => new FixedWindowRateLimiterOptions()
                     {
@@ -154,7 +153,6 @@ internal sealed class Startup
                     context.HttpContext.Request.Path,
                     context.HttpContext.User?.FindFirst("username")?.Value
                         ?? context.HttpContext.Request.Headers.Host.ToString()
-                        ?? context.HttpContext.Connection.RemoteIpAddress?.ToString()
                         ?? "unknown");
 
                 await Task.CompletedTask.ConfigureAwait(false);
