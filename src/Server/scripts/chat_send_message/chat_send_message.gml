@@ -6,6 +6,67 @@ function chat_send_message(params, connection)
     /// @type {Struct.Logger}
     /// @description The logger.
     static _logger = new Logger(nameof(chat_send_message));
+	
+	/// @description Extracts an emote from the specified `message`.
+	/// @param {String} message The message to extract an emote from.
+	/// @returns {Enum.gui_emote_type|Real} Returns the emote type extracted from the message, or -1.
+	static _extract_emote = function(message)
+	{
+		switch (message)
+		{
+			case "/love":
+			case "/heart":
+				return gui_emote_type.heart;
+
+			case "/exclaim":
+			case "/oi":
+				return gui_emote_type.exclaim;
+				
+			case "/question":
+			case "/what":
+				return gui_emote_type.question;
+				
+			case "/...":
+			case "/ellipsis":
+				return gui_emote_type.ellipsis;
+		}
+		
+		return -1;
+	};
+
+    /// @description Formats the specified `message`.
+    /// @param {String} message The message to format.
+    /// @returns {String} The formatted message.
+    static _format_message = function(message)
+    {
+        /// @type {Real}
+        /// @description The maximum length of a chat message.
+        static _max_length = 80;
+
+        /// @type {Array<String>}
+        /// @description The array of allowed effects.
+        static _allowed_effects = [
+            "shake",
+            "wobble",
+            "rainbow", 
+        ];
+
+        var result = string_lower(string_trim(message));
+
+        // Limit message length to predefined maximum.
+        result = string_copy(result, 1, min(string_length(result), _max_length));
+		
+		// Convert any allowed effects to Scribble.
+		// Since this is more a visual effect, we let the client remove unallowed Scribble effects.
+        // Essentially, the client is responsible for sanitizing Scribble effects.
+		for (var i = 0; i < array_length(_allowed_effects); i++)
+		{
+			var effect_name = _allowed_effects[i];
+			result = string_replace_all(result, $"/{effect_name}", $"[{effect_name}]");
+		}
+
+		return result;
+    }
 
     var player = player_get_by_connection(connection);
 
@@ -17,16 +78,23 @@ function chat_send_message(params, connection)
 
     var message = params[$ "message"];
 
-    if (string_empty(message))
+    _logger.log(log_type.information, $"Player '{player.name}' sent chat message: '{message}'");
+
+	var content = _format_message(message);
+	var emote = _extract_emote(content);
+
+    // If both content and emote are empty/invalid, do not send the message.
+    if (string_empty(content) && emote == -1)
     {
         return;
     }
-
-    _logger.log(log_type.information, $"Player '{player.name}' sent chat message: '{message}'");
+    
+    show_debug_message(content);
 
     var dto = {
-        name: string_lower(player.name),
-        message: string_lower(string_trim(message)),
+        sender: string_lower(player.name),
+        content: content,
+		emote: emote,
     };
 
     // Notify all connected players of the new chat message.
