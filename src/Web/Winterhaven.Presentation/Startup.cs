@@ -6,7 +6,10 @@ namespace Winterhaven.Presentation;
 
 using System.Text;
 using System.Text.Json;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -47,6 +50,8 @@ internal sealed class Startup
         application.UseAuthentication();
         application.UseMiddleware<UserSessionValidationMiddleware>();
         application.UseAuthorization();
+
+        application.UseRateLimiter();
 
         application.UseStaticFiles(new StaticFileOptions()
         {
@@ -115,6 +120,46 @@ internal sealed class Startup
         services.AddInfrastructureServices(this.Configuration, "Docker");
 
         services.AddEndpointsApiExplorer();
+
+        services.AddRateLimiter(x =>
+        {
+            x.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+            {
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.User?.FindFirst("username")?.Value
+                        ?? context.Request.Headers.Host.ToString()
+                        ?? context.Connection.RemoteIpAddress?.ToString()
+                        ?? "unknown",
+                    factory: partition => new FixedWindowRateLimiterOptions()
+                    {
+                        // Refresh request limit every X minutes.
+                        AutoReplenishment = this.Configuration.GetValue<bool?>("RateLimitOptions:AutoReplenishment") ?? true,
+
+                        // Maximum of X requests per X minutes.
+                        PermitLimit = this.Configuration.GetValue<int?>("RateLimitOptions:PermitLimit") ?? 10,
+
+                        // If the queue is full, reject the request.
+                        QueueLimit = this.Configuration.GetValue<int?>("RateLimitOptions:QueueLimit") ?? 0,
+
+                        // Time window for rate limiting.
+                        Window = TimeSpan.FromMinutes(this.Configuration.GetValue<int?>("RateLimitOptions:WindowMinutes") ?? 1),
+                    });
+            });
+
+            x.OnRejected = async (context, token) =>
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+
+                logger.LogWarning("Rate limit rejected request for path: {Path}, User Data: {IPAddress}",
+                    context.HttpContext.Request.Path,
+                    context.HttpContext.User?.FindFirst("username")?.Value
+                        ?? context.HttpContext.Request.Headers.Host.ToString()
+                        ?? context.HttpContext.Connection.RemoteIpAddress?.ToString()
+                        ?? "unknown");
+
+                await Task.CompletedTask.ConfigureAwait(false);
+            };
+        });
 
         services.AddSwaggerGen(x =>
         {
