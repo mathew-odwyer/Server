@@ -7,8 +7,14 @@ function user_refresh(refresh_token, connection)
 	/// @type {Struct.Logger}
 	/// @description The logger.
 	static _logger = new Logger(nameof(user_refresh));
+
+	if (!is_string(refresh_token))
+	{
+		return;
+	}
 	
 	var user_account_client = new UserAccountClient({
+		signal: connection.get_signal(),
 		bearer: connection[$ "access_token"],
 		jsonrpc_error: true,
 	});

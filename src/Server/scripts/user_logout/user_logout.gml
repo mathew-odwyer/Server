@@ -6,8 +6,14 @@ function user_logout(_, connection)
 {
 	/// @type {Struct.Logger}
 	/// @description The logger.
-	static _logger = new Logger(nameof(user_logout));	
+	static _logger = new Logger(nameof(user_logout));
+
+	if (!struct_exists(connection, "access_token"))
+	{
+		return;
+	}
 	
+	// No need to abort at all here, when the user logs out we should make sure that the entire operation completes.
 	var client_options = {
 		bearer: connection[$ "access_token"],
 		jsonrpc_error: true,
@@ -20,8 +26,14 @@ function user_logout(_, connection)
 
 	var user_account_client = new UserAccountClient(client_options);
 	var player_client = new PlayerClient(client_options);
-
+	
 	var player = player_get_by_connection(connection);
+
+	// If there's no player, we should still logout just to be safe.
+	if (player == noone)
+	{
+		return user_account_client.logout_async();
+	}
 
 	var dto = {
 		x: player[$ "x"] ?? undefined,
