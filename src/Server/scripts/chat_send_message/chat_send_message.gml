@@ -55,15 +55,30 @@ function chat_send_message(params, connection)
 
         // Limit message length to predefined maximum.
         result = string_copy(result, 1, min(string_length(result), _max_length));
+
+        // Store the original result to check if it contains actual content.
+        var temp = result;
+
+        // Make sure no effects from Scribble are drawn to the client.
+        result = string_replace_all(result, "[", "[[")
 		
 		// Convert any allowed effects to Scribble.
-		// Since this is more a visual effect, we let the client remove unallowed Scribble effects.
-        // Essentially, the client is responsible for sanitizing Scribble effects.
 		for (var i = 0; i < array_length(_allowed_effects); i++)
 		{
 			var effect_name = _allowed_effects[i];
-			result = string_replace_all(result, $"/{effect_name}", $"[{effect_name}]");
+            
+            // Apply the effect to the result.
+			result = string_replace_all(result, $"/{effect_name} ", $"[{effect_name}]");
+
+            // Check if the original message only contained effect commands (nothing but effects).
+            temp = string_replace_all(temp, $"/{effect_name}", "");
 		}
+        
+        // If after removing all effect commands there's no content left, return empty string.
+        if (string_empty(string_trim(temp)))
+        {
+            return "";
+        }
 
 		return result;
     }
@@ -88,8 +103,6 @@ function chat_send_message(params, connection)
     {
         return;
     }
-    
-    show_debug_message(content);
 
     var dto = {
         sender: string_lower(player.name),
