@@ -13,7 +13,11 @@ function ClientConnection(socket) constructor
 	/// @type {Id.Buffer}
 	/// @description The buffer used to send messages through the socket.
 	_write_buffer = buffer_create(1, buffer_grow, 1);
-	
+
+	/// @type {Struct.AbortController}
+	/// @description The abort controller used to signal an operation may have been aborted.
+	_controller = new AbortController();
+
 	/// @type {Bool}
 	/// @description Indicates whether this instance is disposed.
 	_is_disposed = false;
@@ -23,7 +27,7 @@ function ClientConnection(socket) constructor
 	/// @returns {Bool} Returns `true` if the message was sent; otherwise, `false`.
 	send = function(message)
 	{
-		if (_is_disposed)
+		if (_is_disposed || _controller.signal.get_aborted())
 		{
 			// Instead of throwing an `ObjectDisposedError we should simply just return false.
 			// For more information on why this behaviour is intended, see #41
@@ -32,7 +36,7 @@ function ClientConnection(socket) constructor
 		
 		buffer_seek(_write_buffer, buffer_seek_start, 0);
 		buffer_write(_write_buffer, buffer_string, json_stringify(message));
-		
+
 		return network_send_raw(_socket, _write_buffer, buffer_tell(_write_buffer)) >= 0;
 	}
 	
@@ -43,6 +47,8 @@ function ClientConnection(socket) constructor
 		{
 			return;
 		}
+
+		_controller.abort($"Socket disconnected with ID: '{_socket}'");
 		
 		if (_write_buffer != -1)
 		{
@@ -59,5 +65,12 @@ function ClientConnection(socket) constructor
 		}
 		
 		_is_disposed = true;
+	}
+
+	/// @description Gets the abort controller signal for this `Struct.ClientConnection`.
+	/// @returns {Struct.AbortSignal} Returns the abort controller signal for this `Struct.ClientConnection`.
+	get_signal = function()
+	{
+		return _controller.signal;
 	}
 }
