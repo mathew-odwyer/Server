@@ -87,6 +87,8 @@
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_server","path":"objects/obj_server/obj_server.yy",},},
     {"id":{"name":"rm_server","path":"rooms/rm_server/rm_server.yy",},},
+    {"id":{"name":"AbortController","path":"scripts/AbortController/AbortController.yy",},},
+    {"id":{"name":"AbortSignal","path":"scripts/AbortSignal/AbortSignal.yy",},},
     {"id":{"name":"Animation","path":"scripts/Animation/Animation.yy",},},
     {"id":{"name":"AnimationSystem","path":"scripts/AnimationSystem/AnimationSystem.yy",},},
     {"id":{"name":"CharacterAnimationSystem","path":"scripts/CharacterAnimationSystem/CharacterAnimationSystem.yy",},},
