@@ -70,7 +70,7 @@ function chat_send_message(params, connection)
 
     var player = player_get_by_connection(connection);
 
-    if (is_undefined(player))
+    if (player == noone)
     {
         _logger.log(log_type.warning, $"Failed to locate player for connection with socket ID: {connection._socket}");
         return;
