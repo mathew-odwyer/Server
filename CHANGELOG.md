@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- [#41] - Fixed crash when a client disconnects before the server responds.
+- [#41] - Fixed crash when a client disconnects before the server responds (_by [@mathew-odwyer]_).
 - [#44] - Fixed Diagonal Movement (_by [@mathew-odwyer]_).
 
 ## [v0.0.1] - 21-11-2025
