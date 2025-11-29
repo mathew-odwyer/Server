@@ -27,6 +27,7 @@ var reject = context.reject;
 var timeout = context.timeout;
 
 var options = context.options;
+var signal = options[$ "signal"];
 
 if (!string_empty(result))
 {
@@ -40,7 +41,13 @@ if (!string_empty(result))
 	}
 }
 
-if (status == 0 && http_status >= 200 && http_status <= 299)
+if (!is_undefined(signal) && signal.get_aborted())
+{
+	// If the operation ahs been cancelled, abort.
+	_logger.log(log_type.debug, $"HTTP Asynchronous operation has been aborted: {signal.get_reason()}");
+	reject(signal.get_reason());
+}
+else if (status == 0 && http_status >= 200 && http_status <= 299)
 {
 	// Success
 	resolve(data);
