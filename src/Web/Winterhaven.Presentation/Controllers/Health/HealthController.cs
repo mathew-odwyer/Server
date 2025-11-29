@@ -5,6 +5,7 @@
 namespace Winterhaven.Presentation.Controllers.Health;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 /// <summary>
 /// Provides endpoints for health checks of the API.
@@ -19,6 +20,7 @@ public sealed class HealthController : ApiControllerBase
     /// Returns an <see cref="IActionResult"/> containing the health status and current UTC timestamp.
     /// </returns>
     [HttpGet]
+    [DisableRateLimiting]
     public async Task<IActionResult> Get()
     {
         return await Task.Run<IActionResult>(() => this.Ok(new
