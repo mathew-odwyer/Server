@@ -43,7 +43,7 @@ if (!string_empty(result))
 
 if (!is_undefined(signal) && signal.get_aborted())
 {
-	// If the operation ahs been cancelled, abort.
+	// If the operation has been cancelled, abort.
 	_logger.log(log_type.debug, $"HTTP Asynchronous operation has been aborted: {signal.get_reason()}");
 	reject(signal.get_reason());
 }
