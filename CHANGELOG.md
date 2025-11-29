@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#50] - Hole Punch Light Engine (_by [@mathew-odwyer]_).
 - [#47] - Chat UI and Emotes (_by [@mathew-odwyer]_).
 
 ### Changed
 
-- [#73b1e00] - Added Clock Ticking Audio Emitter (_by [@mathew-odwyer]_).
+- [#73b1e00] - Clock Ticking Audio Emitter (_by [@mathew-odwyer]_).
 - [#46] - Fixed Diagonal Movement (_by [@mathew-odwyer]_).
 
 ## [v0.0.1] - 21-11-2025
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.1...HEAD
 [v0.0.1]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#50]: https://github.com/mathew-odwyer/Server/issues/50
 [#73b1e00]: https://github.com/mathew-odwyer/Server/commit/73b1e00a6929eaaeb6f23f8b5dd63e56961ae77d
 [#46]: https://github.com/mathew-odwyer/Server/pull/46
 [#c26c3ec]: https://github.com/mathew-odwyer/Server/commit/c26c3ec7496bfa31ad649a16ae4c672f00ff22ee
