@@ -138,7 +138,15 @@ function JsonRpcServerProtocol(server) constructor
 								result: value,
 							});
 						}))
-						.fail(method({notify, connection, rpc_id}, function(error) {
+						.fail(method({_logger, notify, connection, rpc_id}, function(error) {
+							// If the error isn't a struct, we can safely assume it's not an error that should be sent back to the client.
+							// As a result, let's just log the message as a warning just in case.
+							if (!is_struct(error))
+							{
+								_logger.log(log_type.warning, error);
+								return;
+							}
+
 							connection.send({
 								jsonrpc: "2.0",
 								id: rpc_id,
