@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"AbortController",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"AbortController",
+  "parent":{
+    "name":"Events",
+    "path":"folders/Extensions/GMUtilities/Scripts/Events.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
