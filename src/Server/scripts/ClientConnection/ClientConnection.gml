@@ -25,7 +25,9 @@ function ClientConnection(socket) constructor
 	{
 		if (_is_disposed)
 		{
-			throw new ObjectDisposedError(nameof(ClientConnection));
+			// Instead of throwing an `ObjectDisposedError we should simply just return false.
+			// For more information on why this behaviour is intended, see #41
+			return false;
 		}
 		
 		buffer_seek(_write_buffer, buffer_seek_start, 0);
@@ -50,10 +52,10 @@ function ClientConnection(socket) constructor
 		
 		if (_socket != -1)
 		{
+			_logger.log(log_type.debug, $"Socket disconnected with ID: '{_socket}'");
+			
 			network_destroy(_socket);
 			_socket = -1;
-			
-			_logger.log(log_type.debug, $"Socket disconnected with ID: '{_socket}'");
 		}
 		
 		_is_disposed = true;
