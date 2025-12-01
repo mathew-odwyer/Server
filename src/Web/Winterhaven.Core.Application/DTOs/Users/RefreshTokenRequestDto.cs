@@ -4,7 +4,6 @@
 
 namespace Winterhaven.Core.Application.DTOs.Users;
 
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
@@ -15,5 +14,4 @@ using System.Diagnostics.CodeAnalysis;
 /// </param>
 [ExcludeFromCodeCoverage]
 public sealed record RefreshTokenRequestDto(
-    [Required(ErrorMessage = "Refresh token is required.")]
     string RefreshToken);

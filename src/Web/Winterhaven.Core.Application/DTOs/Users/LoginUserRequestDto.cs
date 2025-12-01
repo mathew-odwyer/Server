@@ -4,7 +4,6 @@
 
 namespace Winterhaven.Core.Application.DTOs.Users;
 
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Winterhaven.Core.Domain.Entities.Users;
 
@@ -35,7 +34,5 @@ using Winterhaven.Core.Domain.Entities.Users;
 /// </param>
 [ExcludeFromCodeCoverage]
 public sealed record LoginUserRequestDto(
-    [Required(ErrorMessage = "Username is required.")]
     string Username,
-    [Required(ErrorMessage = "Password is required.")]
     string Password);

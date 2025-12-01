@@ -4,7 +4,6 @@
 
 namespace Winterhaven.Core.Application.DTOs.Users;
 
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Winterhaven.Core.Domain.Entities.Users;
 
@@ -90,15 +89,6 @@ using Winterhaven.Core.Domain.Entities.Users;
 /// </param>
 [ExcludeFromCodeCoverage]
 public sealed record RegisterUserRequestDto(
-    [Required(ErrorMessage = "Email address is required.")]
-    [EmailAddress(ErrorMessage = "Email address is invalid.")]
     string EmailAddress,
-
-    [Required(ErrorMessage = "Username is required.")]
-    [MinLength(3, ErrorMessage = "Username must be at least 3 characters.")]
-    [MaxLength(12, ErrorMessage = "Username must be at least 12 characters.")]
     string Username,
-
-    [Required(ErrorMessage = "Password is required.")]
-    [MinLength(12, ErrorMessage = "Password must be at least 12 characters.")]
     string Password);
