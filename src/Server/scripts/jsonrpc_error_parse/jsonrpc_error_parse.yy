@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"jsonrpc_error_parse",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"jsonrpc_error_parse",
+  "parent":{
+    "name":"Errors",
+    "path":"folders/Extensions/GMNetwork/Scripts/Errors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
