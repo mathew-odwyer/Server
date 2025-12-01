@@ -10,11 +10,10 @@ internal sealed class UsernameValidator : AbstractValidator<string>
 {
     internal UsernameValidator()
     {
-        this.RuleFor(x => x)
-            .NotEmpty().WithMessage("Name cannot be empty.")
-            .MinimumLength(3).WithMessage("Name must be at least 3 characters.")
-            .MaximumLength(12).WithMessage("Name must be no more than 12 characters.")
-            .Must(ContainsLegalCharacters).WithMessage("Name can only contain alphanumerical characters (and '-' or '_')");
+        this.RuleFor(x => x).NotEmpty().WithMessage("Name cannot be empty.");
+        this.RuleFor(x => x).MinimumLength(3).WithMessage("Name must be at least 3 characters.");
+        this.RuleFor(x => x).MaximumLength(12).WithMessage("Name must be no more than 12 characters.");
+        this.RuleFor(x => x).Must(ContainsLegalCharacters).WithMessage("Name can only contain alphanumerical characters (and '-' or '_')");
     }
 
     private static bool ContainsLegalCharacters(string username)

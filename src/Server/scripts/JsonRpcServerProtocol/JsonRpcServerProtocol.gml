@@ -155,7 +155,6 @@ function JsonRpcServerProtocol(server) constructor
 									message: error[$ "message"] ?? "Internal Server Error",
 									data: error[$ "data"] ?? {
 										detail: "An unexpected error occurred. Please try again later.",
-										errors: [],
 									},
 								},
 							});
@@ -175,7 +174,6 @@ function JsonRpcServerProtocol(server) constructor
 						message: "Internal Server Error",
 						data: {
 							detail: "An unexpected error occurred. Please try again later.",
-							errors: [],
 						},
 					},
 				});

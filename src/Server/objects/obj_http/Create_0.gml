@@ -18,13 +18,25 @@ _convert_problem_details_to_jsonrpc = function(status, error)
 		// If that happens, let's make sure we set the status to 503 - Service Unavailable.
 		status = 503;
 	}
-	
+
+	var code = error[$ "status"] ?? status;
+	var message = error[$ "title"] ?? "Internal Server Error";
+	var data = {};
+
+	// ASP.NET problem details for validation errors does not include the detail field.
+	// So we should follow the same design decision here to eliminate confusion.
+	if (struct_exists(error, "detail"))
+	{
+		data[$ "detail"] = error[$ "detail"];
+	}
+	else if (struct_exists(error, "errors"))
+	{
+		data[$ "errors"] = error[$ "errors"];
+	}
+
 	return {
-		code: error[$ "status"] ?? status,
-		message: error[$ "title"] ?? "Internal Server Error",
-		data: {
-			detail: error[$ "detail"] ?? "An unexpected error occurred. Please try again later.",
-			errors: error[$ "errors"] ?? [],
-		},
-	};
+		code: code,
+		message: message,
+		data: data,
+	}
 }

@@ -5,6 +5,8 @@
 namespace Winterhaven.Infrastructure.Services.Users;
 
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Winterhaven.Core.Application.Exceptions;
 using Winterhaven.Core.Application.Exceptions.Database;
 using Winterhaven.Core.Application.Services.Users;
@@ -12,8 +14,6 @@ using Winterhaven.Core.Application.Work;
 using Winterhaven.Core.Application.Work.Users;
 using Winterhaven.Core.Domain.Entities.Players;
 using Winterhaven.Core.Domain.Entities.Users;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 internal sealed class UserRegistrar : IUserRegistrar
 {
@@ -55,10 +55,19 @@ internal sealed class UserRegistrar : IUserRegistrar
 
         if (!result.Succeeded)
         {
-            var error = result.Errors.FirstOrDefault();
+            var errors = result.Errors
+                .GroupBy(x => x.Code)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Where(e => !string.IsNullOrWhiteSpace(e.Description))
+                          .Select(e => e.Description)
+                          .ToArray()
+                );
 
-            this.logger.LogWarning("Failed to register user with username: '{Username}'. Error: {Error}", username, error?.Description ?? "Unknown error");
-            throw new ValidationException(error?.Description ?? "An unknown error occurred during registration.");
+            string message = string.Join("; ", errors.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
+            this.logger.LogWarning("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
+
+            throw new ValidationException(errors);
         }
 
         try

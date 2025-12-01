@@ -33,6 +33,18 @@ public sealed class ValidationException : Exception
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="ValidationException"/> class.
+    /// </summary>
+    /// <param name="errors">
+    /// The errors that describe the reason for the <see cref="ValidationException"/>.
+    /// </param>
+    public ValidationException(IReadOnlyDictionary<string, string[]>? errors)
+        : base("One or more validation failures have occurred.")
+    {
+        this.Errors = (IDictionary<string, string[]>?)errors;
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ValidationException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
     /// </summary>
     /// <param name="message">
@@ -45,4 +57,12 @@ public sealed class ValidationException : Exception
         : base(message, innerException)
     {
     }
+
+    /// <summary>
+    /// Gets the errors that describe the reason for the <see cref="ValidationException"/>.
+    /// </summary>
+    /// <value>
+    /// The errors that describe the reason for the <see cref="ValidationException"/>.
+    /// </value>
+    public IDictionary<string, string[]>? Errors { get; }
 }

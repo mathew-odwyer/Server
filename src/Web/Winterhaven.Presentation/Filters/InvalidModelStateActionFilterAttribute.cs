@@ -15,19 +15,27 @@ internal sealed class InvalidModelStateActionFilterAttribute : ActionFilterAttri
 
         if (!context.ModelState.IsValid)
         {
-            var firstErrorEntry = context.ModelState
-                .FirstOrDefault(x => x.Value?.Errors.Count > 0);
+            var errors = context.ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value!.Errors
+                        .Select(x => x.ErrorMessage)
+                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                        .ToArray()
+                );
 
-            string? firstError = firstErrorEntry.Value?.Errors.FirstOrDefault()?.ErrorMessage;
-            string fieldName = firstErrorEntry.Key;
-
-            var details = new ProblemDetails()
+            var details = new ValidationProblemDetails
             {
                 Title = "Invalid Model State",
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",
                 Status = StatusCodes.Status400BadRequest,
-                Detail = firstError != null ? $"{fieldName}: {firstError}" : "One or more validation errors occurred.",
-            };
+                Errors = errors ?? new Dictionary<string, string[]>()
+                {
+                    { "Invalid Model State Error", ["One or more validation errors occurred."] }
+                }
+            }
+        ;
 
             context.Result = new BadRequestObjectResult(details);
         }

@@ -14,10 +14,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using Winterhaven.Core.Application.Extensions;
 using Winterhaven.Infrastructure.Extensions;
-using Winterhaven.Presentation.Factories;
 using Winterhaven.Presentation.Filters;
 using Winterhaven.Presentation.Middleware.Users;
 
@@ -72,8 +70,7 @@ internal sealed class Startup
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = true);
-        services.AddFluentValidationAutoValidation(x => x.OverrideDefaultResultFactoryWith<InvalidModelStateActionResultFactory>());
+        services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = false);
 
         services.AddLogging();
 

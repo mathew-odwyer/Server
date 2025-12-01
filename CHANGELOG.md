@@ -13,12 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#50] - Hole Punch Light Engine (_by [@mathew-odwyer]_).
 - [#36] - Chat UI and Emotes (_by [@mathew-odwyer]_).
 
+### Changed
+
+- [#25] - Added Multiple Validation Error Support and updated UI (_by [@mathew-odwyer]_).
+
 ### Fixed
 
 - [#41] - Fixed crash when a client disconnects before the server responds (_by [@mathew-odwyer]_).
 - [#44] - Fixed Diagonal Movement (_by [@mathew-odwyer]_).
 
-## [v0.0.1] - 21-11-2025
+## [v0.1.0] - 21-11-2025
 
 ### Added
 
@@ -31,8 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Web API Infrastructure (_by [@mathew-odwyer]_).
 
 [Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.1...HEAD
-[v0.0.1]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
+[v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#25]: https://github.com/mathew-odwyer/Server/issues/25
 [#41]: https://github.com/mathew-odwyer/Server/issues/41
 [#50]: https://github.com/mathew-odwyer/Server/issues/50
 [#44]: https://github.com/mathew-odwyer/Server/issues/44
