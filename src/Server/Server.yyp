@@ -106,6 +106,7 @@
     {"id":{"name":"health_ping","path":"scripts/health_ping/health_ping.yy",},},
     {"id":{"name":"http_async","path":"scripts/http_async/http_async.yy",},},
     {"id":{"name":"instance_singleton","path":"scripts/instance_singleton/instance_singleton.yy",},},
+    {"id":{"name":"jsonrpc_error_parse","path":"scripts/jsonrpc_error_parse/jsonrpc_error_parse.yy",},},
     {"id":{"name":"JsonRpcClientProtocol","path":"scripts/JsonRpcClientProtocol/JsonRpcClientProtocol.yy",},},
     {"id":{"name":"JsonRpcServerProtocol","path":"scripts/JsonRpcServerProtocol/JsonRpcServerProtocol.yy",},},
     {"id":{"name":"Logger","path":"scripts/Logger/Logger.yy",},},
