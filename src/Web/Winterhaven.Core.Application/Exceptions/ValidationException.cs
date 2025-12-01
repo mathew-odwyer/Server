@@ -32,6 +32,11 @@ public sealed class ValidationException : Exception
     {
     }
 
+    public ValidationException(IReadOnlyDictionary<string, string[]>? errors)
+    {
+        this.Errors = (IDictionary<string, string[]>?)errors;
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidationException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
     /// </summary>
@@ -45,4 +50,6 @@ public sealed class ValidationException : Exception
         : base(message, innerException)
     {
     }
+
+    public IDictionary<string, string[]>? Errors { get; } = [];
 }
