@@ -71,7 +71,6 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(services);
 
         services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = false);
-        ////services.AddFluentValidationAutoValidation(x => x.OverrideDefaultResultFactoryWith<InvalidModelStateActionResultFactory>());
 
         services.AddLogging();
 

@@ -30,8 +30,12 @@ internal sealed class InvalidModelStateActionFilterAttribute : ActionFilterAttri
                 Title = "Invalid Model State",
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",
                 Status = StatusCodes.Status400BadRequest,
-                Errors = errors ?? [],
-            };
+                Errors = errors ?? new Dictionary<string, string[]>()
+                {
+                    { "Invalid Model State Error", ["One or more validation errors occurred."] }
+                }
+            }
+        ;
 
             context.Result = new BadRequestObjectResult(details);
         }
