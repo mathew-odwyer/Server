@@ -33,6 +33,7 @@ public sealed class ValidationException : Exception
     }
 
     public ValidationException(IReadOnlyDictionary<string, string[]>? errors)
+        : base("One or more validation failures have occurred.")
     {
         this.Errors = (IDictionary<string, string[]>?)errors;
     }
@@ -51,5 +52,5 @@ public sealed class ValidationException : Exception
     {
     }
 
-    public IDictionary<string, string[]>? Errors { get; } = [];
+    public IDictionary<string, string[]>? Errors { get; }
 }
