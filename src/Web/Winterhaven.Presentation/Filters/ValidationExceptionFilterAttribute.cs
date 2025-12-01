@@ -4,9 +4,9 @@
 
 namespace Winterhaven.Presentation.Filters;
 
-using Winterhaven.Core.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Winterhaven.Core.Application.Exceptions;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
 internal sealed class ValidationExceptionFilterAttribute : ExceptionFilterAttribute
@@ -22,12 +22,13 @@ internal sealed class ValidationExceptionFilterAttribute : ExceptionFilterAttrib
 
         if (context.Exception is ValidationException exception)
         {
-            var details = new ProblemDetails()
+            var details = new ValidationProblemDetails
             {
                 Title = "Validation Error",
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                 Status = StatusCodes.Status400BadRequest,
                 Detail = exception.Message ?? "One or more validation errors occurred.",
+                Errors = exception.Errors ?? new Dictionary<string, string[]>(),
             };
 
             context.Result = new BadRequestObjectResult(details);
