@@ -30,14 +30,20 @@ internal sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavi
 
             var validationResults = await Task.WhenAll(this.validators.Select(x => x.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
 
-            var failure = validationResults
+            var errors = validationResults
                 .Where(x => x.Errors.Count != 0)
                 .SelectMany(x => x.Errors)
-                .FirstOrDefault();
+                .GroupBy(x => x.PropertyName)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Where(e => !string.IsNullOrWhiteSpace(e.ErrorMessage))
+                          .Select(e => e.ErrorMessage)
+                          .ToArray()
+                );
 
-            if (failure != null)
+            if (errors != null && errors.Count != 0)
             {
-                throw new ValidationException($"{failure.PropertyName}: {failure.ErrorMessage}");
+                throw new ValidationException(errors);
             }
         }
 
