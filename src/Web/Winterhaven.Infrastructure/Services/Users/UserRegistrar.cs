@@ -64,10 +64,10 @@ internal sealed class UserRegistrar : IUserRegistrar
                           .ToArray()
                 );
 
-            string? message = string.Join(",", errors.Values.Select(x => x.ToString()));
-
+            string message = string.Join("; ", errors.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
             this.logger.LogWarning("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
-            throw new ValidationException(message ?? "An unknown error occurred during registration.");
+
+            throw new ValidationException(errors);
         }
 
         try
