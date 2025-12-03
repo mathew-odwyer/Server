@@ -2,17 +2,9 @@
 /// @param {Id.Socket} socket The underlying socket connection.
 function ClientConnection(socket) constructor
 {
-	/// @type {Real}
-	/// @description The unique identifier incrementor.
-	static _uniqUe_id = 0;
-
 	/// @type {Struct.Logger}
 	/// @description The logger.
 	static _logger = new Logger(nameof(ClientConnection));
-
-	/// @type {Real}
-	/// @description The unique identifier for the connection.
-	_identifier = _uniqUe_id++;
 	
 	/// @type {Id.Socket}
 	/// @description The underlying socket connection.
@@ -82,10 +74,10 @@ function ClientConnection(socket) constructor
 		return _controller.signal;
 	}
 
-	/// @description Gets the unique identifier for this client connection.
-	/// @returns {Real} Returns the unique identifier for this client connection.
-	get_identifier = function()
+	/// @description Converts the socket identifier as a string.
+	/// @returns {Any} Returns the socket identifeir converted to a string.
+	toString = function()
 	{
-		return _identifier;
+		return string(_socket);
 	}
 }

@@ -87,7 +87,7 @@ function chat_send_message(params, connection)
 
     if (player == noone)
     {
-        _logger.log(log_type.warning, $"Failed to locate player for connection with socket ID: {connection.get_identifier()}");
+        _logger.log(log_type.warning, $"Failed to locate player for connection with ID: {connection}");
         return;
     }
 
