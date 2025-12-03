@@ -83,6 +83,11 @@ function chat_send_message(params, connection)
 		return result;
     }
 
+    if (!is_struct(params))
+    {
+        return;
+    }
+
     var player = player_get_by_connection(connection);
 
     if (player == noone)
