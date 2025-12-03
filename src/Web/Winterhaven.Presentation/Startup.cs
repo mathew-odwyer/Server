@@ -51,6 +51,8 @@ internal sealed class Startup
 
         application.UseRateLimiter();
 
+        // TODO: Create a FileOptions.CacheRoot and only cache responses if enabled.
+        //          - It's nice not to have caching enabled for debugging purposes, but in production it should likely be enabled.
         application.UseStaticFiles(new StaticFileOptions()
         {
             HttpsCompression = HttpsCompressionMode.DoNotCompress,
@@ -114,7 +116,7 @@ internal sealed class Startup
         services.AddHealthChecks();
 
         services.AddApplicationServices(this.Configuration);
-        services.AddInfrastructureServices(this.Configuration, "Docker");
+        services.AddInfrastructureServices(this.Configuration, "Memory");
 
         services.AddEndpointsApiExplorer();
 

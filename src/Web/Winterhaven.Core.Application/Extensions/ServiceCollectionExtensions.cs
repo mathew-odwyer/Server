@@ -5,16 +5,18 @@
 namespace Winterhaven.Core.Application.Extensions;
 
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Reflection;
 using FluentValidation;
-using Winterhaven.Core.Application.Behaviours;
-using Winterhaven.Core.Application.Options.Security;
-using Winterhaven.Core.Application.Profiles.Players;
-using Winterhaven.Core.Application.Profiles.Users;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Winterhaven.Core.Application.Behaviours;
+using Winterhaven.Core.Application.Options.Security;
+using Winterhaven.Core.Application.Profiles.Maps;
+using Winterhaven.Core.Application.Profiles.Players;
+using Winterhaven.Core.Application.Profiles.Users;
 
 /// <summary>
 /// Provides extension methods for configuring and adding application services to an <see cref="IServiceCollection"/>.
@@ -46,6 +48,7 @@ public static class ServiceCollectionExtensions
         {
             x.AddProfile<UserProfile>();
             x.AddProfile<PlayerProfile>();
+            x.AddProfile<MapProfile>();
         });
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -59,6 +62,8 @@ public static class ServiceCollectionExtensions
 
             x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
         });
+
+        services.AddSingleton<IFileSystem, FileSystem>();
 
         services.AddValidatedOptions<JwtOptions>(configuration);
 
