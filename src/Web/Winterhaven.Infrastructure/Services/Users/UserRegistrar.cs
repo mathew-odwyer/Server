@@ -82,8 +82,6 @@ internal sealed class UserRegistrar : IUserRegistrar
                 Player = new Player()
                 {
                     Name = username,
-                    X = 128,
-                    Y = 128,
                 },
             };
 
