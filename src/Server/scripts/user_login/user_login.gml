@@ -65,6 +65,11 @@ function user_login(credentials, connection)
 			
 			inst.name = player.name;
 			inst.connection = connection;
+
+			// Send welcome message to player (accounting for new and returning players).
+			inst.notify("chat.add_message", {
+				content: $"Welcome, {inst.name}!",
+			});
 				
 			_logger.log(log_type.information, $"'{player.name}' logged in!");
 
