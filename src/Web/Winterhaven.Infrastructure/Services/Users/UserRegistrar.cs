@@ -10,8 +10,6 @@ using Microsoft.Extensions.Logging;
 using Winterhaven.Core.Application.Exceptions;
 using Winterhaven.Core.Application.Exceptions.Database;
 using Winterhaven.Core.Application.Services.Users;
-using Winterhaven.Core.Application.Work;
-using Winterhaven.Core.Application.Work.Users;
 using Winterhaven.Core.Domain.Entities.Players;
 using Winterhaven.Core.Domain.Entities.Users;
 
@@ -19,22 +17,14 @@ internal sealed class UserRegistrar : IUserRegistrar
 {
     private readonly ILogger<UserRegistrar> logger;
 
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-
-    private readonly IUserAccountRepository userAccountRepository;
-
     private readonly UserManager<IdentityUser<Guid>> userManager;
 
     public UserRegistrar(
         ILogger<UserRegistrar> logger,
-        UserManager<IdentityUser<Guid>> userManager,
-        IUnitOfWorkFactory unitOfWorkFactory,
-        IUserAccountRepository userAccountRepository)
+        UserManager<IdentityUser<Guid>> userManager)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        this.unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
-        this.userAccountRepository = userAccountRepository ?? throw new ArgumentNullException(nameof(userAccountRepository));
     }
 
     public async Task<UserAccount> RegisterUserAsync(string emailAddress, string username, string password)
@@ -72,8 +62,6 @@ internal sealed class UserRegistrar : IUserRegistrar
 
         try
         {
-            var work = this.unitOfWorkFactory.CreateUnitOfWork();
-
             var userAccount = new UserAccount()
             {
                 Id = identityUser.Id,
@@ -84,9 +72,6 @@ internal sealed class UserRegistrar : IUserRegistrar
                     Name = username,
                 },
             };
-
-            await this.userAccountRepository.AddAsync(userAccount).ConfigureAwait(false);
-            await work.SaveAsync().ConfigureAwait(false);
 
             return userAccount;
         }
