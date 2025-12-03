@@ -71,8 +71,8 @@ function user_login(credentials, connection)
 				{ content: $"Welcome, {player.name}" },
 				{ content: "Walk around with WAS or arrow keys, hit the TAB key to chat!" },
 				{ content: "Chat now has [rainbow]effects[/rainbow]! Use /[rainbow]rainbow[/rainbow], /[shake]shake[/shake] and [wobble]/wobble[/wobble]!" },
-				{ content: "You can now toggle chat visiblity with [c_red]ctrl + t[/c_red]"},
-				{ content: "You can now use emotes! Use /exclaim, /[c_red]love[/c_red], /[c_red]what[/c_red] and /[c_red]...[/c_red]" },
+				{ content: "You can now toggle chat visiblity with [c_red]ctrl + t"},
+				{ content: "You can now use emotes! Use /exclaim, [c_red]/love, /what and /..." },
 			];
 			
 			_logger.log(log_type.information, $"'{player.name}' logged in!");
