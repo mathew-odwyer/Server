@@ -6,6 +6,11 @@ namespace Winterhaven.Tests.Application.Requests.Users.LoginUser;
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using NUnit.Framework;
 using Winterhaven.Core.Application.Exceptions;
 using Winterhaven.Core.Application.Exceptions.Database;
 using Winterhaven.Core.Application.Options.Security;
@@ -16,11 +21,6 @@ using Winterhaven.Core.Application.Work;
 using Winterhaven.Core.Application.Work.Users;
 using Winterhaven.Core.Domain.Entities.Players;
 using Winterhaven.Core.Domain.Entities.Users;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
-using NUnit.Framework;
 
 [TestFixture]
 internal sealed class LoginUserRequestHandlerTests
@@ -48,6 +48,8 @@ internal sealed class LoginUserRequestHandlerTests
     private UserSessionToken userSessionToken;
 
     private IUserSessionTokenRepository userSessionTokenRepository;
+
+    private Player player;
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
@@ -300,8 +302,6 @@ internal sealed class LoginUserRequestHandlerTests
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
-
-    private Player player;
 
     [SetUp]
     public void Setup()
