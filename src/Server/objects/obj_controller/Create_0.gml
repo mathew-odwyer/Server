@@ -1,7 +1,6 @@
 /// @description Initialize services.
 
 /// @globalvar {Struct.Logger} Logger
-/// @globalvar {Struct.WorldManager} WorldManager 
 
 Logger.LogLevel = log_type.debug;
 
