@@ -13,6 +13,3 @@ instance_create_layer(0, 0, "Instances", obj_http);
 instance_create_layer(0, 0, "Instances", obj_server);
 
 draw_enable_drawevent(os_type != os_linux);
-
-// Finally, load the map from the environment variable.
-tiled_oneshot(environment_get_variable("MAP_PATH"));
