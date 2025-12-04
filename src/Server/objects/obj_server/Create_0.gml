@@ -2,9 +2,7 @@
 
 /// @type {String}
 /// @description The Web API url.
-#macro api_url "https://localhost:7256"
-
-// environment_get_variable("API_URL")
+#macro api_url environment_get_variable("API_URL")
 
 /// @type {Constant.SocketType}
 /// @description The socket type.
@@ -18,6 +16,12 @@
 /// @description The maximum number of connected clients.
 #macro server_max_clients 200
 
+instance_singleton(obj_server);
+
+/// @type {String}
+/// @description The map data.
+map_data = undefined;
+
 /// @type {Struct.Server}
 /// @description The server.
 _server = new Server(socket_type, server_port, server_max_clients);
@@ -25,6 +29,10 @@ _server = new Server(socket_type, server_port, server_max_clients);
 /// @type {Struct.JsonRpcServerProtocol}
 /// @description The protocol to be used by the server.
 _protocol = new JsonRpcServerProtocol(_server);
+
+/// @type {Struct.MapClient}
+/// @description The map client used to fetch and load the servers map.
+_map_client = new MapClient({ api_key: environment_get_variable("API_KEY") });
 
 /// @inheritdoc
 notify = _protocol.notify;
@@ -40,3 +48,15 @@ _protocol.register("user.logout", user_logout);
 _protocol.register("player.action", player_action);
 
 _protocol.register("chat.send_message", chat_send_message);
+
+_map_client
+    .get_async(environment_get_variable("MAP_NAME"))
+    .next(function(result)
+    {
+        map_data = result;
+        map_load_map(map_data);
+    })
+    .fail(function(error)
+    {
+        throw new Error($"Failed to load map data: '{environment_get_variable("MAP_NAME")}'", error);
+    });

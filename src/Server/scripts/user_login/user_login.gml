@@ -82,6 +82,7 @@ function user_login(credentials, connection)
 				players: players,
 				refresh_token: connection[$ "refresh_token"],
 				messages: messages,
+				map_data: obj_server.map_data,
 			};
 		}));
 }
