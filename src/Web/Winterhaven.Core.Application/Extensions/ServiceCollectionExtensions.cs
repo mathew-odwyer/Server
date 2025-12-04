@@ -65,6 +65,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IFileSystem, FileSystem>();
 
+        services.AddValidatedOptions<ApiOptions>(configuration);
         services.AddValidatedOptions<JwtOptions>(configuration);
 
         return services;

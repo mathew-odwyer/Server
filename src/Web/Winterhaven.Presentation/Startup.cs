@@ -185,7 +185,7 @@ internal sealed class Startup
                 Description = "API documentation for Winterhaven."
             });
 
-            var securityScheme = new OpenApiSecurityScheme
+            var jwtScheme = new OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Description = "Enter JWT Bearer token **_only_**",
@@ -200,15 +200,29 @@ internal sealed class Startup
                 }
             };
 
-            var securityRequirement = new OpenApiSecurityRequirement
+            var apiKeyScheme = new OpenApiSecurityScheme
             {
+                Name = "X-API-KEY",
+                Description = "API Key for server endpoints.",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "ApiKey",
+                Reference = new OpenApiReference
                 {
-                    securityScheme,
-                    Array.Empty<string>()
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
                 }
             };
 
-            x.AddSecurityDefinition("Bearer", securityScheme);
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                { jwtScheme, Array.Empty<string>() },
+                { apiKeyScheme, Array.Empty<string>() }
+            };
+
+            x.AddSecurityDefinition("Bearer", jwtScheme);
+            x.AddSecurityDefinition("ApiKey", apiKeyScheme);
+
             x.AddSecurityRequirement(securityRequirement);
         });
     }

@@ -2,7 +2,9 @@
 
 /// @type {String}
 /// @description The Web API url.
-#macro api_url environment_get_variable("API_URL")
+#macro api_url "https://localhost:7256"
+
+// environment_get_variable("API_URL")
 
 /// @type {Constant.SocketType}
 /// @description The socket type.
