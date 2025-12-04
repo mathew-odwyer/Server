@@ -14,7 +14,7 @@ public sealed class MapController : ApiControllerBase
     private const string ContentType = "text/xml";
 
     [HttpGet]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "ApiKey")]
     public async Task<IActionResult> Get([FromQuery] GetMapRequestDto requestDto, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(requestDto);

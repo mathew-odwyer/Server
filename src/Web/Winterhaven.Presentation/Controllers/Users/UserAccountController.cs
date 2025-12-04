@@ -11,6 +11,7 @@ using Winterhaven.Core.Application.Requests.Users.RefreshToken;
 using Winterhaven.Core.Application.Requests.Users.RegisterUser;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 /// <summary>
 /// Provides API endpoints for managing user account operations, including registration, login, logout, and token refresh.
@@ -50,7 +51,7 @@ public sealed class UserAccountController : ApiControllerBase
     /// Returns an <see cref="IActionResult"/> containing an HTTP 204 (No Content) response when logout succeeds.
     /// </returns>
     [HttpPost]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken = default)
     {
         var request = new LogoutUserRequest();
@@ -72,7 +73,7 @@ public sealed class UserAccountController : ApiControllerBase
     /// Returns an <see cref="IActionResult"/> containing an HTTP 200 (OK) response with the refreshed authentication token.
     /// </returns>
     [HttpPost]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto requestDto, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(requestDto);
