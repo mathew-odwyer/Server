@@ -7,6 +7,7 @@ namespace Winterhaven.Presentation;
 using System.Text;
 using System.Text.Json;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Winterhaven.Core.Application.Extensions;
 using Winterhaven.Infrastructure.Extensions;
+using Winterhaven.Presentation.Authentication;
 using Winterhaven.Presentation.Filters;
 using Winterhaven.Presentation.Middleware.Users;
 
@@ -94,9 +96,25 @@ internal sealed class Startup
             .AddAuthorization()
             .AddAuthentication(x =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultAuthenticateScheme = "WinterhavenAuth";
+                x.DefaultChallengeScheme = "WinterhavenAuth";
             })
+            .AddPolicyScheme("WinterhavenAuth", "JWT or API Key", x =>
+            {
+                // Prefer API Key over JWT.
+                // This isn't 100% safe but it's simple.
+                // If anyone DOES access the API key, they won't be able to affect user accounts.
+                // They will, however, be able to fetch data. This will likely have to change in the future to something more secure
+                // Such as issuing a "machine jwt" - a JWT that is given to the server, but this requires a bit of setup and I'm not certain on the correct path.
+                // So for now this is fine.
+                x.ForwardDefaultSelector = context =>
+                {
+                    return context.Request.Headers.ContainsKey("X-API-KEY")
+                        ? "ApiKey"
+                        : JwtBearerDefaults.AuthenticationScheme;
+                };
+            })
+            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKey", null)
             .AddJwtBearer(x =>
             {
                 x.TokenValidationParameters = new TokenValidationParameters
