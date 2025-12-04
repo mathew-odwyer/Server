@@ -29,6 +29,15 @@ internal sealed class UserSessionValidationMiddleware
         // When the user is not authenticated, we do not have any user information to validate against.
         if (context.User.Identity?.IsAuthenticated == true)
         {
+            // If the user is the server making a request, continue.
+            bool isServer = !string.IsNullOrWhiteSpace(context.User.FindFirstValue("api_key"));
+
+            if (isServer)
+            {
+                await this.next(context).ConfigureAwait(false);
+                return;
+            }
+
             string? identifier = context.User.FindFirstValue("identifier");
 
             // If the claims are null, empty or whitespace we can't proceed with validation.

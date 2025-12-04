@@ -13,8 +13,6 @@ using Microsoft.AspNetCore.RateLimiting;
 /// <seealso cref="ApiControllerBase" />
 public sealed class HealthController : ApiControllerBase
 {
-    //// TODO: Setup X-API-KEY within docker-compose health-checks and only allow [Authorize] for API Key.
-
     /// <summary>
     /// Returns the current health status of the API.
     /// </summary>

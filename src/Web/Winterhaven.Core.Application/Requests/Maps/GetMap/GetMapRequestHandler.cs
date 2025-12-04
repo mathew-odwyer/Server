@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Winterhaven.Core.Application.Contexts.Users;
 using Winterhaven.Core.Application.Exceptions;
 
 public sealed class GetMapRequestHandler : IRequestHandler<GetMapRequest, GetMapResponse>
@@ -18,20 +17,17 @@ public sealed class GetMapRequestHandler : IRequestHandler<GetMapRequest, GetMap
 
     private readonly ILogger<GetMapRequestHandler> logger;
 
-    private readonly IUserAccountContext userAccountContext;
-
-    public GetMapRequestHandler(ILogger<GetMapRequestHandler> logger, IFileSystem fileSystem, IUserAccountContext userAccountContext)
+    public GetMapRequestHandler(ILogger<GetMapRequestHandler> logger, IFileSystem fileSystem)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
-        this.userAccountContext = userAccountContext ?? throw new ArgumentNullException(nameof(userAccountContext));
     }
 
     public async Task<GetMapResponse> Handle(GetMapRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        this.logger.LogInformation("Fetching map '{MapName}' for user with ID: '{UserAccountId}'", request.Name, this.userAccountContext.User.Id);
+        this.logger.LogInformation("Fetching map '{MapName}'", request.Name);
 
         string fullPath = Path.Combine("wwwroot", "Maps", $"{request.Name}.tmx");
 
