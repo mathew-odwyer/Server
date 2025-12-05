@@ -94,25 +94,19 @@ internal sealed class Startup
             .AddAuthorization()
             .AddAuthentication(x =>
             {
-                x.DefaultAuthenticateScheme = "WinterhavenAuth";
-                x.DefaultChallengeScheme = "WinterhavenAuth";
+                x.DefaultAuthenticateScheme = WinterhavenBearerDefaults.Name;
+                x.DefaultChallengeScheme = WinterhavenBearerDefaults.Name;
             })
-            .AddPolicyScheme("WinterhavenAuth", "JWT or API Key", x =>
+            .AddPolicyScheme(WinterhavenBearerDefaults.Name, "JWT or API Key", x =>
             {
-                // Prefer API Key over JWT.
-                // This isn't 100% safe but it's simple.
-                // If anyone DOES access the API key, they won't be able to affect user accounts.
-                // They will, however, be able to fetch data. This will likely have to change in the future to something more secure
-                // Such as issuing a "machine jwt" - a JWT that is given to the server, but this requires a bit of setup and I'm not certain on the correct path.
-                // So for now this is fine.
                 x.ForwardDefaultSelector = context =>
                 {
                     return context.Request.Headers.ContainsKey("X-API-KEY")
-                        ? "ApiKey"
+                        ? WinterhavenBearerDefaults.ServerAuthenticationScheme
                         : JwtBearerDefaults.AuthenticationScheme;
                 };
             })
-            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKey", null)
+            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(WinterhavenBearerDefaults.ServerAuthenticationScheme, null)
             .AddJwtBearer(x =>
             {
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -204,11 +198,11 @@ internal sealed class Startup
                 Description = "API Key for server endpoints.",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
-                Scheme = "ApiKey",
+                Scheme = WinterhavenBearerDefaults.ServerAuthenticationScheme,
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "ApiKey"
+                    Id = WinterhavenBearerDefaults.ServerAuthenticationScheme
                 }
             };
 
@@ -219,7 +213,7 @@ internal sealed class Startup
             };
 
             x.AddSecurityDefinition("Bearer", jwtScheme);
-            x.AddSecurityDefinition("ApiKey", apiKeyScheme);
+            x.AddSecurityDefinition(WinterhavenBearerDefaults.ServerAuthenticationScheme, apiKeyScheme);
 
             x.AddSecurityRequirement(securityRequirement);
         });

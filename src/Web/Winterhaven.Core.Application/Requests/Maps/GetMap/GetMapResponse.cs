@@ -4,12 +4,10 @@
 
 namespace Winterhaven.Core.Application.Requests.Maps.GetMap;
 
-public sealed class GetMapResponse
-{
-    public GetMapResponse(byte[] data)
-    {
-        this.Data = data ?? throw new ArgumentNullException(nameof(data));
-    }
-
-    public byte[] Data { get; }
-}
+/// <summary>
+/// Represents a response object that contains map data.
+/// </summary>
+/// <param name="Data">
+/// The map data.
+/// </param>
+public sealed record GetMapResponse(IEnumerable<byte> Data);
