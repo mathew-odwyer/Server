@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - DD-MM-YYYY
 
+## [v0.2.0] - 05-12-2025
+
 ### Added
 
 - [#11] - Global Web API Rate Limiting (_by [@mathew-odwyer]_).
@@ -36,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Web API Infrastructure (_by [@mathew-odwyer]_).
 
 [Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.1...HEAD
+[v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
 [#34]: https://github.com/mathew-odwyer/Server/issues/34
