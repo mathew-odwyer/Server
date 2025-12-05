@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#34] - Maps are Loaded from Web API end-point (_by [@mathew-odwyer]_).
 - [#25] - Added Multiple Validation Error Support and updated UI (_by [@mathew-odwyer]_).
 
 ### Fixed
@@ -37,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.1...HEAD
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#34]: https://github.com/mathew-odwyer/Server/issues/34
 [#25]: https://github.com/mathew-odwyer/Server/issues/25
 [#41]: https://github.com/mathew-odwyer/Server/issues/41
 [#50]: https://github.com/mathew-odwyer/Server/issues/50

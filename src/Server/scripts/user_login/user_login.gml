@@ -69,10 +69,10 @@ function user_login(credentials, connection)
 			// Send welcome message to player (accounting for new and returning players).
 			var messages = [
 				{ content: $"Welcome, {player.name}" },
-				{ content: "Walk around with WAS or arrow keys, hit the TAB key to chat!" },
+				{ content: "Walk around with WASD or arrow keys, hit the TAB key to chat!" },
 				{ content: "Chat now has [rainbow]effects[/rainbow]! Use /[rainbow]rainbow[/rainbow], /[shake]shake[/shake] and [wobble]/wobble[/wobble]!" },
-				{ content: "You can now toggle chat visiblity with [c_red]ctrl + t[/c_red]"},
-				{ content: "You can now use emotes! Use /exclaim, /[c_red]love[/c_red], /[c_red]what[/c_red] and /[c_red]...[/c_red]" },
+				{ content: "You can now toggle chat visiblity with [c_red]ctrl + t"},
+				{ content: "You can now use emotes! Use [c_red]/exclaim, /love, /what and /..." },
 			];
 			
 			_logger.log(log_type.information, $"'{player.name}' logged in!");
@@ -82,6 +82,7 @@ function user_login(credentials, connection)
 				players: players,
 				refresh_token: connection[$ "refresh_token"],
 				messages: messages,
+				map_data: obj_server.map_data,
 			};
 		}));
 }

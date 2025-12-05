@@ -54,6 +54,7 @@ function Server(type, port, max_clients) constructor
 			throw new ObjectDisposedError(nameof(ClientConnection));
 		}
 		
+		/// @type {Struct.ClientConnection} 
 		var connection = _socket_to_connection_map[$ string(socket)];
 		
 		if (is_instanceof(connection, ClientConnection))

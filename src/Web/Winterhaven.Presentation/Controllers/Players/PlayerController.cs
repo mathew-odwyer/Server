@@ -10,6 +10,7 @@ using Winterhaven.Core.Application.Requests.Players.UpdatePlayer;
 using Winterhaven.Core.Domain.Entities.Players;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 /// <summary>
 /// Provides API endpoints for managing <see cref="Player"/> entities.
@@ -26,7 +27,7 @@ public sealed class PlayerController : ApiControllerBase
     /// Returns an <see cref="OkObjectResult"/> containing the retrieved player.
     /// </returns>
     [HttpGet]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Get(CancellationToken cancellationToken = default)
     {
         var request = new GetPlayerRequest();
@@ -48,7 +49,7 @@ public sealed class PlayerController : ApiControllerBase
     /// Returns a <see cref="NoContentResult"/> when the player is successfully updated.
     /// </returns>
     [HttpPatch]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Update([FromBody] UpdatePlayerRequestDto requestDto, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(requestDto);

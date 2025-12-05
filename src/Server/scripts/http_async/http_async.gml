@@ -16,16 +16,21 @@ function http_async(url, type, body = {}, options = {})
 	
 	var headers = ds_map_create();
 	
-	headers[? "Accept"] = "application/json, application/problem+json";
+	headers[? "Accept"] = "application/json, application/problem+json, text/xml";
 	headers[? "Content-Type"] = "application/json";
 	
 	if (struct_exists(options, "bearer"))
 	{
 		headers[? "Authorization"] = $"Bearer {options[$ "bearer"]}";
 	}
-	
+
+	if (struct_exists(options, "api_key"))
+	{
+		headers[? "X-API-KEY"] = options[$ "api_key"];
+	}
+
 	_logger.log(log_type.debug, $"{type} '{url}'...");
-	
+
 	var request = http_request(url, type, headers, json_stringify(body));
 
 	var promise = new Promise(method({request, options}, function(resolve, reject)

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"MapClient",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"MapClient",
+  "parent":{
+    "name":"Maps",
+    "path":"folders/Scripts/Network/HTTP/Clients/Maps.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

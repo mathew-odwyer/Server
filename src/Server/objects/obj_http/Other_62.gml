@@ -33,7 +33,16 @@ if (!string_empty(result))
 {
 	try
 	{
-		data = json_parse(result);
+		var content = string_trim(result);
+
+		if (string_starts_with(content, "{") && string_ends_with(content, "}"))
+		{
+			data = json_parse(result);
+		}
+		else if (string_starts_with(content, "<?xml"))
+		{
+			data = result;
+		}
 	}
 	catch (ex)
 	{

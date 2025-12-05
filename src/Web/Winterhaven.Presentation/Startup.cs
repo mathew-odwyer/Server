@@ -7,6 +7,7 @@ namespace Winterhaven.Presentation;
 using System.Text;
 using System.Text.Json;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Winterhaven.Core.Application.Extensions;
 using Winterhaven.Infrastructure.Extensions;
+using Winterhaven.Presentation.Authentication;
 using Winterhaven.Presentation.Filters;
 using Winterhaven.Presentation.Middleware.Users;
 
@@ -92,9 +94,19 @@ internal sealed class Startup
             .AddAuthorization()
             .AddAuthentication(x =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultAuthenticateScheme = WinterhavenBearerDefaults.Name;
+                x.DefaultChallengeScheme = WinterhavenBearerDefaults.Name;
             })
+            .AddPolicyScheme(WinterhavenBearerDefaults.Name, "JWT or API Key", x =>
+            {
+                x.ForwardDefaultSelector = context =>
+                {
+                    return context.Request.Headers.ContainsKey("X-API-KEY")
+                        ? WinterhavenBearerDefaults.ServerAuthenticationScheme
+                        : JwtBearerDefaults.AuthenticationScheme;
+                };
+            })
+            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(WinterhavenBearerDefaults.ServerAuthenticationScheme, null)
             .AddJwtBearer(x =>
             {
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -165,7 +177,7 @@ internal sealed class Startup
                 Description = "API documentation for Winterhaven."
             });
 
-            var securityScheme = new OpenApiSecurityScheme
+            var jwtScheme = new OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Description = "Enter JWT Bearer token **_only_**",
@@ -180,15 +192,29 @@ internal sealed class Startup
                 }
             };
 
-            var securityRequirement = new OpenApiSecurityRequirement
+            var apiKeyScheme = new OpenApiSecurityScheme
             {
+                Name = "X-API-KEY",
+                Description = "API Key for server endpoints.",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = WinterhavenBearerDefaults.ServerAuthenticationScheme,
+                Reference = new OpenApiReference
                 {
-                    securityScheme,
-                    Array.Empty<string>()
+                    Type = ReferenceType.SecurityScheme,
+                    Id = WinterhavenBearerDefaults.ServerAuthenticationScheme
                 }
             };
 
-            x.AddSecurityDefinition("Bearer", securityScheme);
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                { jwtScheme, Array.Empty<string>() },
+                { apiKeyScheme, Array.Empty<string>() }
+            };
+
+            x.AddSecurityDefinition("Bearer", jwtScheme);
+            x.AddSecurityDefinition(WinterhavenBearerDefaults.ServerAuthenticationScheme, apiKeyScheme);
+
             x.AddSecurityRequirement(securityRequirement);
         });
     }
