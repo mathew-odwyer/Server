@@ -1,0 +1,82 @@
+name: 🧹 Tech Debt
+description: Tasks related to codebase cleanup, refactoring, or internal improvements.
+title: "🧹 Tech Debt"
+labels: ["🧹 Tech Debt"]
+projects: ["mathew-odwyer/7"]
+assignees:
+  - mathew-odwyer
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the long-term health and maintainability of the project!
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Checklist"
+      description: "Please complete the following checklist before submitting this tech debt issue."
+      options:
+        - label: "I have not removed the 🧹 emoji from the title."
+          required: true
+        - label: "I have confirmed that this task is not already tracked under another tech debt or refactor issue."
+          required: true
+        - label: "This does not represent a user-facing feature request or bug report, but an internal improvement."
+          required: true
+        - label: "For maintainers: I have updated the projects and milestones if needed."
+          required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "Provide a clear and concise explanation of the technical debt."
+      placeholder: "Explain the debt—e.g., outdated patterns, messy code, lack of tests, etc."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: "Impact"
+      description: "Describe how this technical debt affects maintainability, performance, or development speed."
+      placeholder: "Explain why addressing this tech debt matters."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: "Proposed Approach"
+      description: "Explain how you suggest addressing this technical debt, including refactor ideas, cleanup steps, or restructuring."
+      placeholder: "Describe the recommended solution or approach."
+    validations:
+      required: false
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: "Risks or Challenges"
+      description: "Describe any potential risks, regressions, or complications that might arise when addressing this technical debt."
+      placeholder: "Note any challenges or risks that may be encountered."
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "Additional Context"
+      description: "Include any extra notes, history, or details that may help clarify the tech debt."
+      placeholder: "Provide additional information if necessary."
+    validations:
+      required: false
+
+  - type: textarea
+    id: related
+    attributes:
+      label: "Related Issues"
+      description: "Link any related bugs, features, or other tech debt issues."
+      placeholder: "Reference related issues in list format."
+    validations:
+      required: false
