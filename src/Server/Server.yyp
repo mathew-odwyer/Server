@@ -2,7 +2,7 @@
   "$GMProject":"v1",
   "%Name":"Server",
   "AudioGroups":[
-    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -70,9 +70,7 @@
     {"$GMFolder":"","%Name":"Masking","folderPath":"folders/Tilesets/Masking.yy","name":"Masking","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
-  "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"rm_bellmare_tavern.tmx","CopyToMask":-1,"filePath":"datafiles/Maps/Bellmare","name":"rm_bellmare_tavern.tmx","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-  ],
+  "IncludedFiles":[],
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
