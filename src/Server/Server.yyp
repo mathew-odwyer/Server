@@ -2,7 +2,7 @@
   "$GMProject":"v1",
   "%Name":"Server",
   "AudioGroups":[
-    {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -34,6 +34,7 @@
     {"$GMFolder":"","%Name":"Time","folderPath":"folders/Extensions/GMUtilities/Scripts/Time.yy","name":"Time","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Winterhaven","folderPath":"folders/Extensions/Winterhaven.yy","name":"Winterhaven","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Extensions/Winterhaven/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"AI","folderPath":"folders/Extensions/Winterhaven/Objects/AI.yy","name":"AI","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Entities","folderPath":"folders/Extensions/Winterhaven/Objects/Entities.yy","name":"Entities","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Characters","folderPath":"folders/Extensions/Winterhaven/Objects/Entities/Characters.yy","name":"Characters","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Extensions/Winterhaven/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -79,6 +80,7 @@
   "name":"Server",
   "resources":[
     {"id":{"name":"GMTiled2","path":"extensions/GMTiled2/GMTiled2.yy",},},
+    {"id":{"name":"obj_ai_manager","path":"objects/obj_ai_manager/obj_ai_manager.yy",},},
     {"id":{"name":"obj_character_base","path":"objects/obj_character_base/obj_character_base.yy",},},
     {"id":{"name":"obj_controller","path":"objects/obj_controller/obj_controller.yy",},},
     {"id":{"name":"obj_depth_base","path":"objects/obj_depth_base/obj_depth_base.yy",},},
