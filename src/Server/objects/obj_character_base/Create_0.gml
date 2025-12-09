@@ -1,11 +1,5 @@
 /// @description Initialize default parameters.
 
-/// @instancevar {Bool} can_walk Indicates whether the character can walk.
-/// @instancevar {Bool} can_wander Indicates whether the character can wander.
-/// @instancevar {Real} wander_min_wait_frames The minimum time the character must wait before wandering.
-/// @instancevar {Real} wander_max_wait_frames The maximum time the character must wait before wandering.
-/// @instancevar {Real} wander_radius How far the character can wander (in pixels).
-
 /// @description Enumerates the available character states. 
 enum character_state
 {
@@ -42,6 +36,8 @@ _last_direction = 3;
 /// @description The path used for wandering.
 _path = path_add();
 
+/// @type {Bool}
+/// @description Indicates whether the character is colliding with any tiles or entities this frame.
 _colliding = false;
 
 /// @description Moves the character based on the current input.
@@ -164,7 +160,13 @@ _wander_state = function(type)
 	switch (type)
 	{
 		case state_type.on_enter:
-			obj_ai_manager.generate_random_path(_path, x, y, xstart, ystart, wander_radius);
+			var xpos = irandom_range(xstart - wander_radius, xstart + wander_radius);
+			var ypos = irandom_range(ystart - wander_radius, ystart + wander_radius);
+		
+			if (!obj_ai_manager.try_generate_random_path(_path, x, y, xstart, ystart, wander_radius))
+			{
+				_state_machine.set_state(character_state.idle);
+			}
 			break;
 			
 		case state_type.on_exit:
