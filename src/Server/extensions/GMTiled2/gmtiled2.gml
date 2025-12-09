@@ -387,7 +387,27 @@ for (var i = 0; i<ds_list_size(layers); i++) {
 				}
 
 				var object = asset_get_index(instance[? "name"]);
-				var inst = instance_create_layer(instance[? "x"], instance[? "y"], layer_id, object);
+
+				var tx = instance[? "x"];
+				var ty = instance[? "y"];
+
+				var inst = instance_create_layer(tx, ty, layer_id, object);
+
+				// Adjust for sprite origin.
+				if (inst.sprite_index != -1)
+				{
+					var spr = inst.sprite_index;
+
+					var ox = sprite_get_xoffset(spr);
+					var oy = sprite_get_yoffset(spr);
+					var h  = sprite_get_height(spr);
+
+					// Convert Tiled bottom-left to GM top-left + origin correction.
+					// TODO: This only accounts for Tile Objects in Tiled - Rectangle and Image objects use the top left.
+					inst.x = tx + ox;
+					inst.y = ty - (h - oy);
+				}
+
 				show_debug_message("Create instance " + instance[? "name"])
 				ds_list_add(new_instances, inst);
 
