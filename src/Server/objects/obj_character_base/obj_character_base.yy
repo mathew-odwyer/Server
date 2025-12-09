@@ -51,5 +51,5 @@
     "name":"spr_character_shadow_0_0",
     "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
   },
-  "visible":true,
+  "visible":false,
 }
