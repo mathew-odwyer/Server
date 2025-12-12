@@ -541,3 +541,9 @@ sprites.info.json
 # Docker compose stuff
 docker-compose.override.yml
 
+Cache/
+GameAssetsLinux/
+GameAssetsLinux.zip
+igor.output.manifest
+options.ini
+Server.desktop

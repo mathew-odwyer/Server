@@ -1,6 +1,7 @@
 /// @description Initialize services.
 
 /// @globalvar {Struct.Logger} Logger
+/// @globalvar {Struct.EventAggregator} EventAggregator 
 
 Logger.LogLevel = log_type.debug;
 
