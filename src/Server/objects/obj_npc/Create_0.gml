@@ -17,11 +17,6 @@ _process_tick = function()
 {
     with (obj_player)
     {
-        if (self.id == other.id)
-        {
-            continue;
-        }
-
         notify("npc.action_remote", {
             name: other.name,
             actions: other._actions_performed,

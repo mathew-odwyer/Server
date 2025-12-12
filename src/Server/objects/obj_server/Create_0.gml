@@ -10,7 +10,7 @@
 
 /// @type {Real}
 /// @description The port number.
-#macro server_port 8080
+#macro server_port 8082
 
 /// @type {Real}
 /// @description The maximum number of connected clients.
