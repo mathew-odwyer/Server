@@ -1,4 +1,4 @@
-/// @description Handle player actions.
+/// @description Process action queue.
 
 if (!ds_queue_empty(_action_queue))
 {

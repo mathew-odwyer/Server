@@ -35,3 +35,19 @@ if (sound != noone)
 {
     audio_play_sound_on(_emitter, sound, true, 0);
 }
+
+// Debug view for entities
+dbg_view($"Entity: {object_get_name(object_index)}: '{id}'", false);
+
+dbg_section("Lighting", false);
+
+dbg_checkbox(ref_create(self, nameof(light_enabled)), "Enabled");
+
+dbg_text_separator("Properties");
+dbg_color(ref_create(self, nameof(light_color)), "Color");
+dbg_slider(ref_create(self, nameof(light_intensity)), 0.1, 5.0, "Intensity", 0.05);
+dbg_slider(ref_create(self, nameof(light_scale)), 0.1, 10.0, "Scale", 0.05);
+
+dbg_text_separator("Flickering");
+dbg_slider(ref_create(self, nameof(light_amplitude)), 0.1, 1.0, "Amplitude", 0.1);
+dbg_slider(ref_create(self, nameof(light_frequency)), 1, 16, "Frequency", 0.5);

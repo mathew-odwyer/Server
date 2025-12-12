@@ -8,6 +8,10 @@ enum character_state
 	wander,
 };
 
+/// @type {String}
+/// @description The name of the character. 
+name = "";
+
 /// @type {Struct.CharacterCustomizer}
 /// @description The character customizer.
 customizer = new CharacterCustomizer();
@@ -32,19 +36,12 @@ _move_y = 0;
 /// @description The last direction as an interger.
 _last_direction = 3;
 
-/// @type {Asset.GMPath}
-/// @description The path used for wandering.
-_path = path_add();
-
-/// @type {Bool}
-/// @description Indicates whether the character is colliding with any tiles or entities this frame.
-_colliding = false;
-
 /// @description Moves the character based on the current input.
 /// @param {Real} move_x The horizontal movement: (+) right, (-) left.
 /// @param {Real} move_y The vertical movement: (+) down, (-) up
 _move = function(move_x, move_y)
 {
+	// If moving diagonally, normalize the movement vector.
 	if (move_x != 0 && move_y != 0)
 	{
 		// Normalize diagonal movement to prevent faster movement.
@@ -64,14 +61,14 @@ _move = function(move_x, move_y)
 	    array_push(collidables, tilemap_id);
 	}
 	
-	_colliding = array_length(move_and_collide(move_x, move_y, collidables)) > 0;
+	move_and_collide(move_x, move_y, collidables);
 }
 
 /// @description Determines whether the character is currently moving.
 /// @returns {Bool} Returns `true` if the character is moving; otherwise, `false`.
 _moving = function()
 {
-    return _move_x !=0 || _move_y != 0;
+    return _move_x < 0 || _move_x > 0 || _move_y < 0 || _move_y > 0;
 }
 
 /// @description Gets the current direction index for the character.
@@ -102,12 +99,6 @@ _update_animation = function()
 	var tag = tags[_get_direction()];
 	var state = _state_machine.get_name();
 	
-	if (state == "Wander")
-	{
-		// Wandering and walking are the same animation.
-		state = "Walk";
-	}
-	
 	_animation_system.set_animation($"{state}{tag}");
 }
 
@@ -117,18 +108,6 @@ _idle_state = function(type)
 {
 	switch (type)
 	{
-		case state_type.on_enter:
-			if (can_wander)
-			{
-				var wait_frames = irandom_range(wander_min_wait_frames, wander_max_wait_frames);
-				
-				call_later(wait_frames, time_source_units_frames, function()
-				{
-					_state_machine.set_state(character_state.wander);
-				});
-			}
-			break;
-
 		case state_type.on_step:
 			if (_moving())
 			{
@@ -153,65 +132,7 @@ _walk_state = function(type)
 	}
 }
 
-/// @description Handles the wandering state.
-/// @param {Enum.state_type} type The state type.
-_wander_state = function(type)
-{
-	switch (type)
-	{
-		case state_type.on_enter:
-			var xpos = irandom_range(xstart - wander_radius, xstart + wander_radius);
-			var ypos = irandom_range(ystart - wander_radius, ystart + wander_radius);
-		
-			if (!obj_ai_manager.try_generate_random_path(_path, x, y, xstart, ystart, wander_radius))
-			{
-				_state_machine.set_state(character_state.idle);
-			}
-			break;
-			
-		case state_type.on_exit:
-			path_clear_points(_path);
-			break;
-
-		case state_type.on_step:
-			// Get the next point in the path (in room coordinates).
-			var point_x = path_get_point_x(_path, 0);
-			var point_y = path_get_point_y(_path, 0);
-			
-			// Get the distance between the current position and the next point.
-			var distance = point_distance(x, y, point_x, point_y);
-			
-			// If we're still moving along the path, keep moving.
-			if (distance > 1)
-			{
-				// Get the direction of the vector (where we want to go).
-				var heading = point_direction(x, y, point_x, point_y);
-				
-				// Normalize the vector
-				// Also floor it to ensure we only move in the correct direction each frame.
-				_move_x = lengthdir_x(1.0, heading);
-				_move_y = lengthdir_y(1.0, heading);
-			}
-			else
-			{
-				// If we've reached the end of this point in the path, go to the next point.
-				path_delete_point(_path, 0);
-			}
-			break;
-			
-		case state_type.on_step_end:
-			if (_colliding || path_get_number(_path) == 0)
-			{
-				// Since we're only wandering, to save on CPU - go back to idle if we collide with anything.
-				// There's no need to try again or anything.
-				_state_machine.set_state(character_state.idle);
-			}
-			break;
-	}
-}
-
 _state_machine.add_state("Idle", character_state.idle, _idle_state);
 _state_machine.add_state("Walk", character_state.walk, _walk_state);
-_state_machine.add_state("Wander", character_state.wander, _wander_state);
 
 _state_machine.set_state(character_state.idle);

@@ -1,7 +1,5 @@
 /// @description Cleanup resources.
 
-event_inherited();
-
 with (obj_player)
 {
     if (self.id == other.id)
@@ -13,3 +11,5 @@ with (obj_player)
 }
 
 connection.cleanup();
+
+ds_queue_destroy(_action_queue);

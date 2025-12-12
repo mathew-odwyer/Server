@@ -5,6 +5,7 @@
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":12,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":2,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
   "name":"obj_player",
@@ -14,8 +15,8 @@
     "path":"folders/Objects/Entities/Characters/Players.yy",
   },
   "parentObjectId":{
-    "name":"obj_character_server_base",
-    "path":"objects/obj_character_server_base/obj_character_server_base.yy",
+    "name":"obj_character_base",
+    "path":"objects/obj_character_base/obj_character_base.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -36,10 +37,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_character_shadow_0_0",
-    "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":{
     "name":"spr_character_shadow_0_0",
     "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
