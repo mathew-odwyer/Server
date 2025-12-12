@@ -32,14 +32,24 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[],
+  "properties":[
+    {"$GMObjectProperty":"v2","%Name":"name","filters":[],"listItems":[],"multiselect":false,"name":"name","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"Player","varType":2,},
+    {"$GMObjectProperty":"v2","%Name":"can_walk","filters":[],"listItems":[],"multiselect":false,"name":"can_walk","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"true","varType":3,},
+    {"$GMObjectProperty":"v2","%Name":"can_wander","filters":[],"listItems":[],"multiselect":false,"name":"can_wander","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
+    {"$GMObjectProperty":"v2","%Name":"wander_radius","filters":[],"listItems":[],"multiselect":false,"name":"wander_radius","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"150","varType":0,},
+    {"$GMObjectProperty":"v2","%Name":"wander_min_wait_frames","filters":[],"listItems":[],"multiselect":false,"name":"wander_min_wait_frames","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"100","varType":1,},
+    {"$GMObjectProperty":"v2","%Name":"wander_max_wait_frames","filters":[],"listItems":[],"multiselect":false,"name":"wander_max_wait_frames","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"450","varType":1,},
+  ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_character_shadow_0_0",
+    "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
+  },
   "spriteMaskId":{
     "name":"spr_character_shadow_0_0",
     "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
   },
-  "visible":true,
+  "visible":false,
 }

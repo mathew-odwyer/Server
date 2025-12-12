@@ -387,10 +387,28 @@ for (var i = 0; i<ds_list_size(layers); i++) {
 				}
 
 				var object = asset_get_index(instance[? "name"]);
-				var inst = instance_create_layer(instance[? "x"], instance[? "y"], layer_id, object);
-				show_debug_message("Create instance " + instance[? "name"])
-				ds_list_add(new_instances, inst);
+				var sprite = object_get_sprite(object);
 
+				var tx = instance[? "x"];
+				var ty = instance[? "y"];
+
+				var lx = tx;
+				var ly = ty;
+
+				// Adjust for sprite origin.
+				if (sprite != -1)
+				{
+					var ox = sprite_get_xoffset(sprite);
+					var oy = sprite_get_yoffset(sprite);
+					var h  = sprite_get_height(sprite);
+
+					// Convert Tiled bottom-left to GM top-left + origin correction.
+					// TODO: This only accounts for Tile Objects in Tiled - Rectangle and Image objects use the top left.
+					lx = tx + ox;
+					ly = ty - (h - oy);
+				}
+
+				var inst_struct = {};
 				var properties = instance[? "properties"];
 
 				for (var k=0; k<ds_list_size(properties); k++) {
@@ -410,8 +428,15 @@ for (var i = 0; i<ds_list_size(layers); i++) {
 					}
 
 					show_debug_message("Set property " + prop[? "name"] + " to " + string(value));
-					variable_instance_set(inst, prop[? "name"], value);
+
+					struct_set(inst_struct, prop[? "name"], value);
+					// variable_instance_set(inst, prop[? "name"], value);
 				}
+
+				var inst = instance_create_layer(lx, ly, layer_id, object, inst_struct);
+
+				show_debug_message("Create instance " + instance[? "name"])
+				ds_list_add(new_instances, inst);
 
 				if (not is_undefined(instance[? "visible"]) and instance[? "visible"] == "0") {
 					inst.visible = false;
