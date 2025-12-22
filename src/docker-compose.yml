@@ -24,18 +24,6 @@ services:
       timeout: 5s
     restart: unless-stopped
 
-  nats:
-    image: nats:latest
-    expose:
-      - "9222"
-      - "4222"
-      - "8222"
-    volumes:
-      - ./NATS/nats-development.conf:/etc/nats/nats.conf
-    command: [
-      "--config", "/etc/nats/nats.conf"
-    ]
-
   web:
     container_name: web
     image: winterhaven-web

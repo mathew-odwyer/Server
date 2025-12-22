@@ -2,7 +2,7 @@
   "$GMProject":"v1",
   "%Name":"Server",
   "AudioGroups":[
-    {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -75,7 +75,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.14.1.210",
+    "IDEVersion":"2024.14.2.213",
   },
   "name":"Server",
   "resources":[
@@ -114,6 +114,7 @@
     {"id":{"name":"map_load_map","path":"scripts/map_load_map/map_load_map.yy",},},
     {"id":{"name":"MapClient","path":"scripts/MapClient/MapClient.yy",},},
     {"id":{"name":"NatsClientProtocol","path":"scripts/NatsClientProtocol/NatsClientProtocol.yy",},},
+    {"id":{"name":"NatsError","path":"scripts/NatsError/NatsError.yy",},},
     {"id":{"name":"ObjectDisposedError","path":"scripts/ObjectDisposedError/ObjectDisposedError.yy",},},
     {"id":{"name":"player_action","path":"scripts/player_action/player_action.yy",},},
     {"id":{"name":"player_get_by_connection","path":"scripts/player_get_by_connection/player_get_by_connection.yy",},},
