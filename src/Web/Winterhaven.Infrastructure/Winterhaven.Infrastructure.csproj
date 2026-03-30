@@ -3,6 +3,7 @@
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
