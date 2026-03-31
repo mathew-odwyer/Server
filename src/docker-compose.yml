@@ -33,6 +33,7 @@ services:
     networks:
       - network
     expose:
+      - "8222"
       - "9222"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8222"]
