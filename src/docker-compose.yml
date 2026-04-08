@@ -24,6 +24,23 @@ services:
       timeout: 5s
     restart: unless-stopped
 
+  nats:
+    container_name: nats
+    image: nats
+    depends_on:
+      caddy:
+        condition: service_healthy
+    networks:
+      - network
+    expose:
+      - "8222"
+      - "9222"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8222"]
+    volumes:
+      - ./NATS/nats-production.conf:/etc/nats/nats.conf:ro
+    command: ["-c", "/etc/nats/nats.conf"]
+
   web:
     container_name: web
     image: winterhaven-web
