@@ -24,17 +24,17 @@ Don't forget about adding in GM Builder:
     container_name: winterhaven-builder
     image: winterhaven-builder
     build:
-# The following settings are required if you are running Docker Desktop on Windows and need to perform privileged operations (such as mounting certain filesystems or using specific device nodes):
-#    cap_add:
-#      - SYS_ADMIN
-#      - MKNOD
-#    security_opt:
-#      - seccomp:unconfined
-#      - SYS_ADMIN
-#      - MKNOD
-#    security_opt:
-#      - seccomp:unconfined
-  
+      context: ./Server
+      dockerfile: Dockerfile.Build
+    env_file:
+      - .env
+    
+    # The following settings are required if you are running Docker Desktop on Windows and need to perform privileged operations (such as mounting certain filesystems or using specific device nodes):
+    # cap_add:
+    #   - SYS_ADMIN
+    #   - MKNOD
+    # security_opt:
+    #   - seccomp:unconfined
 ```
 
 ## Web
