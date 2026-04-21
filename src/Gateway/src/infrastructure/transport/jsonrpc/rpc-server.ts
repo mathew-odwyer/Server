@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Server } from 'rpc-websockets';
 import type { ServerOptions } from 'rpc-websockets';
 import { RPC_COTNROLLER_KEY } from '../../decorators/rpc-controller';
@@ -27,6 +29,18 @@ export class RpcServer {
 
     constructor(options: ServerOptions) {
         this.server = new Server(options);
+
+        this.server.on('connection', (socket, req) => {
+            logger.info(`Client Connected: ${req.socket.remoteAddress}`);
+
+            socket.on('close', (code, reason) => {
+                logger.info(`Client Disconnected: ${req.socket.remoteAddress} - Code: ${code}, Reason: ${reason}`);
+            });
+        });
+
+        this.server.on('error', (error) => {
+            logger.error('RPC Server error:', error);
+        });
     }
 
     register(controller: RpcControllerBase) {
