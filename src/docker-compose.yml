@@ -7,8 +7,10 @@ services:
     build: 
       context: ./Caddy
       dockerfile: Dockerfile
+    depends_on:
+      gateway:
+        condition: service_healthy
     ports:
-      - "80:80"
       - "443:443"
     volumes:
       - "caddy_data:/data"
@@ -24,22 +26,41 @@ services:
       timeout: 5s
     restart: unless-stopped
 
-  nats:
-    container_name: nats
-    image: nats
-    depends_on:
-      caddy:
-        condition: service_healthy
+  redis:
+    container_name: redis
+    image: redis:alpine
     networks:
       - network
     expose:
-      - "8222"
-      - "9222"
+      - "6379"
+    volumes:
+      - redis_data:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8222"]
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+  nats:
+    container_name: nats
+    image: winterhaven-nats
+    build:
+      context: ./NATS
+      dockerfile: Dockerfile
+    networks:
+      - network
+    expose:
+      - "9222"
     volumes:
       - ./NATS/nats-production.conf:/etc/nats/nats.conf:ro
     command: ["-c", "/etc/nats/nats.conf"]
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8222/healthz"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
 
   web:
     container_name: web
@@ -49,8 +70,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       database:
-        condition: service_healthy
-      caddy:
         condition: service_healthy
     networks:
       - network
@@ -73,9 +92,6 @@ services:
     volumes:
       - db_data:/var/opt/mssql
       - data-protection-keys:/root/.aspnet/DataProtection-Keys
-    depends_on:
-      caddy:
-        condition: service_healthy
     networks:
       - network
     expose:
@@ -88,33 +104,58 @@ services:
       timeout: 5s
     restart: unless-stopped
 
-  server:
-    container_name: server
-    image: winterhaven-server
-    build: 
-      context: ./Server/build
-      dockerfile: Dockerfile.Run
+  # # server:
+  # #   container_name: server
+  # #   image: winterhaven-server
+  # #   build: 
+  # #     context: ./Server/build
+  # #     dockerfile: Dockerfile.Run
+  # #   expose:
+  # #     - "8080"
+  # #   networks:
+  # #     - network
+  # #   depends_on:
+  # #     web:
+  # #       condition: service_healthy
+  # #   healthcheck:
+  # #     test: >
+  # #       sh -c "echo | websocat -n --connect ws://localhost:8080 >/dev/null 2>&1"
+  # #     interval: 10s
+  # #     timeout: 5s
+  # #     retries: 5
+  # #     start_period: 5s
+  # #   restart: unless-stopped
+
+  gateway:
+    container_name: gateway
+    image: winterhaven-gateway
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile
     expose:
       - "8080"
-    networks:
-      - network
     depends_on:
       web:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    networks:
+      - network
     healthcheck:
-      test: >
-        sh -c "echo | websocat -n --connect ws://localhost:8080 >/dev/null 2>&1"
-      interval: 10s
-      timeout: 5s
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/get"]
+      interval: 5s
       retries: 5
       start_period: 5s
-    restart: unless-stopped
+      timeout: 5s    
     
 networks:
   network:
     driver: bridge
 
 volumes:
+  redis_data:
   caddy_data:
   caddy_config:
   data-protection-keys:
