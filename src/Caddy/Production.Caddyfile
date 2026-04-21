@@ -4,5 +4,5 @@ http://localhost {
 
 winterhaven-demo.duckdns.org {
     tls mathew.odwyer@hotmail.com
-    reverse_proxy server:8080
+    reverse_proxy gateway:8080
 }

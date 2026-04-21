@@ -4,5 +4,5 @@ http://localhost {
 
 https://winterhaven.com.au {
     tls internal
-    reverse_proxy server:8080
+    reverse_proxy gateway:8080
 }
