@@ -11,6 +11,8 @@ import { registerRpcAdapter } from './presentation/adapters/rpc-server.js';
     4. Ensure get and set actually work
     5. Cleanup, documentation, prettify w/ VS Code extensions
     6. UserRpcController.register (push after) - remember controllers can take in dependencies that are services/interfaces and NOT HttpClients, etc.
+    7. Ensure that errors are caught within the PRESENTATION layer by providing a event hook for rpc-server.ts (server.on("error", callback)).
+        - This will allow us to convert HttpError's, or simply return a generic error to the client - OR lastly, return an RpcError
     7. DI Container. Then work on login, logout, refresh.
 */
 
