@@ -8,7 +8,7 @@ import { registerRpcAdapter } from './presentation/adapters/rpc-server.js';
 import { NatsEventsBus } from "./infrastructure/services/events/nats-event-bus.js";
 import { EventBus } from "./application/adapters/events/event-bus.js";
 import { Cache } from "./application/adapters/data/cache.js";
-import { RedisCache } from "./infrastructure/services/cache/redis-cache.js";
+import { RedisCache } from "./infrastructure/services/data/redis-cache.js";
 
 /*
     1. Create event-bus and nats-event-bus :)
