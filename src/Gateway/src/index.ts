@@ -1,14 +1,14 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { createServer } from 'http';
-import { createClient, RedisClientType } from "redis";
-import { connect } from "nats.ws";
+import { createClient, RedisClientType } from 'redis';
+import { connect } from 'nats.ws';
 import { logger } from './common/services/logging/logger.js';
 import { registerHttpAdapter } from './presentation/adapters/http-server.js';
 import { registerRpcAdapter } from './presentation/adapters/rpc-server.js';
-import { NatsEventsBus } from "./infrastructure/services/events/nats-event-bus.js";
-import { EventBus } from "./application/adapters/events/event-bus.js";
-import { Cache } from "./application/adapters/data/cache.js";
-import { RedisCache } from "./infrastructure/services/data/redis-cache.js";
+import { NatsEventsBus } from './infrastructure/services/events/nats-event-bus.js';
+import { EventBus } from './application/adapters/events/event-bus.js';
+import { Cache } from './application/adapters/data/cache.js';
+import { RedisCache } from './infrastructure/services/data/redis-cache.js';
 
 /*
     1. Create event-bus and nats-event-bus :)
@@ -24,12 +24,12 @@ import { RedisCache } from "./infrastructure/services/data/redis-cache.js";
 */
 
 type DataTest = {
-    test:number;
+    test: number;
 };
 
 (async () => {
-    const host = process.env["GATEWAY_HOST"] || '0.0.0.0';
-    const port = Number(process.env["GATEWAY_PORT"] ?? 8080);
+    const host = process.env['GATEWAY_HOST'] || '0.0.0.0';
+    const port = Number(process.env['GATEWAY_PORT'] ?? 8080);
 
     const server = createServer();
 
@@ -37,18 +37,18 @@ type DataTest = {
     registerRpcAdapter(server);
 
     const nats = await connect({
-        servers: process.env["NATS_URL"] || "ws://nats:9222",
+        servers: process.env['NATS_URL'] || 'ws://nats:9222',
     });
 
-    const eventBus:EventBus = new NatsEventsBus(nats);
+    const eventBus: EventBus = new NatsEventsBus(nats);
 
-    const redis:RedisClientType = await createClient({
-        url: process.env["REDIS_URL"] || '',
-    }).connect() as RedisClientType;
+    const redis: RedisClientType = (await createClient({
+        url: process.env['REDIS_URL'] || '',
+    }).connect()) as RedisClientType;
 
-    const cache:Cache = new RedisCache(redis);
+    const cache: Cache = new RedisCache(redis);
 
-    eventBus.subscribe('test.message', async (data:DataTest) => {
+    eventBus.subscribe('test.message', async (data: DataTest) => {
         console.log(data.test);
 
         await cache.set('test', data.test, {
@@ -75,7 +75,7 @@ type DataTest = {
                 return;
             }
 
-            console.log(result);;
+            console.log(result);
         }, 6000);
     });
 
