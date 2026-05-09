@@ -1,0 +1,14 @@
+﻿namespace Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
+
+using MediatR;
+using Winterhaven.API.Core.Domain.Attributes.Users;
+using Winterhaven.API.Core.Domain.Entities.Players;
+
+/// <summary>
+/// Represents a request used to fetch an existing <see cref="Player"/>
+/// </summary>
+/// <seealso cref="IRequest"/>
+/// <seealso cref="IBaseRequest"/>
+[Authorize]
+public sealed record GetPlayerRequest
+    : IRequest<GetPlayerResponse>;
