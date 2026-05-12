@@ -16,11 +16,12 @@ using Winterhaven.Gateway.Presentation.Targets.Users;
 
 /*
     TODO: Fix issue where the server doesn't shut down once a client has connected.
-    TODO: Figure out whether I should ConfigureAwait(true) when a connection needs to be disconnected or something?
-    TODO: Figure out how to ensure that when a client does disconnect I do not get hit with a bunch of insane messages.
-    TOOD: Change to snake lower case.
+        TODO: Figure out whether I should ConfigureAwait(true) when a connection needs to be disconnected or something?
     TOOD: Register things via DI container.
-    TODO: Once we get to that point, open up the client and see if it works.
+    TODO: General cleanup, documentation, PUSH AND MERGE changes as the "Gateway Server" is ready.
+    TODO: Then, WRITE ISSUE FOR Gateway Registration Service (Requires research on HttpClient/Factory, IUserAccountClient, using MediatR, FluentValidation, setting up infra, etc)
+        - This also includes ValidationException, AuthorizationException, etc
+        - As well as mapping the HTTP response that are not in the 200 range to their correct exceptions, which will bubble up to the presentation layer and be converted into JSON-RPC 2.0 Error Details
 */
 
 [ExcludeFromCodeCoverage]
