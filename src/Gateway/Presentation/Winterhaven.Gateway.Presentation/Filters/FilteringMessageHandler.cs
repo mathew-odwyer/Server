@@ -36,9 +36,7 @@ internal sealed class FilteringMessageHandler : WebSocketMessageHandler
 
         if (message is JsonRpcError error)
         {
-            var code = error.Error?.Code ?? JsonRpcErrorCode.InvalidRequest;
-
-            switch (code)
+            switch (error.Error?.Code ?? JsonRpcErrorCode.InvalidRequest)
             {
                 case JsonRpcErrorCode.InvalidRequest:
                     await this.WebSocket.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Invalid Request", cancellationToken).ConfigureAwait(false);

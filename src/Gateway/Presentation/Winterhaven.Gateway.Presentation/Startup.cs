@@ -14,6 +14,15 @@ using Winterhaven.Gateway.Presentation.Targets.Health;
 using Winterhaven.Gateway.Presentation.Targets.Services;
 using Winterhaven.Gateway.Presentation.Targets.Users;
 
+/*
+    TODO: Fix issue where the server doesn't shut down once a client has connected.
+    TODO: Figure out whether I should ConfigureAwait(true) when a connection needs to be disconnected or something?
+    TODO: Figure out how to ensure that when a client does disconnect I do not get hit with a bunch of insane messages.
+    TOOD: Change to snake lower case.
+    TOOD: Register things via DI container.
+    TODO: Once we get to that point, open up the client and see if it works.
+*/
+
 [ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
@@ -55,6 +64,7 @@ internal sealed class Startup
     public static void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        services.AddRateLimiter();
 
         services.AddScoped<JsonRpcRegistrar>();
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();
