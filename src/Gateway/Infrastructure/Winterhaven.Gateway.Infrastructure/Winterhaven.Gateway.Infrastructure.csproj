@@ -1,1 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Winterhaven.Gateway.Core.Application\Winterhaven.Gateway.Core.Application.csproj" />
+  </ItemGroup>
+</Project>

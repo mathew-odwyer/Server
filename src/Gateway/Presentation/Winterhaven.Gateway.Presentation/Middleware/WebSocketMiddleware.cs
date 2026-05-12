@@ -1,15 +1,15 @@
 ﻿namespace Winterhaven.Gateway.Presentation.Middleware;
 
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 using StreamJsonRpc;
 using System;
-using System.Net.WebSockets;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Winterhaven.Gateway.Presentation.Targets;
+using Winterhaven.Gateway.Presentation;
+using Winterhaven.Gateway.Presentation.Filters;
+using Winterhaven.Gateway.Presentation.Targets.Services;
 
 internal sealed class WebSocketMiddleware
 {
@@ -23,9 +23,10 @@ internal sealed class WebSocketMiddleware
         this.next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, ILoggerFactory loggerFactory, JsonRpcRegistrar registrar)
     {
         ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         // If the request is not through /ws endpoint, continue to the next pipeline.
         if (context.Request.Path != "/ws")
@@ -41,38 +42,37 @@ internal sealed class WebSocketMiddleware
             return;
         }
 
+        var clientIp = context.Connection.RemoteIpAddress;
+        string connectionId = context.Connection.Id;
+
+        this.logger.LogInformation("Client connected. ConnectionId: {ConnectionId}, IP: {ClientIp}", connectionId, clientIp);
+
         var socket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
 
-#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
-        await using (var scope = context.RequestServices.CreateAsyncScope())
-#pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
+        using var formatter = new SystemTextJsonFormatter()
         {
-            using (var formatter = new JsonMessageFormatter())
+            JsonSerializerOptions = new JsonSerializerOptions()
             {
-                formatter.JsonSerializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
-                using (var handler = new WebSocketMessageHandler(socket, formatter))
-                {
-                    using (var rpc = new GatewayJsonRpc(scope.ServiceProvider.GetRequiredService<ILogger<GatewayJsonRpc>>(), handler))
-                    {
-                        foreach (var target in scope.ServiceProvider.GetServices<RpcTargetBase>())
-                        {
-                            rpc.AddLocalRpcTarget(target);
-                        }
-
-                        rpc.StartListening();
-
-                        try
-                        {
-                            await rpc.Completion.ConfigureAwait(false);
-                        }
-                        catch (WebSocketException ex) when (ex.InnerException is ConnectionResetException)
-                        {
-                            this.logger.LogDebug("Client disconnected abruptly (no close handshake).");
-                        }
-                    }
-                }
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             }
+        };
+
+        using var handler = new FilteringMessageHandler(loggerFactory.CreateLogger<FilteringMessageHandler>(), socket, formatter);
+        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), handler);
+
+        registrar.RegisterTargets(rpc);
+
+        rpc.StartListening();
+
+        try
+        {
+            await rpc.Completion.WaitAsync(context.RequestAborted).ConfigureAwait(false);
+            this.logger.LogInformation("Client disconnected gracefully. ConnectionId: {ConnectionId}, IP: {ClientIp}", connectionId, clientIp);
+        }
+        catch (OperationCanceledException)
+        {
+            this.logger.LogInformation("Client disconnected abruptly. ConnectionId: {ConnectionId}, IP: {ClientIp}", connectionId, clientIp);
         }
     }
 }

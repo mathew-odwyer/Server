@@ -11,6 +11,8 @@ using System.Diagnostics.CodeAnalysis;
 using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
+using Winterhaven.Gateway.Presentation.Targets.Services;
+using Winterhaven.Gateway.Presentation.Targets.Users;
 
 [ExcludeFromCodeCoverage]
 internal sealed class Startup
@@ -54,6 +56,8 @@ internal sealed class Startup
     {
         services.AddControllers();
 
+        services.AddScoped<JsonRpcRegistrar>();
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();
+        services.AddScoped<RpcTargetBase, UserRpcTarget>();
     }
 }
