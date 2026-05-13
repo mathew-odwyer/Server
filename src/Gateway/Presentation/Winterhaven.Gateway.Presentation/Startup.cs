@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Services;
 using Winterhaven.Gateway.Presentation.Targets;
@@ -16,15 +15,6 @@ using Winterhaven.Gateway.Presentation.Targets.Health;
 using Winterhaven.Gateway.Presentation.Targets.Users;
 
 /*
-    ISSUE: Rate Limiting
-    ISSUE: Gateway: Infrastructure Services Setup (HttpClientFactory, MediatR, FluentValidation, etc)
-        - Map HTTP Response Codes to Exceptions, that will bubble up to the presentation layer and be converted into JSON-RPC 2.0 Error Details.
-        - Ensure AuthorizeAttribute works as expected once API Client is implemented and can acquire JWTs from the API.
-    ISSUE: Gateway Registration
-    ISSUE: Gateway Login
-    ISSUE: Gateway Refresh
-    ISSUE: Gateway Logout
-
     TODO: Documentation
     TODO: REVIEW, PUSH AND MERGE PR! GATEWAY IS AS READY AS IT WILL EVER BE IN TERMS OF PRESENTATION
 */
@@ -73,7 +63,7 @@ internal sealed class Startup
         application.UseEndpoints(x => x.MapControllers());
     }
 
-    public void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
         services.AddRateLimiter();

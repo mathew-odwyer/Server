@@ -23,9 +23,13 @@ COPY API/Presentation/Winterhaven.API.Presentation/Winterhaven.API.Presentation.
 COPY API/Tests/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj \
      API/Tests/Winterhaven.API.Tests/
 
+COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
+     Common/Winterhaven.Common/
+
 RUN dotnet restore API/Presentation/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj
 
 COPY API/ API/
+COPY Common/ Common/
 
 RUN dotnet test API/Tests/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj -c Release --no-restore
 RUN dotnet publish API/Presentation/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj -c Release -o /out
