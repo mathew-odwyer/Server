@@ -3,6 +3,7 @@
     <PackageReference Include="StreamJsonRpc" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Winterhaven.Gateway.Infrastructure\Winterhaven.Gateway.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

@@ -30,7 +30,15 @@ internal sealed class FilteringMessageHandler : WebSocketMessageHandler
         catch (JsonException)
         {
             this.logger.LogDebug("Invalid JSON received from client. ConnectionId: {ConnectionId}", this.WebSocket.GetHashCode());
-            await this.WebSocket.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Invalid JSON payload", cancellationToken).ConfigureAwait(false);
+            await this.SafeCloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Invalid JSON Payload", cancellationToken).ConfigureAwait(false);
+            return null;
+        }
+        catch (WebSocketException)
+        {
+            return null;
+        }
+        catch (OperationCanceledException)
+        {
             return null;
         }
 
@@ -39,11 +47,11 @@ internal sealed class FilteringMessageHandler : WebSocketMessageHandler
             switch (error.Error?.Code ?? JsonRpcErrorCode.InvalidRequest)
             {
                 case JsonRpcErrorCode.InvalidRequest:
-                    await this.WebSocket.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Invalid Request", cancellationToken).ConfigureAwait(false);
+                    await this.SafeCloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Invalid Request", cancellationToken).ConfigureAwait(false);
                     return null;
 
                 case JsonRpcErrorCode.ParseError:
-                    await this.WebSocket.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Parse Error", cancellationToken).ConfigureAwait(false);
+                    await this.SafeCloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Parse Error", cancellationToken).ConfigureAwait(false);
                     return null;
             }
         }
@@ -71,5 +79,28 @@ internal sealed class FilteringMessageHandler : WebSocketMessageHandler
         }
 
         return base.WriteCoreAsync(content, cancellationToken);
+    }
+
+    private async Task SafeCloseAsync(WebSocketCloseStatus status, string description, CancellationToken ct)
+    {
+        try
+        {
+            if (this.WebSocket.State is WebSocketState.Open or WebSocketState.CloseReceived)
+            {
+                await this.WebSocket.CloseAsync(status, description, ct).ConfigureAwait(false);
+            }
+        }
+        catch (WebSocketException)
+        {
+            // connection already broken.
+        }
+        catch (ObjectDisposedException)
+        {
+            // already disposed
+        }
+        catch (InvalidOperationException)
+        {
+            // invalid state during race conditions
+        }
     }
 }

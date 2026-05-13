@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
@@ -31,6 +30,7 @@ using Winterhaven.API.Infrastructure.Services.Users;
 using Winterhaven.API.Infrastructure.Work;
 using Winterhaven.API.Infrastructure.Work.Players;
 using Winterhaven.API.Infrastructure.Work.Users;
+using Winterhaven.Common.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
@@ -109,27 +109,5 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMapLocator, MapLocator>();
 
         return services;
-    }
-
-    /// <summary>
-    /// Adds and configures options with validation to the <see cref="IServiceCollection"/>.
-    /// </summary>
-    /// <typeparam name="TOptions">The type of options to be configured.</typeparam>
-    /// <param name="services">The <see cref="IServiceCollection"/> to extend.</param>
-    /// <param name="configuration">The <see cref="IConfiguration"/> instance to use for configuration.</param>
-    /// <returns>Returns an <see cref="OptionsBuilder{TOptions}"/> instance for further configuration.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="services"/> or <paramref name="configuration"/> is <c>null</c>.
-    /// </exception>
-    public static OptionsBuilder<TOptions> AddValidatedOptions<TOptions>(this IServiceCollection services, IConfiguration configuration)
-            where TOptions : class
-    {
-        ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        return services.AddOptions<TOptions>()
-            .Bind(configuration.GetSection(typeof(TOptions).Name))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
     }
 }

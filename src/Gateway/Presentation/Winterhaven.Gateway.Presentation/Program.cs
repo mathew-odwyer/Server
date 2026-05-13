@@ -9,8 +9,9 @@ internal static class Program
     internal static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var startup = new Startup(builder.Configuration);
 
-        Startup.ConfigureServices(builder.Services);
+        startup.ConfigureServices(builder.Services);
 
         var application = builder.Build();
         Startup.Configure(application, builder.Environment);

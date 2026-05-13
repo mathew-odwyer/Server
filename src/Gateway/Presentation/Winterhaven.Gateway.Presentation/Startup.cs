@@ -8,17 +8,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Winterhaven.Common.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
 using Winterhaven.Gateway.Presentation.Targets.Services;
 using Winterhaven.Gateway.Presentation.Targets.Users;
+using WinterhavenWebSocketOptions = Options.WebSocketOptions;
 
 /*
     TODO: Fix issue where the server doesn't shut down once a client has connected.
+        TODO: Determine whether the exceptions thrown when a client disconnects, etc is a BAD thing or if I should just catch, log and ignore?
         TODO: Figure out whether I should ConfigureAwait(true) when a connection needs to be disconnected or something?
     TOOD: Register things via DI container.
-    TODO: General cleanup, documentation, PUSH AND MERGE changes as the "Gateway Server" is ready.
+    TODO: Documentation
+    TODO: REVIEW, PUSH AND MERGE PR! GATEWAY IS AS READY AS IT WILL EVER BE IN TERMS OF PRESENTATION
+
     TODO: Then, WRITE ISSUE FOR Gateway Registration Service (Requires research on HttpClient/Factory, IUserAccountClient, using MediatR, FluentValidation, setting up infra, etc)
         - This also includes ValidationException, AuthorizationException, etc
         - As well as mapping the HTTP response that are not in the 200 range to their correct exceptions, which will bubble up to the presentation layer and be converted into JSON-RPC 2.0 Error Details
@@ -62,10 +67,12 @@ internal sealed class Startup
         application.UseEndpoints(x => x.MapControllers());
     }
 
-    public static void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
         services.AddRateLimiter();
+
+        services.AddValidatedOptions<WinterhavenWebSocketOptions>(this.Configuration);
 
         services.AddScoped<JsonRpcRegistrar>();
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();

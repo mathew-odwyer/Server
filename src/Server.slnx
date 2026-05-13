@@ -28,6 +28,11 @@
       <Platform Project="x64" />
     </Project>
   </Folder>
+  <Folder Name="/Common/">
+    <Project Path="Common/Winterhaven.Common/Winterhaven.Common.csproj" Id="2d66b46b-958e-4826-aed8-7fc49f08ca85">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
   <Folder Name="/Gateway/">
     <File Path="Gateway/Dockerfile" />
   </Folder>
