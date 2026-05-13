@@ -8,25 +8,25 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Winterhaven.Common.Extensions;
+using System.Linq;
 using Winterhaven.Gateway.Presentation.Middleware;
+using Winterhaven.Gateway.Presentation.Services;
 using Winterhaven.Gateway.Presentation.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
-using Winterhaven.Gateway.Presentation.Targets.Services;
 using Winterhaven.Gateway.Presentation.Targets.Users;
-using WinterhavenWebSocketOptions = Options.WebSocketOptions;
 
 /*
-    TODO: Fix issue where the server doesn't shut down once a client has connected.
-        TODO: Determine whether the exceptions thrown when a client disconnects, etc is a BAD thing or if I should just catch, log and ignore?
-        TODO: Figure out whether I should ConfigureAwait(true) when a connection needs to be disconnected or something?
-    TOOD: Register things via DI container.
+    ISSUE: Rate Limiting
+    ISSUE: Gateway: Infrastructure Services Setup (HttpClientFactory, MediatR, FluentValidation, etc)
+        - Map HTTP Response Codes to Exceptions, that will bubble up to the presentation layer and be converted into JSON-RPC 2.0 Error Details.
+        - Ensure AuthorizeAttribute works as expected once API Client is implemented and can acquire JWTs from the API.
+    ISSUE: Gateway Registration
+    ISSUE: Gateway Login
+    ISSUE: Gateway Refresh
+    ISSUE: Gateway Logout
+
     TODO: Documentation
     TODO: REVIEW, PUSH AND MERGE PR! GATEWAY IS AS READY AS IT WILL EVER BE IN TERMS OF PRESENTATION
-
-    TODO: Then, WRITE ISSUE FOR Gateway Registration Service (Requires research on HttpClient/Factory, IUserAccountClient, using MediatR, FluentValidation, setting up infra, etc)
-        - This also includes ValidationException, AuthorizationException, etc
-        - As well as mapping the HTTP response that are not in the 200 range to their correct exceptions, which will bubble up to the presentation layer and be converted into JSON-RPC 2.0 Error Details
 */
 
 [ExcludeFromCodeCoverage]
@@ -39,16 +39,22 @@ internal sealed class Startup
 
     public IConfiguration Configuration { get; }
 
-    public static void Configure(WebApplication application, IWebHostEnvironment environment)
+    public void Configure(WebApplication application, IWebHostEnvironment environment)
     {
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
 
-        // Forward headers to maintain origin of client.
-        application.UseForwardedHeaders(new ForwardedHeadersOptions
+        var options = new ForwardedHeadersOptions
         {
-            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-        });
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+        };
+
+        // Clear the default restrictions so the docker internal bridge network is trusted.
+        options.KnownIPNetworks.Clear();
+        options.KnownProxies.Clear();
+
+        // Forward headers to maintain origin of client.
+        application.UseForwardedHeaders(options);
 
         if (!environment.IsDevelopment())
         {
@@ -58,7 +64,7 @@ internal sealed class Startup
 
         application.UseWebSockets(new WebSocketOptions
         {
-            KeepAliveInterval = TimeSpan.FromSeconds(30),
+            KeepAliveInterval = TimeSpan.FromSeconds(this.Configuration.GetValue("WebSocketOptions:KeepAliveInterval", 30.0)),
         });
 
         application.UseMiddleware<WebSocketMiddleware>();
@@ -72,9 +78,9 @@ internal sealed class Startup
         services.AddControllers();
         services.AddRateLimiter();
 
-        services.AddValidatedOptions<WinterhavenWebSocketOptions>(this.Configuration);
-
+        services.AddScoped<WebSocketRpcSession>();
         services.AddScoped<JsonRpcRegistrar>();
+
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();
         services.AddScoped<RpcTargetBase, UserRpcTarget>();
     }

@@ -1,13 +1,16 @@
 ﻿namespace Winterhaven.Gateway.Presentation.Targets.Health;
 
 using StreamJsonRpc;
+using System;
+using Winterhaven.Gateway.Presentation.DTOs.Health;
 
 internal sealed class HealthRpcTarget : RpcTargetBase
 {
-    [JsonRpcMethod("health.ping")]
-    public static double Ping(double TimeStamp)
+    [JsonRpcMethod("health.ping", UseSingleObjectParameterDeserialization = true)]
+    public static double Ping(HealthPingRequestDto request)
     {
-        return TimeStamp;
+        ArgumentNullException.ThrowIfNull(request);
+        return request.TimeStamp;
     }
 
     [JsonRpcMethod("health.heartbeat")]

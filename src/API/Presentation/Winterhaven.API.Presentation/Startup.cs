@@ -12,6 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Infrastructure.Extensions;
 using Winterhaven.API.Presentation.Extensions;
 using Winterhaven.API.Presentation.Options.Security;
+using Winterhaven.Common.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal sealed class Startup
@@ -48,12 +49,6 @@ internal sealed class Startup
 
         application.UseRouting();
         application.UseAuthentication();
-
-        if (!environment.IsDevelopment())
-        {
-            application.UseRateLimiter();
-        }
-
         application.UseUserSessions();
         application.UseAuthorization();
 
@@ -77,7 +72,6 @@ internal sealed class Startup
         services.AddWinterhavenControllersWithFilters();
         services.AddWinterhavenAuthentication(this.Configuration);
         services.AddWinterhavenAuthorization();
-        services.AddWinterhavenRateLimiting(this.Configuration);
         services.AddWinterhavenApiServices();
     }
 }

@@ -14,7 +14,7 @@ internal static class Program
         startup.ConfigureServices(builder.Services);
 
         var application = builder.Build();
-        Startup.Configure(application, builder.Environment);
+        startup.Configure(application, builder.Environment);
 
         application.Run();
     }

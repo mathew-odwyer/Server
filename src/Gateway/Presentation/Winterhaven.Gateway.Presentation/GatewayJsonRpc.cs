@@ -9,12 +9,6 @@ internal sealed class GatewayJsonRpc : JsonRpc
 {
     private readonly ILogger<GatewayJsonRpc> logger;
 
-    private static readonly JsonRpcError.ErrorDetail GenericErrorDetail = new()
-    {
-        Code = JsonRpcErrorCode.InternalError,
-        Message = "An unexpected error occurred. Please try again later.",
-    };
-
     public GatewayJsonRpc(ILogger<GatewayJsonRpc> logger, IJsonRpcMessageHandler messageHandler)
             : base(messageHandler)
     {
@@ -29,13 +23,17 @@ internal sealed class GatewayJsonRpc : JsonRpc
                 return new JsonRpcError.ErrorDetail()
                 {
                     Code = (JsonRpcErrorCode)1,
-                    Message = "Lol you couldn't login cunt.",
+                    Message = "Lol you couldn't login.",
                 };
 
             default:
                 // Everything else: log it server-side, send nothing useful to the client.
                 this.logger.LogError(exception, "Unhandled exception processing RPC method '{Method}'.", request.Method);
-                return GenericErrorDetail;
+                return new JsonRpcError.ErrorDetail()
+                {
+                    Code = JsonRpcErrorCode.InternalError,
+                    Message = "An unexpected error occurred. Please try again later.",
+                };
         }
     }
 }

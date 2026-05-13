@@ -146,7 +146,6 @@ internal sealed class RegisterUserRequestHandlerTests
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        // TODO: Fix Args.Any to check if the details are the same.
         this.actorRepository.Received(1).AddAsync(Arg.Any<Actor>(), default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

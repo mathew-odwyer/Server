@@ -1,5 +1,6 @@
-﻿namespace Winterhaven.Gateway.Presentation.Targets.Services;
+﻿namespace Winterhaven.Gateway.Presentation.Services;
 
+using Winterhaven.Gateway.Presentation.Targets;
 using StreamJsonRpc;
 using System;
 using System.Collections.Generic;
