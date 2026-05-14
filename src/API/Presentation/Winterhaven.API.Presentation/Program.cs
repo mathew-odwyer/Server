@@ -18,7 +18,6 @@ internal static class Program
         var application = builder.Build();
         startup.Configure(application, builder.Environment);
 
-#if DEBUG
         using (var scope = application.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
@@ -26,7 +25,6 @@ internal static class Program
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
         }
-#endif
 
         application.Run();
     }
