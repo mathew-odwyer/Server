@@ -44,7 +44,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ApiResponseHandler>();
         services.AddTransient<BearerTokenHandler>();
 
-        services.AddValidatedOptions<ApiOptions>(configuration);
+        services.AddValidatedOptions<ClientOptions>(configuration);
         services.AddGatewayClient<IUserAccountClient, UserAccountClient>("api/UserAccount");
 
         return services;
@@ -57,7 +57,7 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpClient<TClient, TImplementation>((provider, client) =>
         {
-            var settings = provider.GetRequiredService<IOptions<ApiOptions>>().Value;
+            var settings = provider.GetRequiredService<IOptions<ClientOptions>>().Value;
 
             client.DefaultRequestHeaders.Add("X-API-KEY", settings.ApiKey);
 

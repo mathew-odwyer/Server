@@ -2,7 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-internal sealed class ApiOptions
+internal sealed class ClientOptions
 {
     [Required]
     public required string BaseUrl { get; init; }
