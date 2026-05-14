@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.API.Common.DTOs.Users;
+using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 
 public sealed class UserRegisterRequestHandler : IRequestHandler<UserRegisterRequest, UserRegisterResponse>

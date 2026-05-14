@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.API.Common.DTOs.Users;
+using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
 
@@ -36,7 +36,8 @@ public sealed class UserLoginRequestHandler : IRequestHandler<UserLoginRequest, 
             Password = request.Password
         };
 
-        // Attempt to login, if it fails it will bubble up to a 401 and return a JSON-RPC error response with the appropriate message.
+        // Attempt to login, if it fails it will bubble up to a 401 and return a JSON-RPC error
+        // response with the appropriate message.
         var response = await this.userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
 
         this.logger.LogDebug("User login successful for username: {Username}", request.Username);

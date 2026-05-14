@@ -2,7 +2,6 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.API.Common.DTOs.Users;
 using Winterhaven.Common.DTOs.Users;
 
 public interface IUserAccountClient

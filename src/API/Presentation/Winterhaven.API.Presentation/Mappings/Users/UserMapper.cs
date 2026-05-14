@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 using Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 using Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
-using Winterhaven.API.Common.DTOs.Users;
 using Winterhaven.Common.DTOs.Users;
 
 [ExcludeFromCodeCoverage]

@@ -1,4 +1,4 @@
-﻿namespace Winterhaven.API.Common.DTOs.Users;
+﻿namespace Winterhaven.Common.DTOs.Users;
 
 using System.Diagnostics.CodeAnalysis;
 

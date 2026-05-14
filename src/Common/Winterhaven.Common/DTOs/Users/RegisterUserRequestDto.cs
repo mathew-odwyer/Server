@@ -1,4 +1,4 @@
-﻿namespace Winterhaven.API.Common.DTOs.Users;
+﻿namespace Winterhaven.Common.DTOs.Users;
 
 using System.Diagnostics.CodeAnalysis;
 
@@ -11,9 +11,7 @@ public sealed record RegisterUserRequestDto
     /// <summary>
     /// Gets the email address associated with the new <see cref="UserAccount"/>.
     /// </summary>
-    /// <value>
-    /// The email address associated with the new <see cref="UserAccount"/>.
-    /// </value>
+    /// <value>The email address associated with the new <see cref="UserAccount"/>.</value>
     /// <remarks>
     /// <list type="bullet">
     /// <item>
@@ -29,9 +27,7 @@ public sealed record RegisterUserRequestDto
     /// <summary>
     /// Gets the desired username for the new <see cref="UserAccount"/>.
     /// </summary>
-    /// <value>
-    /// The desired username for the new <see cref="UserAccount"/>.
-    /// </value>
+    /// <value>The desired username for the new <see cref="UserAccount"/>.</value>
     /// <remarks>
     /// <list type="bullet">
     /// <item>
@@ -55,9 +51,7 @@ public sealed record RegisterUserRequestDto
     /// <summary>
     /// Gets the password used to secure the new <see cref="UserAccount"/>.
     /// </summary>
-    /// <value>
-    /// The password used to secure the new <see cref="UserAccount"/>.
-    /// </value>
+    /// <value>The password used to secure the new <see cref="UserAccount"/>.</value>
     /// <remarks>
     /// <list type="bullet">
     /// <item>

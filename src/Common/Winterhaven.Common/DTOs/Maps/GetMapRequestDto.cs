@@ -1,4 +1,4 @@
-﻿namespace Winterhaven.API.Common.DTOs.Maps;
+﻿namespace Winterhaven.Common.DTOs.Maps;
 
 /// <summary>
 /// Represents the data transfer object used to fetch a map.

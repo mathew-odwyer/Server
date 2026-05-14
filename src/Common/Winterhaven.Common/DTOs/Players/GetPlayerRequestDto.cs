@@ -1,4 +1,4 @@
-﻿namespace Winterhaven.API.Common.DTOs.Players;
+﻿namespace Winterhaven.Common.DTOs.Players;
 
 using System.Diagnostics.CodeAnalysis;
 
