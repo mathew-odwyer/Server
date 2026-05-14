@@ -14,7 +14,7 @@ using MediatR;
 /// <param name="Password">
 /// Specifies a <see cref="string"/> that represents the password of the user to be registered.
 /// </param>
-public sealed record UserRegisterRequest
-    (string EmailAddress,
+public sealed record UserRegisterRequest(
+    string EmailAddress,
     string Username,
     string Password) : IRequest<UserRegisterResponse>;
