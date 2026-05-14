@@ -34,6 +34,7 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
 
+        // Forward headers to maintain origin of client.
         var options = new ForwardedHeadersOptions
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
@@ -43,7 +44,6 @@ internal sealed class Startup
         options.KnownIPNetworks.Clear();
         options.KnownProxies.Clear();
 
-        // Forward headers to maintain origin of client.
         application.UseForwardedHeaders(options);
 
         if (!environment.IsDevelopment())
