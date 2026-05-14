@@ -7,6 +7,9 @@ services:
     build: 
       context: ./Configuration/Caddy
       dockerfile: Dockerfile
+    depends_on:
+      gateway:
+        condition: service_healthy
     ports:
       - "443:443"
     volumes:
@@ -43,6 +46,9 @@ services:
     build:
       context: ./
       dockerfile: API/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - network
     expose:
@@ -61,6 +67,9 @@ services:
     build:
       context: ./
       dockerfile: Gateway/Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
     networks:
       - network
     expose:
