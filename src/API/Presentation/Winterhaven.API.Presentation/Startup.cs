@@ -67,11 +67,11 @@ internal sealed class Startup
 
         services.AddValidatedOptions<ApiOptions>(this.Configuration);
 
-        services.AddWinterhavenMappings();
-        services.AddWinterhavenInfrastructureServices(this.Configuration);
-        services.AddWinterhavenControllersWithFilters();
-        services.AddWinterhavenAuthentication(this.Configuration);
-        services.AddWinterhavenAuthorization();
-        services.AddWinterhavenApiServices();
+        services.AddApiMappings();
+        services.AddApiInfrastructureServices(this.Configuration);
+        services.AddApiControllersWithFilters();
+        services.AddApiAuthentication(this.Configuration);
+        services.AddApiAuthorization();
+        services.AddApiServices();
     }
 }
