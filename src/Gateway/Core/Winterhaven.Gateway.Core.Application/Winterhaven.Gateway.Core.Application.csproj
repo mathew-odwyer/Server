@@ -1,5 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+	<PackageReference Include="FluentValidation" />
+	<PackageReference Include="MediatR" />
+	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Core.Domain\Winterhaven.Gateway.Core.Domain.csproj" />
   </ItemGroup>
 </Project>
