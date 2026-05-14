@@ -11,9 +11,11 @@ using Winterhaven.Common.Extensions;
 using Winterhaven.Gateway.Core.Application.Behaviours;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Requests.Users.UserRegister;
+using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Infrastructure.Clients.Users;
 using Winterhaven.Gateway.Infrastructure.HTTP.Handlers;
 using Winterhaven.Gateway.Infrastructure.Options;
+using Winterhaven.Gateway.Infrastructure.Services.Sessions;
 
 public static class ServiceCollectionExtensions
 {
@@ -28,15 +30,19 @@ public static class ServiceCollectionExtensions
 
         services.AddMediatR(x =>
         {
-            //x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehahviour<,>)); // maybe?
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>)); // yes
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>)); // yes
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>)); // yes
+            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
 
             x.RegisterServicesFromAssemblyContaining<UserRegisterRequestHandler>();
         });
 
+        services.AddScoped<SessionContext>();
+        services.AddScoped<ISessionContext>(sp => sp.GetRequiredService<SessionContext>());
+        services.AddScoped<ISessionAuthenticator>(sp => sp.GetRequiredService<SessionContext>());
+
         services.AddTransient<ApiResponseHandler>();
+        services.AddTransient<BearerTokenHandler>();
 
         services.AddValidatedOptions<ApiOptions>(configuration);
         services.AddGatewayClient<IUserAccountClient, UserAccountClient>("api/UserAccount");
@@ -58,6 +64,7 @@ public static class ServiceCollectionExtensions
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Winterhaven Gateway/1.0");
             client.BaseAddress = new Uri(settings.BaseUrl.TrimEnd('/') + "/" + route + "/");
         })
+        .AddHttpMessageHandler<BearerTokenHandler>()
         .AddHttpMessageHandler<ApiResponseHandler>();
 
         return services;

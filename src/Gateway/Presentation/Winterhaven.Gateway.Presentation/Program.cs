@@ -3,6 +3,15 @@ namespace Winterhaven.Gateway.Presentation;
 using Microsoft.AspNetCore.Builder;
 using System.Diagnostics.CodeAnalysis;
 
+/*
+    TODO: Rename all DTOs in gateway to Parameters (UserLoginParameters)
+        - This will help me to separate between API DTOs and gateway JSON-RPC params
+    TODO: Remove MediatR from gateway and opt for services and just test the services
+        - Fluent validation can use ValidateAndThrowAsync
+    TODO: Create a Winterhaven.Common.DTOs project
+    TODO: Create a Winterhaven.Common.Extensions project
+*/
+
 [ExcludeFromCodeCoverage]
 internal static class Program
 {

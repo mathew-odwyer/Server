@@ -5,17 +5,41 @@ using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Winterhaven.Common.Exceptions;
+using Winterhaven.Gateway.Core.Application.Services.Sessions;
+using Winterhaven.Gateway.Presentation.Attributes;
 
 internal sealed class GatewayJsonRpc : JsonRpc
 {
     private readonly ILogger<GatewayJsonRpc> logger;
 
-    public GatewayJsonRpc(ILogger<GatewayJsonRpc> logger, IJsonRpcMessageHandler messageHandler)
+    private readonly ISessionContext sessionContext;
+
+    public GatewayJsonRpc(ILogger<GatewayJsonRpc> logger, IJsonRpcMessageHandler messageHandler, ISessionContext sessionContext)
             : base(messageHandler)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.sessionContext = sessionContext ?? throw new ArgumentNullException(nameof(sessionContext));
+    }
+
+    protected override ValueTask<JsonRpcMessage> DispatchRequestAsync(JsonRpcRequest request, TargetMethod targetMethod, CancellationToken cancellationToken)
+    {
+        var methodInfo = targetMethod.TargetMethodInfo!;
+        bool isAuthRequired = methodInfo.GetCustomAttribute<JsonRpcAuthorizeAttribute>() is not null;
+
+        return isAuthRequired && !this.sessionContext.IsAuthenticated
+            ? new ValueTask<JsonRpcMessage>(new JsonRpcError
+            {
+                Error = new JsonRpcError.ErrorDetail()
+                {
+                    Code = (JsonRpcErrorCode)401,
+                    Message = "Authentication is required to perform this action.",
+                }
+            })
+            : base.DispatchRequestAsync(request, targetMethod, cancellationToken);
     }
 
     protected override JsonRpcError.ErrorDetail CreateErrorDetails(JsonRpcRequest request, Exception exception)
@@ -36,7 +60,7 @@ internal sealed class GatewayJsonRpc : JsonRpc
             case AuthorizationException authorizationException:
                 return new JsonRpcError.ErrorDetail
                 {
-                    Code = (JsonRpcErrorCode)403,
+                    Code = (JsonRpcErrorCode)401,
                     Message = authorizationException.Message,
                 };
 

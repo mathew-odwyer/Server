@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Filters;
 
@@ -20,11 +21,14 @@ internal sealed class WebSocketRpcSession
 
     private readonly JsonRpcRegistrar registrar;
 
-    public WebSocketRpcSession(ILogger<WebSocketRpcSession> logger, ILoggerFactory loggerFactory, JsonRpcRegistrar registrar)
+    private readonly ISessionContext sessionContext;
+
+    public WebSocketRpcSession(ILogger<WebSocketRpcSession> logger, ILoggerFactory loggerFactory, JsonRpcRegistrar registrar, ISessionContext sessionContext)
     {
-        this.logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
-        this.loggerFactory = loggerFactory ?? throw new System.ArgumentNullException(nameof(loggerFactory));
-        this.registrar = registrar ?? throw new System.ArgumentNullException(nameof(registrar));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+        this.registrar = registrar ?? throw new ArgumentNullException(nameof(registrar));
+        this.sessionContext = sessionContext ?? throw new ArgumentNullException(nameof(sessionContext));
     }
 
     public async Task RunAsync(HttpContext context, WebSocket socket, CancellationToken cancellationToken)
@@ -47,7 +51,7 @@ internal sealed class WebSocketRpcSession
         };
 
         using var handler = new FilteringMessageHandler(loggerFactory.CreateLogger<FilteringMessageHandler>(), socket, formatter);
-        using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), handler);
+        using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), handler, sessionContext);
 
         this.registrar.RegisterTargets(rpc);
 
