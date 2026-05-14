@@ -7,9 +7,9 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Services.Maps;
 using Winterhaven.API.Infrastructure.Options.Maps;
+using Winterhaven.Common.Exceptions;
 
 internal sealed class MapLocator : IMapLocator
 {

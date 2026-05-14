@@ -1,7 +1,6 @@
-﻿namespace Winterhaven.API.Presentation.DTOs.Users;
+﻿namespace Winterhaven.API.Common.DTOs.Users;
 
 using System.Diagnostics.CodeAnalysis;
-using Winterhaven.API.Core.Domain.Entities.Users;
 
 /// <summary>
 /// Represents the data transfer object used to authenticate an existing <see cref="UserAccount"/>.

@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.Common.Exceptions;
 
 [ExcludeFromCodeCoverage]
 internal sealed class UserAuthenticator : IUserAuthenticator

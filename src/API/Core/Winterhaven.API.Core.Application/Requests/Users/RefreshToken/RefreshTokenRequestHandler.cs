@@ -6,11 +6,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.Common.Exceptions;
 
 /// <summary>
 /// Provides a request handler used to refresh the JSON Web Token for the current <see cref="UserAccount"/>.

@@ -1,7 +1,6 @@
-﻿namespace Winterhaven.API.Presentation.DTOs.Players;
+﻿namespace Winterhaven.API.Common.DTOs.Players;
 
 using System.Diagnostics.CodeAnalysis;
-using Winterhaven.API.Core.Domain.Entities.Players;
 
 /// <summary>
 /// Represents the data transfer object used to update an existing <see cref="Player"/>.

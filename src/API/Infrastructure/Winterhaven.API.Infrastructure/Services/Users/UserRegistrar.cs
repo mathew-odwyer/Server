@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.Common.Exceptions;
 
 [ExcludeFromCodeCoverage]
 internal sealed class UserRegistrar : IUserRegistrar

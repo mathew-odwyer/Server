@@ -11,7 +11,7 @@ using Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 using Winterhaven.API.Core.Application.Requests.Users.LogoutUser;
 using Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 using Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
-using Winterhaven.API.Presentation.DTOs.Users;
+using Winterhaven.API.Common.DTOs.Users;
 
 /// <summary>
 /// Provides API endpoints for managing user account operations, including registration, login,

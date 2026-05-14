@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ValidationException = Domain.Exceptions.ValidationException;
+using ValidationException = Winterhaven.Common.Exceptions.ValidationException;
 
 [ExcludeFromCodeCoverage]
 public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>

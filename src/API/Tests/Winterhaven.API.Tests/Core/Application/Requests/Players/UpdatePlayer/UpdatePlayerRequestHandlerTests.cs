@@ -9,12 +9,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.Common.Exceptions;
 
 [TestFixture]
 internal sealed class UpdatePlayerRequestHandlerTests

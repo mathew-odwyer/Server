@@ -1,4 +1,4 @@
-﻿namespace Winterhaven.API.Core.Application.Exceptions;
+﻿namespace Winterhaven.Common.Exceptions;
 
 using System;
 using System.Diagnostics.CodeAnalysis;
