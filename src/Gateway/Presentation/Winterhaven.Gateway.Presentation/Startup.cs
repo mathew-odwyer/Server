@@ -8,6 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using Winterhaven.Gateway.Infrastructure.Extensions;
+using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Services;
 using Winterhaven.Gateway.Presentation.Targets;
@@ -63,7 +66,7 @@ internal sealed class Startup
         application.UseEndpoints(x => x.MapControllers());
     }
 
-    public static void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
         services.AddRateLimiter();
@@ -73,5 +76,8 @@ internal sealed class Startup
 
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();
         services.AddScoped<RpcTargetBase, UserRpcTarget>();
+
+        services.AddGatewayMappings();
+        services.AddGatewayInfrastructureServices(this.Configuration);
     }
 }
