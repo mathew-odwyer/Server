@@ -3,9 +3,9 @@
 using FluentValidation;
 using Winterhaven.Gateway.Presentation.Targets.Users;
 
-internal sealed class UserLoginParametersValidator : AbstractValidator<UserLoginParameters>
+internal sealed class UserLoginRpcParametersValidator : AbstractValidator<UserLoginRpcParameters>
 {
-    public UserLoginParametersValidator()
+    public UserLoginRpcParametersValidator()
     {
         this.RuleFor(x => x.Username)
             .NotEmpty()
