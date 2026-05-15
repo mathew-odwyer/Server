@@ -2,5 +2,9 @@
 
 public interface ISessionAuthenticator
 {
+    bool IsAuthenticated { get; }
+    
     void Authenticate(string accessToken);
+ 
+    void Invalidate();
 }
