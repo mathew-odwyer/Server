@@ -26,6 +26,12 @@ internal sealed record UserRegisterRpcResult(
 internal sealed record UserLogoutRpcResult(
     bool Success);
 
+internal sealed record UserRefreshRpcParameters(
+    string RefreshToken);
+
+internal sealed record UserRefreshRpcResult(
+    string RefreshToken);
+
 internal sealed class UserRpcTarget : RpcTargetBase
 {
     private readonly IUserAccountService userAccountService;
@@ -36,6 +42,16 @@ internal sealed class UserRpcTarget : RpcTargetBase
     {
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
         this.validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
+    }
+
+    [JsonRpcAuthorize]
+    [JsonRpcMethod("user.refresh")]
+    public async Task<UserRefreshRpcResult> RefreshAsync(UserRefreshRpcParameters parameters, CancellationToken cancellationToken)
+    {
+        var response = await this.userAccountService.RefreshTokenAsync(parameters.RefreshToken, cancellationToken).ConfigureAwait(false);
+
+        return new UserRefreshRpcResult(
+            RefreshToken: response.RefreshToken);
     }
 
     [JsonRpcAuthorize]
