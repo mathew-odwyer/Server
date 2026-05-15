@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]

@@ -10,7 +10,7 @@
     <PackageReference Include="System.IO.Abstractions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
+    <ProjectReference Include="..\..\..\Common\Winterhaven.Common.Extensions\Winterhaven.Common.Extensions.csproj" />
     <ProjectReference Include="..\..\Core\Winterhaven.API.Core.Application\Winterhaven.API.Core.Application.csproj" />
   </ItemGroup>
   <ItemGroup>

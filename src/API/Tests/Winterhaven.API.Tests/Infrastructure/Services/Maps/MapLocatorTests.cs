@@ -9,9 +9,9 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
+using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Infrastructure.Options.Maps;
 using Winterhaven.API.Infrastructure.Services.Maps;
-using Winterhaven.Common.Exceptions;
 
 [TestFixture]
 internal sealed class MapLocatorTests

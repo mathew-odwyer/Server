@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
 using Winterhaven.API.Core.Application.Contexts.Users;
-using Winterhaven.Common.Exceptions;
-using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Application.Work.Users;
+using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 internal sealed class ActorContext : IActorContext
 {

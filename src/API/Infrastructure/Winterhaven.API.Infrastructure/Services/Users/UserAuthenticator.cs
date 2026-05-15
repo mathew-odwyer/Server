@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 [ExcludeFromCodeCoverage]
 internal sealed class UserAuthenticator : IUserAuthenticator

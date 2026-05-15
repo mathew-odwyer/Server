@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ValidationException = Winterhaven.Common.Exceptions.ValidationException;
+using ValidationException = Domain.Exceptions.ValidationException;
 
 [ExcludeFromCodeCoverage]
 public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
@@ -18,7 +18,7 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
 
     public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
     {
-        this.validators = validators;
+        this.validators = validators ?? throw new ArgumentNullException(nameof(validators));
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)

@@ -10,8 +10,8 @@ using Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.Common.Exceptions;
 using Winterhaven.Common.DTOs.Players;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 [TestFixture]
 internal sealed class GetPlayerRequestHandlerTests

@@ -10,7 +10,7 @@ using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
 /// Provides a request handler used to update all a <see cref="Player"/> for the current <see cref="UserAccount"/>.
