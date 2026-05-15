@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Filters;
 
@@ -21,14 +22,22 @@ internal sealed class WebSocketRpcSession
 
     private readonly JsonRpcRegistrar registrar;
 
-    private readonly ISessionContext sessionContext;
+    private readonly IUserAccountService userAccountService;
 
-    public WebSocketRpcSession(ILogger<WebSocketRpcSession> logger, ILoggerFactory loggerFactory, JsonRpcRegistrar registrar, ISessionContext sessionContext)
+    private readonly ISessionAuthenticator sessionAuthenticator;
+
+    public WebSocketRpcSession(
+        ILogger<WebSocketRpcSession> logger,
+        ILoggerFactory loggerFactory,
+        JsonRpcRegistrar registrar,
+        IUserAccountService userAccountService,
+        ISessionAuthenticator sessionAuthenticator)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.registrar = registrar ?? throw new ArgumentNullException(nameof(registrar));
-        this.sessionContext = sessionContext ?? throw new ArgumentNullException(nameof(sessionContext));
+        this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
+        this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
     }
 
     public async Task RunAsync(HttpContext context, WebSocket socket, CancellationToken cancellationToken)
@@ -51,7 +60,7 @@ internal sealed class WebSocketRpcSession
         };
 
         using var handler = new FilteringMessageHandler(this.loggerFactory.CreateLogger<FilteringMessageHandler>(), socket, formatter);
-        using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), handler, this.sessionContext);
+        using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), handler, this.sessionAuthenticator);
 
         this.registrar.RegisterTargets(rpc);
 
@@ -68,6 +77,8 @@ internal sealed class WebSocketRpcSession
         }
         finally
         {
+            await this.userAccountService.LogoutUserAsync(CancellationToken.None).ConfigureAwait(false);
+
             if (socket.State is WebSocketState.Open or WebSocketState.CloseReceived)
             {
                 await socket.SafeCloseAsync(WebSocketCloseStatus.NormalClosure, "Session Ended", cancellationToken).ConfigureAwait(false);
