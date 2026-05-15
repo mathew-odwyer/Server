@@ -1,5 +1,6 @@
 ﻿namespace Winterhaven.Gateway.Infrastructure.Clients.Users;
 
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -10,6 +11,12 @@ using Winterhaven.Gateway.Core.Application.Clients.Users;
 
 internal sealed class UserAccountClient : IUserAccountClient
 {
+    private static readonly Uri LoginUri = new("Login", UriKind.Relative);
+
+    private static readonly Uri LogoutUri = new("Logout", UriKind.Relative);
+
+    private static readonly Uri RegisterUri = new("Register", UriKind.Relative);
+
     private readonly HttpClient client;
 
     public UserAccountClient(HttpClient client)
@@ -19,7 +26,7 @@ internal sealed class UserAccountClient : IUserAccountClient
 
     public async Task<LoginUserResponseDto> LoginUserAsync(LoginUserRequestDto dto, CancellationToken cancellationToken)
     {
-        var response = await this.client.PostAsJsonAsync("Login", dto, cancellationToken).ConfigureAwait(false);
+        var response = await this.client.PostAsJsonAsync(LoginUri, dto, cancellationToken).ConfigureAwait(false);
 
         return await response.Content.ReadFromJsonAsync<LoginUserResponseDto>(cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException("Failed to de-serialize login response.");
@@ -27,14 +34,11 @@ internal sealed class UserAccountClient : IUserAccountClient
 
     public async Task LogoutUserAsync(CancellationToken cancellationToken)
     {
-        // FIXME: Resolve issue where when we logout we have o remove the X-API-KEY so that the JWT
-        // has authority or at least be able to handle using both the API Key and JWT for authentication.
-
-        await this.client.PostAsync("Logout", null, cancellationToken).ConfigureAwait(false);
+        await this.client.PostAsync(LogoutUri, null, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task RegisterUserAsync(RegisterUserRequestDto dto, CancellationToken cancellationToken)
     {
-        await this.client.PostAsJsonAsync("Register", dto, cancellationToken).ConfigureAwait(false);
+        await this.client.PostAsJsonAsync(RegisterUri, dto, cancellationToken).ConfigureAwait(false);
     }
 }
