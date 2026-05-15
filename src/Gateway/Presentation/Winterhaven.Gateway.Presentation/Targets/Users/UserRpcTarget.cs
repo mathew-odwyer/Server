@@ -4,57 +4,71 @@ using StreamJsonRpc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation.Attributes;
 using Winterhaven.Gateway.Presentation.Validation;
 
-internal sealed record UserLoginParameters(
+internal sealed record UserLoginRpcParameters(
     string Username,
     string Password);
 
-internal sealed record UserRegisterParameters(
+internal sealed record UserRegisterRpcParameters(
     string Username,
     string Password,
     string EmailAddress);
+
+internal sealed record UserLoginRpcResult(
+    string RefreshToken);
+
+internal sealed record UserRegisterRpcResult(
+    bool Success);
+
+internal sealed record UserLogoutRpcResult(
+    bool Success);
 
 internal sealed class UserRpcTarget : RpcTargetBase
 {
     private readonly IUserAccountService userAccountService;
 
-    private readonly ISessionAuthenticator sessionAuthenticator;
-
     private readonly IValidatorFactory validatorFactory;
 
-    public UserRpcTarget(IUserAccountService userAccountService, ISessionAuthenticator sessionAuthenticator, IValidatorFactory validatorFactory)
+    public UserRpcTarget(IUserAccountService userAccountService, IValidatorFactory validatorFactory)
     {
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
-        this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
         this.validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
     }
 
     [JsonRpcAuthorize]
     [JsonRpcMethod("user.logout")]
-    public async Task LogoutAsync(CancellationToken cancellationToken)
+    public async Task<UserLogoutRpcResult> LogoutAsync(CancellationToken cancellationToken)
     {
-        await this.userAccountService.LogoutAsync(cancellationToken).ConfigureAwait(false);
+        await this.userAccountService.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
 
-        // TODO: Figure out how to disconnect from the gateway after logout. Maybe we can have a
-        // IConnectionContext that we can use to disconnect the client after logout. - Disconnection
-        // is a presentation concern, so it should be handled in the presentation layer.
+        // There's no need to disconnect the client when they logout explicitly.
+        // The client would be returned to the main menu and can choose to login again or disconnect.
+        return new UserLogoutRpcResult(
+            Success: true);
     }
 
     [JsonRpcMethod("user.register", UseSingleObjectParameterDeserialization = true)]
-    public async Task<bool> RegisterAsync(UserRegisterParameters parameters, CancellationToken cancellationToken)
+    public async Task<UserRegisterRpcResult> RegisterAsync(UserRegisterRpcParameters parameters, CancellationToken cancellationToken)
     {
         Validator.Validate(this.validatorFactory, parameters);
-        return await this.userAccountService.RegisterUserAsync(parameters.Username, parameters.Password, parameters.EmailAddress, cancellationToken).ConfigureAwait(false);
+
+        var response = await this.userAccountService.RegisterUserAsync(parameters.Username, parameters.Password, parameters.EmailAddress, cancellationToken).ConfigureAwait(false);
+
+        return new UserRegisterRpcResult(
+            Success: response.Success);
     }
 
     [JsonRpcMethod("user.login", UseSingleObjectParameterDeserialization = true)]
-    public async Task<string> LoginAsync(UserLoginParameters parameters, CancellationToken cancellationToken)
+    public async Task<UserLoginRpcResult> LoginAsync(UserLoginRpcParameters parameters, CancellationToken cancellationToken)
     {
         Validator.Validate(this.validatorFactory, parameters);
-        return await this.userAccountService.LoginUserAsync(parameters.Username, parameters.Password, cancellationToken).ConfigureAwait(false);
+
+        var response = await this.userAccountService.LoginUserAsync(parameters.Username, parameters.Password, cancellationToken).ConfigureAwait(false);
+
+        return new UserLoginRpcResult(
+            RefreshToken: response.RefreshToken);
     }
 }

@@ -2,17 +2,28 @@
 
 using StreamJsonRpc;
 
+internal sealed record HealthPingRpcParameters(
+    double TimeStamp);
+
+internal sealed record HealthPingRpcResult(
+    double TimeStamp);
+
+internal sealed record HealthHeartbeatRpcResult(
+    bool IsAlive);
+
 internal sealed class HealthRpcTarget : RpcTargetBase
 {
     [JsonRpcMethod("health.ping", UseSingleObjectParameterDeserialization = true)]
-    public static double Ping(double timestamp)
+    public static HealthPingRpcResult Ping(HealthPingRpcParameters parameters)
     {
-        return timestamp;
+        return new HealthPingRpcResult(
+            TimeStamp: parameters.TimeStamp);
     }
 
     [JsonRpcMethod("health.heartbeat")]
-    public static bool Heartbeat()
+    public static HealthHeartbeatRpcResult Heartbeat()
     {
-        return true;
+        return new HealthHeartbeatRpcResult(
+            IsAlive: true);
     }
 }

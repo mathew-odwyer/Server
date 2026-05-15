@@ -83,7 +83,9 @@ internal sealed class Startup
         services.AddGatewayApplicationServices();
         services.AddGatewayInfrastructureServices(this.Configuration);
 
-        services.AddValidatorsFromAssembly(typeof(UserLoginParametersValidator).Assembly);
+        services.AddValidatorsFromAssembly(typeof(UserLoginRpcParametersValidator).Assembly);
         services.AddSingleton<IValidatorFactory, ValidatorFactory>();
+
+        services.AddHttpContextAccessor();
     }
 }
