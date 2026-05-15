@@ -14,44 +14,105 @@ internal sealed class UserAccountService : IUserAccountService
 
     private readonly IUserAccountClient userAccountClient;
 
+    private readonly IUserAccountContext userAccountContext;
+
     private readonly ISessionAuthenticator sessionAuthenticator;
 
-    public UserAccountService(ILogger<UserAccountService> logger, IUserAccountClient userAccountClient, ISessionAuthenticator sessionAuthenticator)
+    private SemaphoreSlim? loginStateLock = new(1, 1);
+
+    private bool isDisposed;
+
+    public UserAccountService(
+        ILogger<UserAccountService> logger,
+        IUserAccountClient userAccountClient,
+        IUserAccountContext userAccountContext,
+        ISessionAuthenticator sessionAuthenticator)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
+        this.userAccountContext = userAccountContext ?? throw new ArgumentNullException(nameof(userAccountContext));
         this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
     }
 
-    public async Task<string> LoginUserAsync(string username, string password, CancellationToken cancellationToken)
+    ~UserAccountService()
     {
+        this.Dispose(false);
+    }
+
+    public async Task<UserLoginResult> LoginUserAsync(string username, string password, CancellationToken cancellationToken)
+    {
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserAccountService));
+
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
-        this.logger.LogInformation("Logging in user with username {Username}", username);
+        // Ensure that only one login attempt can be in progress at a time to prevent race conditions.
+        // This also ensures that if a user logs out while a login attempt is in progress, the login
+        // attempt will fail instead of potentially leaving the session in an inconsistent state.
+        await this.loginStateLock!.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-        var dto = new LoginUserRequestDto()
+        try
         {
-            Username = username,
-            Password = password,
-        };
+            var dto = new LoginUserRequestDto()
+            {
+                Username = username,
+                Password = password,
+            };
 
-        // Ensure the API authenticates the user first.
-        var resposne = await this.userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
+            this.logger.LogInformation("Attempting to log in user with username '{Username}'", username);
 
-        // Then we can authenticate the session with the access token.
-        this.sessionAuthenticator.Authenticate(resposne.AccessToken);
+            var response = await this.userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
 
-        return resposne.RefreshToken;
+            // Authenticate the session with the access token.
+            // This ensures that any HTTP requests made after this point will include the access token for authentication.
+            this.sessionAuthenticator.Authenticate(response.AccessToken);
+
+            this.logger.LogInformation("User login attempt completed for username '{Username}'", username);
+
+            return new UserLoginResult(
+                RefreshToken: response.RefreshToken);
+        }
+        finally
+        {
+            // Release the lock to allow other login attempts to proceed.
+            // As well as logout attempts, which also locks to ensure they don't interfere with an in-progress login attempt.
+            this.loginStateLock.Release();
+        }
     }
 
-    public async Task LogoutAsync(CancellationToken cancellationToken)
+    public async Task LogoutUserAsync(CancellationToken cancellationToken)
     {
-        // TODO: Log message with user information from the session.
-        await this.userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserAccountService));
+
+        // Ensure that only one logout attempt can be in progress at a time.
+        // This also ensures that if a user logs in while a logout attempt is in progress,
+        // the login attempt will fail instead of potentially leaving the session in an inconsistent state.
+        await this.loginStateLock!.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+        try
+        {
+            if (!this.sessionAuthenticator.IsAuthenticated)
+            {
+                return;
+            }
+
+            string username = this.userAccountContext.Username!;
+
+            this.logger.LogInformation("Attempting to log out user with username '{Username}'", username);
+
+            await this.userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
+            this.sessionAuthenticator.Invalidate();
+
+            this.logger.LogInformation("User logout attempt completed for username '{Username}'", username);
+        }
+        finally
+        {
+            // Release the lock to allow other logout or login attempts to proceed.
+            this.loginStateLock.Release();
+        }
     }
 
-    public async Task<bool> RegisterUserAsync(string username, string password, string emailAddress, CancellationToken cancellationToken)
+    public async Task<UserRegistrationResult> RegisterUserAsync(string username, string password, string emailAddress, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
@@ -64,10 +125,35 @@ internal sealed class UserAccountService : IUserAccountService
             EmailAddress = emailAddress,
         };
 
-        this.logger.LogDebug("Registering user with username {Username} and email address {EmailAddress}", username, emailAddress);
+        this.logger.LogInformation("Attempting to register user with username '{Username}'", username);
 
         await this.userAccountClient.RegisterUserAsync(dto, cancellationToken).ConfigureAwait(false);
 
-        return true;
+       this.logger.LogInformation("User registration attempt completed for username '{Username}'", username);
+
+        return new UserRegistrationResult(
+            Success: true);
+    }
+
+    public void Dispose()
+    {
+        this.Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (this.isDisposed)
+        {
+            return;
+        }
+
+        if (disposing && this.loginStateLock != null)
+        {
+            this.loginStateLock.Dispose();
+            this.loginStateLock = null;
+        }
+
+        this.isDisposed = true;
     }
 }
