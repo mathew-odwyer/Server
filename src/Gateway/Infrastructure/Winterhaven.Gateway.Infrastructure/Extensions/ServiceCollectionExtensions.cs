@@ -8,6 +8,7 @@ using System.IO.Abstractions;
 using Winterhaven.Common.Extensions;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Infrastructure.Clients.Users;
 using Winterhaven.Gateway.Infrastructure.HTTP.Handlers;
 using Winterhaven.Gateway.Infrastructure.Options;
@@ -25,9 +26,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<SessionContext>();
         services.AddScoped<ISessionContext>(sp => sp.GetRequiredService<SessionContext>());
         services.AddScoped<ISessionAuthenticator>(sp => sp.GetRequiredService<SessionContext>());
+        services.AddScoped<IUserAccountContext>(sp => sp.GetRequiredService<SessionContext>());
 
+        services.AddTransient<AccessTokenHandler>();
         services.AddTransient<ApiResponseHandler>();
-        services.AddTransient<BearerTokenHandler>();
 
         services.AddValidatedOptions<ClientOptions>(configuration);
         services.AddGatewayClient<IUserAccountClient, UserAccountClient>("api/UserAccount");
@@ -43,12 +45,10 @@ public static class ServiceCollectionExtensions
         {
             var settings = provider.GetRequiredService<IOptions<ClientOptions>>().Value;
 
-            client.DefaultRequestHeaders.Add("X-API-KEY", settings.ApiKey);
-
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Winterhaven Gateway/1.0");
             client.BaseAddress = new Uri(settings.BaseUrl.TrimEnd('/') + "/" + route + "/");
         })
-        .AddHttpMessageHandler<BearerTokenHandler>()
+        .AddHttpMessageHandler<AccessTokenHandler>()
         .AddHttpMessageHandler<ApiResponseHandler>();
 
         return services;
