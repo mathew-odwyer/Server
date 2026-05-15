@@ -8,5 +8,7 @@ public interface IUserAccountClient
 {
     Task<LoginUserResponseDto> LoginUserAsync(LoginUserRequestDto dto, CancellationToken cancellationToken);
 
+    Task LogoutUserAsync(CancellationToken cancellationToken);
+
     Task RegisterUserAsync(RegisterUserRequestDto dto, CancellationToken cancellationToken);
 }
