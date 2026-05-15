@@ -10,5 +10,7 @@ public interface IUserAccountClient
 
     Task LogoutUserAsync(CancellationToken cancellationToken);
 
+    Task<RefreshTokenResponseDto> RefreshTokenAsync(RefreshTokenRequestDto dto, CancellationToken cancellationToken);
+
     Task RegisterUserAsync(RegisterUserRequestDto dto, CancellationToken cancellationToken);
 }

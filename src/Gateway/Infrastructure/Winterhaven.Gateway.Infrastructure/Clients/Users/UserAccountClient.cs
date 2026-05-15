@@ -17,6 +17,8 @@ internal sealed class UserAccountClient : IUserAccountClient
 
     private static readonly Uri RegisterUri = new("Register", UriKind.Relative);
 
+    private static readonly Uri RefreshTokenUri = new("RefreshToken", UriKind.Relative);
+
     private readonly HttpClient client;
 
     public UserAccountClient(HttpClient client)
@@ -35,6 +37,14 @@ internal sealed class UserAccountClient : IUserAccountClient
     public async Task LogoutUserAsync(CancellationToken cancellationToken)
     {
         await this.client.PostAsync(LogoutUri, null, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<RefreshTokenResponseDto> RefreshTokenAsync(RefreshTokenRequestDto dto, CancellationToken cancellationToken)
+    {
+        var response = await this.client.PostAsJsonAsync(RefreshTokenUri, dto, cancellationToken).ConfigureAwait(false);
+
+        return await response.Content.ReadFromJsonAsync<RefreshTokenResponseDto>(cancellationToken).ConfigureAwait(false)
+            ?? throw new InvalidOperationException("Failed to de-serialize refresh token response.");
     }
 
     public async Task RegisterUserAsync(RegisterUserRequestDto dto, CancellationToken cancellationToken)
