@@ -23,8 +23,11 @@ COPY Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.P
 COPY Gateway/Tests/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj \
      Gateway/Tests/Winterhaven.Gateway.Tests/
 
-COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
-     Common/Winterhaven.Common/
+COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
+     Common/Winterhaven.Common.DTOs/
+
+COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
+     Common/Winterhaven.Common.Extensions/
 
 RUN dotnet restore Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj
 
