@@ -129,10 +129,32 @@ internal sealed class UserAccountService : IUserAccountService
 
         await this.userAccountClient.RegisterUserAsync(dto, cancellationToken).ConfigureAwait(false);
 
-       this.logger.LogInformation("User registration attempt completed for username '{Username}'", username);
+        this.logger.LogInformation("User registration attempt completed for username '{Username}'", username);
 
         return new UserRegistrationResult(
             Success: true);
+    }
+
+    public async Task<UserRefreshResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(refreshToken);
+
+        var dto = new RefreshTokenRequestDto()
+        {
+            RefreshToken = refreshToken,
+        };
+
+        this.logger.LogInformation("User refreshing tokens for username: '{Username}'", this.userAccountContext.Username);
+
+        var response = await this.userAccountClient.RefreshTokenAsync(dto, cancellationToken).ConfigureAwait(false);
+
+        // Re-authenticate the session with the new access token.
+        this.sessionAuthenticator.Authenticate(response.AccessToken);
+
+        this.logger.LogInformation("User refreshed tokens for username: '{Username}'", this.userAccountContext.Username);
+
+        return new UserRefreshResult(
+            RefreshToken: response.RefreshToken);
     }
 
     public void Dispose()
