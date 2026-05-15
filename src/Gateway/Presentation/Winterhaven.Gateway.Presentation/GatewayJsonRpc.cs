@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Presentation.Attributes;
 using ValidationException = Core.Domain.Exceptions.ValidationException;
@@ -17,16 +18,16 @@ internal sealed class GatewayJsonRpc : JsonRpc
 {
     private readonly ILogger<GatewayJsonRpc> logger;
 
-    private readonly ISessionContext sessionContext;
+    private readonly ISessionAuthenticator sessionAuthenticator;
 
     public GatewayJsonRpc(
         ILogger<GatewayJsonRpc> logger,
         IJsonRpcMessageHandler messageHandler,
-        ISessionContext sessionContext)
+        ISessionAuthenticator sessionAuthenticator)
             : base(messageHandler)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.sessionContext = sessionContext ?? throw new ArgumentNullException(nameof(sessionContext));
+        this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
     }
 
     protected override ValueTask<JsonRpcMessage> DispatchRequestAsync(JsonRpcRequest request, TargetMethod targetMethod, CancellationToken cancellationToken)
@@ -34,7 +35,7 @@ internal sealed class GatewayJsonRpc : JsonRpc
         var methodInfo = targetMethod.TargetMethodInfo!;
         bool isAuthRequired = methodInfo.GetCustomAttribute<JsonRpcAuthorizeAttribute>() is not null;
 
-        return isAuthRequired && !this.sessionContext.IsAuthenticated
+        return isAuthRequired && !this.sessionAuthenticator.IsAuthenticated
             ? new ValueTask<JsonRpcMessage>(new JsonRpcError
             {
                 Error = new JsonRpcError.ErrorDetail()
