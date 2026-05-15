@@ -3,4 +3,4 @@
 using System;
 
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class JsonRpcAuthorizeAttribute : Attribute;
+internal sealed class JsonRpcAuthorizeAttribute : Attribute;
