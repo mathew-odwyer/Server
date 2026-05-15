@@ -204,7 +204,7 @@ internal sealed class LoginUserRequestHandlerTests
         // Assert
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-        this.userAuthenticator.Received(1).LoginUserAsync(request.Username, request.Password);
+        this.userAuthenticator.Received(1).AuthenticateUser(request.Username, request.Password);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -324,7 +324,7 @@ internal sealed class LoginUserRequestHandlerTests
 
         this.unitOfWorkFactory.CreateUnitOfWork().Returns(this.unitOfWork);
 
-        this.userAuthenticator.LoginUserAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(this.userAccount);
+        this.userAuthenticator.AuthenticateUser(Arg.Any<string>(), Arg.Any<string>()).Returns(this.userAccount);
         this.secureTokenFactory.GenerateUserToken(Arg.Any<UserTokenParameters>()).Returns(this.jwtToken);
         this.secureTokenHasher.HashSecureToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
 

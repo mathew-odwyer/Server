@@ -71,6 +71,8 @@ internal sealed class UserRegistrar : IUserRegistrar
             },
         };
 
+        this.logger.LogInformation("Successfully registered user with username: '{Username}'", username);
+
         return userAccount;
     }
 }

@@ -112,7 +112,7 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
 
         this.logger.LogInformation("Handling login request for user: '{Username}'...", username);
 
-        var userAccount = await this.userAuthenticator.LoginUserAsync(
+        var userAccount = await this.userAuthenticator.AuthenticateUser(
             username: username,
             password: password)
             .ConfigureAwait(false);

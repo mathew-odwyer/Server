@@ -76,7 +76,7 @@ public sealed class GetPlayerRequestHandler : IRequestHandler<GetPlayerRequest, 
 
         var player = userAccount.Player;
 
-        this.logger.LogInformation("Fetching player with ID: '{PlayerId}'", player.Id);
+        this.logger.LogDebug("Fetching player with ID: '{PlayerId}'", player.Id);
 
         return new GetPlayerResponse(
             Name: player.Name,

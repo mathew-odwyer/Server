@@ -30,7 +30,7 @@ internal sealed class MapLocator : IMapLocator
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        this.logger.LogInformation("Locating map '{MapName}'", name);
+        this.logger.LogDebug("Locating map '{MapName}'", name);
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
         // This is required to ensure that on both windows and Linux operating systems the file path

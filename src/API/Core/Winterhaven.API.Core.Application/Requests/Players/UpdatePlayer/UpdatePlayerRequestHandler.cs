@@ -89,7 +89,7 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
             ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
         var player = userAccount!.Player;
 
-        this.logger.LogInformation("Updating player with ID: '{PlayerId}'", player.Id);
+        this.logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
 
         var work = this.unitOfWorkFactory.CreateUnitOfWork();
 

@@ -21,5 +21,5 @@ public interface IUserAuthenticator
     /// Returns a <see cref="Task{TResult}"/> representing the asynchronous operation. The task
     /// result contains a <see cref="UserAccount"/> representing the authenticated user if login succeeds.
     /// </returns>
-    Task<UserAccount> LoginUserAsync(string username, string password);
+    Task<UserAccount> AuthenticateUser(string username, string password);
 }

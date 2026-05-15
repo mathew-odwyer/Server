@@ -25,6 +25,7 @@ services:
       start_period: 10s
       timeout: 5s
     restart: unless-stopped
+    tty: true
 
   nats:
     container_name: nats
@@ -39,6 +40,7 @@ services:
     volumes:
       - ./Configuration/NATS/nats-${APPLICATION_ENVIRONMENT}.conf:/etc/nats/nats.conf:ro
     command: ["-c", "/etc/nats/nats.conf"]
+    tty: true
 
   api:
     container_name: api
@@ -102,6 +104,7 @@ services:
       start_period: 20s
       timeout: 5s
     restart: unless-stopped
+    tty: true
 
   # server:
   #   container_name: server

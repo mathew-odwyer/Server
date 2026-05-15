@@ -33,18 +33,18 @@ internal sealed class UserAuthenticator : IUserAuthenticator
         this.userAccountRepository = userAccountRepository ?? throw new ArgumentNullException(nameof(userAccountRepository));
     }
 
-    public async Task<UserAccount> LoginUserAsync(string username, string password)
+    public async Task<UserAccount> AuthenticateUser(string username, string password)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
-        this.logger.LogInformation("User attempting to login with username: '{Username}'", username);
+        this.logger.LogDebug("User attempting to authenticate with username: '{Username}'", username);
 
         var identityUser = await this.userManager.FindByNameAsync(username).ConfigureAwait(false);
 
         if (identityUser == null)
         {
-            this.logger.LogWarning("Login failed: user not found for user: '{Username}'", username);
+            this.logger.LogWarning("Authentication failed: user not found for user: '{Username}'", username);
             throw new AuthorizationException("Invalid credentials. Please check your details and try again.");
         }
 
@@ -52,7 +52,7 @@ internal sealed class UserAuthenticator : IUserAuthenticator
 
         if (!result.Succeeded)
         {
-            this.logger.LogWarning("Login failed: invalid password for user: '{Username}'", username);
+            this.logger.LogWarning("Authentication failed: invalid password for user: '{Username}'", username);
             throw new AuthorizationException("Invalid credentials. Please check your details and try again.");
         }
 
@@ -64,7 +64,7 @@ internal sealed class UserAuthenticator : IUserAuthenticator
             throw new AuthorizationException("Invalid Credentials. Please check your details and try again.");
         }
 
-        this.logger.LogInformation("Login succeeded for user: '{Username}'", username);
+        this.logger.LogDebug("Authentication succeeded for user: '{Username}'", username);
 
         return userAccount;
     }

@@ -49,5 +49,6 @@ COPY --from=build /out .
 EXPOSE 8080
 
 ENV ASPNETCORE_HTTP_PORTS=8080
+ENV DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION=true
 
 ENTRYPOINT ["dotnet", "Winterhaven.Gateway.Presentation.dll"]

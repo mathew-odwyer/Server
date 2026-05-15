@@ -133,7 +133,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         // Expire the old session before creating a new one just to be safe.
         activeSession.IsRevoked = true;
 
-        this.logger.LogInformation("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
+        this.logger.LogDebug("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
 
         var parameters = new UserTokenParameters(
             UserAccountId: userAccount.Id,
@@ -160,7 +160,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
             throw new AuthorizationException("Invalid or expired refresh token.");
         }
 
-        this.logger.LogInformation("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
+        this.logger.LogDebug("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
 
         return new RefreshTokenResponse(
             AccessToken: userToken.AccessToken,
