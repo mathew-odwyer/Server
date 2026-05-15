@@ -87,7 +87,7 @@ public sealed class UserAccountController : ApiControllerBase
         var request = this.Mapper.Map<RefreshTokenRequest>(requestDto);
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(response);
+        return this.Ok(this.Mapper.Map<RefreshTokenResponseDto>(response));
     }
 
     /// <summary>

@@ -16,5 +16,6 @@ internal sealed class UserMapper : Profile
         this.CreateMap<LoginUserRequestDto, LoginUserRequest>();
         this.CreateMap<RefreshTokenRequestDto, RefreshTokenRequest>();
         this.CreateMap<LoginUserResponse, LoginUserResponseDto>();
+        this.CreateMap<RefreshTokenResponse, RefreshTokenResponseDto>();
     }
 }
