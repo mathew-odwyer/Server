@@ -2,9 +2,7 @@
   <Configurations>
     <Platform Name="x64" />
   </Configurations>
-  <Folder Name="/API/">
-    <File Path="API/Dockerfile" />
-  </Folder>
+  <Folder Name="/API/" />
   <Folder Name="/API/Core/">
     <Project Path="API/Core/Winterhaven.API.Core.Application/Winterhaven.API.Core.Application.csproj">
       <Platform Project="x64" />
@@ -19,7 +17,6 @@
     </Project>
   </Folder>
   <Folder Name="/API/Presentation/">
-    <File Path="API/Dockerfile" />
     <Project Path="API/Presentation/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj">
       <Platform Project="x64" />
     </Project>
@@ -30,13 +27,14 @@
     </Project>
   </Folder>
   <Folder Name="/Common/">
-    <Project Path="Common/Winterhaven.Common/Winterhaven.Common.csproj" Id="2d66b46b-958e-4826-aed8-7fc49f08ca85">
+    <Project Path="Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj" Id="3e5adda7-18aa-4e6b-9ce9-c7fb7a4198fe">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj" Id="20cb5f40-08c9-424c-80aa-d6974ce4b194">
       <Platform Project="x64" />
     </Project>
   </Folder>
-  <Folder Name="/Gateway/">
-    <File Path="Gateway/Dockerfile" />
-  </Folder>
+  <Folder Name="/Gateway/" />
   <Folder Name="/Gateway/Core/">
     <Project Path="Gateway/Core/Winterhaven.Gateway.Core.Application/Winterhaven.Gateway.Core.Application.csproj">
       <Platform Project="x64" />
