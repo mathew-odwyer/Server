@@ -8,9 +8,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.Common.Exceptions;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
+using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Presentation.Attributes;
+using ValidationException = Core.Domain.Exceptions.ValidationException;
 
 internal sealed class GatewayJsonRpc : JsonRpc
 {
@@ -18,7 +19,10 @@ internal sealed class GatewayJsonRpc : JsonRpc
 
     private readonly ISessionContext sessionContext;
 
-    public GatewayJsonRpc(ILogger<GatewayJsonRpc> logger, IJsonRpcMessageHandler messageHandler, ISessionContext sessionContext)
+    public GatewayJsonRpc(
+        ILogger<GatewayJsonRpc> logger,
+        IJsonRpcMessageHandler messageHandler,
+        ISessionContext sessionContext)
             : base(messageHandler)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

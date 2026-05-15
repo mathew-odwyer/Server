@@ -22,7 +22,15 @@ internal sealed class UserAccountClient : IUserAccountClient
         var response = await this.client.PostAsJsonAsync("Login", dto, cancellationToken).ConfigureAwait(false);
 
         return await response.Content.ReadFromJsonAsync<LoginUserResponseDto>(cancellationToken).ConfigureAwait(false)
-            ?? throw new InvalidOperationException("Failed to deserialize login response.");
+            ?? throw new InvalidOperationException("Failed to de-serialize login response.");
+    }
+
+    public async Task LogoutUserAsync(CancellationToken cancellationToken)
+    {
+        // FIXME: Resolve issue where when we logout we have o remove the X-API-KEY so that the JWT
+        // has authority or at least be able to handle using both the API Key and JWT for authentication.
+
+        await this.client.PostAsync("Logout", null, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task RegisterUserAsync(RegisterUserRequestDto dto, CancellationToken cancellationToken)

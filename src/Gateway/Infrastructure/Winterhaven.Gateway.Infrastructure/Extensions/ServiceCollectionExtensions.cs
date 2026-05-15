@@ -1,16 +1,12 @@
 ﻿namespace Winterhaven.Gateway.Infrastructure.Extensions;
 
-using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO.Abstractions;
 using Winterhaven.Common.Extensions;
-using Winterhaven.Gateway.Core.Application.Behaviours;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
-using Winterhaven.Gateway.Core.Application.Requests.Users.UserRegister;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Infrastructure.Clients.Users;
 using Winterhaven.Gateway.Infrastructure.HTTP.Handlers;
@@ -25,17 +21,6 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         services.AddSingleton<IFileSystem, FileSystem>();
-
-        services.AddValidatorsFromAssemblyContaining<UserRegisterRequestValidator>();
-
-        services.AddMediatR(x =>
-        {
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-
-            x.RegisterServicesFromAssemblyContaining<UserRegisterRequestHandler>();
-        });
 
         services.AddScoped<SessionContext>();
         services.AddScoped<ISessionContext>(sp => sp.GetRequiredService<SessionContext>());
@@ -54,7 +39,6 @@ public static class ServiceCollectionExtensions
         where TClient : class
         where TImplementation : class, TClient
     {
-
         services.AddHttpClient<TClient, TImplementation>((provider, client) =>
         {
             var settings = provider.GetRequiredService<IOptions<ClientOptions>>().Value;

@@ -1,5 +1,6 @@
 ﻿namespace Winterhaven.Gateway.Presentation;
 
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -8,14 +9,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
+using Winterhaven.Gateway.Core.Application.Extensions;
 using Winterhaven.Gateway.Infrastructure.Extensions;
-using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Services;
 using Winterhaven.Gateway.Presentation.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
 using Winterhaven.Gateway.Presentation.Targets.Users;
+using Winterhaven.Gateway.Presentation.Validation;
+using Winterhaven.Gateway.Presentation.Validation.Users;
+using IValidatorFactory = Validation.IValidatorFactory;
 
 /*
     TODO: Documentation
@@ -77,7 +80,10 @@ internal sealed class Startup
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();
         services.AddScoped<RpcTargetBase, UserRpcTarget>();
 
-        services.AddGatewayMappings();
+        services.AddGatewayApplicationServices();
         services.AddGatewayInfrastructureServices(this.Configuration);
+
+        services.AddValidatorsFromAssembly(typeof(UserLoginParametersValidator).Assembly);
+        services.AddSingleton<IValidatorFactory, ValidatorFactory>();
     }
 }
