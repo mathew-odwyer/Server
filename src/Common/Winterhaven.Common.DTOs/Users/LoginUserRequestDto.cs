@@ -3,16 +3,16 @@
 using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
-/// Represents the data transfer object used to authenticate an existing <see cref="UserAccount"/>.
+/// Represents the data transfer object used to authenticate an existing user account.
 /// </summary>
 [ExcludeFromCodeCoverage]
 public sealed record LoginUserRequestDto
 {
     /// <summary>
-    /// The username associated with the <see cref="UserAccount"/>.
+    /// The username associated with the user account.
     /// </summary>
     /// <value>
-    /// The username associated with the <see cref="UserAccount"/>.
+    /// The username associated with the user account.
     /// </value>
     /// <remarks>
     /// <para>Validation rules:</para>
@@ -25,10 +25,10 @@ public sealed record LoginUserRequestDto
     public required string Username { get; init; }
 
     /// <summary>
-    /// The password used to authenticate the <see cref="UserAccount"/>.
+    /// The password used to authenticate the user account.
     /// </summary>
     /// <value>
-    /// The password used to authenticate the <see cref="UserAccount"/>.
+    /// The password used to authenticate the user account.
     /// </value>
     /// <remarks>
     /// <para>Validation rules:</para>

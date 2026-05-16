@@ -8,31 +8,31 @@ using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation.Attributes;
 using Winterhaven.Gateway.Presentation.Validation;
 
-internal sealed record UserLoginRpcParameters(
+public sealed record UserLoginRpcParameters(
     string Username,
     string Password);
 
-internal sealed record UserRegisterRpcParameters(
+public sealed record UserRegisterRpcParameters(
     string Username,
     string Password,
     string EmailAddress);
 
-internal sealed record UserLoginRpcResult(
+public sealed record UserLoginRpcResult(
     string RefreshToken);
 
-internal sealed record UserRegisterRpcResult(
+public sealed record UserRegisterRpcResult(
     bool Success);
 
-internal sealed record UserLogoutRpcResult(
+public sealed record UserLogoutRpcResult(
     bool Success);
 
-internal sealed record UserRefreshRpcParameters(
+public sealed record UserRefreshRpcParameters(
     string RefreshToken);
 
-internal sealed record UserRefreshRpcResult(
+public sealed record UserRefreshRpcResult(
     string RefreshToken);
 
-internal sealed class UserRpcTarget : RpcTargetBase
+public sealed class UserRpcTarget : RpcTargetBase
 {
     private readonly IUserAccountService userAccountService;
 
@@ -48,6 +48,9 @@ internal sealed class UserRpcTarget : RpcTargetBase
     [JsonRpcMethod("user.refresh", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserRefreshRpcResult> RefreshAsync(UserRefreshRpcParameters parameters, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(parameters);
+        Validator.Validate(this.validatorFactory, parameters);
+
         var response = await this.userAccountService.RefreshTokenAsync(parameters.RefreshToken, cancellationToken).ConfigureAwait(false);
 
         return new UserRefreshRpcResult(
@@ -69,6 +72,7 @@ internal sealed class UserRpcTarget : RpcTargetBase
     [JsonRpcMethod("user.register", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserRegisterRpcResult> RegisterAsync(UserRegisterRpcParameters parameters, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(parameters);
         Validator.Validate(this.validatorFactory, parameters);
 
         var response = await this.userAccountService.RegisterUserAsync(parameters.Username, parameters.Password, parameters.EmailAddress, cancellationToken).ConfigureAwait(false);
@@ -80,6 +84,7 @@ internal sealed class UserRpcTarget : RpcTargetBase
     [JsonRpcMethod("user.login", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserLoginRpcResult> LoginAsync(UserLoginRpcParameters parameters, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(parameters);
         Validator.Validate(this.validatorFactory, parameters);
 
         var response = await this.userAccountService.LoginUserAsync(parameters.Username, parameters.Password, cancellationToken).ConfigureAwait(false);

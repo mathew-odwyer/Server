@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISessionContext>(sp => sp.GetRequiredService<SessionContext>());
         services.AddScoped<ISessionAuthenticator>(sp => sp.GetRequiredService<SessionContext>());
 
+        services.AddTransient<LoggingHandler>();
         services.AddTransient<AccessTokenHandler>();
         services.AddTransient<ApiResponseHandler>();
 
@@ -50,6 +51,7 @@ public static class ServiceCollectionExtensions
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Winterhaven Gateway/1.0");
             client.BaseAddress = new Uri(settings.BaseUrl.TrimEnd('/') + "/" + route + "/");
         })
+        .AddHttpMessageHandler<LoggingHandler>()
         .AddHttpMessageHandler<AccessTokenHandler>()
         .AddHttpMessageHandler<ApiResponseHandler>();
 

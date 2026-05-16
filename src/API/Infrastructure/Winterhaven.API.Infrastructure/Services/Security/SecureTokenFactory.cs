@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Winterhaven.API.Core.Application.Services.Security;
+using Winterhaven.API.Core.Domain.ValueObjects.Users;
 using Winterhaven.API.Infrastructure.Options.Security;
 
 [ExcludeFromCodeCoverage]

@@ -2,7 +2,7 @@
 
 using FluentValidation;
 
-internal interface IValidatorFactory
+public interface IValidatorFactory
 {
     IValidator<T>? GetValidator<T>();
 }

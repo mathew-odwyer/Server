@@ -2,9 +2,9 @@
 
 using System;
 
-public sealed class SessionAuthenticatedEventArgs: EventArgs
+public sealed class SessionAuthenticatedEventArgs : EventArgs
 {
-    public string Username { get; init; }
+    public string Username { get; init; } = string.Empty;
 
     public TimeSpan AccessTokenExpiry { get; init; }
 }

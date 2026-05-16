@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
 /// <summary>
-/// Configures the <see cref="UserAccount"/> entity.
+/// Configures the user account entity.
 /// </summary>
 /// <see cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
 [ExcludeFromCodeCoverage]

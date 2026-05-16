@@ -28,7 +28,7 @@ public interface IUserRegistrar
     /// </param>
     /// <returns>
     /// Returns a <see cref="Task{TResult}"/> representing the asynchronous operation. The task
-    /// result contains a <see cref="UserAccount"/> representing the newly registered user if
+    /// result contains a user account representing the newly registered user if
     /// registration succeeds.
     /// </returns>
     Task<UserAccount> RegisterUserAsync(string emailAddress, string username, string password);

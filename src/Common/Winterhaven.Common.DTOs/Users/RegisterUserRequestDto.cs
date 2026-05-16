@@ -9,9 +9,9 @@ using System.Diagnostics.CodeAnalysis;
 public sealed record RegisterUserRequestDto
 {
     /// <summary>
-    /// Gets the email address associated with the new <see cref="UserAccount"/>.
+    /// Gets the email address associated with the new user account.
     /// </summary>
-    /// <value>The email address associated with the new <see cref="UserAccount"/>.</value>
+    /// <value>The email address associated with the new user account.</value>
     /// <remarks>
     /// <list type="bullet">
     /// <item>
@@ -25,9 +25,9 @@ public sealed record RegisterUserRequestDto
     public required string EmailAddress { get; init; }
 
     /// <summary>
-    /// Gets the desired username for the new <see cref="UserAccount"/>.
+    /// Gets the desired username for the new user account.
     /// </summary>
-    /// <value>The desired username for the new <see cref="UserAccount"/>.</value>
+    /// <value>The desired username for the new user account.</value>
     /// <remarks>
     /// <list type="bullet">
     /// <item>
@@ -49,9 +49,9 @@ public sealed record RegisterUserRequestDto
     public required string Username { get; init; }
 
     /// <summary>
-    /// Gets the password used to secure the new <see cref="UserAccount"/>.
+    /// Gets the password used to secure the new user account.
     /// </summary>
-    /// <value>The password used to secure the new <see cref="UserAccount"/>.</value>
+    /// <value>The password used to secure the new user account.</value>
     /// <remarks>
     /// <list type="bullet">
     /// <item>

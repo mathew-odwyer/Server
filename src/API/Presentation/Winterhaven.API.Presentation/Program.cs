@@ -17,7 +17,7 @@ internal static class Program
 
         var application = builder.Build();
         startup.Configure(application, builder.Environment);
-
+        
         using (var scope = application.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();

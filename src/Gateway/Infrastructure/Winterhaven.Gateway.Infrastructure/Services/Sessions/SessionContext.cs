@@ -55,7 +55,7 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
         }
 
         this.Session = userSession;
-        this.logger.LogDebug("User refreshed: '{Username}'", this.Session.Username);
+        this.logger.LogDebug("User session refreshed: '{Username}'", this.Session.Username);
 
         this.SessionRefreshed?.Invoke(this, new SessionAuthenticatedEventArgs()
         {

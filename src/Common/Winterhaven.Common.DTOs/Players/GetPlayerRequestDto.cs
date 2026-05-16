@@ -5,9 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// Represents a player within the system.
 /// </summary>
-/// <param name="Name">The unique name of the <see cref="Player"/>.</param>
-/// <param name="X">The current X-coordinate of the <see cref="Player"/>.</param>
-/// <param name="Y">The current Y-coordinate of the <see cref="Player"/>.</param>
+/// <param name="Name">The unique name of the player.</param>
+/// <param name="X">The current X-coordinate of the player.</param>
+/// <param name="Y">The current Y-coordinate of the player.</param>
 [ExcludeFromCodeCoverage]
 
 public sealed record GetPlayerRequestDto(

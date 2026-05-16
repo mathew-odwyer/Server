@@ -10,7 +10,7 @@ internal static class Validator
     {
         var validator = factory.GetValidator<T>();
 
-        if (validator is null)
+        if (validator == null)
         {
             return;
         }

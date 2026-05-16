@@ -12,7 +12,7 @@ using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
-/// Provides a request handler used to fetch an existing <see cref="Player"/> from the current <see cref="UserAccount"/>.
+/// Provides a request handler used to fetch an existing player from the current user account.
 /// </summary>
 public sealed class GetPlayerRequestHandler : IRequestHandler<GetPlayerRequest, GetPlayerResponse>
 {

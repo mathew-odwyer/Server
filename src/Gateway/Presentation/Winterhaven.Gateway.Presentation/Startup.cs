@@ -21,7 +21,6 @@ using IValidatorFactory = Validation.IValidatorFactory;
 
 /*
     TODO: Documentation
-    TODO: Code Review (use the large checklist)
     TODO: Finish up all the Draft PR's.
 */
 
@@ -83,7 +82,7 @@ internal sealed class Startup
         services.AddGatewayInfrastructureServices(this.Configuration);
 
         services.AddValidatorsFromAssembly(typeof(UserLoginRpcParametersValidator).Assembly);
-        services.AddSingleton<IValidatorFactory, ValidatorFactory>();
+        services.AddScoped<IValidatorFactory, ValidatorFactory>();
 
         services.AddHttpContextAccessor();
     }

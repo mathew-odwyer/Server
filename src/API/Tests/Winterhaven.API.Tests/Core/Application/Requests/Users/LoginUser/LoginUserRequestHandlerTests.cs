@@ -15,6 +15,7 @@ using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.API.Core.Domain.ValueObjects.Users;
 
 [TestFixture]
 internal sealed class LoginUserRequestHandlerTests

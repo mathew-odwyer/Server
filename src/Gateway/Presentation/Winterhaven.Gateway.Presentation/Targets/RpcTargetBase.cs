@@ -1,3 +1,3 @@
 ﻿namespace Winterhaven.Gateway.Presentation.Targets;
 
-internal abstract class RpcTargetBase;
+public abstract class RpcTargetBase;

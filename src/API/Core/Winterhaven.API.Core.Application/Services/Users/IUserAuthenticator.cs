@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
 /// <summary>
-/// Defines an interface that provides functionality for authenticating a <see cref="UserAccount"/>.
+/// Defines an interface that provides functionality for authenticating a user account.
 /// </summary>
 public interface IUserAuthenticator
 {
@@ -19,7 +19,7 @@ public interface IUserAuthenticator
     /// </param>
     /// <returns>
     /// Returns a <see cref="Task{TResult}"/> representing the asynchronous operation. The task
-    /// result contains a <see cref="UserAccount"/> representing the authenticated user if login succeeds.
+    /// result contains a user account representing the authenticated user if login succeeds.
     /// </returns>
     Task<UserAccount> AuthenticateUser(string username, string password);
 }

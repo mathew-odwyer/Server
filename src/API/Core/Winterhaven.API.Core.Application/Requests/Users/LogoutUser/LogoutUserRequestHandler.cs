@@ -12,7 +12,7 @@ using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
-/// Provides a request handler used to logout a <see cref="UserAccount"/> and invalidate their
+/// Provides a request handler used to logout a user account and invalidate their
 /// currently active session.
 /// </summary>
 public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest>

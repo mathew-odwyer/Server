@@ -5,4 +5,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Controllers must be public for MVC discovery", Scope = "namespaceanddescendants", Target = "~N:Winterhaven.Gateway.Presentation.Controllers")]
-[assembly: SuppressMessage("Maintainability", "CA1812:Avoid uninstantiated internal classes", Justification = "Internal classes are fine in this namespace", Scope = "namespaceanddescendants", Target = "~N:Winterhaven.Gateway")]
+[assembly: SuppressMessage("Maintainbility", "CA1812:Internal classes should be made static", Justification = "Internal classes are registered via DI", Scope = "namespaceanddescendants", Target = "~N:Winterhaven.Gateway.Infrastructure")]
+[assembly: SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Targets and Parameters must be public for discovery", Scope = "namespaceanddescendants", Target = "~N:Winterhaven.Gateway.Presentation.Targets")]
+[assembly: SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Validators must be public for FluentValidation discovery", Scope = "namespaceanddescendants", Target = "~N:Winterhaven.Gateway.Presentation.Validation")]

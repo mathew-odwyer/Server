@@ -3,7 +3,7 @@
 using FluentValidation;
 using Winterhaven.Gateway.Presentation.Targets.Users;
 
-internal sealed class UserLoginRpcParametersValidator : AbstractValidator<UserLoginRpcParameters>
+public sealed class UserLoginRpcParametersValidator : AbstractValidator<UserLoginRpcParameters>
 {
     public UserLoginRpcParametersValidator()
     {

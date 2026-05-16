@@ -1,21 +1,33 @@
 ﻿namespace Winterhaven.Gateway.Presentation.Targets.Health;
 
 using StreamJsonRpc;
+using System;
+using Winterhaven.Gateway.Presentation.Validation;
 
-internal sealed record HealthPingRpcParameters(
+public sealed record HealthPingRpcParameters(
     double TimeStamp);
 
-internal sealed record HealthPingRpcResult(
+public sealed record HealthPingRpcResult(
     double TimeStamp);
 
-internal sealed record HealthHeartbeatRpcResult(
+public sealed record HealthHeartbeatRpcResult(
     bool IsAlive);
 
-internal sealed class HealthRpcTarget : RpcTargetBase
+public sealed class HealthRpcTarget : RpcTargetBase
 {
-    [JsonRpcMethod("health.ping", UseSingleObjectParameterDeserialization = true)]
-    public static HealthPingRpcResult Ping(HealthPingRpcParameters parameters)
+    private readonly IValidatorFactory validatorFactory;
+
+    public HealthRpcTarget(IValidatorFactory validatorFactory)
     {
+        this.validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
+    }
+
+    [JsonRpcMethod("health.ping", UseSingleObjectParameterDeserialization = true)]
+    public HealthPingRpcResult Ping(HealthPingRpcParameters parameters)
+    {
+        ArgumentNullException.ThrowIfNull(parameters);
+        Validator.Validate(this.validatorFactory, parameters);
+
         return new HealthPingRpcResult(
             TimeStamp: parameters.TimeStamp);
     }

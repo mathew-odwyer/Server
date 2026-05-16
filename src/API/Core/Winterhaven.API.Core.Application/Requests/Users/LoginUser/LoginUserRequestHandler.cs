@@ -11,10 +11,11 @@ using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.API.Core.Domain.ValueObjects.Users;
 
 /// <summary>
 /// Provides a request handler used to authenticate and enforce single-session login for a potential
-/// <see cref="UserAccount"/>.
+/// user account.
 /// </summary>
 public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, LoginUserResponse>
 {

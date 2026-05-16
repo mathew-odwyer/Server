@@ -13,7 +13,7 @@ using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.Common.DTOs.Players;
 
 /// <summary>
-/// Provides API endpoints for managing <see cref="Player"/> entities.
+/// Provides API endpoints for managing player entities.
 /// </summary>
 [ExcludeFromCodeCoverage]
 public sealed class PlayerController : ApiControllerBase
