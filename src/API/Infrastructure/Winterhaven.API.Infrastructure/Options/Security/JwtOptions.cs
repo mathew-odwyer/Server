@@ -14,7 +14,8 @@ internal sealed class JwtOptions
     /// </summary>
     /// <value>The <see cref="double"/> that represents the life time of an access token in minutes.</value>
     [Required]
-    public required double AccessTokenExpiryMinutes { get; init; } = 15;
+    [Range(1, 15)]
+    public required double AccessTokenExpiryMinutes { get; init; }
 
     /// <summary>
     /// Gets or sets a <see cref="string"/> that represents the intended audience for the JWT.
@@ -35,7 +36,8 @@ internal sealed class JwtOptions
     /// </summary>
     /// <value>The <see cref="double"/> that represents the lifetime of the refresh token in days.</value>
     [Required]
-    public required double RefreshTokenExpiryDays { get; init; } = 7;
+    [Range(1, 7)]
+    public required double RefreshTokenExpiryDays { get; init; }
 
     /// <summary>
     /// Gets or sets a <see cref="string"/> that represents the secret key used to sign and validate
@@ -54,7 +56,7 @@ internal sealed class JwtOptions
     /// <c>true</c> if the JWT audience should be validated during token validation; otherwise, <c>false</c>.
     /// </value>
     [Required]
-    public required bool ValidateAudience { get; init; } = true;
+    public required bool ValidateAudience { get; init; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the JWT issuer should be validated during token validation.
@@ -63,7 +65,7 @@ internal sealed class JwtOptions
     /// <c>true</c> if the JWT issuer should be validated during token validation; otherwise, <c>false</c>.
     /// </value>
     [Required]
-    public required bool ValidateIssuer { get; init; } = true;
+    public required bool ValidateIssuer { get; init; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the JWT issuer signing key should be validated
@@ -74,7 +76,7 @@ internal sealed class JwtOptions
     /// otherwise, <c>false</c>.
     /// </value>
     [Required]
-    public required bool ValidateIssuerSigningKey { get; init; } = true;
+    public required bool ValidateIssuerSigningKey { get; init; }
 
     /// <summary>
     /// Gets a value indicating whether the signing key should be validated during JWT token validation.
@@ -83,5 +85,5 @@ internal sealed class JwtOptions
     /// <c>true</c> if the signing key should be validated during JWT token validation; otherwise, <c>false</c>.
     /// </value>
     [Required]
-    public required bool ValidateLifetime { get; init; } = true;
+    public required bool ValidateLifetime { get; init; }
 }
