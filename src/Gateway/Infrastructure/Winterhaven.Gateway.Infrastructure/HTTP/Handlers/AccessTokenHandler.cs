@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.Gateway.Infrastructure.Services.Sessions;
+using Winterhaven.Gateway.Core.Application.Services.Sessions;
 
 internal sealed class AccessTokenHandler : DelegatingHandler
 {
@@ -21,10 +21,10 @@ internal sealed class AccessTokenHandler : DelegatingHandler
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var sessionContext = this.httpContextAccessor.HttpContext?.RequestServices.GetRequiredService<ISessionContext>();
-
-        if (sessionContext is not null && !string.IsNullOrEmpty(sessionContext.AccessToken))
+        
+        if (sessionContext?.Session is not null && !string.IsNullOrEmpty(sessionContext.Session.AccessToken))
         {
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionContext.AccessToken);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionContext.Session.AccessToken);
         }
 
         return base.SendAsync(request, cancellationToken);
