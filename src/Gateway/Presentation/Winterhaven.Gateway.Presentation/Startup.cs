@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Winterhaven.Gateway.Core.Application.Extensions;
 using Winterhaven.Gateway.Infrastructure.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Services;
@@ -22,7 +21,8 @@ using IValidatorFactory = Validation.IValidatorFactory;
 
 /*
     TODO: Documentation
-    TODO: REVIEW, PUSH AND MERGE PR! GATEWAY IS AS READY AS IT WILL EVER BE IN TERMS OF PRESENTATION
+    TODO: Code Review (use the large checklist)
+    TODO: Finish up all the Draft PR's.
 */
 
 [ExcludeFromCodeCoverage]
@@ -80,7 +80,6 @@ internal sealed class Startup
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();
         services.AddScoped<RpcTargetBase, UserRpcTarget>();
 
-        services.AddGatewayApplicationServices();
         services.AddGatewayInfrastructureServices(this.Configuration);
 
         services.AddValidatorsFromAssembly(typeof(UserLoginRpcParametersValidator).Assembly);
