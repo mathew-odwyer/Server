@@ -46,7 +46,7 @@ public sealed class GetMapRequestHandler : IRequestHandler<GetMapRequest, GetMap
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        this.logger.LogInformation("Fetching map '{MapName}'", request.Name);
+        this.logger.LogDebug("Fetching map '{MapName}'", request.Name);
         var mapData = await this.mapLocator.LocateMapDataAsync(request.Name, cancellationToken).ConfigureAwait(false);
 
         return new GetMapResponse(

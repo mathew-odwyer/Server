@@ -7,7 +7,6 @@ using NUnit.Framework;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Services.Users;
@@ -15,6 +14,8 @@ using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.API.Core.Domain.ValueObjects.Users;
 
 [TestFixture]
 internal sealed class LoginUserRequestHandlerTests
@@ -204,7 +205,7 @@ internal sealed class LoginUserRequestHandlerTests
         // Assert
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-        this.userAuthenticator.Received(1).LoginUserAsync(request.Username, request.Password);
+        this.userAuthenticator.Received(1).AuthenticateUser(request.Username, request.Password);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -324,7 +325,7 @@ internal sealed class LoginUserRequestHandlerTests
 
         this.unitOfWorkFactory.CreateUnitOfWork().Returns(this.unitOfWork);
 
-        this.userAuthenticator.LoginUserAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(this.userAccount);
+        this.userAuthenticator.AuthenticateUser(Arg.Any<string>(), Arg.Any<string>()).Returns(this.userAccount);
         this.secureTokenFactory.GenerateUserToken(Arg.Any<UserTokenParameters>()).Returns(this.jwtToken);
         this.secureTokenHasher.HashSecureToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
 

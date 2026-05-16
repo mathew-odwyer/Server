@@ -2,20 +2,40 @@
 
 using StreamJsonRpc;
 using System;
-using Winterhaven.Gateway.Presentation.DTOs.Health;
+using Winterhaven.Gateway.Presentation.Validation;
 
-internal sealed class HealthRpcTarget : RpcTargetBase
+public sealed record HealthPingRpcParameters(
+    double TimeStamp);
+
+public sealed record HealthPingRpcResult(
+    double TimeStamp);
+
+public sealed record HealthHeartbeatRpcResult(
+    bool IsAlive);
+
+public sealed class HealthRpcTarget : RpcTargetBase
 {
-    [JsonRpcMethod("health.ping", UseSingleObjectParameterDeserialization = true)]
-    public static double Ping(HealthPingRequestDto request)
+    private readonly IValidatorFactory validatorFactory;
+
+    public HealthRpcTarget(IValidatorFactory validatorFactory)
     {
-        ArgumentNullException.ThrowIfNull(request);
-        return request.TimeStamp;
+        this.validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
+    }
+
+    [JsonRpcMethod("health.ping", UseSingleObjectParameterDeserialization = true)]
+    public HealthPingRpcResult Ping(HealthPingRpcParameters parameters)
+    {
+        ArgumentNullException.ThrowIfNull(parameters);
+        Validator.Validate(this.validatorFactory, parameters);
+
+        return new HealthPingRpcResult(
+            TimeStamp: parameters.TimeStamp);
     }
 
     [JsonRpcMethod("health.heartbeat")]
-    public static bool Heartbeat()
+    public static HealthHeartbeatRpcResult Heartbeat()
     {
-        return true;
+        return new HealthHeartbeatRpcResult(
+            IsAlive: true);
     }
 }

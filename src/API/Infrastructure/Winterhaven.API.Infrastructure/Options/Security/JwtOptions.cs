@@ -14,6 +14,7 @@ internal sealed class JwtOptions
     /// </summary>
     /// <value>The <see cref="double"/> that represents the life time of an access token in minutes.</value>
     [Required]
+    [Range(1, 15)]
     public required double AccessTokenExpiryMinutes { get; init; }
 
     /// <summary>
@@ -35,6 +36,7 @@ internal sealed class JwtOptions
     /// </summary>
     /// <value>The <see cref="double"/> that represents the lifetime of the refresh token in days.</value>
     [Required]
+    [Range(1, 7)]
     public required double RefreshTokenExpiryDays { get; init; }
 
     /// <summary>

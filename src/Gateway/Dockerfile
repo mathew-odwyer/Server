@@ -23,8 +23,14 @@ COPY Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.P
 COPY Gateway/Tests/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj \
      Gateway/Tests/Winterhaven.Gateway.Tests/
 
-COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
-     Common/Winterhaven.Common/
+COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
+     Common/Winterhaven.Common.DTOs/
+
+COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
+     Common/Winterhaven.Common.Extensions/
+
+COPY Gateway/Presentation/Winterhaven.Gateway.Presentation/appsettings.json \
+    Gateway/Presentation/Winterhaven.Gateway.Presentation/
 
 RUN dotnet restore Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj
 
@@ -46,5 +52,6 @@ COPY --from=build /out .
 EXPOSE 8080
 
 ENV ASPNETCORE_HTTP_PORTS=8080
+ENV DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION=true
 
 ENTRYPOINT ["dotnet", "Winterhaven.Gateway.Presentation.dll"]

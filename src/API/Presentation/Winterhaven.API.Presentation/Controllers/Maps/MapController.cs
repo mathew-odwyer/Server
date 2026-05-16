@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Requests.Maps.GetMap;
 using Winterhaven.API.Presentation.Authentication;
-using Winterhaven.API.Presentation.DTOs.Maps;
+using Winterhaven.Common.DTOs.Maps;
 
 /// <summary>
 /// Provides API endpoints for handling maps.

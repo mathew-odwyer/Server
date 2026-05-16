@@ -23,8 +23,14 @@ COPY API/Presentation/Winterhaven.API.Presentation/Winterhaven.API.Presentation.
 COPY API/Tests/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj \
      API/Tests/Winterhaven.API.Tests/
 
-COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
-     Common/Winterhaven.Common/
+COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
+     Common/Winterhaven.Common.DTOs/
+
+COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
+     Common/Winterhaven.Common.Extensions/
+
+COPY API/Presentation/Winterhaven.API.Presentation/appsettings.json \
+    API/Presentation/Winterhaven.API.Presentation/
 
 RUN dotnet restore API/Presentation/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj
 
@@ -49,6 +55,7 @@ EXPOSE 8080
 
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
 ENV ASPNETCORE_HTTP_PORTS=8080
+ENV DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION=true
 
 ENTRYPOINT ["dotnet", "Winterhaven.API.Presentation.dll"]
 

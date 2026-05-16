@@ -6,9 +6,9 @@ using NSubstitute.ClearExtensions;
 using NUnit.Framework;
 using System;
 using System.Security.Claims;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Infrastructure.Contexts;
 
 [TestFixture]

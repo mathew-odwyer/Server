@@ -35,7 +35,7 @@ using Winterhaven.Common.Extensions;
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddWinterhavenInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);

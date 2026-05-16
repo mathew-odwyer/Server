@@ -9,7 +9,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Requests.Users.LogoutUser;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;

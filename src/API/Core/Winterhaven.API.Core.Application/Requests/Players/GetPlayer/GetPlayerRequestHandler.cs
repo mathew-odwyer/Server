@@ -6,13 +6,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
-/// Provides a request handler used to fetch an existing <see cref="Player"/> from the current <see cref="UserAccount"/>.
+/// Provides a request handler used to fetch an existing player from the current user account.
 /// </summary>
 public sealed class GetPlayerRequestHandler : IRequestHandler<GetPlayerRequest, GetPlayerResponse>
 {
@@ -76,7 +76,7 @@ public sealed class GetPlayerRequestHandler : IRequestHandler<GetPlayerRequest, 
 
         var player = userAccount.Player;
 
-        this.logger.LogInformation("Fetching player with ID: '{PlayerId}'", player.Id);
+        this.logger.LogDebug("Fetching player with ID: '{PlayerId}'", player.Id);
 
         return new GetPlayerResponse(
             Name: player.Name,

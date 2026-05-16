@@ -81,7 +81,7 @@ public sealed class RegisterUserRequestHandler : IRequestHandler<RegisterUserReq
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        this.logger.LogInformation("Handling user registration for new user: '{Username}'", request.Username);
+        this.logger.LogDebug("Handling user registration for new user: '{Username}'", request.Username);
 
         var work = this.unitOfWorkFactory.CreateUnitOfWork();
 
@@ -103,6 +103,6 @@ public sealed class RegisterUserRequestHandler : IRequestHandler<RegisterUserReq
 
         await work.SaveAsync(cancellationToken).ConfigureAwait(false);
 
-        this.logger.LogInformation("User registration succeeded for username: {Username}", request.Username);
+        this.logger.LogDebug("User registration succeeded for username: {Username}", request.Username);
     }
 }

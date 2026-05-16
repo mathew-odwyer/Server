@@ -18,9 +18,9 @@ public class UserAccount : AuditableEntityBase
     public required string EmailAddress { get; init; }
 
     /// <summary>
-    /// Gets the player linked to this <see cref="UserAccount"/>.
+    /// Gets the player linked to this user account.
     /// </summary>
-    /// <value>The player linked to this <see cref="UserAccount"/>.</value>
+    /// <value>The player linked to this user account.</value>
     public virtual required Player Player { get; set; }
 
     /// <summary>

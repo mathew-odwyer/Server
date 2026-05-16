@@ -18,7 +18,7 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
 
     public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
     {
-        this.validators = validators;
+        this.validators = validators ?? throw new ArgumentNullException(nameof(validators));
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)

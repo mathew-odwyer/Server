@@ -3,7 +3,7 @@
 using AutoMapper;
 using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Application.Requests.Maps.GetMap;
-using Winterhaven.API.Presentation.DTOs.Maps;
+using Winterhaven.Common.DTOs.Maps;
 
 [ExcludeFromCodeCoverage]
 internal sealed class MapMapper : Profile

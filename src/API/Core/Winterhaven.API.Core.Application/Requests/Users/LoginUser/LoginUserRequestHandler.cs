@@ -5,16 +5,17 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.API.Core.Application.Exceptions;
 using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.API.Core.Domain.ValueObjects.Users;
 
 /// <summary>
 /// Provides a request handler used to authenticate and enforce single-session login for a potential
-/// <see cref="UserAccount"/>.
+/// user account.
 /// </summary>
 public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, LoginUserResponse>
 {
@@ -112,7 +113,7 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
 
         this.logger.LogInformation("Handling login request for user: '{Username}'...", username);
 
-        var userAccount = await this.userAuthenticator.LoginUserAsync(
+        var userAccount = await this.userAuthenticator.AuthenticateUser(
             username: username,
             password: password)
             .ConfigureAwait(false);

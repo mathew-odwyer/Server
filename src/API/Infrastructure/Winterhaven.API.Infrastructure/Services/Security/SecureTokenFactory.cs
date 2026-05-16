@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Winterhaven.API.Core.Application.Services.Security;
+using Winterhaven.API.Core.Domain.ValueObjects.Users;
 using Winterhaven.API.Infrastructure.Options.Security;
 
 [ExcludeFromCodeCoverage]
@@ -53,7 +54,7 @@ internal sealed class SecureTokenFactory : ISecureTokenFactory
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        this.logger.LogInformation("Generating JWT for user: {Username}", parameters.Username);
+        this.logger.LogDebug("Generating JWT for user: {Username}", parameters.Username);
 
         var claims = new[]
         {
@@ -71,7 +72,7 @@ internal sealed class SecureTokenFactory : ISecureTokenFactory
             expires: DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
             signingCredentials: credentials);
 
-        this.logger.LogInformation("Successfully generated JWT token for user: {Username}", parameters.Username);
+        this.logger.LogDebug("Successfully generated JWT token for user: {Username}", parameters.Username);
 
         var handler = new JwtSecurityTokenHandler();
         return handler.WriteToken(token);

@@ -20,7 +20,7 @@ using Winterhaven.API.Presentation.Transformers.Security;
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddWinterhavenControllersWithFilters(this IServiceCollection services)
+    internal static IServiceCollection AddApiControllersWithFilters(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -40,7 +40,7 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    internal static IServiceCollection AddWinterhavenAuthorization(this IServiceCollection services)
+    internal static IServiceCollection AddApiAuthorization(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -50,7 +50,7 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    internal static IServiceCollection AddWinterhavenApiServices(this IServiceCollection services)
+    internal static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddHealthChecks();
         services.AddEndpointsApiExplorer();
@@ -65,7 +65,7 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    internal static IServiceCollection AddWinterhavenAuthentication(this IServiceCollection services, IConfiguration configuration)
+    internal static IServiceCollection AddApiAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
@@ -102,7 +102,7 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    internal static IServiceCollection AddWinterhavenMappings(this IServiceCollection services)
+    internal static IServiceCollection AddApiMappings(this IServiceCollection services)
     {
         services.AddAutoMapper(x =>
         {

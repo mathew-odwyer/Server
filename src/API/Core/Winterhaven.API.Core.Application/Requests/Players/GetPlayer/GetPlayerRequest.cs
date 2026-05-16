@@ -5,7 +5,7 @@ using Winterhaven.API.Core.Domain.Attributes.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 
 /// <summary>
-/// Represents a request used to fetch an existing <see cref="Player"/>
+/// Represents a request used to fetch an existing player
 /// </summary>
 /// <seealso cref="IRequest"/>
 /// <seealso cref="IBaseRequest"/>
