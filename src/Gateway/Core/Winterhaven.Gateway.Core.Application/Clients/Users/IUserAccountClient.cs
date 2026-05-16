@@ -2,9 +2,15 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.API.Common.DTOs.Users;
+using Winterhaven.Common.DTOs.Users;
 
 public interface IUserAccountClient
 {
+    Task<LoginUserResponseDto> LoginUserAsync(LoginUserRequestDto dto, CancellationToken cancellationToken);
+
+    Task LogoutUserAsync(CancellationToken cancellationToken);
+
+    Task<RefreshTokenResponseDto> RefreshTokenAsync(RefreshTokenRequestDto dto, CancellationToken cancellationToken);
+
     Task RegisterUserAsync(RegisterUserRequestDto dto, CancellationToken cancellationToken);
 }

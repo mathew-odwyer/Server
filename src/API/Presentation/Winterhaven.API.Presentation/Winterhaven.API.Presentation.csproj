@@ -6,6 +6,7 @@
 	<PackageReference Include="Scalar.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Winterhaven.Common.DTOs\Winterhaven.Common.DTOs.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Winterhaven.API.Infrastructure\Winterhaven.API.Infrastructure.csproj" />
   </ItemGroup>
 	<ItemGroup>

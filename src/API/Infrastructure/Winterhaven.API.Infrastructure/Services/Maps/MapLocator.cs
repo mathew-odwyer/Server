@@ -8,8 +8,9 @@ using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Services.Maps;
+using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.API.Core.Domain.ValueObjects.Maps;
 using Winterhaven.API.Infrastructure.Options.Maps;
-using Winterhaven.Common.Exceptions;
 
 internal sealed class MapLocator : IMapLocator
 {
@@ -30,7 +31,7 @@ internal sealed class MapLocator : IMapLocator
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        this.logger.LogInformation("Locating map '{MapName}'", name);
+        this.logger.LogDebug("Locating map '{MapName}'", name);
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
         // This is required to ensure that on both windows and Linux operating systems the file path

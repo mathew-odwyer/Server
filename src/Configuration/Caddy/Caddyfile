@@ -1,3 +1,10 @@
+{
+    # Enables structured logging to stdout
+    log {
+        format console
+    }
+}
+
 http://localhost {
     respond "OK"
 }

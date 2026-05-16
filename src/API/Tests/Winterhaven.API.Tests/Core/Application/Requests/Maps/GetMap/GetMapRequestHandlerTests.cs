@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Requests.Maps.GetMap;
 using Winterhaven.API.Core.Application.Services.Maps;
+using Winterhaven.API.Core.Domain.ValueObjects.Maps;
 
 [TestFixture]
 internal sealed class GetMapRequestHandlerTests

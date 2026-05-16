@@ -11,7 +11,7 @@ using Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 using Winterhaven.API.Core.Application.Requests.Users.LogoutUser;
 using Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 using Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
-using Winterhaven.API.Common.DTOs.Users;
+using Winterhaven.Common.DTOs.Users;
 
 /// <summary>
 /// Provides API endpoints for managing user account operations, including registration, login,
@@ -41,7 +41,7 @@ public sealed class UserAccountController : ApiControllerBase
         var request = this.Mapper.Map<LoginUserRequest>(requestDto);
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(response);
+        return this.Ok(this.Mapper.Map<LoginUserResponseDto>(response));
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public sealed class UserAccountController : ApiControllerBase
         var request = this.Mapper.Map<RefreshTokenRequest>(requestDto);
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(response);
+        return this.Ok(this.Mapper.Map<RefreshTokenResponseDto>(response));
     }
 
     /// <summary>

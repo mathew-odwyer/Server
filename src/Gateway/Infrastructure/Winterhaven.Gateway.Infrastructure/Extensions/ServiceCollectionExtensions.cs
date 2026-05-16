@@ -1,19 +1,19 @@
 ﻿namespace Winterhaven.Gateway.Infrastructure.Extensions;
 
-using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO.Abstractions;
 using Winterhaven.Common.Extensions;
-using Winterhaven.Gateway.Core.Application.Behaviours;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
-using Winterhaven.Gateway.Core.Application.Requests.Users.UserRegister;
+using Winterhaven.Gateway.Core.Application.Services.Sessions;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Infrastructure.Clients.Users;
 using Winterhaven.Gateway.Infrastructure.HTTP.Handlers;
 using Winterhaven.Gateway.Infrastructure.Options;
+using Winterhaven.Gateway.Infrastructure.Services.Sessions;
+using Winterhaven.Gateway.Infrastructure.Services.Users;
 
 public static class ServiceCollectionExtensions
 {
@@ -24,22 +24,18 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IFileSystem, FileSystem>();
 
-        services.AddValidatorsFromAssemblyContaining<UserRegisterRequestValidator>();
+        services.AddScoped<SessionContext>();
+        services.AddScoped<ISessionContext>(sp => sp.GetRequiredService<SessionContext>());
+        services.AddScoped<ISessionAuthenticator>(sp => sp.GetRequiredService<SessionContext>());
 
-        services.AddMediatR(x =>
-        {
-            //x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehahviour<,>)); // maybe?
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>)); // yes
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>)); // yes
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>)); // yes
-
-            x.RegisterServicesFromAssemblyContaining<UserRegisterRequestHandler>();
-        });
-
+        services.AddTransient<LoggingHandler>();
+        services.AddTransient<AccessTokenHandler>();
         services.AddTransient<ApiResponseHandler>();
 
-        services.AddValidatedOptions<ApiOptions>(configuration);
+        services.AddValidatedOptions<ClientOptions>(configuration);
         services.AddGatewayClient<IUserAccountClient, UserAccountClient>("api/UserAccount");
+
+        services.AddScoped<IUserAccountService, UserAccountService>();
 
         return services;
     }
@@ -48,16 +44,15 @@ public static class ServiceCollectionExtensions
         where TClient : class
         where TImplementation : class, TClient
     {
-
         services.AddHttpClient<TClient, TImplementation>((provider, client) =>
         {
-            var settings = provider.GetRequiredService<IOptions<ApiOptions>>().Value;
-
-            client.DefaultRequestHeaders.Add("X-API-KEY", settings.ApiKey);
+            var settings = provider.GetRequiredService<IOptions<ClientOptions>>().Value;
 
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Winterhaven Gateway/1.0");
             client.BaseAddress = new Uri(settings.BaseUrl.TrimEnd('/') + "/" + route + "/");
         })
+        .AddHttpMessageHandler<LoggingHandler>()
+        .AddHttpMessageHandler<AccessTokenHandler>()
         .AddHttpMessageHandler<ApiResponseHandler>();
 
         return services;

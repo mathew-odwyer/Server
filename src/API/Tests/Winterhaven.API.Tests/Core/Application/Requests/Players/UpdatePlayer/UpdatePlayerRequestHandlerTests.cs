@@ -14,7 +14,7 @@ using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 [TestFixture]
 internal sealed class UpdatePlayerRequestHandlerTests

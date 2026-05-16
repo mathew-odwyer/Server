@@ -10,10 +10,11 @@ using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.API.Core.Domain.ValueObjects.Users;
 
 /// <summary>
-/// Provides a request handler used to refresh the JSON Web Token for the current <see cref="UserAccount"/>.
+/// Provides a request handler used to refresh the JSON Web Token for the current user account.
 /// </summary>
 public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, RefreshTokenResponse>
 {
@@ -43,7 +44,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
     private readonly IActorContext actorContext;
 
     /// <summary>
-    /// The user session token repository, used to store the currently active session for the <see cref="UserAccount"/>.
+    /// The user session token repository, used to store the currently active session for the user account.
     /// </summary>
     private readonly IUserSessionTokenRepository userSessionTokenRepository;
 
@@ -60,7 +61,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
     /// <param name="secureTokenHasher">The secure token hasher used to verify the current session.</param>
     /// <param name="unitOfWorkFactory">The unit of work factory.</param>
     /// <param name="userSessionTokenRepository">
-    /// The user session token repository, used to store the currently active session for the <see cref="UserAccount"/>.
+    /// The user session token repository, used to store the currently active session for the user account.
     /// </param>
     /// <param name="actorContext">
     /// The user account context, used to fetch the currently authenticated user.
@@ -133,7 +134,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
         // Expire the old session before creating a new one just to be safe.
         activeSession.IsRevoked = true;
 
-        this.logger.LogInformation("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
+        this.logger.LogDebug("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
 
         var parameters = new UserTokenParameters(
             UserAccountId: userAccount.Id,
@@ -160,7 +161,7 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
             throw new AuthorizationException("Invalid or expired refresh token.");
         }
 
-        this.logger.LogInformation("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
+        this.logger.LogDebug("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
 
         return new RefreshTokenResponse(
             AccessToken: userToken.AccessToken,

@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.Gateway.Core.Domain.Exceptions;
 
 internal sealed class ApiResponseHandler : DelegatingHandler
 {
@@ -34,9 +34,6 @@ internal sealed class ApiResponseHandler : DelegatingHandler
         {
             HttpStatusCode.BadRequest => BuildValidationException(content),
             HttpStatusCode.Unauthorized => new AuthorizationException(detail),
-            HttpStatusCode.Forbidden => new ForbiddenAccessException(detail),
-            HttpStatusCode.NotFound => new ResourceNotFoundException(detail),
-            HttpStatusCode.Conflict => new ConflictException(detail),
             HttpStatusCode.InternalServerError => new InvalidOperationException(detail),
             _ => new InvalidOperationException($"Unexpected status {(int)response.StatusCode}: {detail}")
         };

@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Work;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 [ExcludeFromCodeCoverage]
 internal sealed class UnitOfWork : IUnitOfWork

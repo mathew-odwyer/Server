@@ -10,10 +10,10 @@ using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.Common.Exceptions;
+using Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
-/// Provides a request handler used to update all a <see cref="Player"/> for the current <see cref="UserAccount"/>.
+/// Provides a request handler used to update all a player for the current user account.
 /// </summary>
 public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerRequest>
 {
@@ -23,7 +23,7 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     private readonly ILogger<UpdatePlayerRequestHandler> logger;
 
     /// <summary>
-    /// The unit of work factory, used to save the changes of the <see cref="Player"/> to update.
+    /// The unit of work factory, used to save the changes of the player to update.
     /// </summary>
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
@@ -42,7 +42,7 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     /// </summary>
     /// <param name="logger">The logger.</param>
     /// <param name="unitOfWorkFactory">
-    /// The unit of work factory, used to save the changes of the <see cref="Player"/> to update.
+    /// The unit of work factory, used to save the changes of the player to update.
     /// </param>
     /// <param name="actorContext">
     /// The user account context, used to fetch the currently authenticated user.
@@ -89,7 +89,7 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
             ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
         var player = userAccount!.Player;
 
-        this.logger.LogInformation("Updating player with ID: '{PlayerId}'", player.Id);
+        this.logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
 
         var work = this.unitOfWorkFactory.CreateUnitOfWork();
 
