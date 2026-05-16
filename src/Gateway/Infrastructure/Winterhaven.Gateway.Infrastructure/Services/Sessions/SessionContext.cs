@@ -1,13 +1,12 @@
 ﻿namespace Winterhaven.Gateway.Infrastructure.Services.Sessions;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.JsonWebTokens;
 using System;
-using System.Linq;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
-using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Core.Domain.Events.Sessions;
+using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 
-internal sealed class SessionContext : ISessionContext, ISessionAuthenticator, IUserAccountContext
+internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
 {
     private readonly ILogger<SessionContext> logger;
 
@@ -16,41 +15,63 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator, I
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public string? AccessToken { get; private set; }
-
-    public string? Username
-    {
-        get { return this.ParseClaim("username", value => value); }
-    }
+    public UserSession? Session { get; private set; }
 
     public bool IsAuthenticated
     {
-        get { return !string.IsNullOrWhiteSpace(this.AccessToken); }
+        get { return this.Session != null; }
     }
 
-    public void Authenticate(string accessToken)
+    public event EventHandler<SessionAuthenticatedEventArgs>? SessionAuthenticated;
+
+    public event EventHandler<SessionAuthenticatedEventArgs>? SessionRefreshed;
+
+    public void Authenticate(UserSession userSession)
     {
-        this.AccessToken = accessToken;
-        this.logger.LogDebug("User session authenticated: '{Username}'", this.Username);
+        ArgumentNullException.ThrowIfNull(userSession);
+
+        if (this.IsAuthenticated)
+        {
+            return;
+        }
+
+        this.Session = userSession;
+        this.logger.LogDebug("User session authenticated: '{Username}'", this.Session.Username);
+
+        this.SessionAuthenticated?.Invoke(this, new SessionAuthenticatedEventArgs()
+        {
+            Username = userSession.Username,
+            AccessTokenExpiry = userSession.AccessTokenExpiry,
+        });
+    }
+
+    public void Refresh(UserSession userSession)
+    {
+        ArgumentNullException.ThrowIfNull(userSession);
+
+        if (!this.IsAuthenticated)
+        {
+            return;
+        }
+
+        this.Session = userSession;
+        this.logger.LogDebug("User refreshed: '{Username}'", this.Session.Username);
+
+        this.SessionRefreshed?.Invoke(this, new SessionAuthenticatedEventArgs()
+        {
+            Username = userSession.Username,
+            AccessTokenExpiry = userSession.AccessTokenExpiry,
+        });
     }
 
     public void Invalidate()
     {
-        this.logger.LogDebug("Invalidating user session for username: '{Username}'", this.Username);
-        this.AccessToken = null;
-    }
-
-    private T? ParseClaim<T>(string type, Func<string, T> selector)
-    {
-        if (string.IsNullOrWhiteSpace(this.AccessToken))
+        if (!this.IsAuthenticated)
         {
-            return default;
+            return;
         }
 
-        var handler = new JsonWebTokenHandler();
-        var jwt = handler.ReadJsonWebToken(this.AccessToken);
-
-        var claim = jwt.Claims.FirstOrDefault(c => c.Type == type);
-        return claim is not null ? selector(claim.Value) : default;
+        this.logger.LogDebug("Invalidating user session for username: '{Username}'", this.Session!.Username!);
+        this.Session = null;
     }
 }

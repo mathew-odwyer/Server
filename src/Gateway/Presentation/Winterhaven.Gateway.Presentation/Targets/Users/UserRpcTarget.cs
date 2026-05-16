@@ -45,7 +45,7 @@ internal sealed class UserRpcTarget : RpcTargetBase
     }
 
     [JsonRpcAuthorize]
-    [JsonRpcMethod("user.refresh")]
+    [JsonRpcMethod("user.refresh", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserRefreshRpcResult> RefreshAsync(UserRefreshRpcParameters parameters, CancellationToken cancellationToken)
     {
         var response = await this.userAccountService.RefreshTokenAsync(parameters.RefreshToken, cancellationToken).ConfigureAwait(false);

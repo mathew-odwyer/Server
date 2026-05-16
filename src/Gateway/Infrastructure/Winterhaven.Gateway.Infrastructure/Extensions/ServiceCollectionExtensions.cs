@@ -13,6 +13,7 @@ using Winterhaven.Gateway.Infrastructure.Clients.Users;
 using Winterhaven.Gateway.Infrastructure.HTTP.Handlers;
 using Winterhaven.Gateway.Infrastructure.Options;
 using Winterhaven.Gateway.Infrastructure.Services.Sessions;
+using Winterhaven.Gateway.Infrastructure.Services.Users;
 
 public static class ServiceCollectionExtensions
 {
@@ -26,13 +27,14 @@ public static class ServiceCollectionExtensions
         services.AddScoped<SessionContext>();
         services.AddScoped<ISessionContext>(sp => sp.GetRequiredService<SessionContext>());
         services.AddScoped<ISessionAuthenticator>(sp => sp.GetRequiredService<SessionContext>());
-        services.AddScoped<IUserAccountContext>(sp => sp.GetRequiredService<SessionContext>());
 
         services.AddTransient<AccessTokenHandler>();
         services.AddTransient<ApiResponseHandler>();
 
         services.AddValidatedOptions<ClientOptions>(configuration);
         services.AddGatewayClient<IUserAccountClient, UserAccountClient>("api/UserAccount");
+
+        services.AddScoped<IUserAccountService, UserAccountService>();
 
         return services;
     }
