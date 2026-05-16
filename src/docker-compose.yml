@@ -16,6 +16,8 @@ services:
       - "caddy_data:/data"
       - "caddy_config:/config"
       - ./Configuration/Caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ${AppData}/caddy/data:/data
+      - ${AppData}/caddy/config:/config
     networks:
       - network
     healthcheck:
