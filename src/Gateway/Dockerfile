@@ -29,6 +29,9 @@ COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
 COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
      Common/Winterhaven.Common.Extensions/
 
+COPY Gateway/Presentation/Winterhaven.Gateway.Presentation/appsettings.json \
+    Gateway/Presentation/Winterhaven.Gateway.Presentation/
+
 RUN dotnet restore Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj
 
 COPY Gateway/ Gateway/
