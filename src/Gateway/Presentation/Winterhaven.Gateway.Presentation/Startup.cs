@@ -19,11 +19,6 @@ using Winterhaven.Gateway.Presentation.Validation;
 using Winterhaven.Gateway.Presentation.Validation.Users;
 using IValidatorFactory = Validation.IValidatorFactory;
 
-/*
-    TODO: Documentation
-    TODO: Finish up all the Draft PR's.
-*/
-
 [ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
