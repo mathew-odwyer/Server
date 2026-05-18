@@ -8,64 +8,65 @@ using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
-using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
-/// Provides a request handler used to update all a player for the current user account.
+///   Provides a request handler used to update all a player for the current user account.
 /// </summary>
 public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerRequest>
 {
     /// <summary>
-    /// The logger.
-    /// </summary>
-    private readonly ILogger<UpdatePlayerRequestHandler> logger;
-
-    /// <summary>
-    /// The unit of work factory, used to save the changes of the player to update.
-    /// </summary>
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-
-    /// <summary>
-    /// The actor context, used to fetch the currently authenticated actor.
+    ///   The actor context, used to fetch the currently authenticated actor.
     /// </summary>
     private readonly IActorContext actorContext;
 
     /// <summary>
-    /// The user account repository, used to fetch the user account (if any) linked to the actor.
+    ///   The logger.
+    /// </summary>
+    private readonly ILogger<UpdatePlayerRequestHandler> logger;
+
+    /// <summary>
+    ///   The unit of work factory, used to save the changes of the player to update.
+    /// </summary>
+    private readonly IUnitOfWorkFactory unitOfWorkFactory;
+
+    /// <summary>
+    ///   The user account repository, used to fetch the user account (if any) linked to the actor.
     /// </summary>
     private readonly IUserAccountRepository userAccountRepository;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UpdatePlayerRequestHandler"/> class.
+    ///   Initializes a new instance of the <see cref="UpdatePlayerRequestHandler"/> class.
     /// </summary>
-    /// <param name="logger">The logger.</param>
+    /// <param name="logger">
+    ///   The logger.
+    /// </param>
     /// <param name="unitOfWorkFactory">
-    /// The unit of work factory, used to save the changes of the player to update.
+    ///   The unit of work factory, used to save the changes of the player to update.
     /// </param>
     /// <param name="actorContext">
-    /// The user account context, used to fetch the currently authenticated user.
+    ///   The user account context, used to fetch the currently authenticated user.
     /// </param>
     /// <param name="userAccountRepository">
-    /// The user account repository, used to fetch the user account (if any) linked to the actor.
+    ///   The user account repository, used to fetch the user account (if any) linked to the actor.
     /// </param>
     /// <exception cref="ArgumentNullException">
-    /// Thrown when one of the following parameters is <c>null</c>:
-    /// <list type="bullet">
-    /// <item>
-    /// <description><paramref name="logger"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="unitOfWorkFactory"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="actorContext"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="userAccountRepository"/></description>
-    /// </item>
-    /// </list>
+    ///   Thrown when one of the following parameters is <c>null</c>:
+    ///   <list type="bullet">
+    ///     <item>
+    ///       <description><paramref name="logger"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="unitOfWorkFactory"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="actorContext"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="userAccountRepository"/></description>
+    ///     </item>
+    ///   </list>
     /// </exception>
     public UpdatePlayerRequestHandler(
         ILogger<UpdatePlayerRequestHandler> logger,

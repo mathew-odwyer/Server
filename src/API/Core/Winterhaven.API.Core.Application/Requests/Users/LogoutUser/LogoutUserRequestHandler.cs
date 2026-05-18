@@ -12,67 +12,71 @@ using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
-/// Provides a request handler used to logout a user account and invalidate their
-/// currently active session.
+///   Provides a request handler used to logout a user account and invalidate their currently active session.
 /// </summary>
 public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest>
 {
     /// <summary>
-    /// The logger.
-    /// </summary>
-    private readonly ILogger<LogoutUserRequestHandler> logger;
-
-    /// <summary>
-    /// The unit of work factory.
-    /// </summary>
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-
-    /// <summary>
-    /// The actor context, used to fetch the currently authenticated actor.
+    ///   The actor context, used to fetch the currently authenticated actor.
     /// </summary>
     private readonly IActorContext actorContext;
 
     /// <summary>
-    /// The user account repository, used to fetch the user account (if any) linked to the actor.
+    ///   The logger.
+    /// </summary>
+    private readonly ILogger<LogoutUserRequestHandler> logger;
+
+    /// <summary>
+    ///   The unit of work factory.
+    /// </summary>
+    private readonly IUnitOfWorkFactory unitOfWorkFactory;
+
+    /// <summary>
+    ///   The user account repository, used to fetch the user account (if any) linked to the actor.
     /// </summary>
     private readonly IUserAccountRepository userAccountRepository;
 
     /// <summary>
-    /// The user session token repository, used to expire the currently active session.
+    ///   The user session token repository, used to expire the currently active session.
     /// </summary>
     private readonly IUserSessionTokenRepository userSessionTokenRepository;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LogoutUserRequestHandler"/> class.
+    ///   Initializes a new instance of the <see cref="LogoutUserRequestHandler"/> class.
     /// </summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+    /// <param name="logger">
+    ///   The logger.
+    /// </param>
+    /// <param name="unitOfWorkFactory">
+    ///   The unit of work factory.
+    /// </param>
     /// <param name="userSessionTokenRepository">
-    /// The user session token repository, used to expire the currently active session.
+    ///   The user session token repository, used to expire the currently active session.
     /// </param>
     /// <param name="actorContext">
-    /// The user account context, used to fetch the currently authenticated user.
+    ///   The user account context, used to fetch the currently authenticated user.
     /// </param>
-    /// <param name="userAccountRepository"></param>
+    /// <param name="userAccountRepository">
+    /// </param>
     /// <exception cref="ArgumentNullException">
-    /// Thrown when one of the following parameters is <c>null</c>:
-    /// <list type="bullet">
-    /// <item>
-    /// <description><paramref name="logger"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="unitOfWorkFactory"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="userSessionTokenRepository"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="actorContext"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="userAccountRepository"/></description>
-    /// </item>
-    /// </list>
+    ///   Thrown when one of the following parameters is <c>null</c>:
+    ///   <list type="bullet">
+    ///     <item>
+    ///       <description><paramref name="logger"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="unitOfWorkFactory"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="userSessionTokenRepository"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="actorContext"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="userAccountRepository"/></description>
+    ///     </item>
+    ///   </list>
     /// </exception>
     public LogoutUserRequestHandler(
         ILogger<LogoutUserRequestHandler> logger,
@@ -115,8 +119,7 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
         }
         catch (EntityPersistenceException ex)
         {
-            // Lets keep this here just in-case someone attempts to spoof tokens. There's really no
-            // need for concurrency handling, but a DB failure will bubble up as a 500 without context.
+            // Lets keep this here just in-case someone attempts to spoof tokens. There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context.
             this.logger.LogError(ex, "Failed to logout from active session for user with ID: {UserAccountId}", userAccount.Id);
             throw new ConflictException("Logout failed due to a system error.", ex);
         }

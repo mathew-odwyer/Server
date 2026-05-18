@@ -1,7 +1,7 @@
 ﻿namespace Winterhaven.API.Presentation.Transformers;
 
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;

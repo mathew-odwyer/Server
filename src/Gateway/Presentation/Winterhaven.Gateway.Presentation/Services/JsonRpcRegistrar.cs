@@ -1,9 +1,10 @@
 ﻿namespace Winterhaven.Gateway.Presentation.Services;
 
-using Winterhaven.Gateway.Presentation.Targets;
 using StreamJsonRpc;
 using System;
 using System.Collections.Generic;
+
+using Winterhaven.Gateway.Presentation.Targets;
 
 internal sealed class JsonRpcRegistrar
 {

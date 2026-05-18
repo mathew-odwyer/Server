@@ -13,9 +13,9 @@ using Winterhaven.API.Core.Domain.Attributes.Users;
 public sealed class AuthorizationBehahviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    private readonly ILogger<AuthorizationBehahviour<TRequest, TResponse>> logger;
-
     private readonly IActorContext actorContext;
+
+    private readonly ILogger<AuthorizationBehahviour<TRequest, TResponse>> logger;
 
     public AuthorizationBehahviour(ILogger<AuthorizationBehahviour<TRequest, TResponse>> logger, IActorContext actorContext)
     {
@@ -36,8 +36,7 @@ public sealed class AuthorizationBehahviour<TRequest, TResponse> : IPipelineBeha
         {
             this.logger.LogError("Authenticated user required for request {RequestType} but no user was present.", type.FullName);
 
-            // This is an unexpected server/configuration issue (controller should have enforced
-            // [Authorize]). Throwing InvalidOperationException should always surface as a 500.
+            // This is an unexpected server/configuration issue (controller should have enforced [Authorize]). Throwing InvalidOperationException should always surface as a 500.
             throw new InvalidOperationException("Authenticated user required but not present in the current context.");
         }
 

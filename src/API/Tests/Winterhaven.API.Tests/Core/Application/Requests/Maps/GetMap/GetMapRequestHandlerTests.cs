@@ -17,9 +17,9 @@ internal sealed class GetMapRequestHandlerTests
 
     private ILogger<GetMapRequestHandler> logger;
 
-    private IMapLocator mapLocator;
-
     private MapData mapData;
+
+    private IMapLocator mapLocator;
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
@@ -35,6 +35,25 @@ internal sealed class GetMapRequestHandlerTests
         // Act and assert
         Assert.Throws<ArgumentNullException>(() =>
             new GetMapRequestHandler(this.logger, null));
+    }
+
+    [Test]
+    public async Task HandleShouldFetchMapUsingRequestName()
+    {
+        // Arrange
+        var request = new GetMapRequest(
+            Name: this.mapData.Name);
+
+        // Act
+        await this.handler
+            .Handle(request, default)
+            .ConfigureAwait(false);
+
+        // Assert
+        await this.mapLocator
+            .Received(1)
+            .LocateMapDataAsync(this.mapData.Name, Arg.Any<CancellationToken>())
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -55,25 +74,6 @@ internal sealed class GetMapRequestHandlerTests
             Assert.That(response.Name, Is.EqualTo(this.mapData.Name));
             Assert.That(response.Data, Is.EqualTo(this.mapData.Data));
         }
-    }
-
-    [Test]
-    public async Task HandleShouldFetchMapUsingRequestName()
-    {
-        // Arrange
-        var request = new GetMapRequest(
-            Name: this.mapData.Name);
-
-        // Act
-        await this.handler
-            .Handle(request, default)
-            .ConfigureAwait(false);
-
-        // Assert
-        await this.mapLocator
-            .Received(1)
-            .LocateMapDataAsync(this.mapData.Name, Arg.Any<CancellationToken>())
-            .ConfigureAwait(false);
     }
 
     [Test]

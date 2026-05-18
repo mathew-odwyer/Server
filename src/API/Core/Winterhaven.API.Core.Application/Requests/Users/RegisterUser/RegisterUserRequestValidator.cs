@@ -5,12 +5,12 @@ using FluentValidation.Validators;
 using Winterhaven.API.Core.Application.Validators.Users;
 
 /// <summary>
-/// Provides validation for the <see cref="RegisterUserRequest"/> class.
+///   Provides validation for the <see cref="RegisterUserRequest"/> class.
 /// </summary>
 public sealed class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RegisterUserRequestValidator"/> class.
+    ///   Initializes a new instance of the <see cref="RegisterUserRequestValidator"/> class.
     /// </summary>
     public RegisterUserRequestValidator()
     {

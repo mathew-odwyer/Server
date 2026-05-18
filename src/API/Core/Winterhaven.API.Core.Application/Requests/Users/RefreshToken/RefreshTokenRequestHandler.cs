@@ -14,84 +14,93 @@ using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Core.Domain.ValueObjects.Users;
 
 /// <summary>
-/// Provides a request handler used to refresh the JSON Web Token for the current user account.
+///   Provides a request handler used to refresh the JSON Web Token for the current user account.
 /// </summary>
 public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, RefreshTokenResponse>
 {
     /// <summary>
-    /// The logger.
-    /// </summary>
-    private readonly ILogger<RefreshTokenRequestHandler> logger;
-
-    /// <summary>
-    /// The secure token factory, used to generate a new JWT.
-    /// </summary>
-    private readonly ISecureTokenFactory secureTokenFactory;
-
-    /// <summary>
-    /// The secure token hasher, used to verify the current session.
-    /// </summary>
-    private readonly ISecureTokenHasher secureTokenHasher;
-
-    /// <summary>
-    /// The unit of work factory.
-    /// </summary>
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-
-    /// <summary>
-    /// The actor context, used to fetch the currently authenticated actor.
+    ///   The actor context, used to fetch the currently authenticated actor.
     /// </summary>
     private readonly IActorContext actorContext;
 
     /// <summary>
-    /// The user session token repository, used to store the currently active session for the user account.
+    ///   The logger.
     /// </summary>
-    private readonly IUserSessionTokenRepository userSessionTokenRepository;
+    private readonly ILogger<RefreshTokenRequestHandler> logger;
 
     /// <summary>
-    /// The user account repository, used to fetch the user account (if any) linked to the actor.
+    ///   The secure token factory, used to generate a new JWT.
+    /// </summary>
+    private readonly ISecureTokenFactory secureTokenFactory;
+
+    /// <summary>
+    ///   The secure token hasher, used to verify the current session.
+    /// </summary>
+    private readonly ISecureTokenHasher secureTokenHasher;
+
+    /// <summary>
+    ///   The unit of work factory.
+    /// </summary>
+    private readonly IUnitOfWorkFactory unitOfWorkFactory;
+
+    /// <summary>
+    ///   The user account repository, used to fetch the user account (if any) linked to the actor.
     /// </summary>
     private readonly IUserAccountRepository userAccountRepository;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RefreshTokenRequestHandler"/> class.
+    ///   The user session token repository, used to store the currently active session for the user account.
     /// </summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="secureTokenFactory">The secure token factory used to generate a new JWT.</param>
-    /// <param name="secureTokenHasher">The secure token hasher used to verify the current session.</param>
-    /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+    private readonly IUserSessionTokenRepository userSessionTokenRepository;
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="RefreshTokenRequestHandler"/> class.
+    /// </summary>
+    /// <param name="logger">
+    ///   The logger.
+    /// </param>
+    /// <param name="secureTokenFactory">
+    ///   The secure token factory used to generate a new JWT.
+    /// </param>
+    /// <param name="secureTokenHasher">
+    ///   The secure token hasher used to verify the current session.
+    /// </param>
+    /// <param name="unitOfWorkFactory">
+    ///   The unit of work factory.
+    /// </param>
     /// <param name="userSessionTokenRepository">
-    /// The user session token repository, used to store the currently active session for the user account.
+    ///   The user session token repository, used to store the currently active session for the user account.
     /// </param>
     /// <param name="actorContext">
-    /// The user account context, used to fetch the currently authenticated user.
+    ///   The user account context, used to fetch the currently authenticated user.
     /// </param>
-    /// <param name="userAccountRepository"></param>
+    /// <param name="userAccountRepository">
+    /// </param>
     /// <exception cref="ArgumentNullException">
-    /// Thrown when one of the following parameters is <c>null</c>:
-    /// <list type="bullet">
-    /// <item>
-    /// <description><paramref name="logger"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="secureTokenFactory"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="secureTokenHasher"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="unitOfWorkFactory"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="userSessionTokenRepository"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="actorContext"/></description>
-    /// </item>
-    /// <item>
-    /// <description><paramref name="userAccountRepository"/></description>
-    /// </item>
-    /// </list>
+    ///   Thrown when one of the following parameters is <c>null</c>:
+    ///   <list type="bullet">
+    ///     <item>
+    ///       <description><paramref name="logger"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="secureTokenFactory"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="secureTokenHasher"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="unitOfWorkFactory"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="userSessionTokenRepository"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="actorContext"/></description>
+    ///     </item>
+    ///     <item>
+    ///       <description><paramref name="userAccountRepository"/></description>
+    ///     </item>
+    ///   </list>
     /// </exception>
     public RefreshTokenRequestHandler(
         ILogger<RefreshTokenRequestHandler> logger,

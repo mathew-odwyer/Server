@@ -22,9 +22,9 @@ internal sealed class WebSocketRpcSession
 
     private readonly JsonRpcRegistrar registrar;
 
-    private readonly IUserAccountService userAccountService;
-
     private readonly ISessionAuthenticator sessionAuthenticator;
+
+    private readonly IUserAccountService userAccountService;
 
     public WebSocketRpcSession(
         ILogger<WebSocketRpcSession> logger,

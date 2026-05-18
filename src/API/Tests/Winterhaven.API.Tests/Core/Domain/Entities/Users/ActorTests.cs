@@ -21,7 +21,7 @@ internal sealed class ActorTests
     public void SystemUniqueIdentifierShouldReturnCorrectIdentifier()
     {
         // Arrange
-        var actor = Actor.SystemActor;
+        var actor = Actor.GetSystemActor();
         var uniqueIdentifier = Guid.Parse("AC892565-1CB6-4AE2-9616-2AA5E2385168");
 
         // Act

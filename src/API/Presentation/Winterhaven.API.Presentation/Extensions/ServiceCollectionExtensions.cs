@@ -20,51 +20,6 @@ using Winterhaven.API.Presentation.Transformers.Security;
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddApiControllersWithFilters(this IServiceCollection services)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-
-        services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = false);
-
-        services.AddControllersWithViews(x =>
-        {
-            x.Filters.Add<UnhandledExceptionFilterAttribute>();
-            x.Filters.Add<InvalidModelStateActionFilterAttribute>();
-            x.Filters.Add<ValidationExceptionFilterAttribute>();
-            x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
-            x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
-            x.Filters.Add<ConflictExceptionFilterAttribute>();
-            x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
-        });
-
-        return services;
-    }
-
-    internal static IServiceCollection AddApiAuthorization(this IServiceCollection services)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-
-        services.AddAuthorization();
-        services.AddHttpContextAccessor();
-
-        return services;
-    }
-
-    internal static IServiceCollection AddApiServices(this IServiceCollection services)
-    {
-        services.AddHealthChecks();
-        services.AddEndpointsApiExplorer();
-
-        services.AddOpenApi("v0.3.0", options =>
-        {
-            options.AddDocumentTransformer<WinterhavenTransformer>();
-            options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>();
-        });
-
-        return services;
-    }
-
     internal static IServiceCollection AddApiAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -102,6 +57,36 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
+    internal static IServiceCollection AddApiAuthorization(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddAuthorization();
+        services.AddHttpContextAccessor();
+
+        return services;
+    }
+
+    internal static IServiceCollection AddApiControllersWithFilters(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = false);
+
+        services.AddControllersWithViews(x =>
+        {
+            x.Filters.Add<UnhandledExceptionFilterAttribute>();
+            x.Filters.Add<InvalidModelStateActionFilterAttribute>();
+            x.Filters.Add<ValidationExceptionFilterAttribute>();
+            x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
+            x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
+            x.Filters.Add<ConflictExceptionFilterAttribute>();
+            x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
+        });
+
+        return services;
+    }
+
     internal static IServiceCollection AddApiMappings(this IServiceCollection services)
     {
         services.AddAutoMapper(x =>
@@ -109,6 +94,21 @@ internal static class ServiceCollectionExtensions
             x.AddProfile<UserMapper>();
             x.AddProfile<PlayerMapper>();
             x.AddProfile<MapMapper>();
+        });
+
+        return services;
+    }
+
+    internal static IServiceCollection AddApiServices(this IServiceCollection services)
+    {
+        services.AddHealthChecks();
+        services.AddEndpointsApiExplorer();
+
+        services.AddOpenApi("v0.3.0", options =>
+        {
+            options.AddDocumentTransformer<WinterhavenTransformer>();
+            options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>();
         });
 
         return services;

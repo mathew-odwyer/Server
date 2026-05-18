@@ -36,7 +36,7 @@ internal sealed class ActorContext : IActorContext
                 }
             }
 
-            return Actor.SystemActor;
+            return Actor.GetSystemActor();
         }
     }
 }

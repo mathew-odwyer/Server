@@ -7,10 +7,10 @@ using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Domain.Entities;
 
 /// <summary>
-/// Provides configuration for entities that inherit from <see cref="EntityBase"/>.
+///   Provides configuration for entities that inherit from <see cref="EntityBase"/>.
 /// </summary>
 /// <typeparam name="TEntity">
-/// The type of the entity being configured, which must inherit from <see cref="EntityBase"/>.
+///   The type of the entity being configured, which must inherit from <see cref="EntityBase"/>.
 /// </typeparam>
 /// <seealso cref="IEntityTypeConfiguration{TEntity}"/>
 [ExcludeFromCodeCoverage]

@@ -3,12 +3,12 @@
 using FluentValidation;
 
 /// <summary>
-/// Provides validation for a <see cref="LoginUserRequest"/>.
+///   Provides validation for a <see cref="LoginUserRequest"/>.
 /// </summary>
 public sealed class LoginUserRequestValidator : AbstractValidator<LoginUserRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="LoginUserRequestValidator"/> class.
+    ///   Initializes a new instance of the <see cref="LoginUserRequestValidator"/> class.
     /// </summary>
     public LoginUserRequestValidator()
     {

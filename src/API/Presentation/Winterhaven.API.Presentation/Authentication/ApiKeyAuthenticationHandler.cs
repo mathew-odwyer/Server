@@ -42,9 +42,7 @@ internal sealed class ApiKeyAuthenticationHandler : AuthenticationHandler<Authen
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, this.Scheme.Name);
 
-        // From here, if the server attempts to make a call to a MediatR request handler on behalf
-        // of a user that is [Authorize] it will fail However, this will give the server authority
-        // to make requests for things like fetching maps, NPC data, etc.
+        // From here, if the server attempts to make a call to a MediatR request handler on behalf of a user that is [Authorize] it will fail However, this will give the server authority to make requests for things like fetching maps, NPC data, etc.
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
 }

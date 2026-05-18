@@ -12,9 +12,9 @@ public interface ISessionAuthenticator
 
     bool IsAuthenticated { get; }
 
-    void Refresh(UserSession userSession);
-
     void Authenticate(UserSession usersSession);
 
     void Invalidate();
+
+    void Refresh(UserSession userSession);
 }

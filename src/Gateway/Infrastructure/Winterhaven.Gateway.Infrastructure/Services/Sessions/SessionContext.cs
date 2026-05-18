@@ -15,16 +15,16 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public UserSession? Session { get; private set; }
+    public event EventHandler<SessionAuthenticatedEventArgs>? SessionAuthenticated;
+
+    public event EventHandler<SessionAuthenticatedEventArgs>? SessionRefreshed;
 
     public bool IsAuthenticated
     {
         get { return this.Session != null; }
     }
 
-    public event EventHandler<SessionAuthenticatedEventArgs>? SessionAuthenticated;
-
-    public event EventHandler<SessionAuthenticatedEventArgs>? SessionRefreshed;
+    public UserSession? Session { get; private set; }
 
     public void Authenticate(UserSession userSession)
     {
@@ -38,11 +38,18 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
         this.Session = userSession;
         this.logger.LogDebug("User session authenticated: '{Username}'", this.Session.Username);
 
-        this.SessionAuthenticated?.Invoke(this, new SessionAuthenticatedEventArgs()
+        this.SessionAuthenticated?.Invoke(this, new SessionAuthenticatedEventArgs(userSession.Username, userSession.AccessTokenExpiry));
+    }
+
+    public void Invalidate()
+    {
+        if (!this.IsAuthenticated)
         {
-            Username = userSession.Username,
-            AccessTokenExpiry = userSession.AccessTokenExpiry,
-        });
+            return;
+        }
+
+        this.logger.LogDebug("Invalidating user session for username: '{Username}'", this.Session!.Username!);
+        this.Session = null;
     }
 
     public void Refresh(UserSession userSession)
@@ -57,21 +64,6 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
         this.Session = userSession;
         this.logger.LogDebug("User session refreshed: '{Username}'", this.Session.Username);
 
-        this.SessionRefreshed?.Invoke(this, new SessionAuthenticatedEventArgs()
-        {
-            Username = userSession.Username,
-            AccessTokenExpiry = userSession.AccessTokenExpiry,
-        });
-    }
-
-    public void Invalidate()
-    {
-        if (!this.IsAuthenticated)
-        {
-            return;
-        }
-
-        this.logger.LogDebug("Invalidating user session for username: '{Username}'", this.Session!.Username!);
-        this.Session = null;
+        this.SessionRefreshed?.Invoke(this, new SessionAuthenticatedEventArgs(userSession.Username, userSession.AccessTokenExpiry));
     }
 }

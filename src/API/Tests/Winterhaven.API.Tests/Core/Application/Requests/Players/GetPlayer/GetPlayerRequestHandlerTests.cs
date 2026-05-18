@@ -10,12 +10,16 @@ using Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.Common.DTOs.Players;
 using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.Common.DTOs.Players;
 
 [TestFixture]
 internal sealed class GetPlayerRequestHandlerTests
 {
+    private Actor actor;
+
+    private IActorContext actorContext;
+
     private GetPlayerRequestHandler handler;
 
     private ILogger<GetPlayerRequestHandler> logger;
@@ -26,11 +30,7 @@ internal sealed class GetPlayerRequestHandlerTests
 
     private UserAccount userAccount;
 
-    private IActorContext actorContext;
-
     private IUserAccountRepository userAccountRepository;
-
-    private Actor actor;
 
     [Test]
     public void ConstructorShouldShouldThrowArgumentNullExceptionWhenActorContextIsNull()
@@ -54,6 +54,19 @@ internal sealed class GetPlayerRequestHandlerTests
     }
 
     [Test]
+    public async Task HandleShouldFetchUserAccountUsingActorId()
+    {
+        // Arrange
+        var request = new GetPlayerRequest();
+
+        // Act
+        await this.handler.Handle(request, default).ConfigureAwait(false);
+
+        // Assert
+        await this.userAccountRepository.Received(1).GetByIdAsync(this.actor.Id).ConfigureAwait(false);
+    }
+
+    [Test]
     public async Task HandleShouldShouldReturnPlayerDtoWhenPlayerIsFetched()
     {
         // Arrange
@@ -69,6 +82,13 @@ internal sealed class GetPlayerRequestHandlerTests
             Assert.That(response.X, Is.EqualTo(this.playerDto.X));
             Assert.That(response.Y, Is.EqualTo(this.playerDto.Y));
         }
+    }
+
+    [Test]
+    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
+    {
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentNullException>(() => this.handler.Handle(null, default));
     }
 
     [Test]
@@ -90,26 +110,6 @@ internal sealed class GetPlayerRequestHandlerTests
             Assert.That(exception!.Name, Is.EqualTo(nameof(UserAccount)));
             Assert.That(exception.Key, Is.EqualTo(this.actor.Id));
         }
-    }
-
-    [Test]
-    public async Task HandleShouldFetchUserAccountUsingActorId()
-    {
-        // Arrange
-        var request = new GetPlayerRequest();
-
-        // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
-
-        // Assert
-        await this.userAccountRepository.Received(1).GetByIdAsync(this.actor.Id).ConfigureAwait(false);
-    }
-
-    [Test]
-    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
-    {
-        // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => this.handler.Handle(null, default));
     }
 
     [SetUp]

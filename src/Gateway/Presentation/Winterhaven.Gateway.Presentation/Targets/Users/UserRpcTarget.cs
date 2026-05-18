@@ -44,6 +44,29 @@ public sealed class UserRpcTarget : RpcTargetBase
         this.validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
     }
 
+    [JsonRpcMethod("user.login", UseSingleObjectParameterDeserialization = true)]
+    public async Task<UserLoginRpcResult> LoginAsync(UserLoginRpcParameters parameters, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(parameters);
+        Validator.Validate(this.validatorFactory, parameters);
+
+        var response = await this.userAccountService.LoginUserAsync(parameters.Username, parameters.Password, cancellationToken).ConfigureAwait(false);
+
+        return new UserLoginRpcResult(
+            RefreshToken: response.RefreshToken);
+    }
+
+    [JsonRpcAuthorize]
+    [JsonRpcMethod("user.logout")]
+    public async Task<UserLogoutRpcResult> LogoutAsync(CancellationToken cancellationToken)
+    {
+        await this.userAccountService.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
+
+        // There's no need to disconnect the client when they logout explicitly. The client would be returned to the main menu and can choose to login again or disconnect.
+        return new UserLogoutRpcResult(
+            Success: true);
+    }
+
     [JsonRpcAuthorize]
     [JsonRpcMethod("user.refresh", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserRefreshRpcResult> RefreshAsync(UserRefreshRpcParameters parameters, CancellationToken cancellationToken)
@@ -57,18 +80,6 @@ public sealed class UserRpcTarget : RpcTargetBase
             RefreshToken: response.RefreshToken);
     }
 
-    [JsonRpcAuthorize]
-    [JsonRpcMethod("user.logout")]
-    public async Task<UserLogoutRpcResult> LogoutAsync(CancellationToken cancellationToken)
-    {
-        await this.userAccountService.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
-
-        // There's no need to disconnect the client when they logout explicitly.
-        // The client would be returned to the main menu and can choose to login again or disconnect.
-        return new UserLogoutRpcResult(
-            Success: true);
-    }
-
     [JsonRpcMethod("user.register", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserRegisterRpcResult> RegisterAsync(UserRegisterRpcParameters parameters, CancellationToken cancellationToken)
     {
@@ -79,17 +90,5 @@ public sealed class UserRpcTarget : RpcTargetBase
 
         return new UserRegisterRpcResult(
             Success: response.Success);
-    }
-
-    [JsonRpcMethod("user.login", UseSingleObjectParameterDeserialization = true)]
-    public async Task<UserLoginRpcResult> LoginAsync(UserLoginRpcParameters parameters, CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(parameters);
-        Validator.Validate(this.validatorFactory, parameters);
-
-        var response = await this.userAccountService.LoginUserAsync(parameters.Username, parameters.Password, cancellationToken).ConfigureAwait(false);
-
-        return new UserLoginRpcResult(
-            RefreshToken: response.RefreshToken);
     }
 }

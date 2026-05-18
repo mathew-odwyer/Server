@@ -14,9 +14,9 @@ using Winterhaven.API.Infrastructure.Options.Maps;
 
 internal sealed class MapLocator : IMapLocator
 {
-    private readonly ILogger<MapLocator> logger;
-
     private readonly IFileSystem fileSystem;
+
+    private readonly ILogger<MapLocator> logger;
 
     private readonly IOptions<MapStorageOptions> options;
 
@@ -34,8 +34,7 @@ internal sealed class MapLocator : IMapLocator
         this.logger.LogDebug("Locating map '{MapName}'", name);
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-        // This is required to ensure that on both windows and Linux operating systems the file path
-        // can be located regardless of case-sensitivity.
+        // This is required to ensure that on both windows and Linux operating systems the file path can be located regardless of case-sensitivity.
         string fullPath = Path.Combine(this.options.Value.BasePath, $"{name.ToLowerInvariant()}.tmx");
 #pragma warning restore CA1308 // Normalize strings to uppercase
 

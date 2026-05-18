@@ -14,9 +14,9 @@ internal sealed class UserAccountClient : IUserAccountClient
 
     private static readonly Uri LogoutUri = new("Logout", UriKind.Relative);
 
-    private static readonly Uri RegisterUri = new("Register", UriKind.Relative);
-
     private static readonly Uri RefreshTokenUri = new("RefreshToken", UriKind.Relative);
+
+    private static readonly Uri RegisterUri = new("Register", UriKind.Relative);
 
     private readonly HttpClient client;
 

@@ -7,10 +7,10 @@ using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Domain.Entities;
 
 /// <summary>
-/// Provides configuration for entities that inherit from <see cref="AuditableEntityBase"/>.
+///   Provides configuration for entities that inherit from <see cref="AuditableEntityBase"/>.
 /// </summary>
 /// <typeparam name="TEntity">
-/// The type of the entity being configured, which must inherit from <see cref="AuditableEntityBase"/>.
+///   The type of the entity being configured, which must inherit from <see cref="AuditableEntityBase"/>.
 /// </typeparam>
 /// <seealso cref="EntityTypeConfigurationBase{TEntity}"/>
 [ExcludeFromCodeCoverage]

@@ -13,7 +13,7 @@ using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Domain.Entities;
 
 /// <summary>
-/// Intercepts save changes operations to update auditing fields for entities that inherit from <see cref="AuditableEntityBase"/>.
+///   Intercepts save changes operations to update auditing fields for entities that inherit from <see cref="AuditableEntityBase"/>.
 /// </summary>
 [ExcludeFromCodeCoverage]
 public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
@@ -21,11 +21,10 @@ public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesIntercept
     private readonly IServiceProvider serviceProvider;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AuditableEntitySaveChangesInterceptor"/> class.
+    ///   Initializes a new instance of the <see cref="AuditableEntitySaveChangesInterceptor"/> class.
     /// </summary>
     /// <param name="serviceProvider">
-    /// Specifies a <see cref="IServiceProvider"/> that is used to resolve the <see
-    /// cref="IActorContext"/> upon updating entities.
+    ///   Specifies a <see cref="IServiceProvider"/> that is used to resolve the <see cref="IActorContext"/> upon updating entities.
     /// </param>
     public AuditableEntitySaveChangesInterceptor(IServiceProvider serviceProvider)
     {
@@ -49,21 +48,25 @@ public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesIntercept
     }
 
     /// <summary>
-    /// Checks if any owned entities have changed in the given <see cref="EntityEntry"/>.
+    ///   Checks if any owned entities have changed in the given <see cref="EntityEntry"/>.
     /// </summary>
     /// <param name="entry">
-    /// Specifies an <see cref="EntityEntry"/> to check for changes in owned entities.
+    ///   Specifies an <see cref="EntityEntry"/> to check for changes in owned entities.
     /// </param>
-    /// <returns>Returns <c>true</c> if any owned entities have changed; otherwise, <c>false</c>.</returns>
+    /// <returns>
+    ///   Returns <c>true</c> if any owned entities have changed; otherwise, <c>false</c>.
+    /// </returns>
     private static bool HasChangedOwnedEntities(EntityEntry entry)
     {
         return entry.References.Any(x => x.TargetEntry?.Metadata.IsOwned() == true && (x.TargetEntry.State == EntityState.Added || x.TargetEntry.State == EntityState.Modified));
     }
 
     /// <summary>
-    /// Updates the auditing fields of entities in the given <see cref="DbContext"/>.
+    ///   Updates the auditing fields of entities in the given <see cref="DbContext"/>.
     /// </summary>
-    /// <param name="context">Specifies a <see cref="DbContext"/> whose entities are being audited.</param>
+    /// <param name="context">
+    ///   Specifies a <see cref="DbContext"/> whose entities are being audited.
+    /// </param>
     private void UpdateEntities(DbContext? context)
     {
         if (context == null)

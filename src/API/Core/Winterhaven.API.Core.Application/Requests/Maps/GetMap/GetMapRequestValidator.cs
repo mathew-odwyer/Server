@@ -3,12 +3,12 @@
 using FluentValidation;
 
 /// <summary>
-/// Provides validation logic for a <see cref="GetMapRequest"/>.
+///   Provides validation logic for a <see cref="GetMapRequest"/>.
 /// </summary>
 public sealed class GetMapRequestValidator : AbstractValidator<GetMapRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="GetMapRequestValidator"/> class.
+    ///   Initializes a new instance of the <see cref="GetMapRequestValidator"/> class.
     /// </summary>
     public GetMapRequestValidator()
     {

@@ -28,6 +28,12 @@ internal sealed class SecureTokenFactory : ISecureTokenFactory
         this.options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
+    public string GenerateSecureToken()
+    {
+        byte[] bytes = RandomNumberGenerator.GetBytes(32);
+        return Convert.ToBase64String(bytes);
+    }
+
     public UserToken GenerateUserToken(UserTokenParameters parameters)
     {
         ArgumentNullException.ThrowIfNull(parameters);
@@ -40,14 +46,6 @@ internal sealed class SecureTokenFactory : ISecureTokenFactory
             RefreshToken: refreshToken,
             AccessTokenExpiryDate: DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
             RefreshTokenExpiryDate: DateTime.UtcNow.AddDays(this.options.Value.RefreshTokenExpiryDays));
-    }
-
-    public string GenerateSecureToken()
-    {
-        byte[] bytes = RandomNumberGenerator.GetBytes(32);
-        string token = Convert.ToBase64String(bytes);
-
-        return token;
     }
 
     private string GenerateAccessToken(UserTokenParameters parameters)

@@ -24,9 +24,7 @@ internal sealed class UserSessionValidationMiddleware
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(userSessionTokenRepository);
 
-        // If the user is not authenticated, we can skip the validation. This is because the user
-        // session validation is only necessary for authenticated users. When the user is not
-        // authenticated, we do not have any user information to validate against.
+        // If the user is not authenticated, we can skip the validation. This is because the user session validation is only necessary for authenticated users. When the user is not authenticated, we do not have any user information to validate against.
         if (context.User.Identity?.IsAuthenticated == true)
         {
             // If the user is the server making a request, continue.
@@ -40,9 +38,7 @@ internal sealed class UserSessionValidationMiddleware
 
             string? identifier = context.User.FindFirstValue("identifier");
 
-            // If the claims are null, empty or whitespace we can't proceed with validation.
-            // However, because the user has authenticated, something has gone wrong so we should
-            // return a 401 Unauthorized.
+            // If the claims are null, empty or whitespace we can't proceed with validation. However, because the user has authenticated, something has gone wrong so we should return a 401 Unauthorized.
             if (string.IsNullOrWhiteSpace(identifier) || !Guid.TryParse(identifier, out var userAccountId))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -54,8 +50,7 @@ internal sealed class UserSessionValidationMiddleware
             // Finally, check whether the user has an active session.
             var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccountId, context.RequestAborted).ConfigureAwait(false);
 
-            // If they don't, we can assume they're not authorized to make the requset because
-            // either the JWT has expired or they've logged out.
+            // If they don't, we can assume they're not authorized to make the requset because either the JWT has expired or they've logged out.
             if (activeSession == null)
             {
                 this.logger.LogWarning("No active session found for user {UserId}. Returning 401. Path: {Path}", identifier, context.Request.Path);

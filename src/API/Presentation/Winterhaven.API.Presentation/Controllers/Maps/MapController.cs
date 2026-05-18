@@ -11,22 +11,26 @@ using Winterhaven.API.Presentation.Authentication;
 using Winterhaven.Common.DTOs.Maps;
 
 /// <summary>
-/// Provides API endpoints for handling maps.
+///   Provides API endpoints for handling maps.
 /// </summary>
 /// <seealso cref="ApiControllerBase"/>
 [ExcludeFromCodeCoverage]
 public sealed class MapController : ApiControllerBase
 {
     /// <summary>
-    /// Retrieves a specific map associated with the specified <see cref="GetMapRequestDto.Name"/>.
+    ///   Retrieves a specific map associated with the specified <see cref="GetMapRequestDto.Name"/>.
     /// </summary>
-    /// <param name="requestDto">The request data transfer object used to fetch the map.</param>
-    /// <param name="cancellationToken">
-    /// Specifies a <see cref="CancellationToken"/> that can be used to cancel the operation.
+    /// <param name="requestDto">
+    ///   The request data transfer object used to fetch the map.
     /// </param>
-    /// <returns>Returns a file containing the map data.</returns>
+    /// <param name="cancellationToken">
+    ///   Specifies a <see cref="CancellationToken"/> that can be used to cancel the operation.
+    /// </param>
+    /// <returns>
+    ///   Returns a file containing the map data.
+    /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// The specified <paramref name="requestDto"/> parameter cannot be null.
+    ///   The specified <paramref name="requestDto"/> parameter cannot be null.
     /// </exception>
     [HttpGet]
     [Authorize(AuthenticationSchemes = WinterhavenBearerDefaults.ServerAuthenticationScheme)]

@@ -7,7 +7,7 @@ using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
 /// <summary>
-/// Configures the <see cref="UserSessionToken"/> entity.
+///   Configures the <see cref="UserSessionToken"/> entity.
 /// </summary>
 /// <seealso cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
 [ExcludeFromCodeCoverage]

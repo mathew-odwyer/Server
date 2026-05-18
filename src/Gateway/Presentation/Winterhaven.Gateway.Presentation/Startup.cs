@@ -41,7 +41,7 @@ internal sealed class Startup
         };
 
         // Clear the default restrictions so the docker internal bridge network is trusted.
-        options.KnownIPNetworks.Clear();
+        options.KnownNetworks.Clear();
         options.KnownProxies.Clear();
 
         application.UseForwardedHeaders(options);

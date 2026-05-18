@@ -22,6 +22,13 @@ public sealed class HealthRpcTarget : RpcTargetBase
         this.validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
     }
 
+    [JsonRpcMethod("health.heartbeat")]
+    public static HealthHeartbeatRpcResult Heartbeat()
+    {
+        return new HealthHeartbeatRpcResult(
+            IsAlive: true);
+    }
+
     [JsonRpcMethod("health.ping", UseSingleObjectParameterDeserialization = true)]
     public HealthPingRpcResult Ping(HealthPingRpcParameters parameters)
     {
@@ -30,12 +37,5 @@ public sealed class HealthRpcTarget : RpcTargetBase
 
         return new HealthPingRpcResult(
             TimeStamp: parameters.TimeStamp);
-    }
-
-    [JsonRpcMethod("health.heartbeat")]
-    public static HealthHeartbeatRpcResult Heartbeat()
-    {
-        return new HealthHeartbeatRpcResult(
-            IsAlive: true);
     }
 }

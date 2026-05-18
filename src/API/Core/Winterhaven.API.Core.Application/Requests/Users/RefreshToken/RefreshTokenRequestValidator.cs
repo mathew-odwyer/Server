@@ -3,12 +3,12 @@
 using FluentValidation;
 
 /// <summary>
-/// Provides validation for a <see cref="RefreshTokenRequest"/>.
+///   Provides validation for a <see cref="RefreshTokenRequest"/>.
 /// </summary>
 public sealed class RefreshTokenRequestValidator : AbstractValidator<RefreshTokenRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RefreshTokenRequestValidator"/> class.
+    ///   Initializes a new instance of the <see cref="RefreshTokenRequestValidator"/> class.
     /// </summary>
     public RefreshTokenRequestValidator()
     {

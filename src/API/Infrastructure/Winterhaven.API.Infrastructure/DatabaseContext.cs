@@ -21,7 +21,7 @@ internal sealed class DatabaseContext : IdentityDbContext<IdentityUser<Guid>, Id
         ArgumentNullException.ThrowIfNull(builder);
 
         builder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
-        builder.Entity<Actor>().HasData(Actor.SystemActor);
+        builder.Entity<Actor>().HasData(Actor.GetSystemActor());
 
         base.OnModelCreating(builder);
     }
