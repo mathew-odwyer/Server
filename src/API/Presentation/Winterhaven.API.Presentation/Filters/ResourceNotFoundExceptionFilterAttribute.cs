@@ -9,7 +9,7 @@ using Winterhaven.API.Core.Domain.Exceptions;
 
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-internal sealed class EntityNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
+internal sealed class ResourceNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext context)
     {
@@ -25,7 +25,7 @@ internal sealed class EntityNotFoundExceptionFilterAttribute : ExceptionFilterAt
             var details = new ProblemDetails
             {
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4",
-                Title = "Entity Not Found",
+                Title = "Resource Not Found",
                 Detail = exception.Message,
                 Status = StatusCodes.Status404NotFound,
             };

@@ -79,7 +79,7 @@ internal static class ServiceCollectionExtensions
             x.Filters.Add<InvalidModelStateActionFilterAttribute>();
             x.Filters.Add<ValidationExceptionFilterAttribute>();
             x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
-            x.Filters.Add<EntityNotFoundExceptionFilterAttribute>();
+            x.Filters.Add<ResourceNotFoundExceptionFilterAttribute>();
             x.Filters.Add<ConflictExceptionFilterAttribute>();
             x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
         });

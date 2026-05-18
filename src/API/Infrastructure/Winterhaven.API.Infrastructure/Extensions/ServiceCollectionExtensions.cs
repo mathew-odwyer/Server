@@ -84,7 +84,6 @@ public static class ServiceCollectionExtensions
             x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehahviour<,>));
             x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
             x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
 
             x.RegisterServicesFromAssemblyContaining<RegisterUserRequestHandler>();
         });

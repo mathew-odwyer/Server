@@ -35,6 +35,7 @@ internal sealed class GatewayJsonRpc : JsonRpc
 
         this.sessionAuthenticator.SessionAuthenticated += this.SessionAuthenticator_SessionAuthenticated;
         this.sessionAuthenticator.SessionRefreshed += this.SessionAuthenticator_SessionRefreshed;
+        this.sessionAuthenticator.SessionInvalidated += this.SessionAuthenticator_SessionInvalidated;
     }
 
     protected override JsonRpcError.ErrorDetail CreateErrorDetails(JsonRpcRequest request, Exception exception)
@@ -136,7 +137,13 @@ internal sealed class GatewayJsonRpc : JsonRpc
         this.ReplaceExpiryTimer(e.Username, e.AccessTokenExpiry);
     }
 
-    private void SessionAuthenticator_SessionRefreshed(object? sender, SessionAuthenticatedEventArgs e)
+    private void SessionAuthenticator_SessionInvalidated(object? sender, SessionInvalidatedEventArgs e)
+    {
+        // Ensures if the access token expires, we do not disconnect as we're already invalidated.
+        this.expiryTokenSource?.Dispose();
+    }
+
+    private void SessionAuthenticator_SessionRefreshed(object? sender, SessionRefreshedEventArgs e)
     {
         this.ReplaceExpiryTimer(e.Username, e.AccessTokenExpiry);
     }

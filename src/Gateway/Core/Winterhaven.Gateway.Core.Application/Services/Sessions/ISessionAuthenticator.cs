@@ -8,7 +8,9 @@ public interface ISessionAuthenticator
 {
     event EventHandler<SessionAuthenticatedEventArgs>? SessionAuthenticated;
 
-    event EventHandler<SessionAuthenticatedEventArgs>? SessionRefreshed;
+    event EventHandler<SessionInvalidatedEventArgs>? SessionInvalidated;
+
+    event EventHandler<SessionRefreshedEventArgs>? SessionRefreshed;
 
     bool IsAuthenticated { get; }
 

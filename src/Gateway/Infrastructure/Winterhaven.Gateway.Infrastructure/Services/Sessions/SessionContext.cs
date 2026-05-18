@@ -17,7 +17,9 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
 
     public event EventHandler<SessionAuthenticatedEventArgs>? SessionAuthenticated;
 
-    public event EventHandler<SessionAuthenticatedEventArgs>? SessionRefreshed;
+    public event EventHandler<SessionInvalidatedEventArgs>? SessionInvalidated;
+
+    public event EventHandler<SessionRefreshedEventArgs>? SessionRefreshed;
 
     public bool IsAuthenticated
     {
@@ -48,8 +50,12 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
             return;
         }
 
-        this.logger.LogDebug("Invalidating user session for username: '{Username}'", this.Session!.Username!);
+        string username = this.Session!.Username;
+
         this.Session = null;
+        this.logger.LogDebug("Invalidated user session for username: '{Username}'", username);
+
+        this.SessionInvalidated?.Invoke(this, new SessionInvalidatedEventArgs(username));
     }
 
     public void Refresh(UserSession userSession)
@@ -64,6 +70,6 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
         this.Session = userSession;
         this.logger.LogDebug("User session refreshed: '{Username}'", this.Session.Username);
 
-        this.SessionRefreshed?.Invoke(this, new SessionAuthenticatedEventArgs(userSession.Username, userSession.AccessTokenExpiry));
+        this.SessionRefreshed?.Invoke(this, new SessionRefreshedEventArgs(userSession.Username, userSession.AccessTokenExpiry));
     }
 }

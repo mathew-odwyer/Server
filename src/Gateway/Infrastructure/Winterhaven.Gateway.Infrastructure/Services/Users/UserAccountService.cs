@@ -53,7 +53,6 @@ internal sealed class UserAccountService : IUserAccountService
     public async Task<UserLoginResult> LoginUserAsync(string username, string password, CancellationToken cancellationToken)
     {
         ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserAccountService));
-
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
@@ -129,6 +128,7 @@ internal sealed class UserAccountService : IUserAccountService
 
     public async Task<UserRefreshResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
     {
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserAccountService));
         ArgumentException.ThrowIfNullOrWhiteSpace(refreshToken);
 
         if (!this.sessionAuthenticator.IsAuthenticated)

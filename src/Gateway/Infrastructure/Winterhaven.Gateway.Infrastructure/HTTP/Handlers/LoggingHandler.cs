@@ -2,10 +2,12 @@
 
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
+[ExcludeFromCodeCoverage]
 internal sealed class LoggingHandler : DelegatingHandler
 {
     private readonly ILogger<LoggingHandler> logger;

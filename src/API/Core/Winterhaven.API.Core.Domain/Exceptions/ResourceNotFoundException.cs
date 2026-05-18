@@ -14,7 +14,6 @@ public sealed class ResourceNotFoundException : Exception
     ///   Initializes a new instance of the <see cref="ResourceNotFoundException"/> class.
     /// </summary>
     public ResourceNotFoundException()
-        : base()
     {
     }
 
@@ -53,7 +52,7 @@ public sealed class ResourceNotFoundException : Exception
     ///   Specifies an <see cref="object"/> representing the key of the resource that was not found.
     /// </param>
     public ResourceNotFoundException(string name, object key)
-        : base($"Entity '{name}' ({key}) was not found.")
+        : base($"Resource '{name}' ({key}) was not found.")
     {
         this.Name = name;
         this.Key = key;

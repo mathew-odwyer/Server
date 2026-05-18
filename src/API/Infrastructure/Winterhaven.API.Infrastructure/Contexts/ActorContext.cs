@@ -30,9 +30,9 @@ internal sealed class ActorContext : IActorContext
             {
                 string? identifier = user.FindFirstValue("identifier");
 
-                if (!string.IsNullOrWhiteSpace(identifier) && Guid.TryParse(identifier, out var userAccountId))
+                if (!string.IsNullOrWhiteSpace(identifier) && Guid.TryParse(identifier, out var actorId))
                 {
-                    return this.actorRepository.GetById(userAccountId) ?? throw new ResourceNotFoundException(nameof(Core.Domain.Entities.Users.Actor), userAccountId);
+                    return this.actorRepository.GetById(actorId) ?? throw new ResourceNotFoundException(nameof(Core.Domain.Entities.Users.Actor), actorId);
                 }
             }
 
