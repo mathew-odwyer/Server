@@ -34,13 +34,13 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
 
-        // Forward headers to maintain origin of client.
+        // Read X-Forwarded-For and X-Forwarded-Proto headers set by the reverse proxy so the app sees the real client IP and protocol instead of the proxy's.
         var options = new ForwardedHeadersOptions
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
         };
 
-        // Clear the default restrictions so the docker internal bridge network is trusted.
+        // Clear the default known network/ proxy restrictions since our reverse proxy runs on Docker's internal bridge network, which isn't trusted by default.
         options.KnownNetworks.Clear();
         options.KnownProxies.Clear();
 
