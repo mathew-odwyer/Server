@@ -1,0 +1,21 @@
+{
+    # Enables structured logging to stdout
+    log {
+        format console
+    }
+}
+
+http://localhost {
+    respond "OK"
+}
+
+{$APP_DOMAIN} {
+    tls {$TLS_EMAIL}
+
+    reverse_proxy {$APP_HOST}:{$APP_PORT} {
+        transport http {
+            keepalive 35s
+            keepalive_idle_conns 10
+        }
+    }
+}

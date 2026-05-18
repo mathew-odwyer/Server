@@ -1,0 +1,50 @@
+﻿namespace Winterhaven.API.Presentation.Transformers.Security;
+
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+[ExcludeFromCodeCoverage]
+internal sealed class BearerSecuritySchemeTransformer : IOpenApiDocumentTransformer
+{
+    public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+    {
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+
+        document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter your JWT token."
+        };
+
+        var scheme = new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        };
+
+        var requirement = new OpenApiSecurityRequirement
+        {
+            [scheme] = []
+        };
+
+        foreach (var operation in document.Paths.Values.SelectMany(path => (IEnumerable<OpenApiOperation>?)path.Operations?.Values ?? []))
+        {
+            operation.Security ??= [];
+            operation.Security.Add(requirement);
+        }
+
+        return Task.CompletedTask;
+    }
+}

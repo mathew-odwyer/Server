@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#91] - Gateway WebSocket Server (_by [@mathew-odwyer]_).
 - [#72] - Communication via NATS Server (_by [@mathew-odwyer]_).
 
 ## [v0.2.0] - 05-12-2025
@@ -45,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#91]: https://github.com/mathew-odwyer/Server/issues/91
 [#72]: https://github.com/mathew-odwyer/Server/issues/72
 [#34]: https://github.com/mathew-odwyer/Server/issues/34
 [#25]: https://github.com/mathew-odwyer/Server/issues/25

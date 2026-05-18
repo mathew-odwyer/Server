@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+	<PackageReference Include="FluentValidation" />
+    <PackageReference Include="StreamJsonRpc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Winterhaven.Gateway.Infrastructure\Winterhaven.Gateway.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

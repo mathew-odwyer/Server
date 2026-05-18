@@ -60,7 +60,8 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
 | Component | Technology | Purpose |
 |-----------|-----------|---------|
 | Client | GameMaker (GML) | Game rendering, input handling, client-side prediction |
-| Game Server | GameMaker (GML) | Real-time game logic, state authority, world simulation |
+| Gateway | ASP.NET Core, C#, StreamJsonRpc | Centralized connection service for all clients |
+| Room | GameMaker (GML) | Real-time game logic, state authority, world simulation |
 | Web API | ASP.NET Core, C# | Authentication, user management, data persistence |
 | Database | MSSQL + EF Core | Player data, accounts, persistent storage |
 | Reverse Proxy | Caddy | SSL/TLS termination, routing |
@@ -114,6 +115,6 @@ _This project is dedicated to my dearly departed partner Bellamy, I love you lev
 
 ## 📄 License
 
-Copyright © 2025 Mathew O'Dwyer. All rights reserved.
+Copyright © 2026 Mathew O'Dwyer. All rights reserved.
 
 This software is proprietary and may not be redistributed, modified, or used commercially without explicit permission from Mathew O'Dwyer.

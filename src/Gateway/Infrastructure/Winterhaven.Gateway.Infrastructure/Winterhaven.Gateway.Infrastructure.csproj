@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+	<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+	<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
+	<PackageReference Include="Microsoft.Extensions.Http" />
+	<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+	<PackageReference Include="System.IO.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Winterhaven.Common.Extensions\Winterhaven.Common.Extensions.csproj" />
+    <ProjectReference Include="..\..\Core\Winterhaven.Gateway.Core.Application\Winterhaven.Gateway.Core.Application.csproj" />
+  </ItemGroup>
+</Project>

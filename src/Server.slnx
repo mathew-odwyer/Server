@@ -1,0 +1,80 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/API/" />
+  <Folder Name="/API/Core/">
+    <Project Path="API/Core/Winterhaven.API.Core.Application/Winterhaven.API.Core.Application.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="API/Core/Winterhaven.API.Core.Domain/Winterhaven.API.Core.Domain.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/API/Infrastructure/">
+    <Project Path="API/Infrastructure/Winterhaven.API.Infrastructure/Winterhaven.API.Infrastructure.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/API/Presentation/">
+    <Project Path="API/Presentation/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/API/Tests/">
+    <Project Path="API/Tests/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Common/">
+    <Project Path="Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj" Id="3e5adda7-18aa-4e6b-9ce9-c7fb7a4198fe">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj" Id="20cb5f40-08c9-424c-80aa-d6974ce4b194">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Gateway/" />
+  <Folder Name="/Gateway/Core/">
+    <Project Path="Gateway/Core/Winterhaven.Gateway.Core.Application/Winterhaven.Gateway.Core.Application.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Gateway/Core/Winterhaven.Gateway.Core.Domain/Winterhaven.Gateway.Core.Domain.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Gateway/Infrastructure/">
+    <Project Path="Gateway/Infrastructure/Winterhaven.Gateway.Infrastructure/Winterhaven.Gateway.Infrastructure.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Gateway/Presentation/">
+    <Project Path="Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Gateway/Tests/">
+    <Project Path="Gateway/Tests/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".env.example" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/Configuration/" />
+  <Folder Name="/Solution Items/Configuration/Caddy/">
+    <File Path="Configuration/Caddy/Caddyfile" />
+    <File Path="Configuration/Caddy/Dockerfile" />
+  </Folder>
+  <Folder Name="/Solution Items/Configuration/Database/">
+    <File Path="Configuration/Database/Dockerfile" />
+  </Folder>
+  <Folder Name="/Solution Items/Configuration/NATS/">
+    <File Path="Configuration/NATS/nats-development.conf" />
+    <File Path="Configuration/NATS/nats-production.conf" />
+  </Folder>
+</Solution>
