@@ -5,6 +5,7 @@
 [![Built with: ASP.NET](https://img.shields.io/badge/Built%20with-ASP.NET-512BD4)](https://dotnet.microsoft.com/apps/aspnet)
 [![Made with: GameMaker](https://img.shields.io/badge/Made%20with-GameMaker-000000)](https://gamemaker.io/)
 
+[![Build](https://github.com/mathew-odwyer/Server/actions/workflows/build.yml/badge.svg)](https://github.com/mathew-odwyer/Server/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server)](https://github.com/mathew-odwyer/Server/releases)
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
