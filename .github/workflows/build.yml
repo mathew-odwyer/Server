@@ -8,8 +8,8 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  build_api:
-    name: Build Web API
+  build_server:
+    name: Build Server
     runs-on: ubuntu-latest
 
     steps:
@@ -22,13 +22,13 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Restore
-        run: dotnet restore src/Web/Web.sln
+        run: dotnet restore src/Server.slnx
 
       - name: Build
-        run: dotnet build src/Web/Web.sln --configuration Release --no-restore
+        run: dotnet build src/Server.slnx --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test src/Web/Web.sln --configuration Release --no-build --verbosity normal
+        run: dotnet test src/Server.slnx --configuration Release --no-build --verbosity normal
 
   # TODO: Change to ubuntu-latest if bscotch ever supports it.
   # build_server:
