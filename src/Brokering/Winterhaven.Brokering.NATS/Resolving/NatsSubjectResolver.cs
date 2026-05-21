@@ -1,12 +1,12 @@
-﻿namespace Winterhaven.Brokering.NATS;
+﻿namespace Winterhaven.Brokering.NATS.Resolving;
 
 using System.Reflection;
 using Winterhaven.Brokering.Attributes;
 using Winterhaven.Brokering.NATS.Exceptions;
 
-internal static class NatsSubjectResolver
+internal sealed class NatsSubjectResolver : INatsSubjectResolver
 {
-    public static string ResolveSubject<TEvent>(TEvent e)
+    public string ResolveSubject<TEvent>(TEvent e)
         where TEvent : class
     {
         var type = e.GetType();

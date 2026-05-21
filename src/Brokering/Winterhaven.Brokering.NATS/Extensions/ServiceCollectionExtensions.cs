@@ -4,6 +4,7 @@ using global::NATS.Client.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
+using Winterhaven.Brokering.NATS.Resolving;
 
 /// <summary>
 ///   Provides extension methods for registering brokering services to an <see cref="IServiceCollection"/>.
@@ -33,6 +34,9 @@ public static class ServiceCollectionExtensions
             Name = "winterhaven-nats",
             Url = configuration["NATS_URL"] ?? "ws://nats:9222",
         });
+
+        services.AddSingleton<INatsSubjectResolver, NatsSubjectResolver>();
+        services.AddSingleton<IEventPublisher, NatsEventPublisher>();
 
         return services;
     }
