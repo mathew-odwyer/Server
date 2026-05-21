@@ -1,10 +1,12 @@
 name: winterhaven
 
+# TODO: Room depends on NATS and the API being healthy.
+
 services:
   caddy:
     container_name: caddy
     image: winterhaven-caddy
-    build: 
+    build:
       context: ./Configuration/Caddy
       dockerfile: Dockerfile
     depends_on:
@@ -108,28 +110,16 @@ services:
     restart: unless-stopped
     tty: true
 
-  # server:
-  #   container_name: server
-  #   image: winterhaven-server
-  #   build: 
-  #     context: ./Server/build
-  #     dockerfile: Dockerfile.Run
-  #   expose:
-  #     - "8080"
-  #   networks:
-  #     - network
-  #   depends_on:
-  #     web:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: >
-  #       sh -c "echo | websocat -n --connect ws://localhost:8080 >/dev/null 2>&1"
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 5s
-  #   restart: unless-stopped
-    
+  room:
+    container_name: room
+    image: winterhaven-room
+    build:
+      context: ./Room
+      dockerfile: Dockerfile
+    networks:
+      - network
+    restart: unless-stopped
+
 networks:
   network:
     driver: bridge
