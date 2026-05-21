@@ -45,17 +45,17 @@ internal sealed class MapLocator : IMapLocator
             throw new ResourceNotFoundException("Map", name);
         }
 
-        byte[] bytes = await this.fileSystem.File.ReadAllBytesAsync(fullPath, cancellationToken).ConfigureAwait(false);
+        string data = await this.fileSystem.File.ReadAllTextAsync(fullPath, cancellationToken).ConfigureAwait(false);
 
         // If there is no content in the TMX file, that is not a valid TMX file - so throw an error (500).
-        if (bytes.Length == 0)
+        if (data.Length == 0)
         {
             this.logger.LogWarning("Failed to read contents of map at path: '{FullPath}'", fullPath);
             throw new InvalidOperationException($"Failed to read contents of map at path: '{fullPath}'");
         }
 
         return new MapData(
-            Name: name.ToUpperInvariant(),
-            Data: bytes);
+            Name: name.ToUpperInvariant().Replace("_", " ", StringComparison.OrdinalIgnoreCase),
+            Data: data);
     }
 }
