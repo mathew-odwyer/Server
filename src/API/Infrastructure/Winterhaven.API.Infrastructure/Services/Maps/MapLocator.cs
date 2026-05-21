@@ -55,7 +55,7 @@ internal sealed class MapLocator : IMapLocator
         }
 
         return new MapData(
-            Name: name.ToUpperInvariant(),
+            Name: name.ToUpperInvariant().Replace("_", " ", StringComparison.OrdinalIgnoreCase),
             Data: data);
     }
 }
