@@ -6,15 +6,19 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Winterhaven.Brokering;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Core.Domain.Events.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 
 internal sealed class UserAccountService : IUserAccountService
 {
+    private readonly IEventPublisher eventPublisher;
+
     private readonly ILogger<UserAccountService> logger;
 
     private readonly ISessionAuthenticator sessionAuthenticator;
@@ -31,12 +35,14 @@ internal sealed class UserAccountService : IUserAccountService
         ILogger<UserAccountService> logger,
         IUserAccountClient userAccountClient,
         ISessionAuthenticator sessionAuthenticator,
-        ISessionContext sessionContext)
+        ISessionContext sessionContext,
+        IEventPublisher eventPublisher)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
         this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
         this.sessionContext = sessionContext ?? throw new ArgumentNullException(nameof(sessionContext));
+        this.eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
     }
 
     ~UserAccountService()
@@ -84,6 +90,10 @@ internal sealed class UserAccountService : IUserAccountService
                 RefreshToken: response.RefreshToken,
                 AccessTokenExpiry: TimeSpan.FromSeconds(response.ExpirationSeconds)));
 
+            await this.eventPublisher.PublishEventAsync(new UserLoggedInEvent(
+                Username: this.sessionContext.Session!.Username,
+                AccessToken: this.sessionContext.Session!.AccessToken), cancellationToken).ConfigureAwait(false);
+
             this.logger.LogInformation("User login attempt completed for username '{Username}'", username);
 
             return new UserLoginResult(
@@ -116,6 +126,9 @@ internal sealed class UserAccountService : IUserAccountService
 
             await this.userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
             this.sessionAuthenticator.Invalidate();
+
+            await this.eventPublisher.PublishEventAsync(new UserLoggedOutEvent(
+                Username: username), cancellationToken).ConfigureAwait(false);
 
             this.logger.LogInformation("User logout attempt completed for username '{Username}'", username);
         }
