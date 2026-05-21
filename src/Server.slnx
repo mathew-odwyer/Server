@@ -26,6 +26,11 @@
       <Platform Project="x64" />
     </Project>
   </Folder>
+  <Folder Name="/Brokering/">
+    <Project Path="Brokering/Winterhaven.Brokering/Winterhaven.Brokering.csproj" Id="43be6921-06cc-4882-8982-8b6d692416b1">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
   <Folder Name="/Common/">
     <Project Path="Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj" Id="3e5adda7-18aa-4e6b-9ce9-c7fb7a4198fe">
       <Platform Project="x64" />
