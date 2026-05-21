@@ -1,5 +1,9 @@
 /// @description Initialize default parameters.
 
+#macro event_publish obj_nats._protocol.publish
+
+#macro event_subscribe obj_nats._protocol.subscribe
+
 /// @type {Struct.Logger}
 /// @description The logger.
 _logger = new Logger(nameof(obj_nats));
@@ -11,7 +15,6 @@ _client = new Client(network_socket_ws);
 /// @type {Struct.NatsClientProtocol}
 /// @description THe NATS client protocol.
 _protocol = new NatsClientProtocol(_client.send);
-
 
 if (!_client.connect("ws://nats", 9222))
 {

@@ -1,8 +1,20 @@
 function user_logged_out(user)
 {
-	// TODO: Make ideompotent
-	// TODO: Support lower snake case.
+	/// @type {Struct.Logger}
+	/// @description The logger.
+	static _logger = new Logger(nameof(user_logged_out));
 	
-	show_debug_message(user[$ "Username"]);
-	show_debug_message(user[$ "AccessToken"]);
+	var username = user[$ "Username"];	
+	var player = player_get_by_name(username);
+	
+	if (player == noone)
+	{
+		return;
+	}
+
+	_logger.log(log_type.information, $"Player leaving room with name: '{username}'");
+	
+	instance_destroy(player);
+	
+	_logger.log(log_type.information, $"Player left room with name: '{username}'");
 }
