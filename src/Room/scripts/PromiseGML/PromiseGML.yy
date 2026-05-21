@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"PromiseGML",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PromiseGML",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Extensions/GMFoundation/GMPromises/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

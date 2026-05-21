@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"NatsClientProtocol",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"NatsClientProtocol",
+  "parent":{
+    "name":"NATS",
+    "path":"folders/Extensions/GMFoundation/GMNetwork/Scripts/Protocols/NATS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

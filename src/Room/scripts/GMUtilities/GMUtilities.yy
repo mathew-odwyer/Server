@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"GMUtilities",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GMUtilities",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
