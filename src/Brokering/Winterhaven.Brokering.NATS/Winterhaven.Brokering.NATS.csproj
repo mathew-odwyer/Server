@@ -10,4 +10,8 @@
     <PackageReference Include="NATS.Net" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Winterhaven.Brokering\Winterhaven.Brokering.csproj" />
+  </ItemGroup>
+
 </Project>
