@@ -32,6 +32,9 @@ COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
 COPY Brokering/Winterhaven.Brokering/Winterhaven.Brokering.csproj \
      Brokering/Winterhaven.Brokering/
 
+COPY Brokering/Winterhaven.Brokering.NATS/Winterhaven.Brokering.NATS.csproj \
+     Brokering/Winterhaven.Brokering.NATS/
+
 COPY appsettings.json Gateway/Presentation/Winterhaven.Gateway.Presentation/
 
 RUN dotnet restore Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj
