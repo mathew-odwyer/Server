@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"gui_emote_type",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"gui_emote_type",
+  "parent":{
+    "name":"Emotes",
+    "path":"folders/Extensions/Winterhaven/Scripts/Emotes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"map_load_map",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"map_load_map",
+  "parent":{
+    "name":"Maps",
+    "path":"folders/Extensions/Winterhaven/Scripts/Maps.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

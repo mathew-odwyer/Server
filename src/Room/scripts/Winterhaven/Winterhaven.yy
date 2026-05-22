@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Winterhaven",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Winterhaven",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Extensions/Winterhaven/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
