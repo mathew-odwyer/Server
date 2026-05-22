@@ -50,11 +50,11 @@ internal sealed class MapLocatorTests
     {
         // Arrange
         const string name = "testmap";
-        byte[] expectedBytes = new byte[] { 1, 2, 3 };
+        string expectedData = "data";
         string fullPath = System.IO.Path.Combine(this.options.Value.BasePath, $"{name}.tmx");
 
         this.fileSystem.File.Exists(fullPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(fullPath, Arg.Any<CancellationToken>()).Returns(expectedBytes);
+        this.fileSystem.File.ReadAllTextAsync(fullPath, Arg.Any<CancellationToken>()).Returns(expectedData);
 
         // Act
         await this.locator.LocateMapDataAsync(name, default).ConfigureAwait(false);
@@ -71,7 +71,7 @@ internal sealed class MapLocatorTests
         string expectedPath = Path.Combine(this.options.Value.BasePath, $"{name}.tmx");
 
         this.fileSystem.File.Exists(expectedPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(expectedPath, Arg.Any<CancellationToken>()).Returns(Array.Empty<byte>());
+        this.fileSystem.File.ReadAllTextAsync(expectedPath, Arg.Any<CancellationToken>()).Returns("data");
 
         // Act
         try
@@ -97,7 +97,7 @@ internal sealed class MapLocatorTests
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
         this.fileSystem.File.Exists(expectedPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(expectedPath, Arg.Any<CancellationToken>()).Returns(new byte[] { 1, 2, 3 });
+        this.fileSystem.File.ReadAllTextAsync(expectedPath, Arg.Any<CancellationToken>()).Returns("data");
 
         // Act
         await this.locator.LocateMapDataAsync(name, default).ConfigureAwait(false);
@@ -107,25 +107,24 @@ internal sealed class MapLocatorTests
     }
 
     [Test]
-    public async Task LocateMapDataAsyncShouldInvokeReadAllBytesAsyncOnceWhenFileExistsAndHasContent()
+    public async Task LocateMapDataAsyncShouldInvokeReadAllTextAsyncOnceWhenFileExistsAndHasContent()
     {
         // Arrange
         const string name = "testmap";
-        byte[] expectedBytes = new byte[] { 1, 2, 3 };
         string fullPath = System.IO.Path.Combine(this.options.Value.BasePath, $"{name}.tmx");
 
         this.fileSystem.File.Exists(fullPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(fullPath, Arg.Any<CancellationToken>()).Returns(expectedBytes);
+        this.fileSystem.File.ReadAllTextAsync(fullPath, Arg.Any<CancellationToken>()).Returns("data");
 
         // Act
         await this.locator.LocateMapDataAsync(name, default).ConfigureAwait(false);
 
         // Assert
-        await this.fileSystem.File.Received(1).ReadAllBytesAsync(fullPath, Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        await this.fileSystem.File.Received(1).ReadAllTextAsync(fullPath, Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
-    public async Task LocateMapDataAsyncShouldInvokeReadAllBytesAsyncWithCorrectFullPath()
+    public async Task LocateMapDataAsyncShouldInvokeReadAllTextAsyncWithCorrectFullPath()
     {
         // Arrange
         const string name = "testmap";
@@ -136,17 +135,17 @@ internal sealed class MapLocatorTests
 #pragma warning restore CA1308 // Normalize strings to uppercase
 
         this.fileSystem.File.Exists(expectedPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(expectedPath, Arg.Any<CancellationToken>()).Returns([1, 2, 3]);
+        this.fileSystem.File.ReadAllTextAsync(expectedPath, Arg.Any<CancellationToken>()).Returns("data");
 
         // Act
         await this.locator.LocateMapDataAsync(name, default).ConfigureAwait(false);
 
         // Assert
-        await this.fileSystem.File.Received(1).ReadAllBytesAsync(expectedPath, Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        await this.fileSystem.File.Received(1).ReadAllTextAsync(expectedPath, Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
-    public async Task LocateMapDataAsyncShouldNotInvokeReadAllBytesAsyncWhenFileDoesNotExist()
+    public async Task LocateMapDataAsyncShouldNotInvokeReadAllTextAsyncWhenFileDoesNotExist()
     {
         // Arrange
         this.fileSystem.File.Exists(Arg.Any<string>()).Returns(false);
@@ -161,7 +160,7 @@ internal sealed class MapLocatorTests
         }
 
         // Assert
-        await this.fileSystem.File.DidNotReceive().ReadAllBytesAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        await this.fileSystem.File.DidNotReceive().ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
@@ -169,17 +168,17 @@ internal sealed class MapLocatorTests
     {
         // Arrange
         const string name = "testmap";
-        byte[] expectedBytes = [1, 2, 3];
+        var expectedData = "data";
         string fullPath = System.IO.Path.Combine(this.options.Value.BasePath, $"{name}.tmx");
 
         this.fileSystem.File.Exists(fullPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(fullPath, Arg.Any<CancellationToken>()).Returns(expectedBytes);
+        this.fileSystem.File.ReadAllTextAsync(fullPath, Arg.Any<CancellationToken>()).Returns(expectedData);
 
         // Act
         var result = await this.locator.LocateMapDataAsync(name, default).ConfigureAwait(false);
 
         // Assert
-        Assert.That(result.Data.ToArray(), Is.EqualTo(expectedBytes));
+        Assert.That(result.Data, Is.EqualTo(expectedData));
     }
 
     [Test]
@@ -187,11 +186,11 @@ internal sealed class MapLocatorTests
     {
         // Arrange
         const string name = "testmap";
-        byte[] expectedBytes = new byte[] { 1, 2, 3 };
+        var expectedData = "data";
         string fullPath = System.IO.Path.Combine(this.options.Value.BasePath, $"{name}.tmx");
 
         this.fileSystem.File.Exists(fullPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(fullPath, Arg.Any<CancellationToken>()).Returns(expectedBytes);
+        this.fileSystem.File.ReadAllTextAsync(fullPath, Arg.Any<CancellationToken>()).Returns(expectedData);
 
         // Act
         var result = await this.locator.LocateMapDataAsync(name, default).ConfigureAwait(false);
@@ -229,7 +228,21 @@ internal sealed class MapLocatorTests
         string expectedPath = Path.Combine(this.options.Value.BasePath, $"{name}.tmx");
 
         this.fileSystem.File.Exists(expectedPath).Returns(true);
-        this.fileSystem.File.ReadAllBytesAsync(expectedPath, Arg.Any<CancellationToken>()).Returns(Array.Empty<byte>());
+        this.fileSystem.File.ReadAllTextAsync(expectedPath, Arg.Any<CancellationToken>()).Returns("");
+
+        // Act and assert
+        Assert.ThrowsAsync<InvalidOperationException>(() => this.locator.LocateMapDataAsync(name, default));
+    }
+
+    [Test]
+    public void LocateMapDataAsyncShouldThrowInvalidOperationExceptionWhenFileIsWhiteSpace()
+    {
+        // Arrange
+        const string name = "testmap";
+        string expectedPath = Path.Combine(this.options.Value.BasePath, $"{name}.tmx");
+
+        this.fileSystem.File.Exists(expectedPath).Returns(true);
+        this.fileSystem.File.ReadAllTextAsync(expectedPath, Arg.Any<CancellationToken>()).Returns(" \r\n\t");
 
         // Act and assert
         Assert.ThrowsAsync<InvalidOperationException>(() => this.locator.LocateMapDataAsync(name, default));

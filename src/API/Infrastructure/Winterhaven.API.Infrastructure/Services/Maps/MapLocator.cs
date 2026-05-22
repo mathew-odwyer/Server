@@ -48,7 +48,7 @@ internal sealed class MapLocator : IMapLocator
         string data = await this.fileSystem.File.ReadAllTextAsync(fullPath, cancellationToken).ConfigureAwait(false);
 
         // If there is no content in the TMX file, that is not a valid TMX file - so throw an error (500).
-        if (data.Length == 0)
+        if (string.IsNullOrWhiteSpace(data))
         {
             this.logger.LogWarning("Failed to read contents of map at path: '{FullPath}'", fullPath);
             throw new InvalidOperationException($"Failed to read contents of map at path: '{fullPath}'");

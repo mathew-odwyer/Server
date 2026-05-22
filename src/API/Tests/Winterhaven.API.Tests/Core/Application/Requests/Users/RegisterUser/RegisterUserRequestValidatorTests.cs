@@ -34,7 +34,7 @@ internal sealed class RegisterUserRequestValidatorTests
         var result = this.validator.TestValidate(request);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(nameof(request.EmailAddress));
+        result.ShouldHaveValidationErrorFor("Email Address");
     }
 
     [Test]
@@ -50,7 +50,7 @@ internal sealed class RegisterUserRequestValidatorTests
         var result = this.validator.TestValidate(request);
 
         // Assert
-        result.ShouldNotHaveValidationErrorFor(nameof(request.EmailAddress));
+        result.ShouldNotHaveValidationErrorFor("Email Address");
     }
 
     [Test]
