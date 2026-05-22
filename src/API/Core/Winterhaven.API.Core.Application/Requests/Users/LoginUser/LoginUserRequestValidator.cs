@@ -14,10 +14,12 @@ public sealed class LoginUserRequestValidator : AbstractValidator<LoginUserReque
     {
         this.RuleFor(x => x.Username)
             .NotEmpty()
-            .WithMessage("Username must not be empty.");
+            .WithMessage("Username must not be empty.")
+            .OverridePropertyName("Username");
 
         this.RuleFor(x => x.Password)
             .NotEmpty()
-            .WithMessage("Password must not be empty.");
+            .WithMessage("Password must not be empty.")
+            .OverridePropertyName("Password");
     }
 }
