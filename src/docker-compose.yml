@@ -40,7 +40,11 @@ services:
       - "8222"
       - "9222"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8222"]
+      test: ["CMD", "nats-server", "--healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
     volumes:
       - ./Configuration/NATS/nats-${APPLICATION_ENVIRONMENT}.conf:/etc/nats/nats.conf:ro
     command: ["-c", "/etc/nats/nats.conf"]
@@ -75,6 +79,8 @@ services:
       dockerfile: Gateway/Dockerfile
     depends_on:
       api:
+        condition: service_healthy
+      nats:
         condition: service_healthy
     networks:
       - network
@@ -116,9 +122,15 @@ services:
     build:
       context: ./Room
       dockerfile: Dockerfile
+    depends_on:
+      nats:
+        condition: service_healthy
+      api:
+        condition: service_healthy
     networks:
       - network
     restart: unless-stopped
+    tty: true
 
 networks:
   network:

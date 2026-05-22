@@ -4,7 +4,7 @@ function user_logged_out(user)
 	/// @description The logger.
 	static _logger = new Logger(nameof(user_logged_out));
 	
-	var username = user[$ "Username"];	
+	var username = user[$ "username"];	
 	var player = player_get_by_name(username);
 	
 	if (player == noone)

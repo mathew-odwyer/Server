@@ -136,7 +136,7 @@ function NatsClientProtocol(send, options = {}) constructor
 				_logger.log(log_type.warning, $"No handler registered for subject: '{subject}'");
 				return;
 			}
-
+			
 			handler(json_parse(body), reply_to);
 		}
 		catch (ex)

@@ -1,14 +1,20 @@
 function user_logged_in(user)
 {
-	// TODO: Support lower snake case for both NATS and API with headers or something else?
+	// TODO: Stage commits and push changes
+	// TODO: Import Winterhaven core library from Client
+	// TODO: Export GMFoundation and Core from Room into Client
+	//		- That should keep everything in sync.
+	// TODO: Push changes and merge into 103/107
+	// TODO: Review changes in client and push changes
+	
 	// TODO: If we can't fetch the player, we need to notify the gateway.
 	// TODO: If anything goes wrong in here, we need to fail fast and publish a message.
 	//	     That way the gateway knows the player couldn't join the room.
 	
 	static _logger = new Logger(nameof(user_logged_in));
 	
-	var username = user[$ "Username"];
-	var access_token = user[$ "AccessToken"];
+	var username = user[$ "username"];
+	var access_token = user[$ "access_token"];
 
 	var player = player_get_by_name(username);
 	

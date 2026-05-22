@@ -54,24 +54,51 @@ function Logger(name = "global") constructor
             return;
         }
 		
+		// ANSI Colour Formatting.
 		static _type_to_name_map = [
-		    [log_type.trace, "Trace"],
-            [log_type.debug, "Debug"],
-            [log_type.information, "Information"],
-            [log_type.warning, "Warning"],
-            [log_type.error, "Error"],
-            [log_type.critical, "Critical"],
-        ];
+		    [log_type.trace, "\u001b[37m", "trce"], // white
+		    [log_type.debug, "\u001b[36m", "debug"], // cyan
+		    [log_type.information, "\u001b[32m", "info"], // green
+		    [log_type.warning, "\u001b[33m", "warn"], // yellow
+		    [log_type.error, "\u001b[31m", "fail"], // red
+		    [log_type.critical, "\u001b[35m", "crit"], // magenta
+		];
+
+		var reset = "\u001b[0m";
+		var color = _type_to_name_map[type][1];
+		var label = _type_to_name_map[type][2];
 		
-		var date_time = date_time_string(date_current_datetime());
-		var entry = $"[{date_time}] [{_type_to_name_map[type][1]}] [{_name}]: {text}";
+		var now = date_current_datetime();
+		
+		var year = string(date_get_year(now));
+		var month = string_format(date_get_month(now), 2, 0);
+		var day = string_format(date_get_day(now), 2, 0);
+		
+		var hour = string_format(date_get_hour(now), 2, 0);
+		var minute = string_format(date_get_minute(now), 2, 0);
+		var second = string_format(date_get_second(now), 2, 0);
+		var ms = string_format((now mod 1) * 1000, 3, 0);
+
+		// Replace spaces from string_format padding with zeroes.
+		month = string_replace_all(month, " ", "0");
+		day = string_replace_all(day, " ", "0");
+		
+		hour = string_replace_all(hour, " ", "0");
+		minute = string_replace_all(minute, " ", "0");
+		second = string_replace_all(second, " ", "0");
+		ms = string_replace_all(ms, " ", "0");
+
+		var date_time = $"{year}/{month}/{day} {hour}:{minute}:{second}.{ms}";
+
+		var entry_console = $"{date_time} {color}{label}{reset}: {_name}\n      {text}";
+		var entry_file = $"{date_time} {label}: {_name}\n      {text}";
+
+		LogFunction(entry_console);
+
+		// Write the clean version to file
 		var file = file_text_open_append(_path);
-        
-        LogFunction(entry);
-		
-		file_text_write_string(file, entry);
+		file_text_write_string(file, entry_file);
 		file_text_write_string(file, "\n");
-		
 		file_text_close(file);
     }
 }
