@@ -1,9 +1,7 @@
 {
   "$GMObject":"",
   "%Name":"obj_player",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "eventList":[],
   "managed":true,
   "name":"obj_player",
   "overriddenProperties":[],
@@ -11,7 +9,10 @@
     "name":"Players",
     "path":"folders/Objects/Entities/Players.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_character_base",
+    "path":"objects/obj_character_base/obj_character_base.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -29,7 +30,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_character_shadow_0_0",
+    "path":"sprites/spr_character_shadow_0_0/spr_character_shadow_0_0.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }
