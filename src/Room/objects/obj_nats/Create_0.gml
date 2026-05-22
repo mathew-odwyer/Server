@@ -22,5 +22,5 @@ if (!_client.connect("ws://nats", 9222))
 	throw "Failed to connect to NATS server";
 }
 
-_protocol.subscribe("user.logged_in", user_logged_in);
-_protocol.subscribe("user.logged_out", user_logged_out);
+event_subscribe("user.logged_in", user_logged_in);
+event_subscribe("user.logged_out", user_logged_out);
