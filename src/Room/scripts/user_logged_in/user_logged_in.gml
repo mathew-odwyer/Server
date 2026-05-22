@@ -25,19 +25,17 @@ function user_logged_in(user)
 	
 	player_client
 		.get_async()
-		.next(function(response)
+		.next(method({_logger}, function(response)
 		{
 			var snapshot = player_get_snapshot(response);
 			
+			/// @type {Id.Instance.obj_player}
 			var inst = instance_create_layer(response.x, response.y, "Instances", obj_player);
+
 			inst.name = response.name;
 			
 			event_publish("player.joined", player_get_snapshot(response));
 			
 			_logger.log(log_type.information, $"Player joined with name: '{inst.name}'");
-		})
-		.fail(function(error)
-		{
-			_logger.log(log_type.error, $"Player failed to join: {error}");
-		});
+		}));
 }
