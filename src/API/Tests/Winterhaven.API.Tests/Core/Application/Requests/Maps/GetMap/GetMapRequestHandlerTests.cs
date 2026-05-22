@@ -92,7 +92,7 @@ internal sealed class GetMapRequestHandlerTests
 
         this.mapData = new MapData(
             Name: "world-map",
-            Data: new byte[] { 1, 2, 3 });
+            Data: "data");
 
         this.mapLocator
             .LocateMapDataAsync(this.mapData.Name, Arg.Any<CancellationToken>())

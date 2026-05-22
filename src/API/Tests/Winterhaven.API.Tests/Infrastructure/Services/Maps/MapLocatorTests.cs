@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Domain.Exceptions;
