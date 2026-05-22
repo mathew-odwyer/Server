@@ -1,9 +1,12 @@
 ﻿namespace Winterhaven.Brokering.NATS.Exceptions;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 ///   Represents an exception that is thrown when an event type has not been mapped.
 /// </summary>
 /// <seealso cref="Exception"/>
+[ExcludeFromCodeCoverage]
 public sealed class UnmappedEventException : Exception
 {
     /// <summary>
