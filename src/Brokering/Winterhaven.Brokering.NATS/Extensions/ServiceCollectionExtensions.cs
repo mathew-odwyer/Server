@@ -1,11 +1,11 @@
 ﻿namespace Winterhaven.Brokering.NATS.Extensions;
 
 using global::NATS.Client.Hosting;
-using global::NATS.Client.Serializers.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 using Winterhaven.Brokering.NATS.Resolving;
+using Winterhaven.Brokering.NATS.Serialization;
 
 /// <summary>
 ///   Provides extension methods for registering brokering services to an <see cref="IServiceCollection"/>.
@@ -34,7 +34,7 @@ public static class ServiceCollectionExtensions
         {
             Name = "winterhaven-nats",
             Url = configuration["NATS_URL"] ?? "ws://nats:9222",
-            SerializerRegistry = NatsJsonSerializerRegistry.Default,
+            SerializerRegistry = NatsSnakeCaseSerializerRegistry.Default,
         });
 
         services.AddSingleton<INatsSubjectResolver, NatsSubjectResolver>();
