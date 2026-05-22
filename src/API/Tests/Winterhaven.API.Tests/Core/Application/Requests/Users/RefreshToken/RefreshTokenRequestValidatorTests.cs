@@ -28,7 +28,7 @@ internal sealed class RefreshTokenRequestValidatorTests
         var result = this.validator.TestValidate(request);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.RefreshToken);
+        result.ShouldHaveValidationErrorFor("Refresh Token");
     }
 
     [Test]
@@ -42,6 +42,6 @@ internal sealed class RefreshTokenRequestValidatorTests
         var result = this.validator.TestValidate(request);
 
         // Assert
-        result.ShouldNotHaveValidationErrorFor(x => x.RefreshToken);
+        result.ShouldNotHaveValidationErrorFor("Refresh Token");
     }
 }
