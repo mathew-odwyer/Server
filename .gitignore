@@ -383,8 +383,6 @@ test-results/
 # Application configuration files
 appsettings.json
 appsettings.*.json
-# Server application files
-Room.AppImage
 # Visual Studio Code settings folder
 .vscode/
 # Bin and obj folders
@@ -406,3 +404,4 @@ options.ini
 Server.desktop
 TestResults/
 *.AppImage
+/src/Room/Room.AppImage
