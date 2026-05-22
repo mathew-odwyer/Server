@@ -384,7 +384,7 @@ test-results/
 appsettings.json
 appsettings.*.json
 # Server application files
-Server.AppImage
+Room.AppImage
 # Visual Studio Code settings folder
 .vscode/
 # Bin and obj folders
