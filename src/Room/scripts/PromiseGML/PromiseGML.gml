@@ -239,7 +239,7 @@ function Promise_all(_arr/*:array<any>*/) {
 		if (!is_array(__arr)) {
 			try {
 				show_error("Promise.all accepts an array", 0);
-			} catch (_e) _reject(_e);
+			} catch (_e) return _reject(_e);
 		}
 		
 		var _len = array_length(__arr);
@@ -285,7 +285,7 @@ function Promise_allSettled(_arr/*:array<any>*/) {
 		if (!is_array(__arr)) {
 			try {
 				show_error("Promise.allSettled accepts an array", 0);
-			} catch (_e) _reject(_e);
+			} catch (_e) return _reject(_e);
 		}
 		
 		var _len = array_length(__arr);
@@ -307,7 +307,7 @@ function Promise_race(_arr/*:array*/) {
 		if (!is_array(__arr)) {
 			try {
 				show_error("Promise.race accepts an array", 0);
-			} catch (_e) _reject(_e);
+			} catch (_e) return _reject(_e);
 		}
 		var _len = array_length(__arr);
 		for (var _ind = 0; _ind < _len; _ind++) {

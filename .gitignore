@@ -405,3 +405,4 @@ igor.output.manifest
 options.ini
 Server.desktop
 TestResults/
+*.AppImage
