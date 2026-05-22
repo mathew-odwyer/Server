@@ -68,7 +68,8 @@ public static class ServiceCollectionExtensions
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<DatabaseContext>()
             .AddSignInManager<SignInManager<IdentityUser<Guid>>>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddErrorDescriber<UserAccountIdentityErrorDescriber>();
 
         services.Configure<IdentityOptions>(x =>
         {

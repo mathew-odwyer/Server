@@ -14,6 +14,7 @@ public sealed class RefreshTokenRequestValidator : AbstractValidator<RefreshToke
     {
         this.RuleFor(request => request.RefreshToken)
             .NotEmpty()
-            .WithMessage("Refresh token must not be empty.");
+            .WithMessage("Refresh token must not be empty.")
+            .OverridePropertyName("Refresh Token");
     }
 }
