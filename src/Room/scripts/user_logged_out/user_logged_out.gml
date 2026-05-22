@@ -1,3 +1,5 @@
+/// @description Handles the `user.logged_out` notification
+/// @param {Struct} user The user data of the user who logged out.
 function user_logged_out(user)
 {
 	/// @type {Struct.Logger}

@@ -1,7 +1,5 @@
 name: winterhaven
 
-# TODO: Room depends on NATS and the API being healthy.
-
 services:
   caddy:
     container_name: caddy

@@ -1,6 +1,7 @@
+/// @description Handles the `user.logged_in` notification
+/// @param {Struct} user The user data of the user who logged in.
 function user_logged_in(user)
 {
-	// TODO: Stage commits and push changes
 	// TODO: Import Winterhaven core library from Client
 	// TODO: Export GMFoundation and Core from Room into Client
 	//		- That should keep everything in sync.
