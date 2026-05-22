@@ -2,6 +2,7 @@
 
 /// @globalvar {Struct.Logger} Logger
 /// @globalvar {Struct.EventAggregator} EventAggregator 
+/// @globalvar {Any} Promise 
 
 Logger.LogLevel = log_type.trace;
 
