@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#129] - Room Service Entry Point Causes Crash on Service Restart (_by [@mathew-odwyer]_).
 - [#60] - Convert Validation Errors to Human Readable Messages (_by [@mathew-odwyer]_).
 - [#71] - Forwarded Origin of Gateway Requests (_by [@mathew-odwyer]_).
 - [#59] - Server Sends GML Error Messages to Client (_by [@mathew-odwyer]_).
@@ -48,10 +49,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - User Registration Flow (_by [@mathew-odwyer]_).
 - Web API Infrastructure (_by [@mathew-odwyer]_).
 
-[Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.0.1...HEAD
+[Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.2.0...HEAD
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#129]: https://github.com/mathew-odwyer/Server/issues/129
 [#60]: https://github.com/mathew-odwyer/Server/issues/60
 [#71]: https://github.com/mathew-odwyer/Server/issues/71
 [#59]: https://github.com/mathew-odwyer/Server/issues/59
