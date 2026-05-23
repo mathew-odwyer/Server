@@ -405,3 +405,4 @@ Server.desktop
 TestResults/
 *.AppImage
 /src/Room/Room.AppImage
+output/
