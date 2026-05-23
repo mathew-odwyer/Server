@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
-using Winterhaven.Gateway.Core.Domain.Events.Sessions;
 using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Filters;
 
@@ -27,22 +26,18 @@ internal sealed class WebSocketRpcSession
 
     private readonly IUserAccountService userAccountService;
 
-    private readonly JsonRpcUserSessionManager userSessionManager;
-
     public WebSocketRpcSession(
         ILogger<WebSocketRpcSession> logger,
         ILoggerFactory loggerFactory,
         JsonRpcRegistrar registrar,
         IUserAccountService userAccountService,
-        ISessionAuthenticator sessionAuthenticator,
-        JsonRpcUserSessionManager userSessionManager)
+        ISessionAuthenticator sessionAuthenticator)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.registrar = registrar ?? throw new ArgumentNullException(nameof(registrar));
         this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
-        this.userSessionManager = userSessionManager ?? throw new ArgumentNullException(nameof(userSessionManager));
     }
 
     public async Task RunAsync(HttpContext context, WebSocket socket, CancellationToken cancellationToken)
@@ -67,19 +62,6 @@ internal sealed class WebSocketRpcSession
         using var handler = new FilteringMessageHandler(this.loggerFactory.CreateLogger<FilteringMessageHandler>(), socket, formatter);
         using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), handler, this.sessionAuthenticator);
 
-        void onAuthenticated(object? sender, SessionAuthenticatedEventArgs e)
-        {
-            this.userSessionManager.AddUserSession(e.UserAccountId, clientId);
-        }
-
-        void onInvalidated(object? sender, SessionInvalidatedEventArgs e)
-        {
-            this.userSessionManager.RemoveUserSession(e.UserAccountId);
-        }
-
-        this.sessionAuthenticator.SessionAuthenticated += onAuthenticated;
-        this.sessionAuthenticator.SessionInvalidated += onInvalidated;
-
         this.registrar.RegisterTargets(rpc);
 
         rpc.StartListening();
@@ -96,9 +78,6 @@ internal sealed class WebSocketRpcSession
         finally
         {
             await this.userAccountService.LogoutUserAsync(CancellationToken.None).ConfigureAwait(false);
-
-            this.sessionAuthenticator.SessionAuthenticated -= onAuthenticated;
-            this.sessionAuthenticator.SessionInvalidated -= onInvalidated;
 
             if (socket.State is WebSocketState.Open or WebSocketState.CloseReceived)
             {
