@@ -55,4 +55,6 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
+docker-compose down builder -v
+
 Write-Host "Build complete! Output at: $TARGET_FILE"
