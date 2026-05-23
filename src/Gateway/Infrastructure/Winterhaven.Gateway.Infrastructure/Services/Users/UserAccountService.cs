@@ -85,6 +85,7 @@ internal sealed class UserAccountService : IUserAccountService
 
             // Authenticate the session with the access token. This ensures that any HTTP requests made after this point will include the access token for authentication.
             this.sessionAuthenticator.Authenticate(new UserSession(
+                UserAccountId: ParseUserAccountId(response.AccessToken),
                 Username: ParseUsername(response.AccessToken),
                 AccessToken: response.AccessToken,
                 RefreshToken: response.RefreshToken,
@@ -158,8 +159,9 @@ internal sealed class UserAccountService : IUserAccountService
 
         var response = await this.userAccountClient.RefreshTokenAsync(dto, cancellationToken).ConfigureAwait(false);
 
-        // Re-authenticate the session with the new access token.
+        // Refresh the session with the new access token.
         this.sessionAuthenticator.Refresh(new UserSession(
+            UserAccountId: ParseUserAccountId(response.AccessToken),
             Username: ParseUsername(response.AccessToken),
             AccessToken: response.AccessToken,
             RefreshToken: response.RefreshToken,
@@ -192,6 +194,12 @@ internal sealed class UserAccountService : IUserAccountService
 
         return new UserRegistrationResult(
             Success: true);
+    }
+
+    private static Guid ParseUserAccountId(string accessToken)
+    {
+        var jwt = new JsonWebTokenHandler().ReadJsonWebToken(accessToken);
+        return Guid.Parse(jwt.Claims.First(c => c.Type == "identifier").Value);
     }
 
     private static string ParseUsername(string accessToken)
