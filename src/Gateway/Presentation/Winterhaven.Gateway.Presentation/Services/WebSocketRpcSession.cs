@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Core.Domain.Events.Sessions;
 using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Filters;
 
@@ -66,9 +67,18 @@ internal sealed class WebSocketRpcSession
         using var handler = new FilteringMessageHandler(this.loggerFactory.CreateLogger<FilteringMessageHandler>(), socket, formatter);
         using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), handler, this.sessionAuthenticator);
 
-        // TODO: Do I need to unhook from these events anywhere? Probably.
-        this.sessionAuthenticator.SessionAuthenticated += (s, e) => this.userSessionManager.AddUserSession(e.UserAccountId, clientId);
-        this.sessionAuthenticator.SessionInvalidated += (s, e) => this.userSessionManager.RemoveUserSession(e.UserAccountId);
+        void onAuthenticated(object? sender, SessionAuthenticatedEventArgs e)
+        {
+            this.userSessionManager.AddUserSession(e.UserAccountId, clientId);
+        }
+
+        void onInvalidated(object? sender, SessionInvalidatedEventArgs e)
+        {
+            this.userSessionManager.RemoveUserSession(e.UserAccountId);
+        }
+
+        this.sessionAuthenticator.SessionAuthenticated += onAuthenticated;
+        this.sessionAuthenticator.SessionInvalidated += onInvalidated;
 
         this.registrar.RegisterTargets(rpc);
 
@@ -86,6 +96,9 @@ internal sealed class WebSocketRpcSession
         finally
         {
             await this.userAccountService.LogoutUserAsync(CancellationToken.None).ConfigureAwait(false);
+
+            this.sessionAuthenticator.SessionAuthenticated -= onAuthenticated;
+            this.sessionAuthenticator.SessionInvalidated -= onInvalidated;
 
             if (socket.State is WebSocketState.Open or WebSocketState.CloseReceived)
             {

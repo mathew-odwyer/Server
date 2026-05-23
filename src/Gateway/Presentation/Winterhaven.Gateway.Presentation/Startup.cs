@@ -79,6 +79,8 @@ internal sealed class Startup
         services.AddValidatorsFromAssembly(typeof(UserLoginRpcParametersValidator).Assembly);
         services.AddScoped<IValidatorFactory, ValidatorFactory>();
 
+        services.AddSingleton<JsonRpcUserSessionManager>();
+
         services.AddHttpContextAccessor();
     }
 }
