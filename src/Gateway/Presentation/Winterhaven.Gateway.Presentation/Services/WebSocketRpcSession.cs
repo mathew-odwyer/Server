@@ -26,18 +26,22 @@ internal sealed class WebSocketRpcSession
 
     private readonly IUserAccountService userAccountService;
 
+    private readonly JsonRpcUserSessionManager userSessionManager;
+
     public WebSocketRpcSession(
         ILogger<WebSocketRpcSession> logger,
         ILoggerFactory loggerFactory,
         JsonRpcRegistrar registrar,
         IUserAccountService userAccountService,
-        ISessionAuthenticator sessionAuthenticator)
+        ISessionAuthenticator sessionAuthenticator,
+        JsonRpcUserSessionManager userSessionManager)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.registrar = registrar ?? throw new ArgumentNullException(nameof(registrar));
         this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
+        this.userSessionManager = userSessionManager ?? throw new ArgumentNullException(nameof(userSessionManager));
     }
 
     public async Task RunAsync(HttpContext context, WebSocket socket, CancellationToken cancellationToken)
@@ -61,6 +65,10 @@ internal sealed class WebSocketRpcSession
 
         using var handler = new FilteringMessageHandler(this.loggerFactory.CreateLogger<FilteringMessageHandler>(), socket, formatter);
         using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), handler, this.sessionAuthenticator);
+
+        // TODO: Do I need to unhook from these events anywhere? Probably.
+        this.sessionAuthenticator.SessionAuthenticated += (s, e) => this.userSessionManager.AddUserSession(e.UserAccountId, clientId);
+        this.sessionAuthenticator.SessionInvalidated += (s, e) => this.userSessionManager.RemoveUserSession(e.UserAccountId);
 
         this.registrar.RegisterTargets(rpc);
 
