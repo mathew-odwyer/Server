@@ -40,7 +40,10 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
         this.Session = userSession;
         this.logger.LogDebug("User session authenticated: '{Username}'", this.Session.Username);
 
-        this.SessionAuthenticated?.Invoke(this, new SessionAuthenticatedEventArgs(userSession.Username, userSession.AccessTokenExpiry));
+        this.SessionAuthenticated?.Invoke(this, new SessionAuthenticatedEventArgs(
+            userAccountId: userSession.UserAccountId,
+            username: userSession.Username,
+            accessTokenExpiry: userSession.AccessTokenExpiry));
     }
 
     public void Invalidate()
@@ -50,12 +53,15 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
             return;
         }
 
+        var userAccountId = this.Session!.UserAccountId;
         string username = this.Session!.Username;
 
         this.Session = null;
         this.logger.LogDebug("Invalidated user session for username: '{Username}'", username);
 
-        this.SessionInvalidated?.Invoke(this, new SessionInvalidatedEventArgs(username));
+        this.SessionInvalidated?.Invoke(this, new SessionInvalidatedEventArgs(
+            userAccountId: userAccountId,
+            username: username));
     }
 
     public void Refresh(UserSession userSession)
@@ -70,6 +76,9 @@ internal sealed class SessionContext : ISessionContext, ISessionAuthenticator
         this.Session = userSession;
         this.logger.LogDebug("User session refreshed: '{Username}'", this.Session.Username);
 
-        this.SessionRefreshed?.Invoke(this, new SessionRefreshedEventArgs(userSession.Username, userSession.AccessTokenExpiry));
+        this.SessionRefreshed?.Invoke(this, new SessionRefreshedEventArgs(
+            userAccountId: userSession.UserAccountId,
+            username: userSession.Username,
+            accessTokenExpiry: userSession.AccessTokenExpiry));
     }
 }

@@ -4,11 +4,15 @@ using System;
 
 public sealed class SessionInvalidatedEventArgs : EventArgs
 {
-    public SessionInvalidatedEventArgs(string username)
+    public SessionInvalidatedEventArgs(Guid userAccountId, string username)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
+
+        this.UserAccountId = userAccountId;
         this.Username = username;
     }
+
+    public Guid UserAccountId { get; init; }
 
     public string Username { get; init; }
 }
