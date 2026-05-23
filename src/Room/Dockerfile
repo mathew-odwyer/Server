@@ -33,6 +33,8 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
   libssl1.0.0 \
   libcurl3-gnutls \
   lsb-release \
+  unzip \
+  libpulse0 \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
@@ -43,6 +45,15 @@ ENV DISPLAY=:0
 ENTRYPOINT ["/root/entrypoint.sh"]
 
 WORKDIR /game
-COPY Room.AppImage .
 
-CMD ["./Room.AppImage", "--appimage-extract-and-run"]
+# Copy the compiled room archive.
+COPY output/Room.zip .
+
+# Unzip the archive and then remove the archive.
+RUN unzip Room.zip && rm Room.zip
+
+# Ensure that the image can be ran.
+RUN chmod +x ./Room
+
+# Finally, run the app image.
+CMD ["./Room"]
