@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<INatsSubjectResolver, NatsSubjectResolver>();
         services.AddSingleton<IEventPublisher, NatsEventPublisher>();
+        services.AddSingleton<IEventSubscriber, NatsEventSubscriber>();
 
         return services;
     }
