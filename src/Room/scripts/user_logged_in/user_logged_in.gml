@@ -22,14 +22,13 @@ function user_logged_in(user)
 		.get_async()
 		.next(method({_logger}, function(response)
 		{
-			var snapshot = player_get_snapshot(response);
-			
 			/// @type {Id.Instance.obj_player}
 			var inst = instance_create_layer(response.x, response.y, "Instances", obj_player);
 
 			inst.name = response.name;
-			
-			event_publish("player.joined", player_get_snapshot(response));
+			inst.identifier = response.identifier;
+
+			event_publish("player.joined", player_get_snapshot(inst));
 			
 			_logger.log(log_type.information, $"Player joined with name: '{inst.name}'");
 		}));
