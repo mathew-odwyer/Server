@@ -12,8 +12,6 @@ function user_logged_in(user)
 		return;
 	}
 	
-	_logger.log(log_type.information, $"Player joining with name: '{username}'");
-	
 	var player_client = new PlayerClient({
 		bearer: access_token,
 	});
@@ -22,6 +20,8 @@ function user_logged_in(user)
 		.get_async()
 		.next(method({_logger}, function(response)
 		{
+			_logger.log(log_type.information, $"Player joining with ID: '{response.identifier}'");
+
 			/// @type {Id.Instance.obj_player}
 			var inst = instance_create_layer(response.x, response.y, "Instances", obj_player);
 
@@ -30,6 +30,6 @@ function user_logged_in(user)
 
 			event_publish("player.joined", player_get_snapshot(inst));
 			
-			_logger.log(log_type.information, $"Player joined with name: '{inst.name}'");
+			_logger.log(log_type.information, $"Player joined with ID: '{inst.identifier}'");
 		}));
 }
