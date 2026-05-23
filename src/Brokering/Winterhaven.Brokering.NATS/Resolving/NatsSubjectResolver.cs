@@ -6,10 +6,10 @@ using Winterhaven.Brokering.NATS.Exceptions;
 
 internal sealed class NatsSubjectResolver : INatsSubjectResolver
 {
-    public string ResolveSubject<TEvent>(TEvent e)
+    public string ResolveSubject<TEvent>()
         where TEvent : class
     {
-        var type = e.GetType();
+        var type = typeof(TEvent);
         var attribute = type.GetCustomAttribute<EventNameAttribute>()
             ?? throw new UnmappedEventException(type);
 

@@ -2,6 +2,6 @@
 
 internal interface INatsSubjectResolver
 {
-    string ResolveSubject<TEvent>(TEvent e)
+    string ResolveSubject<TEvent>()
         where TEvent : class;
 }
