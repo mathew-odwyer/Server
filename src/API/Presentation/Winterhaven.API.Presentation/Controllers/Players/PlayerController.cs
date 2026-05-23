@@ -33,7 +33,7 @@ public sealed class PlayerController : ApiControllerBase
         var request = new GetPlayerRequest();
         var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(response);
+        return this.Ok(this.Mapper.Map<GetPlayerResponseDto>(response));
     }
 
     /// <summary>

@@ -1,9 +1,9 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
+﻿namespace Winterhaven.Common.DTOs.Players;
 
 using System;
 
 /// <summary>
-///   Represents a response that contains the details of an existing player.
+///   Represents a DTO that contains the details of a player.
 /// </summary>
 /// <param name="Id">
 ///   The unique identifier of the player.
@@ -17,7 +17,7 @@ using System;
 /// <param name="Y">
 ///   The current Y-coordinate of the player.
 /// </param>
-public sealed record GetPlayerResponse(
+public sealed record GetPlayerResponseDto(
     Guid Id,
     string Name,
     double X,
