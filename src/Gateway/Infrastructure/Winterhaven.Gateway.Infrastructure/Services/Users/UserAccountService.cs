@@ -7,11 +7,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.Brokering;
+using Winterhaven.Brokering.Events.Users;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
-using Winterhaven.Gateway.Core.Domain.Events.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 

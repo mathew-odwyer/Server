@@ -1,4 +1,4 @@
-﻿namespace Winterhaven.Gateway.Core.Domain.Events.Users;
+namespace Winterhaven.Brokering.Events.Users;
 
 using Winterhaven.Brokering.Attributes;
 
