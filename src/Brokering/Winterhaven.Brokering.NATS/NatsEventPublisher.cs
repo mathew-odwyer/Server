@@ -23,7 +23,7 @@ internal sealed class NatsEventPublisher : IEventPublisher
         ArgumentNullException.ThrowIfNull(e);
 
         await this.connection.PublishAsync(
-            subject: this.subjectResolver.ResolveSubject(e),
+            subject: this.subjectResolver.ResolveSubject<TEvent>(),
             data: e,
             cancellationToken: cancellationToken).ConfigureAwait(false);
     }
