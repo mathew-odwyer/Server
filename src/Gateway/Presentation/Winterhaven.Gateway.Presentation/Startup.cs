@@ -9,9 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Winterhaven.Gateway.Core.Application.Services.Dispatching;
 using Winterhaven.Gateway.Infrastructure.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Services;
+using Winterhaven.Gateway.Presentation.Services.Dispatching;
 using Winterhaven.Gateway.Presentation.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
 using Winterhaven.Gateway.Presentation.Targets.Users;
@@ -78,6 +80,9 @@ internal sealed class Startup
 
         services.AddValidatorsFromAssembly(typeof(UserLoginRpcParametersValidator).Assembly);
         services.AddScoped<IValidatorFactory, ValidatorFactory>();
+
+        services.AddSingleton<IJsonRpcMethodResolver, JsonRpcMethodResolver>();
+        services.AddSingleton<INotificationDispatcher, JsonRpcNotificationDispatcher>();
 
         services.AddHttpContextAccessor();
     }
