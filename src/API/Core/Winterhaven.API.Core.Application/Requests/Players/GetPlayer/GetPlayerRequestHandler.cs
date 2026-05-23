@@ -80,6 +80,7 @@ public sealed class GetPlayerRequestHandler : IRequestHandler<GetPlayerRequest, 
         this.logger.LogDebug("Fetching player with ID: '{PlayerId}'", player.Id);
 
         return new GetPlayerResponse(
+            Identifier: player.Id,
             Name: player.Name,
             X: player.X,
             Y: player.Y);
