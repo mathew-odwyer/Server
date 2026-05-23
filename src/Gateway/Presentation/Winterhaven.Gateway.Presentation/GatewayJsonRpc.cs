@@ -103,6 +103,7 @@ internal sealed class GatewayJsonRpc : JsonRpc
         {
             this.sessionAuthenticator.SessionAuthenticated -= this.SessionAuthenticator_SessionAuthenticated;
             this.sessionAuthenticator.SessionRefreshed -= this.SessionAuthenticator_SessionRefreshed;
+            this.sessionAuthenticator.SessionInvalidated -= this.SessionAuthenticator_SessionInvalidated;
 
             this.expiryTokenSource?.Dispose();
             this.expiryTokenSource = null;
