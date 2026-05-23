@@ -9,7 +9,9 @@ internal sealed class NatsSubjectResolver : INatsSubjectResolver
     public string ResolveSubject<TEvent>(TEvent e)
         where TEvent : class
     {
-        var type = e.GetType();
+        ArgumentNullException.ThrowIfNull(e);
+
+        var type = typeof(TEvent);
         var attribute = type.GetCustomAttribute<EventNameAttribute>()
             ?? throw new UnmappedEventException(type);
 
