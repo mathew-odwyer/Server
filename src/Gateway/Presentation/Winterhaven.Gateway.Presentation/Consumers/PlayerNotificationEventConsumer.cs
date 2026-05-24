@@ -22,6 +22,6 @@ internal sealed class PlayerNotificationEventConsumer : IEventConsumer<PlayerNot
             return;
         }
 
-        await this.rpc.NotifyAsync(e.Method, e.Params).ConfigureAwait(false);
+        await this.rpc.NotifyWithParameterObjectAsync(e.Method, e.Params).ConfigureAwait(false);
     }
 }

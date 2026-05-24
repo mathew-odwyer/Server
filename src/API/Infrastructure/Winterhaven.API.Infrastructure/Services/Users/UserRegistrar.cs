@@ -67,6 +67,7 @@ internal sealed class UserRegistrar : IUserRegistrar
 
             Player = new Player()
             {
+                Id = identityUser.Id,
                 Name = identityUser.UserName!,
             },
         };

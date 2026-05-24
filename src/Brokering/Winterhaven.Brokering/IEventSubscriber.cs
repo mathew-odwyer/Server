@@ -14,6 +14,9 @@ public interface IEventSubscriber
     /// <typeparam name="TEvent">
     ///   The type of the event.
     /// </typeparam>
+    /// <param name="subject">
+    ///   The subject to subscribe to.
+    /// </param>
     /// <param name="consumer">
     ///   The consumer to be subscribed to the event bus.
     /// </param>
@@ -23,6 +26,6 @@ public interface IEventSubscriber
     /// <returns>
     ///   Returns a task that is completed when the consumer has subscribed to the event.
     /// </returns>
-    Task SubscribeAsync<TEvent>(IEventConsumer<TEvent> consumer, CancellationToken cancellationToken = default)
+    Task SubscribeAsync<TEvent>(string subject, IEventConsumer<TEvent> consumer, CancellationToken cancellationToken = default)
         where TEvent : class;
 }

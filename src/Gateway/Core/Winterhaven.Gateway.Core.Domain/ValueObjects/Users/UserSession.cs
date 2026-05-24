@@ -3,6 +3,7 @@
 using System;
 
 public sealed record UserSession(
+    Guid UserAccountId,
     string Username,
     string AccessToken,
     string RefreshToken,

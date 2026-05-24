@@ -4,7 +4,6 @@ using global::NATS.Client.Core;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Winterhaven.Brokering.NATS.Resolving;
 
 internal sealed class NatsEventSubscriber : IEventSubscriber
 {
@@ -12,21 +11,17 @@ internal sealed class NatsEventSubscriber : IEventSubscriber
 
     private readonly ILogger<NatsEventSubscriber> logger;
 
-    private readonly INatsSubjectResolver subjectResolver;
-
-    public NatsEventSubscriber(ILogger<NatsEventSubscriber> logger, INatsConnection connection, INatsSubjectResolver subjectResolver)
+    public NatsEventSubscriber(ILogger<NatsEventSubscriber> logger, INatsConnection connection)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
-        this.subjectResolver = subjectResolver ?? throw new ArgumentNullException(nameof(subjectResolver));
     }
 
-    public async Task SubscribeAsync<TEvent>(IEventConsumer<TEvent> consumer, CancellationToken cancellationToken = default)
+    public async Task SubscribeAsync<TEvent>(string subject, IEventConsumer<TEvent> consumer, CancellationToken cancellationToken = default)
         where TEvent : class
     {
         ArgumentNullException.ThrowIfNull(consumer);
-
-        string subject = this.subjectResolver.ResolveSubject<TEvent>();
+        ArgumentException.ThrowIfNullOrWhiteSpace(subject);
 
         this.logger.LogTrace("Subscribing to NATS Event: {Subject}", subject);
 

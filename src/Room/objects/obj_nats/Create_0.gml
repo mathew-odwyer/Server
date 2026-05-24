@@ -16,7 +16,7 @@ _client = new Client(network_socket_ws);
 /// @description THe NATS client protocol.
 _protocol = new NatsClientProtocol(_client.send);
 
-if (!_client.connect("ws://nats", 9222))
+if (!_client.connect("ws://localhost", 9222))
 {
 	_logger.log(log_type.error, "Failed to connect to NATS server.");
 	throw "Failed to connect to NATS server";

@@ -4,7 +4,6 @@ using global::NATS.Client.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
-using Winterhaven.Brokering.NATS.Resolving;
 using Winterhaven.Brokering.NATS.Serialization;
 
 /// <summary>
@@ -37,7 +36,6 @@ public static class ServiceCollectionExtensions
             SerializerRegistry = NatsSnakeCaseSerializerRegistry.Default,
         });
 
-        services.AddSingleton<INatsSubjectResolver, NatsSubjectResolver>();
         services.AddSingleton<IEventPublisher, NatsEventPublisher>();
         services.AddSingleton<IEventSubscriber, NatsEventSubscriber>();
 

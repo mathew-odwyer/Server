@@ -12,4 +12,4 @@
 
 /// @type {Real}
 /// @description The server tick rate (in frames).
-#macro tick_rate 20
+#macro tick_rate 10
