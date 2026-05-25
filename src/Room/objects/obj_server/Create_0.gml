@@ -22,10 +22,6 @@
 
 instance_singleton(obj_server);
 
-/// @type {String}
-/// @description The map data.
-map_data = undefined;
-
 /// @type {Struct.Server}
 /// @description The server.
 _server = new Server(socket_type, server_port, server_max_clients);

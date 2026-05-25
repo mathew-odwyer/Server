@@ -82,7 +82,7 @@ function user_login(credentials, connection)
 				players: players,
 				refresh_token: connection[$ "refresh_token"],
 				messages: messages,
-				map_data: obj_server.map_data,
+				map_data: obj_map_loader.map_data,
 			};
 		}))
 		.fail(function(error)
