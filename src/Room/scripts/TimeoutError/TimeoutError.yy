@@ -6,7 +6,7 @@
   "name":"TimeoutError",
   "parent":{
     "name":"Errors",
-    "path":"folders/Extensions/GMUtilities/Scripts/Errors.yy",
+    "path":"folders/Extensions/GMFoundation/GMNetwork/Scripts/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

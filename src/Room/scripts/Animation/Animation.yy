@@ -6,7 +6,7 @@
   "name":"Animation",
   "parent":{
     "name":"Scripts",
-    "path":"folders/Extensions/GMAnimations/Scripts.yy",
+    "path":"folders/Extensions/GMFoundation/GMAnimations/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,3 +1,5 @@
+/// @globalvar {Struct.AbortSignal} AbortSignal  
+
 /// @description Represents a signal object that allows you to communicate with an asynchronous operation (such as a fetch request) and abort.
 function AbortSignal() constructor
 {

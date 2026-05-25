@@ -1,5 +1,7 @@
 /// @description Handle HTTP events.
 
+/// @localvar {Any} http_async 
+
 var request = async_load[? "id"];
 var result = async_load[? "result"];
 	

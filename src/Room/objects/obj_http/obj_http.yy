@@ -9,8 +9,8 @@
   "name":"obj_http",
   "overriddenProperties":[],
   "parent":{
-    "name":"HTTP",
-    "path":"folders/Extensions/GMNetwork/Objects/HTTP.yy",
+    "name":"Network",
+    "path":"folders/Objects/Network.yy",
   },
   "parentObjectId":null,
   "persistent":true,

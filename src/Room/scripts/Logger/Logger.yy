@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Logger",
   "parent":{
-    "name":"Logging",
-    "path":"folders/Extensions/GMUtilities/Scripts/Logging.yy",
+    "name":"Scripts",
+    "path":"folders/Extensions/GMFoundation/GMLogger/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

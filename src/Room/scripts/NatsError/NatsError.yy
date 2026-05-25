@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Client",
+  "%Name":"NatsError",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Client",
+  "name":"NatsError",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMNetwork/Scripts.yy",
+    "name":"Errors",
+    "path":"folders/Extensions/GMFoundation/GMNetwork/Scripts/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

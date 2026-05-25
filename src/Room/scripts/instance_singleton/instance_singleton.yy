@@ -6,7 +6,7 @@
   "name":"instance_singleton",
   "parent":{
     "name":"Instances",
-    "path":"folders/Extensions/GMUtilities/Scripts/Instances.yy",
+    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts/Instances.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

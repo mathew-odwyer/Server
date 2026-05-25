@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Macros",
+  "%Name":"GMUtilities",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Macros",
+  "name":"GMUtilities",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMUtilities/Scripts.yy",
+    "name":"GMUtilities",
+    "path":"folders/Extensions/GMFoundation/GMUtilities.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
