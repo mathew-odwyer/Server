@@ -2,10 +2,8 @@ namespace Winterhaven.API.Presentation;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Infrastructure;
 
-[ExcludeFromCodeCoverage]
 internal static class Program
 {
     internal static void Main(string[] args)

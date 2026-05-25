@@ -1,8 +1,11 @@
 ﻿namespace Winterhaven.Common.DTOs.Maps;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 ///   Represents the data transfer object used to fetch a map.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record GetMapRequestDto
 {
     /// <summary>

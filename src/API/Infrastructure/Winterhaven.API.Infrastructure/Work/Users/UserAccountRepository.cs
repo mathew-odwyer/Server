@@ -2,13 +2,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
-[ExcludeFromCodeCoverage]
-internal sealed class UserAccountRepository : Repository<UserAccount>, IUserAccountRepository
+internal sealed class UserAccountRepository : RepositoryBase<UserAccount>, IUserAccountRepository
 {
     public UserAccountRepository(DbContext context)
         : base(context)

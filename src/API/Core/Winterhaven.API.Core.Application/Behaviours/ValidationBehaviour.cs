@@ -4,13 +4,11 @@ using FluentValidation;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ValidationException = Domain.Exceptions.ValidationException;
 
-[ExcludeFromCodeCoverage]
 public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
      where TRequest : notnull
 {

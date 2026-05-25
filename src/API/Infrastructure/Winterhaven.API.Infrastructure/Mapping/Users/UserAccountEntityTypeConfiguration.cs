@@ -2,7 +2,6 @@
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
@@ -10,7 +9,6 @@ using Winterhaven.API.Core.Domain.Entities.Users;
 ///   Configures the user account entity.
 /// </summary>
 /// <see cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
-[ExcludeFromCodeCoverage]
 public sealed class UserAccountEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserAccount>
 {
     /// <inheritdoc/>

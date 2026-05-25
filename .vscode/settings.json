@@ -1,0 +1,6 @@
+{
+    "stitch.diagnostics.suppressGroups": [
+        "Extensions/GMFoundation/GMUtilities",
+        "Extensions/GMFoundation/GMPromises"
+    ]
+}

@@ -3,13 +3,11 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Domain.Attributes.Users;
 
-[ExcludeFromCodeCoverage]
 public sealed class AuthorizationBehahviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {

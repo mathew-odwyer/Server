@@ -2,10 +2,8 @@
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
-[ExcludeFromCodeCoverage]
 internal sealed class ActorEntityTypeConfiguration : EntityTypeConfigurationBase<Actor>
 {
     public override void Configure(EntityTypeBuilder<Actor> builder)

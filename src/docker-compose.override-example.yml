@@ -1,5 +1,7 @@
 services:
   caddy:
+    env_file:
+      .env
     volumes:
       - ${AppData}/caddy/data:/data
       - ${AppData}/caddy/config:/config

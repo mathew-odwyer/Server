@@ -2,13 +2,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
-[ExcludeFromCodeCoverage]
-internal sealed class ActorRepository : Repository<Actor>, IActorRepository
+internal sealed class ActorRepository : RepositoryBase<Actor>, IActorRepository
 {
     public ActorRepository(DbContext context)
         : base(context)

@@ -8,13 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scalar.AspNetCore;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Infrastructure.Extensions;
 using Winterhaven.API.Presentation.Extensions;
 using Winterhaven.API.Presentation.Options.Security;
 using Winterhaven.Common.Extensions;
 
-[ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
     public Startup(IConfiguration configuration)
