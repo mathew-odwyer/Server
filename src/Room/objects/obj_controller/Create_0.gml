@@ -3,6 +3,7 @@
 /// @globalvar {Struct.Logger} Logger
 /// @globalvar {Struct.EventAggregator} EventAggregator 
 /// @globalvar {Any} Promise
+/// @globalvar {Any} AbortSignal 
 
 Logger.LogLevel = log_type.debug;
 
