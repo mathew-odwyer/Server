@@ -1,6 +1,4 @@
-﻿namespace Winterhaven.Gateway.Core.Domain.Events.Users;
-
-using Winterhaven.Brokering.Attributes;
+﻿namespace Winterhaven.Brokering.Events.Users;
 
 /// <summary>
 ///   Represents an event that is triggered when a user has logged in.
@@ -11,7 +9,6 @@ using Winterhaven.Brokering.Attributes;
 /// <param name="AccessToken">
 ///   The access token of the user who has logged in.
 /// </param>
-[EventName("user.logged_in")]
 public sealed record UserLoggedInEvent(
     string Username,
     string AccessToken);

@@ -14,6 +14,7 @@ using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Services;
 using Winterhaven.Gateway.Presentation.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
+using Winterhaven.Gateway.Presentation.Targets.Players;
 using Winterhaven.Gateway.Presentation.Targets.Users;
 using Winterhaven.Gateway.Presentation.Validation;
 using Winterhaven.Gateway.Presentation.Validation.Users;
@@ -73,6 +74,7 @@ internal sealed class Startup
 
         services.AddScoped<RpcTargetBase, HealthRpcTarget>();
         services.AddScoped<RpcTargetBase, UserRpcTarget>();
+        services.AddScoped<RpcTargetBase, PlayerRpcTarget>();
 
         services.AddGatewayInfrastructureServices(this.Configuration);
 

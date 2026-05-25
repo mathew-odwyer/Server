@@ -2,6 +2,10 @@
 
 instance_singleton(obj_map_loader);
 
+/// @type {String}
+/// @description The TMX map data.
+map_data = undefined;
+
 /// @type {Struct.Logger}
 /// @description The logger.
 _logger = new Logger(nameof(obj_map_loader));
@@ -16,7 +20,11 @@ _map_client
 	.get_async("bellmare_tavern")
 	.next(method(self, function(response)
 	{
+		map_data = response.data;
 		map_load_map(response.data);
+
+		layer_set_visible("Collisions", debug_mode || os_type != os_linux);
+		
 		_logger.log(log_type.information, $"Loaded map: '{response.name}'");
 	}))
 	.fail(method({_logger}, function(error)

@@ -1,7 +1,5 @@
 /// @description Initialize default parameters.
 
-/// @instancevar {String} name The name of the character.
-
 /// @description Enumerates the available character states. 
 enum character_state
 {
@@ -9,6 +7,10 @@ enum character_state
     walk,
 	wander,
 };
+
+/// @type {String}
+/// @description The name of the character. 
+name = "";
 
 /// @type {Struct.CharacterCustomizer}
 /// @description The character customizer.
@@ -66,7 +68,7 @@ _move = function(move_x, move_y)
 /// @returns {Bool} Returns `true` if the character is moving; otherwise, `false`.
 _moving = function()
 {
-    return _move_x !=0 || _move_y != 0;
+    return _move_x < 0 || _move_x > 0 || _move_y < 0 || _move_y > 0;
 }
 
 /// @description Gets the current direction index for the character.

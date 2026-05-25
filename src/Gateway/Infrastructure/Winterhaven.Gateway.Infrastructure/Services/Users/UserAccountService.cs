@@ -7,11 +7,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.Brokering;
+using Winterhaven.Brokering.Events.Users;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
-using Winterhaven.Gateway.Core.Domain.Events.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 
@@ -85,12 +85,13 @@ internal sealed class UserAccountService : IUserAccountService
 
             // Authenticate the session with the access token. This ensures that any HTTP requests made after this point will include the access token for authentication.
             this.sessionAuthenticator.Authenticate(new UserSession(
+                UserAccountId: ParseUserAccountId(response.AccessToken),
                 Username: ParseUsername(response.AccessToken),
                 AccessToken: response.AccessToken,
                 RefreshToken: response.RefreshToken,
                 AccessTokenExpiry: TimeSpan.FromSeconds(response.ExpirationSeconds)));
 
-            await this.eventPublisher.PublishEventAsync(new UserLoggedInEvent(
+            await this.eventPublisher.PublishEventAsync("user.logged_in", new UserLoggedInEvent(
                 Username: this.sessionContext.Session!.Username,
                 AccessToken: this.sessionContext.Session!.AccessToken), cancellationToken).ConfigureAwait(false);
 
@@ -127,7 +128,7 @@ internal sealed class UserAccountService : IUserAccountService
             await this.userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
             this.sessionAuthenticator.Invalidate();
 
-            await this.eventPublisher.PublishEventAsync(new UserLoggedOutEvent(
+            await this.eventPublisher.PublishEventAsync("user.logged_out", new UserLoggedOutEvent(
                 Username: username), cancellationToken).ConfigureAwait(false);
 
             this.logger.LogInformation("User logout attempt completed for username '{Username}'", username);
@@ -160,6 +161,7 @@ internal sealed class UserAccountService : IUserAccountService
 
         // Re-authenticate the session with the new access token.
         this.sessionAuthenticator.Refresh(new UserSession(
+            UserAccountId: ParseUserAccountId(response.AccessToken),
             Username: ParseUsername(response.AccessToken),
             AccessToken: response.AccessToken,
             RefreshToken: response.RefreshToken,
@@ -192,6 +194,12 @@ internal sealed class UserAccountService : IUserAccountService
 
         return new UserRegistrationResult(
             Success: true);
+    }
+
+    private static Guid ParseUserAccountId(string accessToken)
+    {
+        var jwt = new JsonWebTokenHandler().ReadJsonWebToken(accessToken);
+        return Guid.Parse(jwt.Claims.First(c => c.Type == "identifier").Value);
     }
 
     private static string ParseUsername(string accessToken)

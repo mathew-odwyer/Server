@@ -9,20 +9,15 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
-using Winterhaven.Gateway.Core.Domain.Events.Sessions;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Presentation.Attributes;
 using ValidationException = Core.Domain.Exceptions.ValidationException;
 
 internal sealed class GatewayJsonRpc : JsonRpc
 {
-    private static readonly TimeSpan ExpiryBuffer = TimeSpan.FromSeconds(5);
-
     private readonly ILogger<GatewayJsonRpc> logger;
 
     private readonly ISessionAuthenticator sessionAuthenticator;
-
-    private CancellationTokenSource? expiryTokenSource;
 
     public GatewayJsonRpc(
         ILogger<GatewayJsonRpc> logger,
@@ -32,10 +27,6 @@ internal sealed class GatewayJsonRpc : JsonRpc
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
-
-        this.sessionAuthenticator.SessionAuthenticated += this.SessionAuthenticator_SessionAuthenticated;
-        this.sessionAuthenticator.SessionRefreshed += this.SessionAuthenticator_SessionRefreshed;
-        this.sessionAuthenticator.SessionInvalidated += this.SessionAuthenticator_SessionInvalidated;
     }
 
     protected override JsonRpcError.ErrorDetail CreateErrorDetails(JsonRpcRequest request, Exception exception)

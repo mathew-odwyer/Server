@@ -4,7 +4,7 @@
 /// @globalvar {Struct.EventAggregator} EventAggregator 
 /// @globalvar {Any} Promise 
 
-Logger.LogLevel = log_type.trace;
+Logger.LogLevel = log_type.debug;
 
 exception_unhandled_handler(unhandled_exception_callback);
 

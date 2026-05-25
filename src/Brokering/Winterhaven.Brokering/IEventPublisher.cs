@@ -14,6 +14,9 @@ public interface IEventPublisher
     /// <typeparam name="TEvent">
     ///   The type of the event to be published.
     /// </typeparam>
+    /// <param name="subject">
+    ///   The subject to subscribe to.
+    /// </param>
     /// <param name="e">
     ///   The event to be published.
     /// </param>
@@ -23,6 +26,6 @@ public interface IEventPublisher
     /// <returns>
     ///   Returns a <see cref="Task"/> that represents the result of the operation.
     /// </returns>
-    Task PublishEventAsync<TEvent>(TEvent e, CancellationToken cancellationToken = default)
+    Task PublishEventAsync<TEvent>(string subject, TEvent e, CancellationToken cancellationToken = default)
         where TEvent : class;
 }

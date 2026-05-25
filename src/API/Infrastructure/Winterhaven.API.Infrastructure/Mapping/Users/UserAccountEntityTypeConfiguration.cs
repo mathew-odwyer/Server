@@ -3,6 +3,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
 /// <summary>
@@ -38,7 +39,7 @@ public sealed class UserAccountEntityTypeConfiguration : AuditableEntityTypeConf
         builder
             .HasOne(x => x.Player)
             .WithOne()
-            .HasForeignKey<UserAccount>("PlayerId");
+            .HasForeignKey<Player>(x => x.Id);
 
         base.Configure(builder);
     }
