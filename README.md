@@ -4,8 +4,8 @@
 
 [![Built with: ASP.NET](https://img.shields.io/badge/Built%20with-ASP.NET-512BD4)](https://dotnet.microsoft.com/apps/aspnet)
 [![Made with: GameMaker](https://img.shields.io/badge/Made%20with-GameMaker-000000)](https://gamemaker.io/)
-[![Built with: Node.js](https://img.shields.io/badge/Built%20with-Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 
+[![Build](https://github.com/mathew-odwyer/Server/actions/workflows/build.yml/badge.svg)](https://github.com/mathew-odwyer/Server/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server)](https://github.com/mathew-odwyer/Server/releases)
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
@@ -60,7 +60,8 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
 | Component | Technology | Purpose |
 |-----------|-----------|---------|
 | Client | GameMaker (GML) | Game rendering, input handling, client-side prediction |
-| Game Server | GameMaker (GML) | Real-time game logic, state authority, world simulation |
+| Gateway | ASP.NET Core, C#, StreamJsonRpc | Centralized connection service for all clients |
+| Room | GameMaker (GML) | Real-time game logic, state authority, world simulation |
 | Web API | ASP.NET Core, C# | Authentication, user management, data persistence |
 | Database | MSSQL + EF Core | Player data, accounts, persistent storage |
 | Reverse Proxy | Caddy | SSL/TLS termination, routing |
@@ -114,6 +115,6 @@ _This project is dedicated to my dearly departed partner Bellamy, I love you lev
 
 ## 📄 License
 
-Copyright © 2025 Mathew O'Dwyer. All rights reserved.
+Copyright © 2026 Mathew O'Dwyer. All rights reserved.
 
 This software is proprietary and may not be redistributed, modified, or used commercially without explicit permission from Mathew O'Dwyer.

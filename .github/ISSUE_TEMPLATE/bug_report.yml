@@ -2,15 +2,15 @@ name: 🐛 Bug Report
 description: A break in functionality.
 title: "🐛 Bug Report"
 labels: ["🐛 Bug"]
-projects: ["softwareantics/2"]
+projects: ["mathew-odwyer/7"]
 assignees:
-  - softwareantics
+  - mathew-odwyer
   
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to submit a feature request!
+        Thanks for taking the time to submit a bug report!
   
   - type: checkboxes
     id: checklist

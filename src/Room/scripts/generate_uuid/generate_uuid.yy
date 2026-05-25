@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"generate_uuid",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"generate_uuid",
+  "parent":{
+    "name":"UUID",
+    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts/UUID.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

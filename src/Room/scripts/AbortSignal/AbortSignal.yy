@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"AbortSignal",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"AbortSignal",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Extensions/GMFoundation/GMSignals/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
