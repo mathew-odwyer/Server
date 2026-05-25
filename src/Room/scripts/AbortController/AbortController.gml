@@ -3,7 +3,7 @@ function AbortController() constructor
 {
     /// @type {Struct.Logger}
     /// @description The logger.
-    _logger = new Logger(nameof(AbortController));
+    static _logger = new Logger(nameof(AbortController));
 
     /// @type {Any}
     /// @description The signal which can be used to communicate with, or to abort, an asynchronous operation.

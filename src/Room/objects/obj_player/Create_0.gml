@@ -2,11 +2,11 @@
 
 /// @instancevar {Struct.ClientConnection} connection The client connection associated with the player.
 
-/// @type {Real}
-/// @description The server-side tick rate.
-#macro server_tick_rate 20
-
 event_inherited();
+
+/// @type {String}
+/// @description The player entity identifier.
+identifier = "";
 
 /// @type {Id.DsQueue}
 /// @description The actions to be performed on the server.
@@ -39,4 +39,4 @@ notify = function(procedure, params)
     obj_server.notify(connection, procedure, params);
 }
 
-alarm[0] = server_tick_rate;
+alarm[0] = tick_rate;

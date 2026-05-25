@@ -32,7 +32,7 @@ _protocol = new JsonRpcServerProtocol(_server);
 
 /// @type {Struct.MapClient}
 /// @description The map client used to fetch and load the servers map.
-_map_client = new MapClient({ api_key: environment_get_variable("API_KEY") });
+_map_client = new MapClient({ x_api_key: environment_get_variable("API_KEY") });
 
 /// @inheritdoc
 notify = _protocol.notify;

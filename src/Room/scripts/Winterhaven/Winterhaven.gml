@@ -17,3 +17,7 @@
 /// @type {Real}
 /// @description The distance between two instances that must be met before an action can be executed.
 #macro action_radius 2 * cell_width
+
+/// @type {Real}
+/// @description The server tick rate.
+#macro tick_rate 20

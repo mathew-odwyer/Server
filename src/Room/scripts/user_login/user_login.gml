@@ -63,6 +63,7 @@ function user_login(credentials, connection)
 			var inst = instance_create_layer(player.x, player.y, "Instances", obj_player);
 			
 			inst.name = player.name;
+			inst.identifier = player.id;
 			inst.connection = connection;
 
 			// Send welcome message to player (accounting for new and returning players).
