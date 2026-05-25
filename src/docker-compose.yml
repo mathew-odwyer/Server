@@ -4,6 +4,9 @@ services:
   caddy:
     container_name: caddy
     image: winterhaven-caddy
+    depends_on:
+      room:
+        condition: service_started
     build:
       context: ./Configuration/Caddy
       dockerfile: Dockerfile
