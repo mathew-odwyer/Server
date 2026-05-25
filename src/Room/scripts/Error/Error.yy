@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Error",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMExceptions/Scripts.yy",
+    "name":"Errors",
+    "path":"folders/Extensions/GMUtilities/Scripts/Errors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

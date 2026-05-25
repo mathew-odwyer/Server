@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"StateMachine",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMStates/Scripts.yy",
+    "name":"States",
+    "path":"folders/Extensions/GMUtilities/Scripts/States.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

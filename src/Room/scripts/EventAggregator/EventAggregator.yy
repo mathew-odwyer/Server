@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"EventAggregator",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMEvents/Scripts.yy",
+    "name":"Events",
+    "path":"folders/Extensions/GMUtilities/Scripts/Events.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

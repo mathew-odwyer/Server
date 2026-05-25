@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"generate_uuid",
   "parent":{
-    "name":"UUID",
-    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts/UUID.yy",
+    "name":"Security",
+    "path":"folders/Extensions/GMUtilities/Scripts/Security.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

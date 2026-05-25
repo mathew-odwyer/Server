@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"PromiseGML",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMPromises/Scripts.yy",
+    "name":"Promises",
+    "path":"folders/Extensions/GMUtilities/Scripts/Promises.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

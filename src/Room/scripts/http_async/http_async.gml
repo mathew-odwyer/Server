@@ -18,16 +18,15 @@ function http_async(url, type, body = {}, options = {})
 	
 	headers[? "Accept"] = "application/json, application/problem+json, text/xml";
 	headers[? "Content-Type"] = "application/json";
-	headers[? "Accept-Case"] = "snake_cake";
 	
 	if (struct_exists(options, "bearer"))
 	{
 		headers[? "Authorization"] = $"Bearer {options[$ "bearer"]}";
 	}
 
-	if (struct_exists(options, "x_api_key"))
+	if (struct_exists(options, "api_key"))
 	{
-		headers[? "X-API-KEY"] = options[$ "x_api_key"];
+		headers[? "X-API-KEY"] = options[$ "api_key"];
 	}
 
 	_logger.log(log_type.debug, $"{type} '{url}'...");

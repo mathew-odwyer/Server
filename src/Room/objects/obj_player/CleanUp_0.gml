@@ -2,12 +2,14 @@
 
 with (obj_player)
 {
-    if (self.identifier == other.identifier)
+    if (self.id == other.id)
     {
         continue;
     }
 
     notify("player.delete_remote", other.name);
 }
+
+connection.cleanup();
 
 ds_queue_destroy(_action_queue);

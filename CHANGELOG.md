@@ -7,18 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - DD-MM-YYYY
 
-### Added
-
-- [#91] - Gateway WebSocket Server (_by [@mathew-odwyer]_).
-- [#72] - Communication via NATS Server (_by [@mathew-odwyer]_).
-
-### Fixed
-
-- [#129] - Room Service Entry Point Causes Crash on Service Restart (_by [@mathew-odwyer]_).
-- [#60] - Convert Validation Errors to Human Readable Messages (_by [@mathew-odwyer]_).
-- [#71] - Forwarded Origin of Gateway Requests (_by [@mathew-odwyer]_).
-- [#59] - Server Sends GML Error Messages to Client (_by [@mathew-odwyer]_).
-
 ## [v0.2.0] - 05-12-2025
 
 ### Added

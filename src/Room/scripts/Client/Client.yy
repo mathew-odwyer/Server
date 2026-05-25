@@ -6,7 +6,7 @@
   "name":"Client",
   "parent":{
     "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMNetwork/Scripts.yy",
+    "path":"folders/Extensions/GMNetwork/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

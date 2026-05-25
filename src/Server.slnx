@@ -26,43 +26,11 @@
       <Platform Project="x64" />
     </Project>
   </Folder>
-  <Folder Name="/Brokering/">
-    <Project Path="Brokering/Winterhaven.Brokering.NATS/Winterhaven.Brokering.NATS.csproj" Id="77208273-4a33-4ee2-a07f-820f2877a858">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Brokering/Winterhaven.Brokering/Winterhaven.Brokering.csproj" Id="43be6921-06cc-4882-8982-8b6d692416b1">
-      <Platform Project="x64" />
-    </Project>
-  </Folder>
   <Folder Name="/Common/">
     <Project Path="Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj" Id="3e5adda7-18aa-4e6b-9ce9-c7fb7a4198fe">
       <Platform Project="x64" />
     </Project>
     <Project Path="Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj" Id="20cb5f40-08c9-424c-80aa-d6974ce4b194">
-      <Platform Project="x64" />
-    </Project>
-  </Folder>
-  <Folder Name="/Gateway/" />
-  <Folder Name="/Gateway/Core/">
-    <Project Path="Gateway/Core/Winterhaven.Gateway.Core.Application/Winterhaven.Gateway.Core.Application.csproj">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Gateway/Core/Winterhaven.Gateway.Core.Domain/Winterhaven.Gateway.Core.Domain.csproj">
-      <Platform Project="x64" />
-    </Project>
-  </Folder>
-  <Folder Name="/Gateway/Infrastructure/">
-    <Project Path="Gateway/Infrastructure/Winterhaven.Gateway.Infrastructure/Winterhaven.Gateway.Infrastructure.csproj">
-      <Platform Project="x64" />
-    </Project>
-  </Folder>
-  <Folder Name="/Gateway/Presentation/">
-    <Project Path="Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj">
-      <Platform Project="x64" />
-    </Project>
-  </Folder>
-  <Folder Name="/Gateway/Tests/">
-    <Project Path="Gateway/Tests/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj">
       <Platform Project="x64" />
     </Project>
   </Folder>
@@ -80,9 +48,5 @@
   </Folder>
   <Folder Name="/Solution Items/Configuration/Database/">
     <File Path="Configuration/Database/Dockerfile" />
-  </Folder>
-  <Folder Name="/Solution Items/Configuration/NATS/">
-    <File Path="Configuration/NATS/nats-development.conf" />
-    <File Path="Configuration/NATS/nats-production.conf" />
   </Folder>
 </Solution>

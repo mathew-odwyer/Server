@@ -6,7 +6,7 @@
   "name":"MapClient",
   "parent":{
     "name":"Maps",
-    "path":"folders/Scripts/HTTP/Clients/Maps.yy",
+    "path":"folders/Scripts/Network/HTTP/Clients/Maps.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

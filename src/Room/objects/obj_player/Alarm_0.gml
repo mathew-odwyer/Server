@@ -20,4 +20,4 @@ with (obj_player)
 }
 
 array_resize(_actions_performed, 0);
-alarm[0] = tick_rate;
+alarm[0] = server_tick_rate;

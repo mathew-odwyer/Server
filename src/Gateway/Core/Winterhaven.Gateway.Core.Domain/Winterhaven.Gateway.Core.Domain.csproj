@@ -1,5 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Brokering\Winterhaven.Brokering\Winterhaven.Brokering.csproj" />
-  </ItemGroup>
-</Project>

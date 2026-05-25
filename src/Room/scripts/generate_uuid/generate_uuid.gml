@@ -3,5 +3,5 @@
 function generate_uuid()
 {
 	static uuid = 0;
-	return int64(uuid++);
+	return uuid++;
 }

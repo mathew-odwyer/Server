@@ -1,0 +1,35 @@
+services:
+  caddy:
+    volumes:
+      - ${AppData}/caddy/data:/data
+      - ${AppData}/caddy/config:/config
+
+  api:
+    env_file:
+      .env
+    ports:
+      - "8080:8080"
+
+  database:
+    ports:
+      - "1433:1433"
+    env_file:
+      .env
+
+  room:
+    env_file:
+      .env
+
+  builder:
+    container_name: winterhaven-builder
+    image: winterhaven-builder
+    ports:
+      - "22:22"
+    build:
+      context: ./Configuration/GMBuilder
+      dockerfile: Dockerfile
+    cap_add:
+      - SYS_ADMIN
+      - MKNOD
+    security_opt:
+      - seccomp:unconfined

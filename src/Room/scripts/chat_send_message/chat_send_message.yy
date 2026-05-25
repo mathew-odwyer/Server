@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chat_send_message",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chat_send_message",
+  "parent":{
+    "name":"Chat",
+    "path":"folders/Scripts/Network/Servers/Chat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

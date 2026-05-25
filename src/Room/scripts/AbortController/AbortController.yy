@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"AbortController",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMSignals/Scripts.yy",
+    "name":"Events",
+    "path":"folders/Extensions/GMUtilities/Scripts/Events.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

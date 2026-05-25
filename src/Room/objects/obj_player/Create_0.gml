@@ -1,14 +1,12 @@
 /// @description Initialize default parameters.
 
+/// @instancevar {Struct.ClientConnection} connection The client connection associated with the player.
+
+/// @type {Real}
+/// @description The server-side tick rate.
+#macro server_tick_rate 20
+
 event_inherited();
-
-/// @type {String}
-/// @description The name of the player
-name = "Player";
-
-/// @type {String}
-/// @description The unique identifier of the player.
-identifier = "";
 
 /// @type {Id.DsQueue}
 /// @description The actions to be performed on the server.
@@ -33,21 +31,12 @@ enqueue_actions = function(actions)
 }
 
 /// @description Sends a JSON-RPC 2.0 notification to the `player`.
-/// @param {String} method The procedure to send to the `player`.
+/// @param {String} procedure The procedure to send to the `player`.
 /// @param {Any} params The parameters of the procedure to send to the `player`
-notify = function(method, params)
+notify = function(procedure, params)
 {
-    event_publish($"player.{identifier}.notify", {
-        method: method,
-        params: params,
-    });
+	/// @feather ignore once GM1041
+    obj_server.notify(connection, procedure, params);
 }
 
-// Wait one frame so that the identifier can be set.
-call_later(1, time_source_units_frames, function()
-{
-    // TODO: Unsubscribe from events on cleanup with event_unsubscribe.
-    event_subscribe($"player.{identifier}.action", enqueue_actions);
-});
-
-alarm[0] = tick_rate;
+alarm[0] = server_tick_rate;

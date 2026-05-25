@@ -39,7 +39,7 @@ function Client(type) constructor
 	}
 	
 	/// @description Sends the specified `message` through the socket.
-	/// @param {Struct|String} message - The `message` to send through the socket.
+	/// @param {Struct} message - The `message` to send through the socket.
 	/// @returns {Bool} Returns `true` if the message was sent; otherwise, `false`.
 	send = function(message)
 	{
@@ -49,7 +49,7 @@ function Client(type) constructor
 		}
 		
 		buffer_seek(_write_buffer, buffer_seek_start, 0);
-		buffer_write(_write_buffer, buffer_text, is_string(message) ? message : json_stringify(message));
+		buffer_write(_write_buffer, buffer_string, json_stringify(message));
 		
 		return network_send_raw(_socket, _write_buffer, buffer_tell(_write_buffer)) >= 0;
 	}

@@ -4,14 +4,13 @@
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":62,"eventType":7,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":12,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
   "name":"obj_http",
   "overriddenProperties":[],
   "parent":{
     "name":"HTTP",
-    "path":"folders/Objects/Networking/HTTP.yy",
+    "path":"folders/Extensions/GMNetwork/Objects/HTTP.yy",
   },
   "parentObjectId":null,
   "persistent":true,

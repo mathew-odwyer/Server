@@ -2,13 +2,17 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using Winterhaven.API.Presentation.Authentication;
 using Winterhaven.API.Presentation.Filters;
 using Winterhaven.API.Presentation.Mappings.Maps;
@@ -24,6 +28,10 @@ internal static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
+
+        services
+            .AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/root/.aspnet/DataProtection-Keys"));
 
         services.AddAuthentication(x =>
         {
@@ -83,7 +91,8 @@ internal static class ServiceCollectionExtensions
             x.Filters.Add<ConflictExceptionFilterAttribute>();
             x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
             x.Filters.Add<AcceptCaseActionFilterAttribute>();
-        });
+        })
+        .AddJsonOptions(x => x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
 
         return services;
     }
@@ -105,7 +114,12 @@ internal static class ServiceCollectionExtensions
         services.AddHealthChecks();
         services.AddEndpointsApiExplorer();
 
-        services.AddOpenApi("v0.3.0", options =>
+        string version = Assembly
+            .GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion ?? "unknown";
+
+        services.AddOpenApi($"v{version}", options =>
         {
             options.AddDocumentTransformer<WinterhavenTransformer>();
             options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();

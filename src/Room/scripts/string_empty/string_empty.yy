@@ -6,7 +6,7 @@
   "name":"string_empty",
   "parent":{
     "name":"Strings",
-    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts/Strings.yy",
+    "path":"folders/Extensions/GMUtilities/Scripts/Strings.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

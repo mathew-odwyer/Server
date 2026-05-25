@@ -6,7 +6,7 @@
   "name":"PlayerClient",
   "parent":{
     "name":"Players",
-    "path":"folders/Scripts/HTTP/Clients/Players.yy",
+    "path":"folders/Scripts/Network/HTTP/Clients/Players.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
