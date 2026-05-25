@@ -2,15 +2,13 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
-[ExcludeFromCodeCoverage]
-internal sealed class UserSessionTokenRepository : Repository<UserSessionToken>, IUserSessionTokenRepository
+internal sealed class UserSessionTokenRepository : RepositoryBase<UserSessionToken>, IUserSessionTokenRepository
 {
     public UserSessionTokenRepository(DbContext context)
         : base(context)

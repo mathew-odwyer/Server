@@ -12,12 +12,12 @@ using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Domain.Entities;
 
 [ExcludeFromCodeCoverage]
-internal abstract class Repository<TEntity> : IRepository<TEntity>
+internal abstract class RepositoryBase<TEntity> : IRepository<TEntity>
     where TEntity : EntityBase
 {
     private readonly DbContext context;
 
-    public Repository(DbContext context)
+    public RepositoryBase(DbContext context)
     {
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }

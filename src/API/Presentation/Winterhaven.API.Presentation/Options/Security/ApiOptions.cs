@@ -1,10 +1,12 @@
 ﻿namespace Winterhaven.API.Presentation.Options.Security;
 
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 ///   Provides options used to configuration the server-to-API settings.
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal sealed class ApiOptions
 {
     /// <summary>

@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
-[ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
 internal sealed class UnhandledExceptionFilterAttribute : ExceptionFilterAttribute
 {

@@ -42,6 +42,7 @@ Please list any possible issues that may arise from the merge of this PR.
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
-- [ ] I have added unit tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] I have not used `ExcludeFromCodeCoverageAttribute` on a class with logic.
+- [ ] New and existing tests pass locally with my changes
 - [ ] My changes generate no new warnings

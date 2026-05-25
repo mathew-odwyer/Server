@@ -2,10 +2,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Application.Work;
 
-[ExcludeFromCodeCoverage]
 internal sealed class UnitOfWorkFactory : IUnitOfWorkFactory
 {
     private readonly DbContext context;

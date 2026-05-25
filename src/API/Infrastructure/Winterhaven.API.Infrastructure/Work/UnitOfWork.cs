@@ -2,13 +2,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Domain.Exceptions;
 
-[ExcludeFromCodeCoverage]
 internal sealed class UnitOfWork : IUnitOfWork
 {
     private readonly DbContext? context;
