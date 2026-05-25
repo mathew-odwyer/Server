@@ -1,0 +1,38 @@
+name: 🧪 Tests
+description: Track unit, integration, or functional tests that need to be written.
+title: "🧪 Tests: "
+labels: ["tests"]
+projects: ["mathew-odwyer/7"]
+assignees:
+  - mathew-odwyer
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to track tests that need to be written for an existing piece of code.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "I have not removed the 🧪 emoji from the title."
+          required: true
+        - label: "I have added the subject to the title (e.g. `🧪 Tests: ActorRepository`)."
+          required: true
+        - label: "I have confirmed this is not already tracked in another issue."
+          required: true
+        - label: "For maintainers: I have updated the projects and milestones if needed."
+          required: false
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: "Test Type"
+      options:
+        - Unit
+        - Integration
+        - Functional
+    validations:
+      required: true
