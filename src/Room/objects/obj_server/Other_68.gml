@@ -19,7 +19,7 @@ switch (type)
 		var identifier = async_load[? "id"];
 		
 		buffer_seek(buffer, buffer_seek_start, 0);
-		var payload = buffer_read(buffer, buffer_string);
+		var payload = buffer_read(buffer, buffer_text);
 		
 		_protocol.handle_message(identifier, payload);
 		break;
