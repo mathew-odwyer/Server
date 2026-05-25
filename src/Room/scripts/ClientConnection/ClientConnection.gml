@@ -23,7 +23,7 @@ function ClientConnection(socket) constructor
 	_is_disposed = false;
 	
 	/// @description Sends the specified `message` through the socket.
-	/// @param {Struct} message The `message` to send through the socket.
+	/// @param {Struct|String} message The `message` to send through the socket.
 	/// @returns {Bool} Returns `true` if the message was sent; otherwise, `false`.
 	send = function(message)
 	{

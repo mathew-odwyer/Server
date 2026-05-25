@@ -91,7 +91,7 @@ _get_direction = function()
 	return _last_direction;
 }
 
-/// @descriptions Updates the animation for the character based on the state and direction.
+/// @description Updates the animation for the character based on the state and direction.
 _update_animation = function()
 {
 	static tags = ["Right", "Up", "Left", "Down"];

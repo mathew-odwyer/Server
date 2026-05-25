@@ -1,4 +1,4 @@
-/// @descriptions Registers a new user account.
+/// @description Registers a new user account.
 /// @param {Struct} credentials The user account credentials.
 /// @param {Struct.ClientConnection} connection The client connection that sent the request.
 /// @returns {Struct.__Promise} Returns a promise that is resolved when the API responds.
