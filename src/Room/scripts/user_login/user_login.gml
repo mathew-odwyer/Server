@@ -84,10 +84,5 @@ function user_login(credentials, connection)
 				messages: messages,
 				map_data: obj_map_loader.map_data,
 			};
-		}))
-		.fail(function(error)
-		{
-			show_debug_message(error);
-			throw error;
-		})
+		}));
 }
