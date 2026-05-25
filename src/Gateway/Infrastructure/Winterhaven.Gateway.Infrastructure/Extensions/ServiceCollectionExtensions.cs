@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO.Abstractions;
+using Winterhaven.Brokering.NATS.Extensions;
 using Winterhaven.Common.Extensions;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
@@ -21,6 +22,8 @@ public static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
+
+        services.AddBrokeringServices(configuration);
 
         services.AddSingleton<IFileSystem, FileSystem>();
 

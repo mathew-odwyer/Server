@@ -35,6 +35,7 @@ RUN dotnet restore Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterh
 
 COPY Gateway/ Gateway/
 COPY Common/ Common/
+COPY Brokering/ Brokering/
 
 RUN dotnet test Gateway/Tests/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj -c Release --no-restore
 RUN dotnet publish Gateway/Presentation/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj -c Release -o /out

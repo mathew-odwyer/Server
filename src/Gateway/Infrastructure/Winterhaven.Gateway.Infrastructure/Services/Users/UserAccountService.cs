@@ -6,6 +6,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Winterhaven.Brokering;
+using Winterhaven.Brokering.Events.Users;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Sessions;
@@ -15,6 +17,8 @@ using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 
 internal sealed class UserAccountService : IUserAccountService
 {
+    private readonly IEventPublisher eventPublisher;
+
     private readonly ILogger<UserAccountService> logger;
 
     private readonly ISessionAuthenticator sessionAuthenticator;
@@ -31,12 +35,14 @@ internal sealed class UserAccountService : IUserAccountService
         ILogger<UserAccountService> logger,
         IUserAccountClient userAccountClient,
         ISessionAuthenticator sessionAuthenticator,
-        ISessionContext sessionContext)
+        ISessionContext sessionContext,
+        IEventPublisher eventPublisher)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
         this.sessionAuthenticator = sessionAuthenticator ?? throw new ArgumentNullException(nameof(sessionAuthenticator));
         this.sessionContext = sessionContext ?? throw new ArgumentNullException(nameof(sessionContext));
+        this.eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
     }
 
     ~UserAccountService()
@@ -79,10 +85,15 @@ internal sealed class UserAccountService : IUserAccountService
 
             // Authenticate the session with the access token. This ensures that any HTTP requests made after this point will include the access token for authentication.
             this.sessionAuthenticator.Authenticate(new UserSession(
+                UserAccountId: ParseUserAccountId(response.AccessToken),
                 Username: ParseUsername(response.AccessToken),
                 AccessToken: response.AccessToken,
                 RefreshToken: response.RefreshToken,
                 AccessTokenExpiry: TimeSpan.FromSeconds(response.ExpirationSeconds)));
+
+            await this.eventPublisher.PublishEventAsync("user.logged_in", new UserLoggedInEvent(
+                Username: this.sessionContext.Session!.Username,
+                AccessToken: this.sessionContext.Session!.AccessToken), cancellationToken).ConfigureAwait(false);
 
             this.logger.LogInformation("User login attempt completed for username '{Username}'", username);
 
@@ -117,6 +128,9 @@ internal sealed class UserAccountService : IUserAccountService
             await this.userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
             this.sessionAuthenticator.Invalidate();
 
+            await this.eventPublisher.PublishEventAsync("user.logged_out", new UserLoggedOutEvent(
+                Username: username), cancellationToken).ConfigureAwait(false);
+
             this.logger.LogInformation("User logout attempt completed for username '{Username}'", username);
         }
         finally
@@ -147,6 +161,7 @@ internal sealed class UserAccountService : IUserAccountService
 
         // Re-authenticate the session with the new access token.
         this.sessionAuthenticator.Refresh(new UserSession(
+            UserAccountId: ParseUserAccountId(response.AccessToken),
             Username: ParseUsername(response.AccessToken),
             AccessToken: response.AccessToken,
             RefreshToken: response.RefreshToken,
@@ -179,6 +194,12 @@ internal sealed class UserAccountService : IUserAccountService
 
         return new UserRegistrationResult(
             Success: true);
+    }
+
+    private static Guid ParseUserAccountId(string accessToken)
+    {
+        var jwt = new JsonWebTokenHandler().ReadJsonWebToken(accessToken);
+        return Guid.Parse(jwt.Claims.First(c => c.Type == "identifier").Value);
     }
 
     private static string ParseUsername(string accessToken)

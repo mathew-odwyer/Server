@@ -383,8 +383,6 @@ test-results/
 # Application configuration files
 appsettings.json
 appsettings.*.json
-# Server application files
-Server.AppImage
 # Visual Studio Code settings folder
 .vscode/
 # Bin and obj folders
@@ -398,10 +396,7 @@ sprites.import.json
 sprites.info.json
 # Docker compose stuff
 docker-compose.override.yml
-Cache/
-GameAssetsLinux/
-GameAssetsLinux.zip
-igor.output.manifest
+
+cache/
+output/
 options.ini
-Server.desktop
-TestResults/
