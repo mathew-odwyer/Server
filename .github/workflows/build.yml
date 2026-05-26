@@ -42,6 +42,7 @@ jobs:
         id: igor
         uses: bscotch/igor-setup@v1.3.0
         with:
+          cache: true
           access-key: ${{secrets.ACCESS_KEY}}
           target-yyp: ${{ github.workspace }}/src/Room/Room.yyp
 
