@@ -49,5 +49,6 @@ jobs:
         uses: bscotch/igor-build@v1.3.2
 
         with:
+          yyc: false
           yyp-path: src/Room/Room.yyp
           user-dir: ${{ steps.igor.outputs.user-dir }}
