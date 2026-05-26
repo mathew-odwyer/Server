@@ -8,6 +8,9 @@ on:
     branches: [ "dev" ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build_server:
     name: Build Server
@@ -48,7 +51,6 @@ jobs:
 
       - name: Build
         uses: bscotch/igor-build@v1.3.2
-
         with:
           yyc: false
           yyp-path: ${{ github.workspace }}/src/Room/Room.yyp
