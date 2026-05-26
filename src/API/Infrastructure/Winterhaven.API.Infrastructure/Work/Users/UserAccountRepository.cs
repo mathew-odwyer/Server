@@ -1,10 +1,10 @@
-﻿namespace Winterhaven.API.Infrastructure.Work.Users;
-
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Infrastructure.Work.Users;
 
 internal sealed class UserAccountRepository : RepositoryBase<UserAccount>, IUserAccountRepository
 {
@@ -13,8 +13,5 @@ internal sealed class UserAccountRepository : RepositoryBase<UserAccount>, IUser
     {
     }
 
-    public UserAccount? GetById(Guid id)
-    {
-        return this.Query().FirstOrDefault(x => x.Id == id);
-    }
+    public UserAccount? GetById(Guid id) => Query().FirstOrDefault(x => x.Id == id);
 }

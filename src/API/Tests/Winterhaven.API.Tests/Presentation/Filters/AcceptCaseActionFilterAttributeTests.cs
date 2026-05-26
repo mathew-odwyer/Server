@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Reflection;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Reflection;
-using System.Text.Json;
 using Winterhaven.API.Presentation.Filters;
 
 namespace Winterhaven.API.Tests.Presentation.Filters;
@@ -20,10 +20,10 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     public void ClassShouldHaveAttributeUsageAttached()
     {
         // Arrange
-        Type type = typeof(AcceptCaseActionFilterAttribute);
+        var type = typeof(AcceptCaseActionFilterAttribute);
 
         // Act
-        AttributeUsageAttribute attribute = type.GetCustomAttribute<AttributeUsageAttribute>();
+        var attribute = type.GetCustomAttribute<AttributeUsageAttribute>();
 
         // Assert
         using (Assert.EnterMultipleScope())
@@ -40,12 +40,12 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var original = new ObjectResult(new { Value = 1 });
-        ActionExecutedContext context = BuildContext(
+        var context = BuildContext(
             acceptCaseHeader: "camelCase",
             result: original);
 
         // Act
-        this.acceptCaseFilter.OnActionExecuted(context);
+        acceptCaseFilter.OnActionExecuted(context);
 
         // Assert
         Assert.That(context.Result, Is.SameAs(original));
@@ -56,12 +56,12 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var payload = new { FirstName = "Ada" };
-        ActionExecutedContext context = BuildContext(
+        var context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: new ObjectResult(payload));
 
         // Act
-        this.acceptCaseFilter.OnActionExecuted(context);
+        acceptCaseFilter.OnActionExecuted(context);
 
         // Assert
         var jsonResult = (JsonResult)context.Result;
@@ -74,12 +74,12 @@ internal sealed class AcceptCaseActionFilterAttributeTests
         // Arrange
         var payload = new { FirstName = "John", LastName = "DoeGuy" };
 
-        ActionExecutedContext context = BuildContext(
+        var context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: new ObjectResult(payload));
 
         // Act
-        this.acceptCaseFilter.OnActionExecuted(context);
+        acceptCaseFilter.OnActionExecuted(context);
 
         // Assert
         Assert.That(context.Result, Is.InstanceOf<JsonResult>());
@@ -89,12 +89,12 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     public void OnActionExecutedUsesSnakeCaseNamingPolicyWithSnakeCaseHeaderAndObjectResult()
     {
         // Arrange
-        ActionExecutedContext context = BuildContext(
+        var context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: new ObjectResult(new { Dummy = 1 }));
 
         // Act
-        this.acceptCaseFilter.OnActionExecuted(context);
+        acceptCaseFilter.OnActionExecuted(context);
 
         // Assert
         var jsonResult = (JsonResult)context.Result;
@@ -112,12 +112,12 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var original = new ObjectResult(new { Value = 1 });
-        ActionExecutedContext context = BuildContext(
+        var context = BuildContext(
             acceptCaseHeader: null,
             result: original);
 
         // Act
-        this.acceptCaseFilter.OnActionExecuted(context);
+        acceptCaseFilter.OnActionExecuted(context);
 
         // Assert
         Assert.That(context.Result, Is.SameAs(original));
@@ -128,23 +128,21 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var original = new StatusCodeResult(204);
-        ActionExecutedContext context = BuildContext(
+        var context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: original);
 
         // Act
-        this.acceptCaseFilter.OnActionExecuted(context);
+        acceptCaseFilter.OnActionExecuted(context);
 
         // Assert
         Assert.That(context.Result, Is.SameAs(original));
     }
 
     [SetUp]
-    public void SetUp()
-    {
+    public void SetUp() =>
         // Arrange
-        this.acceptCaseFilter = new AcceptCaseActionFilterAttribute();
-    }
+        acceptCaseFilter = new AcceptCaseActionFilterAttribute();
 
     private static ActionExecutedContext BuildContext(string acceptCaseHeader, IActionResult result)
     {

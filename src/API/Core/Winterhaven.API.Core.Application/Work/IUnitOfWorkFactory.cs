@@ -11,5 +11,5 @@ public interface IUnitOfWorkFactory
     /// <returns>
     ///   Returns an <see cref="IUnitOfWork"/> that represents the newly created unit of work.
     /// </returns>
-    IUnitOfWork CreateUnitOfWork();
+    public IUnitOfWork CreateUnitOfWork();
 }

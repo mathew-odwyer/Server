@@ -1,8 +1,8 @@
-namespace Winterhaven.API.Presentation;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Winterhaven.API.Infrastructure;
+
+namespace Winterhaven.API.Presentation;
 
 internal static class Program
 {

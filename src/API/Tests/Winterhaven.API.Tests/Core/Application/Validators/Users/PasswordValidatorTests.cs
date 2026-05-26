@@ -1,9 +1,9 @@
-﻿namespace Winterhaven.API.Tests.Core.Application.Validators.Users;
-
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using Winterhaven.API.Core.Application.Validators.Users;
+
+namespace Winterhaven.API.Tests.Core.Application.Validators.Users;
 
 [TestFixture]
 internal sealed class PasswordValidatorTests
@@ -11,15 +11,12 @@ internal sealed class PasswordValidatorTests
     private PasswordValidator validator;
 
     [SetUp]
-    public void Setup()
-    {
-        this.validator = new PasswordValidator();
-    }
+    public void Setup() => validator = new PasswordValidator();
 
     [TestCase("ABCDEFG1!HIJ")] // no lowercase
     public void ValidateShouldHaveErrorWhenMissingLowercase(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel
         {
@@ -32,7 +29,7 @@ internal sealed class PasswordValidatorTests
     [TestCase("Abcdefg!Hijk")]
     public void ValidateShouldHaveErrorWhenMissingNumber(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel
         {
@@ -45,7 +42,7 @@ internal sealed class PasswordValidatorTests
     [TestCase("Abcdefg1Hijk")]
     public void ValidateShouldHaveErrorWhenMissingSpecialCharacter(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel
         {
@@ -58,7 +55,7 @@ internal sealed class PasswordValidatorTests
     [TestCase("abcdef1!ghij")]
     public void ValidateShouldHaveErrorWhenMissingUppercase(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel
         {
@@ -71,7 +68,7 @@ internal sealed class PasswordValidatorTests
     [TestCase("AbcdefghijkL")]
     public void ValidateShouldHaveErrorWhenMultipleRequirementsMissing(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel
         {
@@ -85,7 +82,7 @@ internal sealed class PasswordValidatorTests
     [TestCase("")]
     public void ValidateShouldHaveErrorWhenPasswordIsNullOrEmpty(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel
         {
@@ -99,7 +96,7 @@ internal sealed class PasswordValidatorTests
     [TestCase("shortpwd1!")]
     public void ValidateShouldHaveErrorWhenPasswordTooShort(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel { Password = password });
 
@@ -110,7 +107,7 @@ internal sealed class PasswordValidatorTests
     [TestCase("StrongPassword123!")]
     public void ValidateShouldNotHaveErrorForValidPasswords(string password)
     {
-        var inline = this.BuildParentValidator();
+        var inline = BuildParentValidator();
 
         var result = inline.TestValidate(new TestModel
         {
@@ -127,7 +124,7 @@ internal sealed class PasswordValidatorTests
         // Ensure null values are caught at parent level, then run the child validator for non-null values
         inline.RuleFor(x => x.Password)
               .NotNull()
-              .SetValidator(this.validator);
+              .SetValidator(validator);
 
         return inline;
     }

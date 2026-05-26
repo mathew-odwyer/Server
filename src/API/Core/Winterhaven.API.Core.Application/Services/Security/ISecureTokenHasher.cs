@@ -8,8 +8,10 @@ public interface ISecureTokenHasher
     /// <summary>
     ///   Hashes the specified <paramref name="token"/> for secure storage and comparison.
     /// </summary>
+    /// <param name="token">
+    /// </param>
     /// <returns>
     ///   Returns a <see cref="string"/> representing the hashed token.
     /// </returns>
-    string HashSecureToken(string token);
+    public string HashSecureToken(string token);
 }

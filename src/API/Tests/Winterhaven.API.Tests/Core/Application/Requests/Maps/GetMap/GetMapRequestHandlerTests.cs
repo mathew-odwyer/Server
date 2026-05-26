@@ -1,14 +1,14 @@
-﻿namespace Winterhaven.API.Tests.Core.Application.Requests.Maps.GetMap;
-
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Requests.Maps.GetMap;
 using Winterhaven.API.Core.Application.Services.Maps;
 using Winterhaven.API.Core.Domain.ValueObjects.Maps;
+
+namespace Winterhaven.API.Tests.Core.Application.Requests.Maps.GetMap;
 
 [TestFixture]
 internal sealed class GetMapRequestHandlerTests
@@ -22,37 +22,33 @@ internal sealed class GetMapRequestHandlerTests
     private IMapLocator mapLocator;
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and assert
         Assert.Throws<ArgumentNullException>(() =>
-            new GetMapRequestHandler(null, this.mapLocator));
-    }
+            new GetMapRequestHandler(null, mapLocator));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenMapLocatorIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenMapLocatorIsNull() =>
         // Act and assert
         Assert.Throws<ArgumentNullException>(() =>
-            new GetMapRequestHandler(this.logger, null));
-    }
+            new GetMapRequestHandler(logger, null));
 
     [Test]
     public async Task HandleShouldFetchMapUsingRequestName()
     {
         // Arrange
         var request = new GetMapRequest(
-            Name: this.mapData.Name);
+            Name: mapData.Name);
 
         // Act
-        await this.handler
+        await handler
             .Handle(request, default)
             .ConfigureAwait(false);
 
         // Assert
-        await this.mapLocator
+        await mapLocator
             .Received(1)
-            .LocateMapDataAsync(this.mapData.Name, Arg.Any<CancellationToken>())
+            .LocateMapDataAsync(mapData.Name, Arg.Any<CancellationToken>())
             .ConfigureAwait(false);
     }
 
@@ -61,45 +57,43 @@ internal sealed class GetMapRequestHandlerTests
     {
         // Arrange
         var request = new GetMapRequest(
-            Name: this.mapData.Name);
+            Name: mapData.Name);
 
         // Act
-        var response = await this.handler
+        var response = await handler
             .Handle(request, default)
             .ConfigureAwait(false);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(response.Name, Is.EqualTo(this.mapData.Name));
-            Assert.That(response.Data, Is.EqualTo(this.mapData.Data));
+            Assert.That(response.Name, Is.EqualTo(mapData.Name));
+            Assert.That(response.Data, Is.EqualTo(mapData.Data));
         }
     }
 
     [Test]
-    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
-    {
+    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull() =>
         // Act and assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
-            this.handler.Handle(null, default));
-    }
+            handler.Handle(null, default));
 
     [SetUp]
     public void Setup()
     {
-        this.logger = Substitute.For<ILogger<GetMapRequestHandler>>();
-        this.mapLocator = Substitute.For<IMapLocator>();
+        logger = Substitute.For<ILogger<GetMapRequestHandler>>();
+        mapLocator = Substitute.For<IMapLocator>();
 
-        this.mapData = new MapData(
+        mapData = new MapData(
             Name: "world-map",
             Data: "data");
 
-        this.mapLocator
-            .LocateMapDataAsync(this.mapData.Name, Arg.Any<CancellationToken>())
-            .Returns(this.mapData);
+        mapLocator
+            .LocateMapDataAsync(mapData.Name, Arg.Any<CancellationToken>())
+            .Returns(mapData);
 
-        this.handler = new GetMapRequestHandler(
-            this.logger,
-            this.mapLocator);
+        handler = new GetMapRequestHandler(
+            logger,
+            mapLocator);
     }
 }

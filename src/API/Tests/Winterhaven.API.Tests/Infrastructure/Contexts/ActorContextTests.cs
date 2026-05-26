@@ -1,15 +1,15 @@
-﻿namespace Winterhaven.API.Tests.Infrastructure.Contexts;
-
+﻿using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using NSubstitute.ClearExtensions;
 using NUnit.Framework;
-using System;
-using System.Security.Claims;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Infrastructure.Contexts;
+
+namespace Winterhaven.API.Tests.Infrastructure.Contexts;
 
 [TestFixture]
 internal sealed class ActorContextTests
@@ -26,12 +26,12 @@ internal sealed class ActorContextTests
     public void ActorShouldReturnActorFromRepositoryWhenUserIsAuthenticatedAndIdentifierIsFound()
     {
         // Arrange
-        var expected = this.actor;
-        this.accessor.ClearSubstitute();
+        var expected = actor;
+        accessor.ClearSubstitute();
 
         var identity = new ClaimsIdentity(
         [
-            new Claim("identifier", this.actor.Id.ToString()),
+            new Claim("identifier", actor.Id.ToString()),
         ], "TestAuthType");
 
         var user = new ClaimsPrincipal(identity);
@@ -41,24 +41,24 @@ internal sealed class ActorContextTests
             User = user,
         };
 
-        this.accessor.HttpContext.Returns(httpContext);
+        accessor.HttpContext.Returns(httpContext);
 
         // Act
-        var actual = this.actorContext.Actor;
+        var actual = actorContext.Actor;
 
         // Assert
         Assert.That(actual, Is.SameAs(expected));
-        this.actorRepository.Received(1).GetById(this.actor.Id);
+        actorRepository.Received(1).GetById(actor.Id);
     }
 
     [Test]
     public void ActorShouldReturnSystemActorWhenHttpContextIsNull()
     {
         // Arrange
-        this.accessor.HttpContext.Returns((HttpContext)null);
+        accessor.HttpContext.Returns((HttpContext)null);
 
         // Act
-        var actual = this.actorContext.Actor;
+        var actual = actorContext.Actor;
 
         // Assert
         Assert.That(actual, Is.EqualTo(Actor.GetSystemActor()));
@@ -75,17 +75,17 @@ internal sealed class ActorContextTests
 
         var user = new ClaimsPrincipal(identity);
 
-        this.accessor.HttpContext.Returns(new DefaultHttpContext
+        accessor.HttpContext.Returns(new DefaultHttpContext
         {
             User = user,
         });
 
         // Act
-        var actual = this.actorContext.Actor;
+        var actual = actorContext.Actor;
 
         // Assert
         Assert.That(actual, Is.EqualTo(Actor.GetSystemActor()));
-        this.actorRepository.DidNotReceive().GetById(Arg.Any<Guid>());
+        actorRepository.DidNotReceive().GetById(Arg.Any<Guid>());
     }
 
     [Test]
@@ -95,17 +95,17 @@ internal sealed class ActorContextTests
         var identity = new ClaimsIdentity([], "TestAuthType");
         var user = new ClaimsPrincipal(identity);
 
-        this.accessor.HttpContext.Returns(new DefaultHttpContext
+        accessor.HttpContext.Returns(new DefaultHttpContext
         {
             User = user,
         });
 
         // Act
-        var actual = this.actorContext.Actor;
+        var actual = actorContext.Actor;
 
         // Assert
         Assert.That(actual, Is.EqualTo(Actor.GetSystemActor()));
-        this.actorRepository.DidNotReceive().GetById(Arg.Any<Guid>());
+        actorRepository.DidNotReceive().GetById(Arg.Any<Guid>());
     }
 
     [Test]
@@ -113,11 +113,11 @@ internal sealed class ActorContextTests
     {
         // Arrange
         var expected = Actor.GetSystemActor();
-        this.accessor.ClearSubstitute();
+        accessor.ClearSubstitute();
 
         var identity = new ClaimsIdentity(
         [
-            new Claim("identifier", this.actor.Id.ToString()),
+            new Claim("identifier", actor.Id.ToString()),
         ]);
 
         var user = new ClaimsPrincipal(identity);
@@ -127,10 +127,10 @@ internal sealed class ActorContextTests
             User = user,
         };
 
-        this.accessor.HttpContext.Returns(httpContext);
+        accessor.HttpContext.Returns(httpContext);
 
         // Act
-        var actual = this.actorContext.Actor;
+        var actual = actorContext.Actor;
 
         // Assert
         Assert.That(actual, Is.SameAs(expected));
@@ -140,13 +140,13 @@ internal sealed class ActorContextTests
     public void ActorShouldReturnSystemActorWhenUserIsNull()
     {
         // Arrange
-        this.accessor.HttpContext.Returns(new DefaultHttpContext
+        accessor.HttpContext.Returns(new DefaultHttpContext
         {
             User = null!,
         });
 
         // Act
-        var actual = this.actorContext.Actor;
+        var actual = actorContext.Actor;
 
         // Assert
         Assert.That(actual, Is.EqualTo(Actor.GetSystemActor()));
@@ -156,59 +156,55 @@ internal sealed class ActorContextTests
     public void ActorShouldThrowActorNotFoundExceptionWhenRepositoryReturnsNull()
     {
         // Arrange
-        this.actorRepository.GetById(this.actor.Id).Returns((Actor)null);
+        actorRepository.GetById(actor.Id).Returns((Actor)null);
 
         var identity = new ClaimsIdentity(
         [
-                new Claim("identifier", this.actor.Id.ToString()),
+                new Claim("identifier", actor.Id.ToString()),
         ], "TestAuthType");
 
         var user = new ClaimsPrincipal(identity);
 
-        this.accessor.HttpContext.Returns(new DefaultHttpContext
+        accessor.HttpContext.Returns(new DefaultHttpContext
         {
             User = user,
         });
 
         // Act & Assert
-        var exception = Assert.Throws<ResourceNotFoundException>(() => _ = this.actorContext.Actor);
+        var exception = Assert.Throws<ResourceNotFoundException>(() => _ = actorContext.Actor);
 
         using (Assert.EnterMultipleScope())
         {
             Assert.That(exception!.Name, Is.EqualTo(nameof(Actor)));
-            Assert.That(exception!.Key, Is.EqualTo(this.actor.Id));
+            Assert.That(exception!.Key, Is.EqualTo(actor.Id));
         }
     }
 
     [Test]
-    public void ConstructorShouldAllowNullHttpContextAccessor()
-    {
+    public void ConstructorShouldAllowNullHttpContextAccessor() =>
         // Act & Assert
-        Assert.DoesNotThrow(() => new ActorContext(this.actorRepository, null));
-    }
+        Assert.DoesNotThrow(() => new ActorContext(actorRepository, null));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenActorRepositoryIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenActorRepositoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new ActorContext(null, this.accessor));
-    }
+        Assert.Throws<ArgumentNullException>(() => new ActorContext(null, accessor));
 
     [SetUp]
     public void Setup()
     {
-        this.accessor = Substitute.For<IHttpContextAccessor>();
-        this.actorRepository = Substitute.For<IActorRepository>();
+        accessor = Substitute.For<IHttpContextAccessor>();
+        actorRepository = Substitute.For<IActorRepository>();
 
-        this.actor = new Actor()
+        actor = new Actor()
         {
             Id = Guid.NewGuid(),
             Type = ActorType.User,
             Name = "Test",
         };
 
-        this.actorRepository.GetById(this.actor.Id).Returns(this.actor);
+        actorRepository.GetById(actor.Id).Returns(actor);
 
-        this.actorContext = new ActorContext(this.actorRepository, this.accessor);
+        actorContext = new ActorContext(actorRepository, accessor);
     }
 }

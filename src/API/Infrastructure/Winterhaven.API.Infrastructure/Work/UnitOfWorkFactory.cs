@@ -1,20 +1,14 @@
-﻿namespace Winterhaven.API.Infrastructure.Work;
-
+﻿using System;
 using Microsoft.EntityFrameworkCore;
-using System;
 using Winterhaven.API.Core.Application.Work;
+
+namespace Winterhaven.API.Infrastructure.Work;
 
 internal sealed class UnitOfWorkFactory : IUnitOfWorkFactory
 {
     private readonly DbContext context;
 
-    public UnitOfWorkFactory(DbContext context)
-    {
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+    public UnitOfWorkFactory(DbContext context) => this.context = context ?? throw new ArgumentNullException(nameof(context));
 
-    public IUnitOfWork CreateUnitOfWork()
-    {
-        return new UnitOfWork(this.context);
-    }
+    public IUnitOfWork CreateUnitOfWork() => new UnitOfWork(context);
 }

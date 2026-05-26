@@ -1,11 +1,14 @@
-﻿namespace Winterhaven.Common.Extensions;
-
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System;
-using System.Diagnostics.CodeAnalysis;
 
+namespace Winterhaven.Common.Extensions;
+
+/// <summary>
+///   Provides common extension methods to an <see cref="IServiceCollection"/>.
+/// </summary>
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {

@@ -1,8 +1,12 @@
-﻿namespace Winterhaven.API.Core.Application.Contexts.Users;
+﻿using Winterhaven.API.Core.Domain.Entities.Users;
 
-using Winterhaven.API.Core.Domain.Entities.Users;
+namespace Winterhaven.API.Core.Application.Contexts.Users;
 
+/// <summary>
+/// </summary>
 public interface IActorContext
 {
-    Actor Actor { get; }
+    /// <summary>
+    /// </summary>
+    public Actor Actor { get; }
 }

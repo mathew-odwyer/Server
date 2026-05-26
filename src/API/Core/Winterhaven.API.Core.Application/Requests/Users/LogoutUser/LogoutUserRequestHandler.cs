@@ -1,15 +1,15 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.LogoutUser;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
+
+namespace Winterhaven.API.Core.Application.Requests.Users.LogoutUser;
 
 /// <summary>
 ///   Provides a request handler used to logout a user account and invalidate their currently active session.
@@ -54,9 +54,10 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
     ///   The user session token repository, used to expire the currently active session.
     /// </param>
     /// <param name="actorContext">
-    ///   The user account context, used to fetch the currently authenticated user.
+    ///   The actor context, used to fetch the current actor.
     /// </param>
     /// <param name="userAccountRepository">
+    ///   The user account repository, used to fetch the user associatd with the actor.
     /// </param>
     /// <exception cref="ArgumentNullException">
     ///   Thrown when one of the following parameters is <c>null</c>:
@@ -97,18 +98,18 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var actor = this.actorContext.Actor;
-        var userAccount = await this.userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
+        var actor = actorContext.Actor;
+        var userAccount = await userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
             ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
 
-        this.logger.LogInformation("User logging out with ID: {UserAccountId}", userAccount.Id);
+        logger.LogInformation("User logging out with ID: {UserAccountId}", userAccount.Id);
 
-        var work = this.unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
+        var work = unitOfWorkFactory.CreateUnitOfWork();
+        var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
 
         if (activeSession == null)
         {
-            this.logger.LogError("Failed to locate active session for user with ID: '{UserAccountId}'", userAccount.Id);
+            logger.LogError("Failed to locate active session for user with ID: '{UserAccountId}'", userAccount.Id);
             throw new InvalidOperationException($"Failed to locate an active session for user with ID: '{userAccount.Id}'");
         }
 
@@ -120,7 +121,7 @@ public sealed class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest
         catch (EntityPersistenceException ex)
         {
             // Lets keep this here just in-case someone attempts to spoof tokens. There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context.
-            this.logger.LogError(ex, "Failed to logout from active session for user with ID: {UserAccountId}", userAccount.Id);
+            logger.LogError(ex, "Failed to logout from active session for user with ID: {UserAccountId}", userAccount.Id);
             throw new ConflictException("Logout failed due to a system error.", ex);
         }
     }

@@ -1,7 +1,7 @@
-﻿namespace Winterhaven.API.Core.Domain.Exceptions;
-
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
+
+namespace Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
 ///   Represents an exception that is thrown when a resource is not found.
@@ -54,8 +54,8 @@ public sealed class ResourceNotFoundException : Exception
     public ResourceNotFoundException(string name, object key)
         : base($"Resource '{name}' ({key}) was not found.")
     {
-        this.Name = name;
-        this.Key = key;
+        Name = name;
+        Key = key;
     }
 
     /// <summary>

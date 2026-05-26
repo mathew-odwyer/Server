@@ -1,17 +1,15 @@
-﻿namespace Winterhaven.API.Infrastructure.Services.Users;
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 
-[ExcludeFromCodeCoverage]
+namespace Winterhaven.API.Infrastructure.Services.Users;
+
 internal sealed class UserRegistrar : IUserRegistrar
 {
     private readonly ILogger<UserRegistrar> logger;
@@ -32,7 +30,7 @@ internal sealed class UserRegistrar : IUserRegistrar
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
-        this.logger.LogInformation("Attempting to register user with username: '{Username}'", username);
+        logger.LogInformation("Attempting to register user with username: '{Username}'", username);
 
         var identityUser = new IdentityUser<Guid>
         {
@@ -40,7 +38,7 @@ internal sealed class UserRegistrar : IUserRegistrar
             Email = emailAddress,
         };
 
-        var result = await this.userManager.CreateAsync(identityUser, password).ConfigureAwait(false);
+        var result = await userManager.CreateAsync(identityUser, password).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
@@ -54,7 +52,7 @@ internal sealed class UserRegistrar : IUserRegistrar
                 );
 
             string message = string.Join("; ", errors.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
-            this.logger.LogWarning("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
+            logger.LogWarning("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
 
             throw new ValidationException(errors);
         }
@@ -72,7 +70,7 @@ internal sealed class UserRegistrar : IUserRegistrar
             },
         };
 
-        this.logger.LogInformation("Successfully registered user with username: '{Username}'", username);
+        logger.LogInformation("Successfully registered user with username: '{Username}'", username);
 
         return userAccount;
     }

@@ -1,15 +1,13 @@
-﻿namespace Winterhaven.API.Infrastructure.Extensions;
-
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
+using System.Runtime.InteropServices;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO.Abstractions;
-using System.Runtime.InteropServices;
 using Winterhaven.API.Core.Application.Behaviours;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Requests.Users.LoginUser;
@@ -30,9 +28,19 @@ using Winterhaven.API.Infrastructure.Work;
 using Winterhaven.API.Infrastructure.Work.Users;
 using Winterhaven.Common.Extensions;
 
+namespace Winterhaven.API.Infrastructure.Extensions;
+
+/// <summary>
+/// </summary>
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// </summary>
+    /// <param name="services">
+    /// </param>
+    /// <param name="configuration">
+    /// </param>
     public static IServiceCollection AddApiInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -49,16 +57,13 @@ public static class ServiceCollectionExtensions
 
         services.AddDbContext<DbContext, DatabaseContext>((provider, options) =>
         {
-            options.UseSqlServer(configuration.GetConnectionString(connectionName), o =>
-            {
-                o.EnableRetryOnFailure(
+            options.UseSqlServer(configuration.GetConnectionString(connectionName), o => o.EnableRetryOnFailure(
                     maxRetryCount: 5,
                     maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorNumbersToAdd: null);
-            });
+                    errorNumbersToAdd: null));
 
-            options.UseLazyLoadingProxies();
-            options.AddInterceptors(provider.GetRequiredService<AuditableEntitySaveChangesInterceptor>());
+            options.UseLazyLoadingProxies()
+                .AddInterceptors(provider.GetRequiredService<AuditableEntitySaveChangesInterceptor>());
         }, ServiceLifetime.Scoped);
 
         services
@@ -78,14 +83,13 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IFileSystem, FileSystem>();
 
         services.AddValidatorsFromAssemblyContaining<LoginUserRequestValidator>();
-        services.AddMediatR(x =>
-        {
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehahviour<,>));
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-            x.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
-            x.RegisterServicesFromAssemblyContaining<RegisterUserRequestHandler>();
-        });
+        services
+            .AddMediatR(x => x
+            .AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehahviour<,>))
+            .AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>))
+            .AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>))
+            .RegisterServicesFromAssemblyContaining<RegisterUserRequestHandler>());
 
         services.AddValidatedOptions<JwtOptions>(configuration);
         services.AddValidatedOptions<MapStorageOptions>(configuration);

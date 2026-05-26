@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Reflection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Reflection;
 using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Presentation.Filters;
 
@@ -30,8 +30,8 @@ internal sealed class ConflictExceptionFilterAttributeTests
     public void ClassShouldHaveAttributeUsageAttributeAttached()
     {
         // Arrange
-        Type type = typeof(ConflictExceptionFilterAttribute);
-        AttributeUsageAttribute attribute = type.GetCustomAttribute<AttributeUsageAttribute>();
+        var type = typeof(ConflictExceptionFilterAttribute);
+        var attribute = type.GetCustomAttribute<AttributeUsageAttribute>();
 
         using (Assert.EnterMultipleScope())
         {
@@ -43,36 +43,34 @@ internal sealed class ConflictExceptionFilterAttributeTests
     }
 
     [Test]
-    public void ConstructorShouldNotThrowExceptionWhenInvoked()
-    {
+    public void ConstructorShouldNotThrowExceptionWhenInvoked() =>
         // Act and assert
         Assert.DoesNotThrow(() => new ConflictExceptionFilterAttribute());
-    }
 
     [Test]
     public void OnExceptionShouldNotReturnConflictObjectResultWhenExceptionHandled()
     {
         // Arrange
-        this.exceptionContext.ExceptionHandled = true;
+        exceptionContext.ExceptionHandled = true;
 
         // Act
-        this.filterAttribute.OnException(this.exceptionContext);
+        filterAttribute.OnException(exceptionContext);
 
         // Assert
-        Assert.That(this.exceptionContext.Result, Is.Null);
+        Assert.That(exceptionContext.Result, Is.Null);
     }
 
     [Test]
     public void OnExceptionShouldNotReturnConflictObjectResultWhenExceptionIsNotConflictException()
     {
         // Arrange
-        this.exceptionContext.Exception = new InvalidOperationException();
+        exceptionContext.Exception = new InvalidOperationException();
 
         // Act
-        this.filterAttribute.OnException(this.exceptionContext);
+        filterAttribute.OnException(exceptionContext);
 
         // Assert
-        Assert.That(this.exceptionContext.Result, Is.Not.TypeOf<ConflictException>());
+        Assert.That(exceptionContext.Result, Is.Not.TypeOf<ConflictException>());
     }
 
     [Test]
@@ -80,13 +78,13 @@ internal sealed class ConflictExceptionFilterAttributeTests
     {
         // Arrange
         const string message = "This is the message.";
-        this.exceptionContext.Exception = new ConflictException(message);
+        exceptionContext.Exception = new ConflictException(message);
 
         // Act
-        this.filterAttribute.OnException(this.exceptionContext);
+        filterAttribute.OnException(exceptionContext);
 
         // Assert
-        Assert.That(this.exceptionContext.Exception, Is.TypeOf<ConflictException>());
+        Assert.That(exceptionContext.Exception, Is.TypeOf<ConflictException>());
     }
 
     [Test]
@@ -94,17 +92,17 @@ internal sealed class ConflictExceptionFilterAttributeTests
     {
         // Arrange
         const string message = "This is the message.";
-        this.exceptionContext.Exception = new ConflictException(message);
+        exceptionContext.Exception = new ConflictException(message);
 
         // Act
-        this.filterAttribute.OnException(this.exceptionContext);
+        filterAttribute.OnException(exceptionContext);
 
         // Assert
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(this.exceptionContext.Result, Is.TypeOf<ConflictObjectResult>());
+            Assert.That(exceptionContext.Result, Is.TypeOf<ConflictObjectResult>());
 
-            var conflictResult = this.exceptionContext.Result as ConflictObjectResult;
+            var conflictResult = exceptionContext.Result as ConflictObjectResult;
             var problemDetails = conflictResult.Value as ProblemDetails;
 
             Assert.That(problemDetails.Type, Is.EqualTo("https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8"));
@@ -118,31 +116,29 @@ internal sealed class ConflictExceptionFilterAttributeTests
     public void OnExceptionShouldSetExceptionHandledToTrueWhenExceptionIsConflictException()
     {
         // Arrange
-        this.exceptionContext.Exception = new ConflictException();
+        exceptionContext.Exception = new ConflictException();
 
         // Act
-        this.filterAttribute.OnException(this.exceptionContext);
+        filterAttribute.OnException(exceptionContext);
 
         // Assert
-        Assert.That(this.exceptionContext.ExceptionHandled, Is.True);
+        Assert.That(exceptionContext.ExceptionHandled, Is.True);
     }
 
     [Test]
-    public void OnExceptionShouldThrowArgumentNullExceptionWhenContextIsNull()
-    {
+    public void OnExceptionShouldThrowArgumentNullExceptionWhenContextIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => this.filterAttribute.OnException(null));
-    }
+        Assert.Throws<ArgumentNullException>(() => filterAttribute.OnException(null));
 
     [SetUp]
     public void SetUp()
     {
-        this.httpContext = new DefaultHttpContext();
-        this.routeData = new RouteData();
-        this.actionDescriptor = Substitute.For<ActionDescriptor>();
-        this.actionContext = new ActionContext(this.httpContext, this.routeData, this.actionDescriptor);
-        this.exceptionContext = new ExceptionContext(this.actionContext, Array.Empty<IFilterMetadata>());
+        httpContext = new DefaultHttpContext();
+        routeData = new RouteData();
+        actionDescriptor = Substitute.For<ActionDescriptor>();
+        actionContext = new ActionContext(httpContext, routeData, actionDescriptor);
+        exceptionContext = new ExceptionContext(actionContext, Array.Empty<IFilterMetadata>());
 
-        this.filterAttribute = new ConflictExceptionFilterAttribute();
+        filterAttribute = new ConflictExceptionFilterAttribute();
     }
 }

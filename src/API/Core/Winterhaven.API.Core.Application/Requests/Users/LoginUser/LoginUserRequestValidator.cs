@@ -1,6 +1,6 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.LoginUser;
+﻿using FluentValidation;
 
-using FluentValidation;
+namespace Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 
 /// <summary>
 ///   Provides validation for a <see cref="LoginUserRequest"/>.
@@ -12,12 +12,12 @@ public sealed class LoginUserRequestValidator : AbstractValidator<LoginUserReque
     /// </summary>
     public LoginUserRequestValidator()
     {
-        this.RuleFor(x => x.Username)
+        RuleFor(x => x.Username)
             .NotEmpty()
             .WithMessage("Username must not be empty.")
             .OverridePropertyName("Username");
 
-        this.RuleFor(x => x.Password)
+        RuleFor(x => x.Password)
             .NotEmpty()
             .WithMessage("Password must not be empty.")
             .OverridePropertyName("Password");

@@ -1,7 +1,7 @@
-﻿namespace Winterhaven.API.Core.Application.Services.Users;
-
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Core.Application.Services.Users;
 
 /// <summary>
 ///   Defines an interface that provides functionality for authenticating a user account.
@@ -20,5 +20,5 @@ public interface IUserAuthenticator
     /// <returns>
     ///   Returns a <see cref="Task{TResult}"/> representing the asynchronous operation. The task result contains a user account representing the authenticated user if login succeeds.
     /// </returns>
-    Task<UserAccount> AuthenticateUser(string username, string password);
+    public Task<UserAccount> AuthenticateUser(string username, string password);
 }

@@ -1,5 +1,9 @@
-﻿namespace Winterhaven.API.Presentation.Extensions;
-
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
@@ -7,12 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
 using Winterhaven.API.Presentation.Authentication;
 using Winterhaven.API.Presentation.Filters;
 using Winterhaven.API.Presentation.Mappings.Maps;
@@ -20,6 +18,8 @@ using Winterhaven.API.Presentation.Mappings.Players;
 using Winterhaven.API.Presentation.Mappings.Users;
 using Winterhaven.API.Presentation.Transformers;
 using Winterhaven.API.Presentation.Transformers.Security;
+
+namespace Winterhaven.API.Presentation.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
@@ -37,30 +37,22 @@ internal static class ServiceCollectionExtensions
         {
             x.DefaultAuthenticateScheme = WinterhavenBearerDefaults.Name;
             x.DefaultChallengeScheme = WinterhavenBearerDefaults.Name;
-        }).AddPolicyScheme(WinterhavenBearerDefaults.Name, "JWT or API Key", x =>
-        {
-            x.ForwardDefaultSelector = context =>
-            {
-                return context.Request.Headers.ContainsKey("X-API-KEY")
-                    ? WinterhavenBearerDefaults.ServerAuthenticationScheme
-                    : JwtBearerDefaults.AuthenticationScheme;
-            };
         })
-            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(WinterhavenBearerDefaults.ServerAuthenticationScheme, null)
-            .AddJwtBearer(x =>
-            {
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ClockSkew = TimeSpan.Zero,
-                    ValidateLifetime = configuration.GetValue<bool>("JwtOptions:ValidateLifetime"),
-                    ValidateIssuerSigningKey = configuration.GetValue<bool>("JwtOptions:ValidateIssuerSigningKey"),
-                    ValidateIssuer = configuration.GetValue<bool>("JwtOptions:ValidateIssuer"),
-                    ValidateAudience = configuration.GetValue<bool>("JwtOptions:ValidateAudience"),
-                    ValidIssuer = configuration["JwtOptions:Issuer"],
-                    ValidAudience = configuration["JwtOptions:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Secret"]!)),
-                };
-            });
+        .AddPolicyScheme(WinterhavenBearerDefaults.Name, "JWT or API Key", x => x.ForwardDefaultSelector = context => context.Request.Headers.ContainsKey("X-API-KEY")
+                    ? WinterhavenBearerDefaults.ServerAuthenticationScheme
+                    : JwtBearerDefaults.AuthenticationScheme)
+        .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(WinterhavenBearerDefaults.ServerAuthenticationScheme, null)
+        .AddJwtBearer(x => x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ClockSkew = TimeSpan.Zero,
+            ValidateLifetime = configuration.GetValue<bool>("JwtOptions:ValidateLifetime"),
+            ValidateIssuerSigningKey = configuration.GetValue<bool>("JwtOptions:ValidateIssuerSigningKey"),
+            ValidateIssuer = configuration.GetValue<bool>("JwtOptions:ValidateIssuer"),
+            ValidateAudience = configuration.GetValue<bool>("JwtOptions:ValidateAudience"),
+            ValidIssuer = configuration["JwtOptions:Issuer"],
+            ValidAudience = configuration["JwtOptions:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Secret"]!)),
+        });
 
         return services;
     }
@@ -119,12 +111,10 @@ internal static class ServiceCollectionExtensions
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             ?.InformationalVersion ?? "unknown";
 
-        services.AddOpenApi($"v{version}", options =>
-        {
-            options.AddDocumentTransformer<WinterhavenTransformer>();
-            options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-            options.AddDocumentTransformer<ApiKeySecuritySchemeTransformer>();
-        });
+        services.AddOpenApi($"v{version}", x => x
+                .AddDocumentTransformer<WinterhavenTransformer>()
+                .AddDocumentTransformer<BearerSecuritySchemeTransformer>()
+                .AddDocumentTransformer<ApiKeySecuritySchemeTransformer>());
 
         return services;
     }

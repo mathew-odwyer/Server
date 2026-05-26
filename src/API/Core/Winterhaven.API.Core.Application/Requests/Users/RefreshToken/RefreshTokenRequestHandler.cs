@@ -1,10 +1,8 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Work;
@@ -12,6 +10,8 @@ using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Core.Domain.ValueObjects.Users;
+
+namespace Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 
 /// <summary>
 ///   Provides a request handler used to refresh the JSON Web Token for the current user account.
@@ -72,9 +72,10 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
     ///   The user session token repository, used to store the currently active session for the user account.
     /// </param>
     /// <param name="actorContext">
-    ///   The user account context, used to fetch the currently authenticated user.
+    ///   The actor context, used to fetch the current actor.
     /// </param>
     /// <param name="userAccountRepository">
+    ///   The user account repository, used to fetch the authenticated user.
     /// </param>
     /// <exception cref="ArgumentNullException">
     ///   Thrown when one of the following parameters is <c>null</c>:
@@ -125,52 +126,52 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var actor = this.actorContext.Actor;
-        var userAccount = await this.userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
+        var actor = actorContext.Actor;
+        var userAccount = await userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
             ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
 
-        var work = this.unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount!.Id, cancellationToken).ConfigureAwait(false);
+        var work = unitOfWorkFactory.CreateUnitOfWork();
+        var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccount!.Id, cancellationToken).ConfigureAwait(false);
 
         if (activeSession == null ||
-            activeSession.HashedRefreshToken != this.secureTokenHasher.HashSecureToken(request.RefreshToken) ||
+            activeSession.HashedRefreshToken != secureTokenHasher.HashSecureToken(request.RefreshToken) ||
             activeSession.RefreshTokenExpirationDate < DateTime.UtcNow)
         {
-            this.logger.LogWarning("Invalid or expired refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
+            logger.LogWarning("Invalid or expired refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
             throw new AuthorizationException("Invalid or expired refresh token.");
         }
 
         // Expire the old session before creating a new one just to be safe.
         activeSession.IsRevoked = true;
 
-        this.logger.LogDebug("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
+        logger.LogDebug("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
 
         var parameters = new UserTokenParameters(
             UserAccountId: userAccount.Id,
             Username: userAccount.Username);
 
-        var userToken = this.secureTokenFactory.GenerateUserToken(parameters);
+        var userToken = secureTokenFactory.GenerateUserToken(parameters);
 
         var newSessionToken = new UserSessionToken()
         {
             UserAccount = userAccount,
-            HashedRefreshToken = this.secureTokenHasher.HashSecureToken(userToken.RefreshToken),
+            HashedRefreshToken = secureTokenHasher.HashSecureToken(userToken.RefreshToken),
             AccessTokenExpirationDate = userToken.AccessTokenExpiryDate,
             RefreshTokenExpirationDate = userToken.RefreshTokenExpiryDate,
         };
 
         try
         {
-            await this.userSessionTokenRepository.AddAsync(newSessionToken, cancellationToken).ConfigureAwait(false);
+            await userSessionTokenRepository.AddAsync(newSessionToken, cancellationToken).ConfigureAwait(false);
             await work.SaveAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (EntityPersistenceException ex)
         {
-            this.logger.LogError(ex, "Failed to refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
+            logger.LogError(ex, "Failed to refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
             throw new AuthorizationException("Invalid or expired refresh token.");
         }
 
-        this.logger.LogDebug("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
+        logger.LogDebug("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
 
         return new RefreshTokenResponse(
             AccessToken: userToken.AccessToken,

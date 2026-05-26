@@ -1,6 +1,6 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
+﻿using FluentValidation;
 
-using FluentValidation;
+namespace Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 
 /// <summary>
 ///   Provides validation for a <see cref="RefreshTokenRequest"/>.
@@ -10,11 +10,8 @@ public sealed class RefreshTokenRequestValidator : AbstractValidator<RefreshToke
     /// <summary>
     ///   Initializes a new instance of the <see cref="RefreshTokenRequestValidator"/> class.
     /// </summary>
-    public RefreshTokenRequestValidator()
-    {
-        this.RuleFor(request => request.RefreshToken)
+    public RefreshTokenRequestValidator() => RuleFor(request => request.RefreshToken)
             .NotEmpty()
             .WithMessage("Refresh token must not be empty.")
             .OverridePropertyName("Refresh Token");
-    }
 }

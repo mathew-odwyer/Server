@@ -1,8 +1,8 @@
-﻿namespace Winterhaven.API.Tests.Core.Application.Requests.Users.LoginUser;
-
-using FluentValidation.TestHelper;
+﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
 using Winterhaven.API.Core.Application.Requests.Users.LoginUser;
+
+namespace Winterhaven.API.Tests.Core.Application.Requests.Users.LoginUser;
 
 [TestFixture]
 internal sealed class LoginUserRequestValidatorTests
@@ -10,10 +10,7 @@ internal sealed class LoginUserRequestValidatorTests
     private LoginUserRequestValidator validator;
 
     [SetUp]
-    public void Setup()
-    {
-        this.validator = new LoginUserRequestValidator();
-    }
+    public void Setup() => validator = new LoginUserRequestValidator();
 
     [TestCase(null)]
     [TestCase("")]
@@ -26,7 +23,7 @@ internal sealed class LoginUserRequestValidatorTests
             Password: password);
 
         // Act
-        var result = this.validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Password);
@@ -43,7 +40,7 @@ internal sealed class LoginUserRequestValidatorTests
             Password: "password");
 
         // Act
-        var result = this.validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Username);
@@ -58,7 +55,7 @@ internal sealed class LoginUserRequestValidatorTests
             Password: "password");
 
         // Act
-        var result = this.validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // Assert
         result.ShouldNotHaveValidationErrorFor(x => x.Password);
@@ -73,7 +70,7 @@ internal sealed class LoginUserRequestValidatorTests
             Password: "password");
 
         // Act
-        var result = this.validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // Assert
         result.ShouldNotHaveValidationErrorFor(x => x.Username);

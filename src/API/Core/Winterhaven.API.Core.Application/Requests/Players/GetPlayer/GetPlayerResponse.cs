@@ -1,7 +1,6 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
+﻿using System;
 
-using System;
-using System.Diagnostics.CodeAnalysis;
+namespace Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
 
 /// <summary>
 ///   Represents a response that contains the details of an existing player.
@@ -18,7 +17,6 @@ using System.Diagnostics.CodeAnalysis;
 /// <param name="Y">
 ///   The current Y-coordinate of the player.
 /// </param>
-[ExcludeFromCodeCoverage]
 public sealed record GetPlayerResponse(
     Guid Id,
     string Name,

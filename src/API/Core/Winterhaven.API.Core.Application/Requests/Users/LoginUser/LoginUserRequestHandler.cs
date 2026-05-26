@@ -1,10 +1,8 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.LoginUser;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work;
@@ -12,6 +10,8 @@ using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Core.Domain.ValueObjects.Users;
+
+namespace Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 
 /// <summary>
 ///   Provides a request handler used to authenticate and enforce single-session login for a potential user account.
@@ -116,20 +116,20 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
         string username = request.Username;
         string password = request.Password;
 
-        this.logger.LogInformation("Handling login request for user: '{Username}'...", username);
+        logger.LogInformation("Handling login request for user: '{Username}'...", username);
 
-        var userAccount = await this.userAuthenticator.AuthenticateUser(
+        var userAccount = await userAuthenticator.AuthenticateUser(
             username: username,
             password: password)
             .ConfigureAwait(false);
 
-        var work = this.unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
+        var work = unitOfWorkFactory.CreateUnitOfWork();
+        var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
 
         // If there's currently an active session, reject the login.
         if (activeSession != null)
         {
-            this.logger.LogInformation("Session already active for user: '{Username}'", userAccount.Username);
+            logger.LogInformation("Session already active for user: '{Username}'", userAccount.Username);
             throw new AuthorizationException("You must logout of your current session first.");
         }
 
@@ -137,29 +137,29 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
           UserAccountId: userAccount.Id,
           Username: userAccount.Username);
 
-        var userToken = this.secureTokenFactory.GenerateUserToken(parameters);
+        var userToken = secureTokenFactory.GenerateUserToken(parameters);
 
         var userSessionToken = new UserSessionToken()
         {
             UserAccount = userAccount,
-            HashedRefreshToken = this.secureTokenHasher.HashSecureToken(userToken.RefreshToken),
+            HashedRefreshToken = secureTokenHasher.HashSecureToken(userToken.RefreshToken),
             AccessTokenExpirationDate = userToken.AccessTokenExpiryDate,
             RefreshTokenExpirationDate = userToken.RefreshTokenExpiryDate,
         };
 
         try
         {
-            await this.userSessionTokenRepository.AddAsync(userSessionToken, cancellationToken).ConfigureAwait(false);
+            await userSessionTokenRepository.AddAsync(userSessionToken, cancellationToken).ConfigureAwait(false);
             await work.SaveAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (EntityPersistenceException ex)
         {
             // There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context. So let's just be extra safe here.
-            this.logger.LogError(ex, "Failed to persist login session for {Username}", username);
+            logger.LogError(ex, "Failed to persist login session for {Username}", username);
             throw new AuthorizationException("Login failed due to a system error, please try again in a few moments.", ex);
         }
 
-        this.logger.LogInformation("Login succeeded for user: {Username}", request.Username);
+        logger.LogInformation("Login succeeded for user: {Username}", request.Username);
 
         return new LoginUserResponse(
             AccessToken: userToken.AccessToken,

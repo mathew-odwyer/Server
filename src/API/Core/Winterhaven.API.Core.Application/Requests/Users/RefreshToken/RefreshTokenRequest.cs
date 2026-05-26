@@ -1,9 +1,7 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
-
-using MediatR;
-using System.Diagnostics.CodeAnalysis;
+﻿using MediatR;
 using Winterhaven.API.Core.Domain.Attributes.Users;
 
+namespace Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 /// <summary>
 ///   Represents a request used to refresh a JSON Web Token for an existing user account.
 /// </summary>
@@ -13,6 +11,5 @@ using Winterhaven.API.Core.Domain.Attributes.Users;
 ///   The refresh token used to refresh the JSON Web Token for the user account.
 /// </param>
 [Authorize]
-[ExcludeFromCodeCoverage]
 public sealed record RefreshTokenRequest(string RefreshToken)
     : IRequest<RefreshTokenResponse>;

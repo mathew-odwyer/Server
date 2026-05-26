@@ -1,9 +1,9 @@
-﻿namespace Winterhaven.API.Infrastructure.Mapping.Players;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Infrastructure.Mapping.Players;
 
 /// <summary>
 ///   Configures the <see cref="UserSessionToken"/> entity.

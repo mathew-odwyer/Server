@@ -1,16 +1,14 @@
-﻿namespace Winterhaven.API.Infrastructure.Services.Users;
-
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 
-[ExcludeFromCodeCoverage]
+namespace Winterhaven.API.Infrastructure.Services.Users;
+
 internal sealed class UserAuthenticator : IUserAuthenticator
 {
     private readonly ILogger<UserAuthenticator> logger;
@@ -38,33 +36,33 @@ internal sealed class UserAuthenticator : IUserAuthenticator
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
-        this.logger.LogDebug("User attempting to authenticate with username: '{Username}'", username);
+        logger.LogDebug("User attempting to authenticate with username: '{Username}'", username);
 
-        var identityUser = await this.userManager.FindByNameAsync(username).ConfigureAwait(false);
+        var identityUser = await userManager.FindByNameAsync(username).ConfigureAwait(false);
 
         if (identityUser == null)
         {
-            this.logger.LogWarning("Authentication failed: user not found for user: '{Username}'", username);
+            logger.LogWarning("Authentication failed: user not found for user: '{Username}'", username);
             throw new AuthorizationException("Invalid credentials. Please check your details and try again.");
         }
 
-        var result = await this.signInManager.CheckPasswordSignInAsync(identityUser, password, false).ConfigureAwait(false);
+        var result = await signInManager.CheckPasswordSignInAsync(identityUser, password, false).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
-            this.logger.LogWarning("Authentication failed: invalid password for user: '{Username}'", username);
+            logger.LogWarning("Authentication failed: invalid password for user: '{Username}'", username);
             throw new AuthorizationException("Invalid credentials. Please check your details and try again.");
         }
 
-        var userAccount = await this.userAccountRepository.GetByIdAsync(identityUser.Id).ConfigureAwait(false);
+        var userAccount = await userAccountRepository.GetByIdAsync(identityUser.Id).ConfigureAwait(false);
 
         if (userAccount == null)
         {
-            this.logger.LogError("Failed to locate {UserAccount} with ID: '{UserAccountId}'", nameof(UserAccount), identityUser.Id);
+            logger.LogError("Failed to locate {UserAccount} with ID: '{UserAccountId}'", nameof(UserAccount), identityUser.Id);
             throw new AuthorizationException("Invalid Credentials. Please check your details and try again.");
         }
 
-        this.logger.LogDebug("Authentication succeeded for user: '{Username}'", username);
+        logger.LogDebug("Authentication succeeded for user: '{Username}'", username);
 
         return userAccount;
     }

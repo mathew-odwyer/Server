@@ -1,11 +1,11 @@
-﻿namespace Winterhaven.API.Presentation.Transformers;
-
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Models;
+
+namespace Winterhaven.API.Presentation.Transformers;
 
 [ExcludeFromCodeCoverage]
 internal sealed class WinterhavenTransformer : IOpenApiDocumentTransformer

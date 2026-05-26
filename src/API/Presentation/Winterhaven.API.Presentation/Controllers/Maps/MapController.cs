@@ -1,14 +1,14 @@
-﻿namespace Winterhaven.API.Presentation.Controllers.Maps;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Winterhaven.API.Core.Application.Requests.Maps.GetMap;
 using Winterhaven.API.Presentation.Authentication;
 using Winterhaven.Common.DTOs.Maps;
+
+namespace Winterhaven.API.Presentation.Controllers.Maps;
 
 /// <summary>
 ///   Provides API endpoints for handling maps.
@@ -38,9 +38,9 @@ public sealed class MapController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = this.Mapper.Map<GetMapRequest>(requestDto);
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        var request = Mapper.Map<GetMapRequest>(requestDto);
+        var response = await Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(response);
+        return Ok(response);
     }
 }

@@ -1,15 +1,15 @@
-﻿namespace Winterhaven.API.Presentation.Controllers.Players;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
 using Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 using Winterhaven.Common.DTOs.Players;
+
+namespace Winterhaven.API.Presentation.Controllers.Players;
 
 /// <summary>
 ///   Provides API endpoints for managing player entities.
@@ -31,9 +31,9 @@ public sealed class PlayerController : ApiControllerBase
     public async Task<IActionResult> Get(CancellationToken cancellationToken = default)
     {
         var request = new GetPlayerRequest();
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        var response = await Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(this.Mapper.Map<GetPlayerResponseDto>(response));
+        return Ok(Mapper.Map<GetPlayerResponseDto>(response));
     }
 
     /// <summary>
@@ -54,9 +54,9 @@ public sealed class PlayerController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = this.Mapper.Map<UpdatePlayerRequest>(requestDto);
-        await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        var request = Mapper.Map<UpdatePlayerRequest>(requestDto);
+        await Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.NoContent();
+        return NoContent();
     }
 }

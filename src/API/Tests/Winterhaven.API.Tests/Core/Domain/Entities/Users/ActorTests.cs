@@ -1,21 +1,19 @@
-﻿namespace Winterhaven.API.Tests.Core.Domain.Entities.Users;
-
+﻿using System;
 using NUnit.Framework;
-using System;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Tests.Core.Domain.Entities.Users;
 
 [TestFixture]
 internal sealed class ActorTests
 {
     [Test]
-    public void ConstructorShouldNotThrowExceptionWhenInvoked()
-    {
+    public void ConstructorShouldNotThrowExceptionWhenInvoked() =>
         // Act and assert
         Assert.DoesNotThrow(() => new Actor()
         {
             Name = "User",
         });
-    }
 
     [Test]
     public void SystemUniqueIdentifierShouldReturnCorrectIdentifier()

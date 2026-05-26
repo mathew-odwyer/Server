@@ -1,14 +1,14 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
+
+namespace Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
 
 /// <summary>
 ///   Provides a request handler used to fetch an existing player from the current user account.
@@ -71,13 +71,13 @@ public sealed class GetPlayerRequestHandler : IRequestHandler<GetPlayerRequest, 
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var actor = this.actorContext.Actor;
-        var userAccount = await this.userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
+        var actor = actorContext.Actor;
+        var userAccount = await userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
             ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
 
         var player = userAccount.Player;
 
-        this.logger.LogDebug("Fetching player with ID: '{PlayerId}'", player.Id);
+        logger.LogDebug("Fetching player with ID: '{PlayerId}'", player.Id);
 
         return new GetPlayerResponse(
             Id: player.Id,

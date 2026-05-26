@@ -1,6 +1,6 @@
-﻿namespace Winterhaven.API.Core.Domain.Entities.Users;
+﻿using Winterhaven.API.Core.Domain.Entities.Players;
 
-using Winterhaven.API.Core.Domain.Entities.Players;
+namespace Winterhaven.API.Core.Domain.Entities.Users;
 
 /// <summary>
 ///   Represents a user account for an individual user within the system.

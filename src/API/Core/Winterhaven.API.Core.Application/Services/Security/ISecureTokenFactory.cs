@@ -1,6 +1,6 @@
-﻿namespace Winterhaven.API.Core.Application.Services.Security;
+﻿using Winterhaven.API.Core.Domain.ValueObjects.Users;
 
-using Winterhaven.API.Core.Domain.ValueObjects.Users;
+namespace Winterhaven.API.Core.Application.Services.Security;
 
 /// <summary>
 ///   Defines an interface that provides functionality to generate secure tokens (such as JSON Web Tokens).
@@ -13,7 +13,7 @@ public interface ISecureTokenFactory
     /// <returns>
     ///   Returns a <see cref="string"/> representing the generated secure token.
     /// </returns>
-    string GenerateSecureToken();
+    public string GenerateSecureToken();
 
     /// <summary>
     ///   Generates a new <see cref="UserToken"/> using the specified <paramref name="parameters"/>.
@@ -24,5 +24,5 @@ public interface ISecureTokenFactory
     /// <returns>
     ///   Returns a <see cref="UserToken"/> containing the generated access and refresh tokens.
     /// </returns>
-    UserToken GenerateUserToken(UserTokenParameters parameters);
+    public UserToken GenerateUserToken(UserTokenParameters parameters);
 }

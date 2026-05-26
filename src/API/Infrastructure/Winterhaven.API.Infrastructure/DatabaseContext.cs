@@ -1,13 +1,11 @@
-﻿namespace Winterhaven.API.Infrastructure;
-
+﻿using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
-[ExcludeFromCodeCoverage]
+namespace Winterhaven.API.Infrastructure;
+
 internal sealed class DatabaseContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
 {
     public DatabaseContext(

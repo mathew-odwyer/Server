@@ -1,7 +1,7 @@
-﻿namespace Winterhaven.API.Core.Domain.Exceptions;
-
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
+
+namespace Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
 ///   Represents an exception that is thrown when a request is made without proper authentication or when authentication fails.

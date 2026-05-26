@@ -1,11 +1,8 @@
 ﻿namespace Winterhaven.Common.DTOs.Users;
 
-using System.Diagnostics.CodeAnalysis;
-
 /// <summary>
 ///   Represents the data transfer object used to authenticate an existing user account.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public sealed record LoginUserRequestDto
 {
     /// <summary>

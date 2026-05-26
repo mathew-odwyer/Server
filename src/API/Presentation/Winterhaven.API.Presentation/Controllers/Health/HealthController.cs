@@ -1,9 +1,9 @@
-﻿namespace Winterhaven.API.Presentation.Controllers.Health;
-
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using System;
-using System.Diagnostics.CodeAnalysis;
+
+namespace Winterhaven.API.Presentation.Controllers.Health;
 
 /// <summary>
 ///   Provides endpoints for health checks of the gateway service.
@@ -20,12 +20,9 @@ public sealed class HealthController : ApiControllerBase
     /// </returns>
     [HttpGet]
     [DisableRateLimiting]
-    public IActionResult Get()
+    public IActionResult Get() => Ok(new
     {
-        return this.Ok(new
-        {
-            Status = "Healthiness",
-            TimeStamp = DateTime.UtcNow
-        });
-    }
+        Status = "Healthiness",
+        TimeStamp = DateTime.UtcNow
+    });
 }

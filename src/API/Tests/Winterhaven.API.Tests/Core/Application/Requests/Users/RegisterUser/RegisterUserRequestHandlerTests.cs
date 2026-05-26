@@ -1,16 +1,16 @@
-﻿namespace Winterhaven.API.Tests.Core.Application.Requests.Users.RegisterUser;
-
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Tests.Core.Application.Requests.Users.RegisterUser;
 
 [TestFixture]
 internal sealed class RegisterUserRequestHandlerTests
@@ -31,66 +31,52 @@ internal sealed class RegisterUserRequestHandlerTests
 
     private UserAccount userAccount;
 
-    private Actor actor;
+    [Test]
+    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
+        // Act and assert
+        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(null, userRegistrar, unitOfWorkFactory, userAccountRepository, actorRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserRegistrarIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(null, this.userRegistrar, this.unitOfWorkFactory, this.userAccountRepository, this.actorRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(logger, null, unitOfWorkFactory, userAccountRepository, actorRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserRegistrarIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(this.logger, null, this.unitOfWorkFactory, this.userAccountRepository, this.actorRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(logger, userRegistrar, null, userAccountRepository, actorRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(this.logger, this.userRegistrar, null, this.userAccountRepository, this.actorRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(logger, userRegistrar, unitOfWorkFactory, null, actorRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenActorRepositoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(this.logger, this.userRegistrar, this.unitOfWorkFactory, null, this.actorRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(logger, userRegistrar, unitOfWorkFactory, userAccountRepository, null));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenActorRepositoryIsNull()
-    {
+    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new RegisterUserRequestHandler(this.logger, this.userRegistrar, this.unitOfWorkFactory, this.userAccountRepository, null));
-    }
-
-    [Test]
-    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
-    {
-        // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => this.handler.Handle(null, default));
-    }
+        Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(null, default));
 
     [Test]
     public async Task HandleShouldInvokeRegisterUserAsyncWhenRequestIsNotNull()
     {
         // Arrange
         var request = new RegisterUserRequest(
-            EmailAddress: this.userAccount.EmailAddress,
-            Username: this.userAccount.Username,
+            EmailAddress: userAccount.EmailAddress,
+            Username: userAccount.Username,
             Password: "password");
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        this.userRegistrar.Received(1).RegisterUserAsync(request.EmailAddress, request.Username, request.Password);
+        userRegistrar.Received(1).RegisterUserAsync(request.EmailAddress, request.Username, request.Password);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -100,17 +86,17 @@ internal sealed class RegisterUserRequestHandlerTests
     {
         // Arrange
         var request = new RegisterUserRequest(
-            EmailAddress: this.userAccount.EmailAddress,
-            Username: this.userAccount.Username,
+            EmailAddress: userAccount.EmailAddress,
+            Username: userAccount.Username,
             Password: "password");
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-        this.unitOfWork.Received(1).SaveAsync(default);
+        unitOfWork.Received(1).SaveAsync(default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -120,15 +106,15 @@ internal sealed class RegisterUserRequestHandlerTests
     {
         // Arrange
         var request = new RegisterUserRequest(
-            EmailAddress: this.userAccount.EmailAddress,
-            Username: this.userAccount.Username,
+            EmailAddress: userAccount.EmailAddress,
+            Username: userAccount.Username,
             Password: "password");
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        this.unitOfWorkFactory.Received(1).CreateUnitOfWork();
+        unitOfWorkFactory.Received(1).CreateUnitOfWork();
     }
 
     [Test]
@@ -136,17 +122,17 @@ internal sealed class RegisterUserRequestHandlerTests
     {
         // Arrange
         var request = new RegisterUserRequest(
-            EmailAddress: this.userAccount.EmailAddress,
-            Username: this.userAccount.Username,
+            EmailAddress: userAccount.EmailAddress,
+            Username: userAccount.Username,
             Password: "password");
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        this.actorRepository.Received(1).AddAsync(Arg.Any<Actor>(), default);
+        actorRepository.Received(1).AddAsync(Arg.Any<Actor>(), default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -156,17 +142,17 @@ internal sealed class RegisterUserRequestHandlerTests
     {
         // Arrange
         var request = new RegisterUserRequest(
-            EmailAddress: this.userAccount.EmailAddress,
-            Username: this.userAccount.Username,
+            EmailAddress: userAccount.EmailAddress,
+            Username: userAccount.Username,
             Password: "password");
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        this.userAccountRepository.Received(1).AddAsync(this.userAccount, default);
+        userAccountRepository.Received(1).AddAsync(userAccount, default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -174,20 +160,14 @@ internal sealed class RegisterUserRequestHandlerTests
     [SetUp]
     public void Setup()
     {
-        this.logger = Substitute.For<ILogger<RegisterUserRequestHandler>>();
-        this.userRegistrar = Substitute.For<IUserRegistrar>();
-        this.unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
-        this.userAccountRepository = Substitute.For<IUserAccountRepository>();
-        this.actorRepository = Substitute.For<IActorRepository>();
-        this.unitOfWork = Substitute.For<IUnitOfWork>();
+        logger = Substitute.For<ILogger<RegisterUserRequestHandler>>();
+        userRegistrar = Substitute.For<IUserRegistrar>();
+        unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
+        userAccountRepository = Substitute.For<IUserAccountRepository>();
+        actorRepository = Substitute.For<IActorRepository>();
+        unitOfWork = Substitute.For<IUnitOfWork>();
 
-        this.actor = new Actor()
-        {
-            Name = "username",
-            Type = ActorType.User,
-        };
-
-        this.userAccount = new UserAccount()
+        userAccount = new UserAccount()
         {
             EmailAddress = "test@email.com",
             Username = "username",
@@ -197,9 +177,9 @@ internal sealed class RegisterUserRequestHandlerTests
             },
         };
 
-        this.unitOfWorkFactory.CreateUnitOfWork().Returns(this.unitOfWork);
-        this.userRegistrar.RegisterUserAsync(this.userAccount.EmailAddress, this.userAccount.Username, "password").Returns(this.userAccount);
+        unitOfWorkFactory.CreateUnitOfWork().Returns(unitOfWork);
+        userRegistrar.RegisterUserAsync(userAccount.EmailAddress, userAccount.Username, "password").Returns(userAccount);
 
-        this.handler = new RegisterUserRequestHandler(this.logger, this.userRegistrar, this.unitOfWorkFactory, this.userAccountRepository, this.actorRepository);
+        handler = new RegisterUserRequestHandler(logger, userRegistrar, unitOfWorkFactory, userAccountRepository, actorRepository);
     }
 }

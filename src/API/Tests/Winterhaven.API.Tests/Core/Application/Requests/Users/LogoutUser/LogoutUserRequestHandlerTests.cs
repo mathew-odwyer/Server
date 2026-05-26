@@ -1,13 +1,11 @@
-﻿namespace Winterhaven.API.Tests.Core.Application.Requests.Users.LogoutUser;
-
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Requests.Users.LogoutUser;
 using Winterhaven.API.Core.Application.Work;
@@ -15,6 +13,8 @@ using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
+
+namespace Winterhaven.API.Tests.Core.Application.Requests.Users.LogoutUser;
 
 [TestFixture]
 internal sealed class LogoutUserRequestHandlerTests
@@ -42,38 +42,27 @@ internal sealed class LogoutUserRequestHandlerTests
     private IUserSessionTokenRepository userSessionTokenRepository;
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(null, this.unitOfWorkFactory, this.userSessionTokenRepository, this.actorContext, this.userAccountRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(null, unitOfWorkFactory, userSessionTokenRepository, actorContext, userAccountRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountContextIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountContextIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(this.logger, this.unitOfWorkFactory, this.userSessionTokenRepository, null, this.userAccountRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(logger, unitOfWorkFactory, userSessionTokenRepository, null, userAccountRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(this.logger, null, this.userSessionTokenRepository, this.actorContext, this.userAccountRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(logger, null, userSessionTokenRepository, actorContext, userAccountRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserSesssionTokenRepositoryIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserSesssionTokenRepositoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(this.logger, this.unitOfWorkFactory, null, this.actorContext, this.userAccountRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(logger, unitOfWorkFactory, null, actorContext, userAccountRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull()
-    {
-        Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(this.logger, this.unitOfWorkFactory, this.userSessionTokenRepository, this.actorContext, null));
-    }
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull() => Assert.Throws<ArgumentNullException>(() => new LogoutUserRequestHandler(logger, unitOfWorkFactory, userSessionTokenRepository, actorContext, null));
 
     [Test]
     public void HandleShouldThrowResourceNotFoundExceptionWhenUserAccountRepositoryReturnsNull()
@@ -81,10 +70,10 @@ internal sealed class LogoutUserRequestHandlerTests
         // Arrange
         var request = new LogoutUserRequest();
 
-        this.userAccountRepository.GetByIdAsync(this.actor.Id).ReturnsNull();
+        userAccountRepository.GetByIdAsync(actor.Id).ReturnsNull();
 
         // Act and assert
-        Assert.ThrowsAsync<ResourceNotFoundException>(() => this.handler.Handle(request, default));
+        Assert.ThrowsAsync<ResourceNotFoundException>(() => handler.Handle(request, default));
     }
 
     [Test]
@@ -94,10 +83,10 @@ internal sealed class LogoutUserRequestHandlerTests
         var request = new LogoutUserRequest();
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        _ = this.actorContext.Received(1).Actor;
+        _ = actorContext.Received(1).Actor;
     }
 
     [Test]
@@ -106,14 +95,14 @@ internal sealed class LogoutUserRequestHandlerTests
         // Arrange
         var request = new LogoutUserRequest();
 
-        this.userSessionTokenRepository
-            .GetActiveSessionAsync(this.userAccount.Id, default)
+        userSessionTokenRepository
+            .GetActiveSessionAsync(userAccount.Id, default)
             .ReturnsNull();
 
         // Act
         try
         {
-            await this.handler.Handle(request, default).ConfigureAwait(false);
+            await handler.Handle(request, default).ConfigureAwait(false);
         }
         catch (InvalidOperationException)
         {
@@ -121,7 +110,7 @@ internal sealed class LogoutUserRequestHandlerTests
 
         // Assert
 #pragma warning disable CS4014
-        this.unitOfWork.DidNotReceive().SaveAsync(default);
+        unitOfWork.DidNotReceive().SaveAsync(default);
 #pragma warning restore CS4014
     }
 
@@ -132,10 +121,10 @@ internal sealed class LogoutUserRequestHandlerTests
         var request = new LogoutUserRequest();
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        await this.userAccountRepository.Received(1).GetByIdAsync(this.actor.Id, Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        await userAccountRepository.Received(1).GetByIdAsync(actor.Id, Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
@@ -144,10 +133,10 @@ internal sealed class LogoutUserRequestHandlerTests
         // Arrange
         var request = new LogoutUserRequest();
 
-        this.unitOfWork.SaveAsync(default).ThrowsAsync<EntityPersistenceException>();
+        unitOfWork.SaveAsync(default).ThrowsAsync<EntityPersistenceException>();
 
         // Act and assert
-        Assert.ThrowsAsync<ConflictException>(() => this.handler.Handle(request, default));
+        Assert.ThrowsAsync<ConflictException>(() => handler.Handle(request, default));
     }
 
     [Test]
@@ -157,12 +146,12 @@ internal sealed class LogoutUserRequestHandlerTests
         var request = new LogoutUserRequest();
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        this.unitOfWork.Received(1).SaveAsync(default);
+        unitOfWork.Received(1).SaveAsync(default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -173,10 +162,10 @@ internal sealed class LogoutUserRequestHandlerTests
         var request = new LogoutUserRequest();
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        Assert.That(this.userSessionToken.IsRevoked, Is.True);
+        Assert.That(userSessionToken.IsRevoked, Is.True);
     }
 
     [Test]
@@ -185,12 +174,12 @@ internal sealed class LogoutUserRequestHandlerTests
         // Arrange
         var request = new LogoutUserRequest();
 
-        this.userSessionTokenRepository
-            .GetActiveSessionAsync(this.userAccount.Id, default)
+        userSessionTokenRepository
+            .GetActiveSessionAsync(userAccount.Id, default)
             .ReturnsNull();
 
         // Act and assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => this.handler.Handle(request, default));
+        Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(request, default));
     }
 
     [Test]
@@ -200,12 +189,12 @@ internal sealed class LogoutUserRequestHandlerTests
         var request = new LogoutUserRequest();
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        this.userSessionTokenRepository.Received(1).GetActiveSessionAsync(this.userAccount.Id, default);
+        userSessionTokenRepository.Received(1).GetActiveSessionAsync(userAccount.Id, default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -217,67 +206,65 @@ internal sealed class LogoutUserRequestHandlerTests
         var request = new LogoutUserRequest();
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        this.unitOfWorkFactory.Received(1).CreateUnitOfWork();
+        unitOfWorkFactory.Received(1).CreateUnitOfWork();
     }
 
     [Test]
-    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
-    {
+    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => this.handler.Handle(null, default));
-    }
+        Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(null, default));
 
     [SetUp]
     public void Setup()
     {
-        this.logger = Substitute.For<ILogger<LogoutUserRequestHandler>>();
-        this.unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
-        this.unitOfWork = Substitute.For<IUnitOfWork>();
-        this.userSessionTokenRepository = Substitute.For<IUserSessionTokenRepository>();
-        this.actorContext = Substitute.For<IActorContext>();
-        this.userAccountRepository = Substitute.For<IUserAccountRepository>();
+        logger = Substitute.For<ILogger<LogoutUserRequestHandler>>();
+        unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
+        unitOfWork = Substitute.For<IUnitOfWork>();
+        userSessionTokenRepository = Substitute.For<IUserSessionTokenRepository>();
+        actorContext = Substitute.For<IActorContext>();
+        userAccountRepository = Substitute.For<IUserAccountRepository>();
 
-        this.actor = new Actor()
+        actor = new Actor()
         {
             Name = "User",
             Id = Guid.NewGuid(),
             Type = ActorType.User,
         };
 
-        this.player = new Player()
+        player = new Player()
         {
             Name = "username",
         };
 
-        this.userAccount = new UserAccount()
+        userAccount = new UserAccount()
         {
-            Id = this.actor.Id,
+            Id = actor.Id,
             Username = "User",
             EmailAddress = "test@gmail.com",
-            Player = this.player,
+            Player = player,
         };
 
-        this.userSessionToken = new UserSessionToken()
+        userSessionToken = new UserSessionToken()
         {
             HashedRefreshToken = "HashedRefreshToken",
-            UserAccount = this.userAccount,
+            UserAccount = userAccount,
             AccessTokenExpirationDate = DateTime.MinValue,
             RefreshTokenExpirationDate = DateTime.MaxValue,
         };
 
-        this.unitOfWorkFactory.CreateUnitOfWork().Returns(this.unitOfWork);
-        this.userSessionTokenRepository.GetActiveSessionAsync(this.userAccount.Id, default).Returns(this.userSessionToken);
-        this.actorContext.Actor.Returns(this.actor);
-        this.userAccountRepository.GetByIdAsync(this.actor.Id).Returns(this.userAccount);
+        unitOfWorkFactory.CreateUnitOfWork().Returns(unitOfWork);
+        userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, default).Returns(userSessionToken);
+        actorContext.Actor.Returns(actor);
+        userAccountRepository.GetByIdAsync(actor.Id).Returns(userAccount);
 
-        this.handler = new LogoutUserRequestHandler(
-            this.logger,
-            this.unitOfWorkFactory,
-            this.userSessionTokenRepository,
-            this.actorContext,
-            this.userAccountRepository);
+        handler = new LogoutUserRequestHandler(
+            logger,
+            unitOfWorkFactory,
+            userSessionTokenRepository,
+            actorContext,
+            userAccountRepository);
     }
 }

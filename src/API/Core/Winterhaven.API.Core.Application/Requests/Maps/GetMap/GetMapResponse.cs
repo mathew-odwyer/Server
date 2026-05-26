@@ -1,7 +1,5 @@
 ﻿namespace Winterhaven.API.Core.Application.Requests.Maps.GetMap;
 
-using System.Diagnostics.CodeAnalysis;
-
 /// <summary>
 ///   Represents a response object that contains map data.
 /// </summary>
@@ -11,5 +9,4 @@ using System.Diagnostics.CodeAnalysis;
 /// <param name="Data">
 ///   The map data.
 /// </param>
-[ExcludeFromCodeCoverage]
 public sealed record GetMapResponse(string Name, string Data);

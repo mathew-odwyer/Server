@@ -1,19 +1,16 @@
-﻿namespace Winterhaven.API.Tests.Core.Application.Requests.Users.RegisterUser;
-
-using FluentValidation.TestHelper;
+﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
 using Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
 using Winterhaven.API.Core.Application.Validators.Users;
+
+namespace Winterhaven.API.Tests.Core.Application.Requests.Users.RegisterUser;
 
 internal sealed class RegisterUserRequestValidatorTests
 {
     private RegisterUserRequestValidator validator;
 
     [SetUp]
-    public void Setup()
-    {
-        this.validator = new RegisterUserRequestValidator();
-    }
+    public void Setup() => validator = new RegisterUserRequestValidator();
 
     [TestCase(null)]
     [TestCase("")]
@@ -31,7 +28,7 @@ internal sealed class RegisterUserRequestValidatorTests
             Password: "TestPassword48$#");
 
         // Act
-        var result = this.validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // Assert
         result.ShouldHaveValidationErrorFor("Email Address");
@@ -47,22 +44,15 @@ internal sealed class RegisterUserRequestValidatorTests
             Password: "TestPassword48$#");
 
         // Act
-        var result = this.validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // Assert
         result.ShouldNotHaveValidationErrorFor("Email Address");
     }
 
     [Test]
-    public void ValidatorShouldHavePasswordValidatorForPassword()
-    {
-        this.validator.ShouldHaveChildValidator(x => x.Password, typeof(PasswordValidator));
-    }
+    public void ValidatorShouldHavePasswordValidatorForPassword() => validator.ShouldHaveChildValidator(x => x.Password, typeof(PasswordValidator));
 
     [Test]
-    public void ValidatorShouldHaveUsernameValidatorForUsername()
-    {
-        // Act and assert
-        this.validator.ShouldHaveChildValidator(x => x.Username, typeof(UsernameValidator));
-    }
+    public void ValidatorShouldHaveUsernameValidatorForUsername() => validator.ShouldHaveChildValidator(x => x.Username, typeof(UsernameValidator));
 }

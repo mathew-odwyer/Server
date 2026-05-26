@@ -1,7 +1,7 @@
-﻿namespace Winterhaven.API.Core.Application.Work;
-
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+
+namespace Winterhaven.API.Core.Application.Work;
 
 /// <summary>
 ///   Defines an interface that represents a unit of work.
@@ -17,5 +17,5 @@ public interface IUnitOfWork
     /// <returns>
     ///   Returns a <see cref="Task"/> that represents the asynchronous operation.
     /// </returns>
-    Task SaveAsync(CancellationToken cancellationToken = default);
+    public Task SaveAsync(CancellationToken cancellationToken = default);
 }

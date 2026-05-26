@@ -1,10 +1,8 @@
-﻿namespace Winterhaven.API.Tests.Core.Application.Requests.Players.GetPlayer;
-
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
 using Winterhaven.API.Core.Application.Work.Users;
@@ -12,6 +10,8 @@ using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.Common.DTOs.Players;
+
+namespace Winterhaven.API.Tests.Core.Application.Requests.Players.GetPlayer;
 
 [TestFixture]
 internal sealed class GetPlayerRequestHandlerTests
@@ -33,25 +33,19 @@ internal sealed class GetPlayerRequestHandlerTests
     private IUserAccountRepository userAccountRepository;
 
     [Test]
-    public void ConstructorShouldShouldThrowArgumentNullExceptionWhenActorContextIsNull()
-    {
+    public void ConstructorShouldShouldThrowArgumentNullExceptionWhenActorContextIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new GetPlayerRequestHandler(this.logger, null, this.userAccountRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new GetPlayerRequestHandler(logger, null, userAccountRepository));
 
     [Test]
-    public void ConstructorShouldShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull()
-    {
+    public void ConstructorShouldShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new GetPlayerRequestHandler(this.logger, this.actorContext, null));
-    }
+        Assert.Throws<ArgumentNullException>(() => new GetPlayerRequestHandler(logger, actorContext, null));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
-    {
+    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new GetPlayerRequestHandler(null, this.actorContext, this.userAccountRepository));
-    }
+        Assert.Throws<ArgumentNullException>(() => new GetPlayerRequestHandler(null, actorContext, userAccountRepository));
 
     [Test]
     public async Task HandleShouldFetchUserAccountUsingActorId()
@@ -60,10 +54,10 @@ internal sealed class GetPlayerRequestHandlerTests
         var request = new GetPlayerRequest();
 
         // Act
-        await this.handler.Handle(request, default).ConfigureAwait(false);
+        await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        await this.userAccountRepository.Received(1).GetByIdAsync(this.actor.Id).ConfigureAwait(false);
+        await userAccountRepository.Received(1).GetByIdAsync(actor.Id).ConfigureAwait(false);
     }
 
     [Test]
@@ -73,23 +67,21 @@ internal sealed class GetPlayerRequestHandlerTests
         var request = new GetPlayerRequest();
 
         // Act
-        var response = await this.handler.Handle(request, default).ConfigureAwait(false);
+        var response = await handler.Handle(request, default).ConfigureAwait(false);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(response.Name, Is.SameAs(this.playerDto.Name));
-            Assert.That(response.X, Is.EqualTo(this.playerDto.X));
-            Assert.That(response.Y, Is.EqualTo(this.playerDto.Y));
+            Assert.That(response.Name, Is.SameAs(playerDto.Name));
+            Assert.That(response.X, Is.EqualTo(playerDto.X));
+            Assert.That(response.Y, Is.EqualTo(playerDto.Y));
         }
     }
 
     [Test]
-    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
-    {
+    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => this.handler.Handle(null, default));
-    }
+        Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(null, default));
 
     [Test]
     public void HandleShouldThrowResourceNotFoundExceptionWhenUserAccountIsNotFound()
@@ -97,56 +89,56 @@ internal sealed class GetPlayerRequestHandlerTests
         // Arrange
         var request = new GetPlayerRequest();
 
-        this.userAccountRepository
-            .GetByIdAsync(this.actor.Id)
+        userAccountRepository
+            .GetByIdAsync(actor.Id)
             .Returns((UserAccount)null!);
 
         // Act and assert
         var exception = Assert.ThrowsAsync<ResourceNotFoundException>(() =>
-            this.handler.Handle(request, default));
+            handler.Handle(request, default));
 
         using (Assert.EnterMultipleScope())
         {
             Assert.That(exception!.Name, Is.EqualTo(nameof(UserAccount)));
-            Assert.That(exception.Key, Is.EqualTo(this.actor.Id));
+            Assert.That(exception.Key, Is.EqualTo(actor.Id));
         }
     }
 
     [SetUp]
     public void Setup()
     {
-        this.logger = Substitute.For<ILogger<GetPlayerRequestHandler>>();
-        this.actorContext = Substitute.For<IActorContext>();
-        this.userAccountRepository = Substitute.For<IUserAccountRepository>();
+        logger = Substitute.For<ILogger<GetPlayerRequestHandler>>();
+        actorContext = Substitute.For<IActorContext>();
+        userAccountRepository = Substitute.For<IUserAccountRepository>();
 
-        this.actor = new Actor()
+        actor = new Actor()
         {
             Name = "Player",
             Id = Guid.NewGuid(),
             Type = ActorType.User,
         };
 
-        this.player = new Player()
+        player = new Player()
         {
             Name = "Player",
         };
 
-        this.userAccount = new UserAccount()
+        userAccount = new UserAccount()
         {
             Id = Guid.NewGuid(),
-            Username = this.player.Name,
+            Username = player.Name,
             EmailAddress = "test@email.com",
-            Player = this.player,
+            Player = player,
         };
 
-        this.playerDto = new GetPlayerRequestDto(
-            Name: this.player.Name,
-            X: this.player.X,
-            Y: this.player.Y);
+        playerDto = new GetPlayerRequestDto(
+            Name: player.Name,
+            X: player.X,
+            Y: player.Y);
 
-        this.actorContext.Actor.Returns(this.actor);
-        this.userAccountRepository.GetByIdAsync(this.actor.Id).Returns(this.userAccount);
+        actorContext.Actor.Returns(actor);
+        userAccountRepository.GetByIdAsync(actor.Id).Returns(userAccount);
 
-        this.handler = new GetPlayerRequestHandler(this.logger, this.actorContext, this.userAccountRepository);
+        handler = new GetPlayerRequestHandler(logger, actorContext, userAccountRepository);
     }
 }

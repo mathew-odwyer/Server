@@ -1,12 +1,10 @@
-﻿namespace Winterhaven.API.Infrastructure.Services.Security;
-
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.Security.Cryptography;
 using System.Text;
 using Winterhaven.API.Core.Application.Services.Security;
 
-[ExcludeFromCodeCoverage]
+namespace Winterhaven.API.Infrastructure.Services.Security;
+
 internal sealed class SecureTokenHasher : ISecureTokenHasher
 {
     public string HashSecureToken(string token)

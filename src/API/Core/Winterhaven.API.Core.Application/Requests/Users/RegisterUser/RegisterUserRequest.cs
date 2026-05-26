@@ -1,6 +1,6 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
+﻿using MediatR;
 
-using MediatR;
+namespace Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
 
 /// <summary>
 ///   Represents a request to register a new user.

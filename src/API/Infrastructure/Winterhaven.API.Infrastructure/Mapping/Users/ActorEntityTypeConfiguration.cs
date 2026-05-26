@@ -1,8 +1,8 @@
-﻿namespace Winterhaven.API.Infrastructure.Mapping.Users;
-
+﻿using System;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Infrastructure.Mapping.Users;
 
 internal sealed class ActorEntityTypeConfiguration : EntityTypeConfigurationBase<Actor>
 {

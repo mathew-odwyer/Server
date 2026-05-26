@@ -1,7 +1,7 @@
-﻿namespace Winterhaven.API.Core.Application.Services.Users;
-
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Core.Application.Services.Users;
 
 /// <summary>
 ///   Defines an interface for registering new users in the system.
@@ -23,5 +23,5 @@ public interface IUserRegistrar
     /// <returns>
     ///   Returns a <see cref="Task{TResult}"/> representing the asynchronous operation. The task result contains a user account representing the newly registered user if registration succeeds.
     /// </returns>
-    Task<UserAccount> RegisterUserAsync(string emailAddress, string username, string password);
+    public Task<UserAccount> RegisterUserAsync(string emailAddress, string username, string password);
 }

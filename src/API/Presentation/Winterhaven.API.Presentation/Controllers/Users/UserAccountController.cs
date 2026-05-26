@@ -1,17 +1,17 @@
-﻿namespace Winterhaven.API.Presentation.Controllers.Users;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 using Winterhaven.API.Core.Application.Requests.Users.LogoutUser;
 using Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 using Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
 using Winterhaven.Common.DTOs.Users;
+
+namespace Winterhaven.API.Presentation.Controllers.Users;
 
 /// <summary>
 ///   Provides API endpoints for managing user account operations, including registration, login, logout, and token refresh.
@@ -36,10 +36,10 @@ public sealed class UserAccountController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = this.Mapper.Map<LoginUserRequest>(requestDto);
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        var request = Mapper.Map<LoginUserRequest>(requestDto);
+        var response = await Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(this.Mapper.Map<LoginUserResponseDto>(response));
+        return Ok(Mapper.Map<LoginUserResponseDto>(response));
     }
 
     /// <summary>
@@ -57,8 +57,8 @@ public sealed class UserAccountController : ApiControllerBase
     {
         var request = new LogoutUserRequest();
 
-        await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
-        return this.NoContent();
+        await Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        return NoContent();
     }
 
     /// <summary>
@@ -79,10 +79,10 @@ public sealed class UserAccountController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = this.Mapper.Map<RefreshTokenRequest>(requestDto);
-        var response = await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        var request = Mapper.Map<RefreshTokenRequest>(requestDto);
+        var response = await Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.Ok(this.Mapper.Map<RefreshTokenResponseDto>(response));
+        return Ok(Mapper.Map<RefreshTokenResponseDto>(response));
     }
 
     /// <summary>
@@ -102,9 +102,9 @@ public sealed class UserAccountController : ApiControllerBase
     {
         ArgumentNullException.ThrowIfNull(requestDto);
 
-        var request = this.Mapper.Map<RegisterUserRequest>(requestDto);
-        await this.Sender.Send(request, cancellationToken).ConfigureAwait(false);
+        var request = Mapper.Map<RegisterUserRequest>(requestDto);
+        await Sender.Send(request, cancellationToken).ConfigureAwait(false);
 
-        return this.NoContent();
+        return NoContent();
     }
 }

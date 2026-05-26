@@ -1,7 +1,5 @@
 ﻿namespace Winterhaven.API.Core.Application.Requests.Users.LoginUser;
 
-using System.Diagnostics.CodeAnalysis;
-
 /// <summary>
 ///   Represents a response that contain tokens used to authorized a user account.
 /// </summary>
@@ -14,7 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 /// <param name="ExpirationSeconds">
 ///   The access token expiry (in seconds).
 /// </param>
-[ExcludeFromCodeCoverage]
 public sealed record LoginUserResponse(
     string AccessToken,
     string RefreshToken,

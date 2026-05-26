@@ -1,7 +1,6 @@
-﻿namespace Winterhaven.Common.DTOs.Players;
+﻿using System;
 
-using System;
-using System.Diagnostics.CodeAnalysis;
+namespace Winterhaven.Common.DTOs.Players;
 
 /// <summary>
 ///   Represents a DTO that contains the details of a player.
@@ -18,7 +17,6 @@ using System.Diagnostics.CodeAnalysis;
 /// <param name="Y">
 ///   The current Y-coordinate of the player.
 /// </param>
-[ExcludeFromCodeCoverage]
 public sealed record GetPlayerResponseDto(
     Guid Id,
     string Name,

@@ -1,11 +1,11 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Maps.GetMap;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Services.Maps;
+
+namespace Winterhaven.API.Core.Application.Requests.Maps.GetMap;
 
 /// <summary>
 ///   Represents a request handler that is used to fetch an existing map.
@@ -50,8 +50,8 @@ public sealed class GetMapRequestHandler : IRequestHandler<GetMapRequest, GetMap
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        this.logger.LogDebug("Fetching map '{MapName}'", request.Name);
-        var mapData = await this.mapLocator.LocateMapDataAsync(request.Name, cancellationToken).ConfigureAwait(false);
+        logger.LogDebug("Fetching map '{MapName}'", request.Name);
+        var mapData = await mapLocator.LocateMapDataAsync(request.Name, cancellationToken).ConfigureAwait(false);
 
         return new GetMapResponse(
             Name: mapData.Name,

@@ -1,9 +1,9 @@
-﻿namespace Winterhaven.API.Presentation.Filters;
-
+﻿using System;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Text.Json;
+
+namespace Winterhaven.API.Presentation.Filters;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 internal sealed class AcceptCaseActionFilterAttribute : ActionFilterAttribute

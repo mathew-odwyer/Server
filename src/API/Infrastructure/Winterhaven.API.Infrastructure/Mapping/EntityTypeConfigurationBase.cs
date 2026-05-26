@@ -1,10 +1,9 @@
-﻿namespace Winterhaven.API.Infrastructure.Mapping;
-
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Core.Domain.Entities;
+
+namespace Winterhaven.API.Infrastructure.Mapping;
 
 /// <summary>
 ///   Provides configuration for entities that inherit from <see cref="EntityBase"/>.
@@ -13,7 +12,6 @@ using Winterhaven.API.Core.Domain.Entities;
 ///   The type of the entity being configured, which must inherit from <see cref="EntityBase"/>.
 /// </typeparam>
 /// <seealso cref="IEntityTypeConfiguration{TEntity}"/>
-[ExcludeFromCodeCoverage]
 public abstract class EntityTypeConfigurationBase<TEntity> : IEntityTypeConfiguration<TEntity>
     where TEntity : EntityBase
 {

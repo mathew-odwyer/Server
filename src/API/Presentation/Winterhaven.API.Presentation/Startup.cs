@@ -1,5 +1,4 @@
-﻿namespace Winterhaven.API.Presentation;
-
+﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -7,18 +6,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scalar.AspNetCore;
-using System;
 using Winterhaven.API.Infrastructure.Extensions;
 using Winterhaven.API.Presentation.Extensions;
 using Winterhaven.API.Presentation.Options.Security;
 using Winterhaven.Common.Extensions;
 
+namespace Winterhaven.API.Presentation;
+
 internal sealed class Startup
 {
-    public Startup(IConfiguration configuration)
-    {
-        this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-    }
+    public Startup(IConfiguration configuration) => Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
     public IConfiguration Configuration { get; }
 
@@ -27,7 +24,7 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
 
-        if (environment.IsDevelopment() || this.Configuration.GetValue<bool>("SCALAR_ENABLED"))
+        if (environment.IsDevelopment() || Configuration.GetValue<bool>("SCALAR_ENABLED"))
         {
             application.MapOpenApi();
             application.MapScalarApiReference(x =>
@@ -63,12 +60,12 @@ internal sealed class Startup
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddValidatedOptions<ApiOptions>(this.Configuration);
+        services.AddValidatedOptions<ApiOptions>(Configuration);
 
         services.AddApiMappings();
-        services.AddApiInfrastructureServices(this.Configuration);
+        services.AddApiInfrastructureServices(Configuration);
         services.AddApiControllersWithFilters();
-        services.AddApiAuthentication(this.Configuration);
+        services.AddApiAuthentication(Configuration);
         services.AddApiAuthorization();
         services.AddApiServices();
     }

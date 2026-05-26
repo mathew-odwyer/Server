@@ -1,13 +1,13 @@
-﻿namespace Winterhaven.API.Presentation.Transformers.Security;
-
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Models;
 using Winterhaven.API.Presentation.Authentication;
+
+namespace Winterhaven.API.Presentation.Transformers.Security;
 
 [ExcludeFromCodeCoverage]
 internal sealed class ApiKeySecuritySchemeTransformer : IOpenApiDocumentTransformer

@@ -1,11 +1,8 @@
 ﻿namespace Winterhaven.Common.DTOs.Users;
 
-using System.Diagnostics.CodeAnalysis;
-
 /// <summary>
 ///   Represents the data transfer object for a refresh token request.
 /// </summary>
-[ExcludeFromCodeCoverage]
 public sealed record RefreshTokenRequestDto
 {
     /// <summary>

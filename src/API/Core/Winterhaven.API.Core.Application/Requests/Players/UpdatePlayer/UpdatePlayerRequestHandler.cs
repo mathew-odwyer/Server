@@ -1,15 +1,15 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
+
+namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 
 /// <summary>
 ///   Provides a request handler used to update all a player for the current user account.
@@ -85,14 +85,14 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var actor = this.actorContext.Actor;
-        var userAccount = await this.userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
+        var actor = actorContext.Actor;
+        var userAccount = await userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
             ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
         var player = userAccount!.Player;
 
-        this.logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
+        logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
 
-        var work = this.unitOfWorkFactory.CreateUnitOfWork();
+        var work = unitOfWorkFactory.CreateUnitOfWork();
 
         player.X = request.X ?? player.X;
         player.Y = request.Y ?? player.Y;

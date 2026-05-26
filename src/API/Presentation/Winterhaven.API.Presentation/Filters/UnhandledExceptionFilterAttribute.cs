@@ -1,18 +1,15 @@
-﻿namespace Winterhaven.API.Presentation.Filters;
-
+﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using System;
+
+namespace Winterhaven.API.Presentation.Filters;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
 internal sealed class UnhandledExceptionFilterAttribute : ExceptionFilterAttribute
 {
-    public UnhandledExceptionFilterAttribute(ILogger<UnhandledExceptionFilterAttribute> logger)
-    {
-        this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+    public UnhandledExceptionFilterAttribute(ILogger<UnhandledExceptionFilterAttribute> logger) => Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public ILogger<UnhandledExceptionFilterAttribute> Logger { get; }
 
@@ -25,7 +22,7 @@ internal sealed class UnhandledExceptionFilterAttribute : ExceptionFilterAttribu
             return;
         }
 
-        this.Logger.LogError(context.Exception, "An unexpected error occurred.");
+        Logger.LogError(context.Exception, "An unexpected error occurred.");
 
         var response = new ProblemDetails
         {

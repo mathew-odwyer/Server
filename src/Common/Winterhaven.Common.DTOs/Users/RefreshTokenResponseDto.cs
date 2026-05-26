@@ -1,8 +1,17 @@
 ﻿namespace Winterhaven.Common.DTOs.Users;
 
-using System.Diagnostics.CodeAnalysis;
-
-[ExcludeFromCodeCoverage]
+/// <summary>
+///   Represents a data transfer object that contains information pertaining to a user who has refreshed their tokens.
+/// </summary>
+/// <param name="AccessToken">
+///   The new access token for the user.
+/// </param>
+/// <param name="RefreshToken">
+///   The new refresh token for the user.
+/// </param>
+/// <param name="ExpirationSeconds">
+///   The expiration time (in seconds) of the new access token.
+/// </param>
 public sealed record RefreshTokenResponseDto(
     string AccessToken,
     string RefreshToken,

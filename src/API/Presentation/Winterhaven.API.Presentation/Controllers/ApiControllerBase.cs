@@ -1,10 +1,10 @@
-﻿namespace Winterhaven.API.Presentation.Controllers;
-
+﻿using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
+
+namespace Winterhaven.API.Presentation.Controllers;
 
 /// <summary>
 ///   Provides a base class for API controllers with access to MediatR's <see cref="ISender"/>.
@@ -24,10 +24,7 @@ public abstract class ApiControllerBase : ControllerBase
     /// <value>
     ///   The mapper used for mapping objects.
     /// </value>
-    protected IMapper Mapper
-    {
-        get { return this.mapper ??= this.HttpContext.RequestServices.GetRequiredService<IMapper>(); }
-    }
+    protected IMapper Mapper => mapper ??= HttpContext.RequestServices.GetRequiredService<IMapper>();
 
     /// <summary>
     ///   Gets the sender for handling MediatR requests.
@@ -35,8 +32,5 @@ public abstract class ApiControllerBase : ControllerBase
     /// <value>
     ///   The <see cref="ISender"/> used to send requests to the MediatR pipeline.
     /// </value>
-    protected ISender Sender
-    {
-        get { return this.sender ??= this.HttpContext.RequestServices.GetRequiredService<ISender>(); }
-    }
+    protected ISender Sender => sender ??= HttpContext.RequestServices.GetRequiredService<ISender>();
 }

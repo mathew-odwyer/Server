@@ -1,6 +1,6 @@
-﻿namespace Winterhaven.API.Core.Domain.Entities.Users;
+﻿using System;
 
-using System;
+namespace Winterhaven.API.Core.Domain.Entities.Users;
 
 /// <summary>
 ///   Represents a user session (for single-session management).

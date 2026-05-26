@@ -1,9 +1,9 @@
-﻿namespace Winterhaven.API.Core.Application.Work.Users;
-
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Core.Application.Work.Users;
 
 /// <summary>
 ///   Defines an interface that represents a <see cref="UserSessionToken"/> repository.
@@ -22,5 +22,5 @@ public interface IUserSessionTokenRepository : IRepository<UserSessionToken>
     /// <returns>
     ///   Returns the currently active session for the user account that matches the specified <paramref name="userAccountId"/>; otherwise, <c>null</c>.
     /// </returns>
-    Task<UserSessionToken?> GetActiveSessionAsync(Guid userAccountId, CancellationToken cancellationToken = default);
+    public Task<UserSessionToken?> GetActiveSessionAsync(Guid userAccountId, CancellationToken cancellationToken = default);
 }

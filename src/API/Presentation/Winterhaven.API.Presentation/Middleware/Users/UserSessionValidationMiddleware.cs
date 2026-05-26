@@ -1,11 +1,11 @@
-﻿namespace Winterhaven.API.Presentation.Middleware.Users;
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Work.Users;
+
+namespace Winterhaven.API.Presentation.Middleware.Users;
 
 internal sealed class UserSessionValidationMiddleware
 {
@@ -32,7 +32,7 @@ internal sealed class UserSessionValidationMiddleware
 
             if (isServer)
             {
-                await this.next(context).ConfigureAwait(false);
+                await next(context).ConfigureAwait(false);
                 return;
             }
 
@@ -45,7 +45,7 @@ internal sealed class UserSessionValidationMiddleware
                 return;
             }
 
-            this.logger.LogDebug("Validating active session for user {UserId} on path {Path}", identifier, context.Request.Path);
+            logger.LogDebug("Validating active session for user {UserId} on path {Path}", identifier, context.Request.Path);
 
             // Finally, check whether the user has an active session.
             var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccountId, context.RequestAborted).ConfigureAwait(false);
@@ -53,14 +53,14 @@ internal sealed class UserSessionValidationMiddleware
             // If they don't, we can assume they're not authorized to make the requset because either the JWT has expired or they've logged out.
             if (activeSession == null)
             {
-                this.logger.LogWarning("No active session found for user {UserId}. Returning 401. Path: {Path}", identifier, context.Request.Path);
+                logger.LogWarning("No active session found for user {UserId}. Returning 401. Path: {Path}", identifier, context.Request.Path);
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 
-            this.logger.LogDebug("Active session confirmed for user {UserId}. Continuing request pipeline.", identifier);
+            logger.LogDebug("Active session confirmed for user {UserId}. Continuing request pipeline.", identifier);
         }
 
-        await this.next(context).ConfigureAwait(false);
+        await next(context).ConfigureAwait(false);
     }
 }

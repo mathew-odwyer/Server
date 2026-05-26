@@ -1,14 +1,14 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
+
+namespace Winterhaven.API.Core.Application.Requests.Users.RegisterUser;
 
 /// <summary>
 ///   Handles <see cref="RegisterUserRequest"/> messages to register new user accounts.
@@ -81,11 +81,11 @@ public sealed class RegisterUserRequestHandler : IRequestHandler<RegisterUserReq
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        this.logger.LogDebug("Handling user registration for new user: '{Username}'", request.Username);
+        logger.LogDebug("Handling user registration for new user: '{Username}'", request.Username);
 
-        var work = this.unitOfWorkFactory.CreateUnitOfWork();
+        var work = unitOfWorkFactory.CreateUnitOfWork();
 
-        var userAccount = await this.userRegistrar.RegisterUserAsync(
+        var userAccount = await userRegistrar.RegisterUserAsync(
             emailAddress: request.EmailAddress,
             username: request.Username,
             password: request.Password)
@@ -98,11 +98,11 @@ public sealed class RegisterUserRequestHandler : IRequestHandler<RegisterUserReq
             Type = ActorType.User,
         };
 
-        await this.actorRepository.AddAsync(actor, cancellationToken).ConfigureAwait(false);
-        await this.userAccountRepository.AddAsync(userAccount, cancellationToken).ConfigureAwait(false);
+        await actorRepository.AddAsync(actor, cancellationToken).ConfigureAwait(false);
+        await userAccountRepository.AddAsync(userAccount, cancellationToken).ConfigureAwait(false);
 
         await work.SaveAsync(cancellationToken).ConfigureAwait(false);
 
-        this.logger.LogDebug("User registration succeeded for username: {Username}", request.Username);
+        logger.LogDebug("User registration succeeded for username: {Username}", request.Username);
     }
 }

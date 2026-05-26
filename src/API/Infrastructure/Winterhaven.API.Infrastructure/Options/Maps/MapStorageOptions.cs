@@ -1,11 +1,13 @@
-﻿namespace Winterhaven.API.Infrastructure.Options.Maps;
+﻿using System.ComponentModel.DataAnnotations;
 
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+namespace Winterhaven.API.Infrastructure.Options.Maps;
 
-[ExcludeFromCodeCoverage]
+/// <summary>
+/// </summary>
 public sealed class MapStorageOptions
 {
+    /// <summary>
+    /// </summary>
     [Required]
     public required string BasePath { get; init; }
 }

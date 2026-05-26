@@ -1,7 +1,6 @@
-﻿namespace Winterhaven.API.Core.Domain.ValueObjects.Users;
+﻿using System;
 
-using System;
-using System.Diagnostics.CodeAnalysis;
+namespace Winterhaven.API.Core.Domain.ValueObjects.Users;
 
 /// <summary>
 ///   Represents a user token that contains access and refresh tokens for an authenticated user.
@@ -18,7 +17,6 @@ using System.Diagnostics.CodeAnalysis;
 /// <param name="RefreshTokenExpiryDate">
 ///   Specifies a <see cref="DateTime"/> representing the date and time the refresh token will expire.
 /// </param>
-[ExcludeFromCodeCoverage]
 public sealed record UserToken(
     string AccessToken,
     string RefreshToken,

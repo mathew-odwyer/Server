@@ -1,9 +1,7 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
-
-using MediatR;
-using System.Diagnostics.CodeAnalysis;
+﻿using MediatR;
 using Winterhaven.API.Core.Domain.Attributes.Users;
 
+namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 /// <summary>
 ///   Represents a request used to update an existing player.
 /// </summary>
@@ -16,7 +14,6 @@ using Winterhaven.API.Core.Domain.Attributes.Users;
 ///   The optional Y-coordinate of the player.
 /// </param>
 [Authorize]
-[ExcludeFromCodeCoverage]
 public sealed record UpdatePlayerRequest(
     double? X,
     double? Y)

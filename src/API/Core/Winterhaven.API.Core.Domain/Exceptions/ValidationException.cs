@@ -1,8 +1,8 @@
-﻿namespace Winterhaven.API.Core.Domain.Exceptions;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+
+namespace Winterhaven.API.Core.Domain.Exceptions;
 
 /// <summary>
 ///   Represents an exception that is thrown when one or more validation failures occur.
@@ -37,10 +37,7 @@ public sealed class ValidationException : Exception
     ///   The errors that describe the reason for the <see cref="ValidationException"/>.
     /// </param>
     public ValidationException(IReadOnlyDictionary<string, string[]>? errors)
-        : base("One or more validation failures have occurred.")
-    {
-        this.Errors = (IDictionary<string, string[]>?)errors;
-    }
+        : base("One or more validation failures have occurred.") => Errors = (IDictionary<string, string[]>?)errors;
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="ValidationException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.

@@ -1,7 +1,6 @@
-﻿namespace Winterhaven.API.Core.Application.Requests.Maps.GetMap;
+﻿using MediatR;
 
-using MediatR;
-using System.Diagnostics.CodeAnalysis;
+namespace Winterhaven.API.Core.Application.Requests.Maps.GetMap;
 
 /// <summary>
 ///   Represents a request used to fetch an existing map.
@@ -10,6 +9,5 @@ using System.Diagnostics.CodeAnalysis;
 ///   The name of the map to fetch.
 /// </param>
 /// <seealso cref="IBaseRequest"/>
-[ExcludeFromCodeCoverage]
 public sealed record GetMapRequest(string Name)
     : IRequest<GetMapResponse>;

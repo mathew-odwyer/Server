@@ -1,8 +1,8 @@
-﻿namespace Winterhaven.API.Presentation.Extensions;
-
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
-using System.Diagnostics.CodeAnalysis;
 using Winterhaven.API.Presentation.Middleware.Users;
+
+namespace Winterhaven.API.Presentation.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal static class ApplicationBuilderExtensions

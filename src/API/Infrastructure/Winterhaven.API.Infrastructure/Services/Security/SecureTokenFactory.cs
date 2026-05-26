@@ -1,19 +1,17 @@
-﻿namespace Winterhaven.API.Infrastructure.Services.Security;
-
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Domain.ValueObjects.Users;
 using Winterhaven.API.Infrastructure.Options.Security;
 
-[ExcludeFromCodeCoverage]
+namespace Winterhaven.API.Infrastructure.Services.Security;
+
 internal sealed class SecureTokenFactory : ISecureTokenFactory
 {
     private readonly ILogger<SecureTokenFactory> logger;
@@ -38,21 +36,21 @@ internal sealed class SecureTokenFactory : ISecureTokenFactory
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        string accessToken = this.GenerateAccessToken(parameters);
-        string refreshToken = this.GenerateSecureToken();
+        string accessToken = GenerateAccessToken(parameters);
+        string refreshToken = GenerateSecureToken();
 
         return new UserToken(
             AccessToken: accessToken,
             RefreshToken: refreshToken,
-            AccessTokenExpiryDate: DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
-            RefreshTokenExpiryDate: DateTime.UtcNow.AddDays(this.options.Value.RefreshTokenExpiryDays));
+            AccessTokenExpiryDate: DateTime.UtcNow.AddMinutes(options.Value.AccessTokenExpiryMinutes),
+            RefreshTokenExpiryDate: DateTime.UtcNow.AddDays(options.Value.RefreshTokenExpiryDays));
     }
 
     private string GenerateAccessToken(UserTokenParameters parameters)
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        this.logger.LogDebug("Generating JWT for user: {Username}", parameters.Username);
+        logger.LogDebug("Generating JWT for user: {Username}", parameters.Username);
 
         var claims = new[]
         {
@@ -60,17 +58,17 @@ internal sealed class SecureTokenFactory : ISecureTokenFactory
             new Claim("username", parameters.Username),
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.options.Value.Secret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.Secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: this.options.Value.Issuer,
-            audience: this.options.Value.Audience,
+            issuer: options.Value.Issuer,
+            audience: options.Value.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(this.options.Value.AccessTokenExpiryMinutes),
+            expires: DateTime.UtcNow.AddMinutes(options.Value.AccessTokenExpiryMinutes),
             signingCredentials: credentials);
 
-        this.logger.LogDebug("Successfully generated JWT token for user: {Username}", parameters.Username);
+        logger.LogDebug("Successfully generated JWT token for user: {Username}", parameters.Username);
 
         var handler = new JwtSecurityTokenHandler();
         return handler.WriteToken(token);

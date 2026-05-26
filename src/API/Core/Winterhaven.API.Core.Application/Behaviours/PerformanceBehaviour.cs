@@ -1,13 +1,19 @@
-﻿namespace Winterhaven.API.Core.Application.Behaviours;
-
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
+namespace Winterhaven.API.Core.Application.Behaviours;
+
+/// <summary>
+/// </summary>
+/// <typeparam name="TRequest">
+/// </typeparam>
+/// <typeparam name="TResponse">
+/// </typeparam>
 [ExcludeFromCodeCoverage]
 public sealed class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
@@ -16,26 +22,40 @@ public sealed class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavio
 
     private readonly Stopwatch watch;
 
+    /// <summary>
+    /// </summary>
+    /// <param name="logger">
+    /// </param>
     public PerformanceBehaviour(ILogger<PerformanceBehaviour<TRequest, TResponse>> logger)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.watch = new Stopwatch();
+        watch = new Stopwatch();
     }
 
+    /// <summary>
+    /// </summary>
+    /// <param name="request">
+    /// </param>
+    /// <param name="next">
+    /// </param>
+    /// <param name="cancellationToken">
+    /// </param>
+    /// <returns>
+    /// </returns>
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(next);
 
-        this.watch.Start();
+        watch.Start();
         var response = await next(cancellationToken).ConfigureAwait(false);
-        this.watch.Stop();
+        watch.Stop();
 
         const long waitMs = 1000;
-        long elapsed = this.watch.ElapsedMilliseconds;
+        long elapsed = watch.ElapsedMilliseconds;
 
         if (elapsed >= waitMs)
         {
-            this.logger.LogWarning("Long Running Request: '{Name}': ({Elapsed} milliseconds)", typeof(TRequest).Name, elapsed);
+            logger.LogWarning("Long Running Request: '{Name}': ({Elapsed} milliseconds)", typeof(TRequest).Name, elapsed);
         }
 
         return response;
