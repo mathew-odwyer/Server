@@ -45,13 +45,13 @@ jobs:
         id: igor
         uses: bscotch/igor-setup@v1.3.0
         with:
-          cache: true
-          access-key: ${{secrets.ACCESS_KEY}}
+          cache: true # Cache the runtime for subsequent builds.
+          access-key: ${{secrets.ACCESS_KEY}} # https://gamemaker.io/account/access-keys
           target-yyp: ${{ github.workspace }}/src/Room/Room.yyp
 
       - name: Build
         uses: bscotch/igor-build@v1.3.2
         with:
-          yyc: false
+          yyc: false # Compile using VM instead of YYC.
           yyp-path: ${{ github.workspace }}/src/Room/Room.yyp
           user-dir: ${{ steps.igor.outputs.user-dir }}
