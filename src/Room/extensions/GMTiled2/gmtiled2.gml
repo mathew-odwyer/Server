@@ -1029,7 +1029,9 @@ while (DerpXmlRead_Read()) {
 					Xtiled_parse_skip("tile");
 					break;
 				default:
-					show_error("Tiled Parse error: OpenTag " + value + " not supported in tileset", true)
+					show_debug_message("Tiled Parse error: OpenTag " + value + " not supported in tileset");
+					break;	
+				// show_error("Tiled Parse error: OpenTag " + value + " not supported in tileset", true)
 			}
 			break;
 		case DerpXmlType_CloseTag:
@@ -1037,10 +1039,10 @@ while (DerpXmlRead_Read()) {
 				return;
 			}
 			else {
-				show_error("Tiled Parse error: unexpected CloseTag " + value + " in tileset", true)
+				show_debug_message("Tiled Parse error: unexpected CloseTag " + value + " in tileset");
 			}
 		default:
-			show_error("Tiled Parse error: " + type + " not supported in tileset", true)
+			show_debug_message("Tiled Parse error: " + type + " not supported in tileset");
 			break;
 	}
 }
