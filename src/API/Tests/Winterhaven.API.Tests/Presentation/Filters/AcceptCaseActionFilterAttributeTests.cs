@@ -1,6 +1,4 @@
-﻿namespace Winterhaven.API.Tests.Presentation.Filters;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -12,6 +10,8 @@ using System.Reflection;
 using System.Text.Json;
 using Winterhaven.API.Presentation.Filters;
 
+namespace Winterhaven.API.Tests.Presentation.Filters;
+
 internal sealed class AcceptCaseActionFilterAttributeTests
 {
     private AcceptCaseActionFilterAttribute acceptCaseFilter;
@@ -20,10 +20,10 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     public void ClassShouldHaveAttributeUsageAttached()
     {
         // Arrange
-        var type = typeof(AcceptCaseActionFilterAttribute);
+        Type type = typeof(AcceptCaseActionFilterAttribute);
 
         // Act
-        var attribute = type.GetCustomAttribute<AttributeUsageAttribute>();
+        AttributeUsageAttribute attribute = type.GetCustomAttribute<AttributeUsageAttribute>();
 
         // Assert
         using (Assert.EnterMultipleScope())
@@ -40,7 +40,7 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var original = new ObjectResult(new { Value = 1 });
-        var context = BuildContext(
+        ActionExecutedContext context = BuildContext(
             acceptCaseHeader: "camelCase",
             result: original);
 
@@ -56,7 +56,7 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var payload = new { FirstName = "Ada" };
-        var context = BuildContext(
+        ActionExecutedContext context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: new ObjectResult(payload));
 
@@ -74,7 +74,7 @@ internal sealed class AcceptCaseActionFilterAttributeTests
         // Arrange
         var payload = new { FirstName = "John", LastName = "DoeGuy" };
 
-        var context = BuildContext(
+        ActionExecutedContext context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: new ObjectResult(payload));
 
@@ -89,7 +89,7 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     public void OnActionExecutedUsesSnakeCaseNamingPolicyWithSnakeCaseHeaderAndObjectResult()
     {
         // Arrange
-        var context = BuildContext(
+        ActionExecutedContext context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: new ObjectResult(new { Dummy = 1 }));
 
@@ -112,7 +112,7 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var original = new ObjectResult(new { Value = 1 });
-        var context = BuildContext(
+        ActionExecutedContext context = BuildContext(
             acceptCaseHeader: null,
             result: original);
 
@@ -128,7 +128,7 @@ internal sealed class AcceptCaseActionFilterAttributeTests
     {
         // Arrange
         var original = new StatusCodeResult(204);
-        var context = BuildContext(
+        ActionExecutedContext context = BuildContext(
             acceptCaseHeader: "snake_case",
             result: original);
 
@@ -146,7 +146,7 @@ internal sealed class AcceptCaseActionFilterAttributeTests
         this.acceptCaseFilter = new AcceptCaseActionFilterAttribute();
     }
 
-    private static ActionExecutedContext BuildContext(string? acceptCaseHeader, IActionResult result)
+    private static ActionExecutedContext BuildContext(string acceptCaseHeader, IActionResult result)
     {
         var httpContext = new DefaultHttpContext();
 
