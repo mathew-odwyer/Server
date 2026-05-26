@@ -50,5 +50,5 @@ jobs:
 
         with:
           yyc: false
-          yyp-path: target-yyp: ${{ github.workspace }}/src/Room/Room.yyp
+          yyp-path: ${{ github.workspace }}/src/Room/Room.yyp
           user-dir: ${{ steps.igor.outputs.user-dir }}
