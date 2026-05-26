@@ -13,7 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- [#60] Convert ASP.NET Identity Codes to Human Readable Strings (_by [@mathew-odwyer]_).
+- [#60] - Convert ASP.NET Identity Codes to Human Readable Strings (_by [@mathew-odwyer]_).
+
+### Changed
+
+- [#88] - Improve Performance of `obj_depth_sorter` (_by [@mathew-odwyer]_).
 
 ## [v0.2.0] - 05-12-2025
 
@@ -49,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#88]: https://github.com/mathew-odwyer/Server/issues/88
 [#60]: https://github.com/mathew-odwyer/Server/issues/60
 [#19]: https://github.com/mathew-odwyer/Server/issues/19
 [#34]: https://github.com/mathew-odwyer/Server/issues/34
