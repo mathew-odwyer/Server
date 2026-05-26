@@ -30,24 +30,23 @@ jobs:
       - name: Test
         run: dotnet test src/Server.slnx --configuration Release --no-build --verbosity normal
 
-  # TODO: Change to ubuntu-latest if bscotch ever supports it.
-  # build_server:
-  #   runs-on: windows-2022
+  build_room:
+    name: Build Room Service
+    runs-on: windows-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         lfs: true
+    steps:
+      - uses: actions/checkout@v4
+    
+      - name: Setup
+        id: igor
+        uses: bscotch/igor-setup@v1.3.0
+        with:
+          access-key: ${{secrets.ACCESS_KEY}}
+          target-yyp: src/Server/Room/Room.yyp
 
-  #     - name: Setup
-  #       id: igor
-  #       uses: bscotch/igor-setup@v1
-  #       with:
-  #         target-yyp: src/Server/Server.yyp
-  #         access-key: ${{ secrets.ACCESS_KEY }}
+      - name: Build
+        uses: bscotch/igor-build@v1.3.2
 
-  #     - name: Build
-  #       uses: bscotch/igor-build@v1
-  #       with:
-  #         yyp-path: src/Server/Server.yyp
-  #         user-dir: ${{ steps.igor.outputs.user-dir }}
+        with:
+          yyp-path: src/Server/Room/Room.yyp
+          user-dir: ${{ steps.igor.outputs.user-dir }}
