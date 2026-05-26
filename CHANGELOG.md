@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#35] - Improve Performance of Remote Player Actions (_by [@mathew-odwyer]_).
 - [#88] - Improve Performance of `obj_depth_sorter` (_by [@mathew-odwyer]_).
 
 ## [v0.2.0] - 05-12-2025
@@ -53,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#35]: https://github.com/mathew-odwyer/Server/issues/35
 [#88]: https://github.com/mathew-odwyer/Server/issues/88
 [#60]: https://github.com/mathew-odwyer/Server/issues/60
 [#19]: https://github.com/mathew-odwyer/Server/issues/19
