@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#129] - Room Service Entry Point Causes Crash on Service Restart (_by [@mathew-odwyer]_).
 - [#60] - Convert ASP.NET Identity Codes to Human Readable Strings (_by [@mathew-odwyer]_).
 
 ### Changed
@@ -55,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#129]: https://github.com/mathew-odwyer/Server/issues/129
 [#64]: https://github.com/mathew-odwyer/Server/issues/64
 [#35]: https://github.com/mathew-odwyer/Server/issues/35
 [#88]: https://github.com/mathew-odwyer/Server/issues/88
