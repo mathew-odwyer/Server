@@ -21,3 +21,11 @@
 /// @type {Real}
 /// @description The server tick rate.
 #macro tick_rate 20
+
+/// @type {Real}
+/// @description The width of a character (in pixels).
+#macro character_width 16
+
+/// @type {Real}
+/// @description The height of a character (in pixels).
+#macro character_height 24
