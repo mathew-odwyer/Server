@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - DD-MM-YYYY
 
+## [v0.3.0] - 08-06-2026
+
 ### Added
 
 - [#158] - Player Name Tags (_by [@mathew-odwyer]_).
@@ -54,7 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - User Registration Flow (_by [@mathew-odwyer]_).
 - Web API Infrastructure (_by [@mathew-odwyer]_).
 
-[Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/mathew-odwyer/Server/compare/v0.3.0...HEAD
+[v0.3.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
