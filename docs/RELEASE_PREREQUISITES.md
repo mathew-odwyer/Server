@@ -1,20 +1,48 @@
-TODO: Refine this document and make it look more presentable.
+# 🚀 Release Checklist
 
-- [ ] Ensure that all status checks have passed on dev
-- [ ] Sync up all extensions between server and client just to be safe
-- [ ] Create a new branch for the release (`release/vMajor.Minor.Patch`)
+---
+
+## Pre-Release Verification
+
+- [ ] All status checks have passed on `dev`
+- [ ] Extensions are synced between server and client
+- [ ] Run the server and client locally to confirm everything works
+
+---
+
+## Branch & Docs
+
+- [ ] Create a new release branch: `release/vMajor.Minor.Patch`
 - [ ] Update `docs/Versions/vMajor.Minor.Patch.md`
-- [ ] Update `CHANGELOG.md`, ensure _Unreleased_ is up-to-date and links work
-- [ ] Tag the release version with vMajor.Minor.Patch
-- [ ] Quickly run the server and client locally on your machine to make sure things are working
-- [ ] Push the changes, review and merge the PR
-- [ ] Once merged, the `release` workflow should run and create the GitHub Release
-- [ ] Update the GitHub Release description to include the appropriate changes from `CHANGELOG.md`
-- [ ] Update the GitHub Release assets to include the updated `Client-x64.zip`
-- [ ] Update all other repositories (GMAnimations, GMUtilities, etc) if there were any changes
-- [ ] SSH into demo environment
+- [ ] Update `CHANGELOG.md` ensure _Unreleased_ section is current and all links resolve correctly
+
+---
+
+## Merge & Tag
+
+- [ ] Push changes, review the PR, and merge
+- [ ] Tag the release: `vMajor.Minor.Patch`
+
+---
+
+## GitHub Release
+
+- [ ] Confirm the `release` workflow ran and the GitHub Release was created
+- [ ] Update the GitHub Release description with the relevant `CHANGELOG.md` entries
+- [ ] Attach the updated `Client-x64.zip` to the GitHub Release assets
+
+---
+
+## Deploy to Demo Environment
+
+- [ ] SSH into the demo environment
   - [ ] Clone the repository
-  - [ ] Shutdown all services with `docker-compose down`
-  - [ ] We're not using `docker-compose alpha`, so just `docker-compose up --build -d`
-- [ ] Lastly, test end-to-end to make sure the new features, bug fixes, etc are all working
-- [ ] Vibe Out 😎
+  - [ ] Tear down existing services: `docker-compose down -v`
+  - [ ] Rebuild and start services: `docker-compose up --build -d`
+
+---
+
+## Sign-Off
+
+- [ ] End-to-end test new features and bug fixes
+- [ ] Chill out and watch everything burn
