@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"world_to_gui_space",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"world_to_gui_space",
+  "parent":{
+    "name":"GUI",
+    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts/GUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
