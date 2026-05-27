@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#158] - Player Name Tags (_by [@mathew-odwyer]_).
 - [#19] - Server CI/CD Pipeline (_by [@mathew-odwyer]_).
 
 ### Fixed
@@ -57,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#158]: https://github.com/mathew-odwyer/Server/issues/158
 [#69]: https://github.com/mathew-odwyer/Server/issues/69
 [#129]: https://github.com/mathew-odwyer/Server/issues/129
 [#64]: https://github.com/mathew-odwyer/Server/issues/64
