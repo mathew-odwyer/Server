@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"GMUtilities",
+  "%Name":"normalize",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"GMUtilities",
+  "name":"normalize",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts.yy",
+    "name":"Math",
+    "path":"folders/Extensions/GMFoundation/GMUtilities/Scripts/Math.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
