@@ -5,7 +5,11 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
+using Winterhaven.Gateway.Presentation.Services.Sessions;
+using Winterhaven.Gateway.Presentation.Services.Targets;
+using Winterhaven.Gateway.Presentation.Targets.Health;
 
 namespace Winterhaven.Gateway.Presentation;
 
@@ -61,5 +65,10 @@ internal sealed class Startup
 
         services.AddRateLimiter();
         services.AddControllers();
+
+        services.AddScoped<IJsonRpcTargetRegistrar, JsonRpcTargetRegistrar>();
+        services.AddScoped<IRpcWebSocketSession, RpcWebSocketSession>();
+
+        services.AddRpcSessionTarget<HealthRpcTarget>();
     }
 }

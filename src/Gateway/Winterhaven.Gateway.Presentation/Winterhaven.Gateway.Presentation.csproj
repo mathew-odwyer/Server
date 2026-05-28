@@ -14,6 +14,9 @@
     <Content Include="..\..\appsettings.json" Link="appsettings.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="StreamJsonRpc" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Winterhaven.Gateway.Infrastructure\Winterhaven.Gateway.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
