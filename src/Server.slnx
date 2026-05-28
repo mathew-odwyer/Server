@@ -54,6 +54,9 @@
     </Project>
   </Folder>
   <Folder Name="/Gateway/Tests/">
+    <Project Path="Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj" Id="67673e84-12a7-407f-a325-7ead20a199c8">
+      <Platform Project="x64" />
+    </Project>
     <Project Path="Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj" Id="7e3c7b0d-6607-485a-b6b3-604cc66c8cce">
       <Platform Project="x64" />
     </Project>

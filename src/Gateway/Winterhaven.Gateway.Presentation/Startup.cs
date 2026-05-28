@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -10,14 +9,13 @@ using Winterhaven.Gateway.Presentation.Middleware;
 
 namespace Winterhaven.Gateway.Presentation;
 
-[ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
     public Startup(IConfiguration configuration) => Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
     public IConfiguration Configuration { get; }
 
-    internal void Configure(WebApplication application, IWebHostEnvironment environment)
+    public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
     {
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
@@ -55,7 +53,7 @@ internal sealed class Startup
         application.UseEndpoints(x => x.MapControllers());
     }
 
-    internal void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
