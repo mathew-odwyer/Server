@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - DD-MM-YYYY
 
+### Added
+
+- [#91] - Gateway Server (_by [@mathew-odwyer]_).
+  - [#72] GML NATS Client (_by [@mathew-odwyer]_).
+
 ## [v0.3.0] - 08-06-2026
 
 ### Added
@@ -61,6 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#91]: https://github.com/mathew-odwyer/Server/issues/91
+[#72]: https://github.com/mathew-odwyer/Server/issues/72
 [#158]: https://github.com/mathew-odwyer/Server/issues/158
 [#69]: https://github.com/mathew-odwyer/Server/issues/69
 [#129]: https://github.com/mathew-odwyer/Server/issues/129
