@@ -53,6 +53,11 @@
       <Platform Project="x64" />
     </Project>
   </Folder>
+  <Folder Name="/Gateway/Tests/">
+    <Project Path="Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj" Id="7e3c7b0d-6607-485a-b6b3-604cc66c8cce">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />

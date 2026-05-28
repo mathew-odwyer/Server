@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
 
 namespace Winterhaven.Gateway.Presentation;
 
+[ExcludeFromCodeCoverage]
 internal static class Program
 {
     internal static void Main(string[] args)

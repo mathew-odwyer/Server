@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -9,6 +10,7 @@ using Winterhaven.Gateway.Presentation.Middleware;
 
 namespace Winterhaven.Gateway.Presentation;
 
+[ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
     public Startup(IConfiguration configuration) => Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
