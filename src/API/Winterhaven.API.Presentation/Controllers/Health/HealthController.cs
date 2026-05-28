@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Winterhaven.API.Presentation.Controllers.Health;
 
 /// <summary>
-///   Provides endpoints for health checks of the gateway service.
+///   Provides endpoints for health checks of the API.
 /// </summary>
 /// <seealso cref="ApiControllerBase"/>
 [ExcludeFromCodeCoverage]

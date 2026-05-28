@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Winterhaven.Gateway.Core.Domain\Winterhaven.Gateway.Core.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Winterhaven.Gateway.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+</Project>

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <IsPackable>false</IsPackable>
 	<Nullable>disable</Nullable>
@@ -21,10 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Winterhaven.API.Core.Application\Winterhaven.API.Core.Application.csproj" />
-    <ProjectReference Include="..\..\Core\Winterhaven.API.Core.Domain\Winterhaven.API.Core.Domain.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Winterhaven.API.Infrastructure\Winterhaven.API.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Presentation\Winterhaven.API.Presentation\Winterhaven.API.Presentation.csproj" />
+    <ProjectReference Include="..\Winterhaven.API.Core.Application\Winterhaven.API.Core.Application.csproj" />
+    <ProjectReference Include="..\Winterhaven.API.Core.Domain\Winterhaven.API.Core.Domain.csproj" />
+    <ProjectReference Include="..\Winterhaven.API.Infrastructure\Winterhaven.API.Infrastructure.csproj" />
+    <ProjectReference Include="..\Winterhaven.API.Presentation\Winterhaven.API.Presentation.csproj" />
   </ItemGroup>
-
 </Project>
