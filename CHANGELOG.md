@@ -67,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#97]: https://github.com/mathew-odwyer/Server/issues/97
 [#91]: https://github.com/mathew-odwyer/Server/issues/91
 [#72]: https://github.com/mathew-odwyer/Server/issues/72
 [#158]: https://github.com/mathew-odwyer/Server/issues/158
