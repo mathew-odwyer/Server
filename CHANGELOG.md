@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#91] - Gateway Server (_by [@mathew-odwyer]_).
   - [#72] GML NATS Client (_by [@mathew-odwyer]_).
+  - [#97] - Gateway Infrastructure Setup (_by [@mathew-odwyer]_).
 
 ## [v0.3.0] - 08-06-2026
 
