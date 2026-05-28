@@ -57,6 +57,8 @@ internal sealed class Startup
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        services.AddSingleton(TimeProvider.System);
+
         services.AddRateLimiter();
         services.AddControllers();
     }
