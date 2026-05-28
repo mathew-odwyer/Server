@@ -5,6 +5,21 @@ using StreamJsonRpc.Protocol;
 
 namespace Winterhaven.Gateway.Presentation;
 
+//// TODO: Infrastructure:
+////    - Map HTTP exceptions to application-level exceptions (ApiResponseHandler)
+////    - Map application-level exceptions to presentation level JSON-RPC Error objects (see GatewayJsonRpc).
+
+////    - ApiResponseHandler
+////    - LoggingHandler
+////    - Register handlers as transient
+////    - AddGatewayClient
+
+/*
+    TODO: Once the above is done, write unit tests, integration tests, etc.
+        - Take your time with RpcWebSocketSession and WebSocketMiddleware.
+        - ApiResponseHandler should likely have some unit tests, too.
+*/
+
 internal sealed class GatewayJsonRpc : JsonRpc
 {
     private readonly ILogger<GatewayJsonRpc> logger;

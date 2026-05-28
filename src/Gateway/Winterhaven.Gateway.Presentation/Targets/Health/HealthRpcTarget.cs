@@ -3,8 +3,6 @@ using StreamJsonRpc;
 
 namespace Winterhaven.Gateway.Presentation.Targets.Health;
 
-//// TODO: Make public and see if we can setup AsyncAPI.
-
 internal sealed record HealthPingRpcParameters(
     double TimeStamp);
 
