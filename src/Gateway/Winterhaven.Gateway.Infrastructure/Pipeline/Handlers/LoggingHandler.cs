@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,11 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Winterhaven.Gateway.Infrastructure.Pipeline.Handlers;
 
+[ExcludeFromCodeCoverage(Justification = "Logging")]
 internal sealed class LoggingHandler : DelegatingHandler
 {
     private readonly ILogger<LoggingHandler> logger;
 
-    public LoggingHandler(ILogger<LoggingHandler> logger) => this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    public LoggingHandler(ILogger<LoggingHandler> logger) =>
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

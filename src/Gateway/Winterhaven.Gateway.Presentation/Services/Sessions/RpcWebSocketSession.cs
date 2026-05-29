@@ -45,9 +45,6 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         using var handler = new GatewayWebSocketMessageHandler(socket, formatter);
         using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), handler);
 
-        rpc.TraceSource.Switch.Level = System.Diagnostics.SourceLevels.All;
-        rpc.TraceSource.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
-
         targetRegistrar.RegisterTargets(rpc);
         rpc.StartListening();
 
