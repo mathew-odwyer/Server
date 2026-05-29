@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Builder;
 
 namespace Winterhaven.Gateway.Presentation;
 
+// TODO: Finally, debug tests in WebSocketMiddleware and RpcWebSocketSession (unit and integration tests need debugging just to be safe)
+
 [ExcludeFromCodeCoverage]
 internal static class Program
 {
