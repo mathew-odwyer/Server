@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StreamJsonRpc;
+using Winterhaven.Gateway.Presentation.Handlers;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
 namespace Winterhaven.Gateway.Presentation.Services.Sessions;
@@ -41,7 +42,7 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             }
         };
 
-        using var handler = new WebSocketMessageHandler(socket, formatter);
+        using var handler = new GatewayWebSocketMessageHandler(socket, formatter);
         using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), handler);
 
         targetRegistrar.RegisterTargets(rpc);
