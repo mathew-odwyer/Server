@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
 using Winterhaven.Gateway.Presentation.Targets;
 
 namespace Winterhaven.Gateway.Presentation.Extensions;
 
+[ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
 {
     internal static IServiceCollection AddRpcSessionTarget<TRpcTarget>(this IServiceCollection services)

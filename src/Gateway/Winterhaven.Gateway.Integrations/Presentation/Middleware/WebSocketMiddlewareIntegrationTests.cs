@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using Winterhaven.Gateway.Presentation;
@@ -29,6 +30,26 @@ internal sealed class WebSocketMiddlewareIntegrationTests
         Assert.That(webSocket.State, Is.EqualTo(WebSocketState.Open));
     }
 
+    [Test]
+    public async Task InvokeAsyncShouldPassThroughWhenPathIsNotWs()
+    {
+        var client = host.GetTestServer().CreateClient();
+
+        var response = await client.GetAsync(new Uri("http://localhost/health")).ConfigureAwait(false);
+
+        Assert.That((int)response.StatusCode, Is.Not.EqualTo(400));
+    }
+
+    [Test]
+    public async Task InvokeAsyncShouldReturn400WhenRequestIsNotWebSocket()
+    {
+        var client = host.GetTestServer().CreateClient();
+
+        var response = await client.GetAsync(new Uri("http://localhost/ws")).ConfigureAwait(false);
+
+        Assert.That((int)response.StatusCode, Is.EqualTo(400));
+    }
+
     [SetUp]
     public async Task Setup()
     {
@@ -36,6 +57,7 @@ internal sealed class WebSocketMiddlewareIntegrationTests
 
         builder.ConfigureWebHost(x =>
         {
+            x.ConfigureAppConfiguration(x => x.AddJsonFile("appsettings.Tests.json", optional: false));
             x.UseTestServer();
             x.UseStartup<Startup>();
         });

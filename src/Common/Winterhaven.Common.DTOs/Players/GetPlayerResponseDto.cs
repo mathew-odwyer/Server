@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.Common.DTOs.Players;
 
@@ -17,6 +18,7 @@ namespace Winterhaven.Common.DTOs.Players;
 /// <param name="Y">
 ///   The current Y-coordinate of the player.
 /// </param>
+[ExcludeFromCodeCoverage]
 public sealed record GetPlayerResponseDto(
     Guid Id,
     string Name,
