@@ -1,4 +1,6 @@
-﻿namespace Winterhaven.Common.DTOs.Users;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Winterhaven.Common.DTOs.Users;
 
 /// <summary>
 ///   Represents a user login response data transfer object.
@@ -12,6 +14,7 @@
 /// <param name="ExpirationSeconds">
 ///   The expiration time (in seconds) of the access token.
 /// </param>
+[ExcludeFromCodeCoverage]
 public sealed record LoginUserResponseDto(
     string AccessToken,
     string RefreshToken,
