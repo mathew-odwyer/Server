@@ -95,7 +95,7 @@ internal sealed class RpcWebSocketSessionIntegrationTests
         string response = Encoding.UTF8.GetString(buffer, 0, result.Count);
 
         // Assert
-        Assert.That(response, Does.Contain("\"id\":2"));
+        Assert.That(response, Does.Contain("\"id\":1"));
         Assert.That(response, Does.Contain("\"error\""));
     }
 
