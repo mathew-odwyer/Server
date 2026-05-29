@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Winterhaven.Common.Extensions\Winterhaven.Common.Extensions.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Core.Application\Winterhaven.Gateway.Core.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -10,5 +11,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Refit.HttpClientFactory" />
   </ItemGroup>
 </Project>
