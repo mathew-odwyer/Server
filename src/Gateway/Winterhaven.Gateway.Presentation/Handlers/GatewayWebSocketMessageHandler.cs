@@ -31,6 +31,18 @@ internal sealed class GatewayWebSocketMessageHandler : WebSocketMessageHandler
     {
     }
 
+    /// <summary>
+    ///   Serializes and writes a <see cref="JsonRpcMessage"/> to the WebSocket, masking protocol-level errors before transmission.
+    /// </summary>
+    /// <param name="content">
+    ///   The <see cref="JsonRpcMessage"/> to write.
+    /// </param>
+    /// <param name="cancellationToken">
+    ///   A <see cref="CancellationToken"/> that can be used to abort the write operation.
+    /// </param>
+    /// <returns>
+    ///   A <see cref="ValueTask"/> that completes when the message has been written to the underlying WebSocket.
+    /// </returns>
     protected override ValueTask WriteCoreAsync(JsonRpcMessage content, CancellationToken cancellationToken)
     {
         if (content is JsonRpcError { Error: not null } error)
