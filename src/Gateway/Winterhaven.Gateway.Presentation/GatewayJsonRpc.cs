@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
+using Winterhaven.Gateway.Core.Domain.Exceptions;
 
 namespace Winterhaven.Gateway.Presentation;
 
-//// TODO: Infrastructure:
-////    - Map application-level exceptions to presentation level JSON-RPC Error objects (see GatewayJsonRpc).
 /*
-    TODO: Once the above is done, write unit tests, integration tests, etc.
+    TODO: Write unit tests, integration tests, etc.
         - Take your time with RpcWebSocketSession and WebSocketMiddleware.
-        - ApiResponseHandler should likely have some unit tests, too.
+        - ApiExceptionHandler should likely have some unit tests, too.
 */
 
 internal sealed class GatewayJsonRpc : JsonRpc
@@ -28,8 +28,23 @@ internal sealed class GatewayJsonRpc : JsonRpc
 
         switch (exception)
         {
-            //// TODO: ValidationException
-            //// TODO: AuthorizationException
+            case ValidationException validationException:
+                return new JsonRpcError.ErrorDetail
+                {
+                    Code = (JsonRpcErrorCode)400,
+                    Message = validationException.Message,
+                    Data = validationException.Errors ?? new Dictionary<string, string[]>
+                    {
+                        { "General", ["One or more validation errors occurred."] }
+                    },
+                };
+
+            case AuthorizationException authorizationException:
+                return new JsonRpcError.ErrorDetail
+                {
+                    Code = (JsonRpcErrorCode)401,
+                    Message = authorizationException.Message,
+                };
 
             // Everything else: log it server-side, send nothing useful to the client.
             default:
