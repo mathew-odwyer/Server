@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
@@ -83,8 +82,7 @@ internal static class ServiceCollectionExtensions
             x.Filters.Add<ConflictExceptionFilterAttribute>();
             x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
             x.Filters.Add<AcceptCaseActionFilterAttribute>();
-        })
-        .AddJsonOptions(x => x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
+        });
 
         return services;
     }
@@ -106,6 +104,7 @@ internal static class ServiceCollectionExtensions
         services.AddHealthChecks();
         services.AddEndpointsApiExplorer();
 
+        // TODO: Write issue to consolidate this logic in some Winterhaven.Common project.
         string version = Assembly
             .GetExecutingAssembly()
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
