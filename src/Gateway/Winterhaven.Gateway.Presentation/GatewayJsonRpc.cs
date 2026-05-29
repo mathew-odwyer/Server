@@ -7,12 +7,6 @@ using Winterhaven.Gateway.Core.Domain.Exceptions;
 
 namespace Winterhaven.Gateway.Presentation;
 
-/*
-    TODO: Write unit tests, integration tests, etc.
-        - Take your time with RpcWebSocketSession and WebSocketMiddleware.
-        - ApiExceptionHandler should likely have some unit tests, too.
-*/
-
 internal sealed class GatewayJsonRpc : JsonRpc
 {
     private readonly ILogger<GatewayJsonRpc> logger;
