@@ -20,6 +20,9 @@ internal sealed class GatewayJsonRpc : JsonRpc
     {
         logger.LogTrace("Creating error details for exception: '{Name}'", exception.GetType().Name);
 
+        //// Only return errors that are useful to the client
+        //// We also chose to use positive codes that can (sometimes) match HTTP Status Codes.
+        //// This isn't a requirement, but just a nice-to-have.
         switch (exception)
         {
             case ValidationException validationException:
@@ -40,7 +43,8 @@ internal sealed class GatewayJsonRpc : JsonRpc
                     Message = authorizationException.Message,
                 };
 
-            // Everything else: log it server-side, send nothing useful to the client.
+            //// For everything else, log it and send nothing useful to the client.
+            //// It's obviously a bug or some other issue - let's not leak any internals to the client.
             default:
                 logger.LogError(exception, "Unhandled exception processing RPC method '{Method}'.", request.Method);
 

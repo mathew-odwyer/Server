@@ -33,6 +33,7 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
     {
         ArgumentNullException.ThrowIfNull(socket);
 
+        // Ensure formatting between C# <-> GML styling is considered.
         using var formatter = new SystemTextJsonFormatter()
         {
             JsonSerializerOptions = new JsonSerializerOptions()
@@ -52,16 +53,20 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
         try
         {
+            // Finally, start the session, and only complete once the socket has disconnected or the user logs out.
             await rpc.Completion.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (JsonException ex)
         {
-            // Client sent malformed JSON - not a valid JSON-RPC message at all.
+            //// Client sent malformed JSON - not a valid JSON-RPC message, keep the connection in case of older clients
+            //// But also for testing purposes. This also ensures the server won't end up with a massive stacktrace
+            //// and ensures it won't crash if someone attempts to connect and play the game with an older client.
             logger.LogWarning("Client sent malformed JSON: {Message}", ex.Message);
         }
         catch (InvalidOperationException ex)
         {
-            // Client sent structurally invalid JSON-RPC (e.g. wrong argument kind).
+            //// Client sent structurally invalid JSON-RPC (e.g. wrong argument kind) - good for debug.
+            //// It's also good for the reasons mentioned in the catch above.
             logger.LogWarning("Client sent invalid JSON-RPC payload: {Message}", ex.Message);
         }
     }

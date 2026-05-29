@@ -49,6 +49,8 @@ internal sealed class WebSocketMiddleware
 
         try
         {
+            //// Run the RPC session, abort if the client disconnects.
+            //// Whether any exception is caught or not, we still properly dispose of the connection in the finally block.
             await session.RunAsync(socket, context.RequestAborted).ConfigureAwait(false);
             logger.LogInformation("WebSocket Client Disconnected: Client ID: '{ClientId}', Client IP: '{ClientIp}'", clientId, clientIp);
         }
