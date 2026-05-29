@@ -46,17 +46,12 @@ RUN dotnet publish Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.
 # Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
 
-# Install ICU libraries for globalization support
-# This is because azure SQL edge ships with globalization-invariant enabled, meaning only invariant culture is supported.
-RUN apk add --no-cache curl icu icu-dev
-
 WORKDIR /app
 
 COPY --from=build /out .
 
 EXPOSE 8080
 
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
 ENV ASPNETCORE_HTTP_PORTS=8080
 ENV DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION=true
 

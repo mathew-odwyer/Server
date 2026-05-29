@@ -14,8 +14,6 @@ namespace Winterhaven.Gateway.Tests.Presentation.Middleware;
 [TestFixture]
 internal sealed class WebSocketMiddlewareTests
 {
-    private DefaultHttpContext httpContext;
-
     private ILogger<WebSocketMiddleware> logger;
 
     private WebSocketMiddleware middleware;
@@ -153,12 +151,6 @@ internal sealed class WebSocketMiddlewareTests
         requestDelegate = new RequestDelegate(_ => Task.CompletedTask);
         rpcSession = Substitute.For<IRpcWebSocketSession>();
         middleware = new WebSocketMiddleware(logger, requestDelegate);
-
-        httpContext = new DefaultHttpContext();
-
-        httpContext.Request.Path = "/ws";
-        httpContext.Request.Headers.Upgrade = "websocket";
-        httpContext.Request.Headers.Connection = "Upgrade";
     }
 
     [TearDown]

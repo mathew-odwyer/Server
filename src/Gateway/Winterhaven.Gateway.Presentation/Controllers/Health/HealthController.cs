@@ -18,10 +18,11 @@ public sealed class HealthController : ControllerBase
     /// <param name="timeProvider">
     ///   The time provider.
     /// </param>
-    public HealthController(TimeProvider timeProvider) => this.timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+    public HealthController(TimeProvider timeProvider) =>
+        this.timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
     /// <summary>
-    ///   Returns the current health status of the API.
+    ///   Returns the current health status of the gateway.
     /// </summary>
     /// <returns>
     ///   Returns an <see cref="IActionResult"/> containing the health status and current UTC timestamp.

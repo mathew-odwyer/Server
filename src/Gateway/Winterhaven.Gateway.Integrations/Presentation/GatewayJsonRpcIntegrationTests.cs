@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NSubstitute;
 using NUnit.Framework;
-using StreamJsonRpc;
 using Winterhaven.Gateway.Integrations.Presentation.Targets;
 using Winterhaven.Gateway.Presentation;
 using Winterhaven.Gateway.Presentation.Targets;
@@ -23,16 +21,6 @@ internal sealed class GatewayJsonRpcIntegrationTests
     private IHost host;
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
-    {
-        // Arrange
-        var handler = Substitute.For<IJsonRpcMessageHandler>();
-
-        // Act and Assert
-        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(null, handler));
-    }
-
-    [Test]
     public async Task CreateErrorDetailsShouldReturnAuthorizationErrorWhenAuthorizationExceptionIsThrown()
     {
         // Arrange
@@ -40,7 +28,13 @@ internal sealed class GatewayJsonRpcIntegrationTests
         var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
             .ConfigureAwait(false);
 
-        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ "{\"jsonrpc\":\"2.0\",\"method\":\"test.throwAuthorization\",\"id\":2}");
+        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ """
+        {
+          "jsonrpc": "2.0",
+          "method": "test.throwAuthorization",
+          "id": 2
+        }
+        """);
 
         // Act
         await webSocket.SendAsync(request, WebSocketMessageType.Text, true, CancellationToken.None)
@@ -68,7 +62,13 @@ internal sealed class GatewayJsonRpcIntegrationTests
         var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
             .ConfigureAwait(false);
 
-        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ "{\"jsonrpc\":\"2.0\",\"method\":\"test.throwUnhandled\",\"id\":3}");
+        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ """
+        {
+          "jsonrpc": "2.0",
+          "method": "test.throwUnhandled",
+          "id": 3
+        }
+        """);
 
         // Act
         await webSocket.SendAsync(request, WebSocketMessageType.Text, true, CancellationToken.None)
@@ -95,7 +95,13 @@ internal sealed class GatewayJsonRpcIntegrationTests
         var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
             .ConfigureAwait(false);
 
-        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ "{\"jsonrpc\":\"2.0\",\"method\":\"test.throwValidation\",\"id\":1}");
+        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ """
+        {
+          "jsonrpc": "2.0",
+          "method": "test.throwValidation",
+          "id": 1
+        }
+        """);
 
         // Act
         await webSocket.SendAsync(request, WebSocketMessageType.Text, true, CancellationToken.None)

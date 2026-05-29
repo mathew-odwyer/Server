@@ -53,7 +53,7 @@ internal sealed class RpcWebSocketSessionTests
         }
         catch (OperationCanceledException)
         {
-            // Expected — cancellation propagates up intentionally to WebSocketMiddleware.
+            // Expected because cancellation propagates up intentionally to WebSocketMiddleware. This is because we let the exception through for the websocket middleware to handle it, as it's a protocol concern.
         }
 
         // Assert

@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 using StreamJsonRpc;
 
 namespace Winterhaven.Gateway.Presentation.Targets.Health;
 
 [ExcludeFromCodeCoverage]
 internal sealed record HealthPingRpcParameters(
-    [property: JsonPropertyName("time_stamp")] double TimeStamp);
+    double TimeStamp);
 
 [ExcludeFromCodeCoverage]
 internal sealed record HealthPingRpcResult(
-    [property: JsonPropertyName("time_stamp")] double TimeStamp);
+    double TimeStamp);
 
 [ExcludeFromCodeCoverage]
 internal sealed record HealthHeartbeatRpcResult(
-    [property: JsonPropertyName("is_alive")] bool IsAlive);
+    bool IsAlive);
 
 internal sealed class HealthRpcTarget : IRpcTarget
 {

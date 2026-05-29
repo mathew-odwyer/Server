@@ -9,13 +9,13 @@ namespace Winterhaven.Gateway.Presentation.Extensions;
 [ExcludeFromCodeCoverage]
 internal static class WebSocketExtensions
 {
-    public static async Task SafeCloseAsync(this WebSocket socket, WebSocketCloseStatus status, string description, CancellationToken ct)
+    public static async Task SafeCloseAsync(this WebSocket socket, WebSocketCloseStatus status, string description, CancellationToken cancellationToken = default)
     {
         try
         {
             if (socket.State is WebSocketState.Open or WebSocketState.CloseReceived)
             {
-                await socket.CloseAsync(status, description, ct).ConfigureAwait(false);
+                await socket.CloseAsync(status, description, cancellationToken).ConfigureAwait(false);
             }
         }
         catch (WebSocketException)

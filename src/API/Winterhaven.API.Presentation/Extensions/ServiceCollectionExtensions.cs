@@ -104,7 +104,6 @@ internal static class ServiceCollectionExtensions
         services.AddHealthChecks();
         services.AddEndpointsApiExplorer();
 
-        // TODO: Write issue to consolidate this logic in some Winterhaven.Common project.
         string version = Assembly
             .GetExecutingAssembly()
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
