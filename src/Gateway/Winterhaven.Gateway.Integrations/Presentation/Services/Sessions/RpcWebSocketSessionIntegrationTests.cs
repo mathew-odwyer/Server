@@ -78,9 +78,13 @@ internal sealed class RpcWebSocketSessionIntegrationTests
         var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
             .ConfigureAwait(false);
 
-#pragma warning disable JSON002 // Probable JSON string detected
-        byte[] request = Encoding.UTF8.GetBytes("""{"jsonrpc":"2.0","method":"unknown/method","id":2}""");
-#pragma warning restore JSON002 // Probable JSON string detected
+        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ """
+        {
+            "jsonrpc": "2.0",
+            "method": "unknown.method",
+            "id": 1
+        }
+        """);
 
         // Act
         await webSocket.SendAsync(request, WebSocketMessageType.Text, true, CancellationToken.None)
