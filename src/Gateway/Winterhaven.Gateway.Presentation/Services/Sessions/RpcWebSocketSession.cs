@@ -43,7 +43,7 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             }
         };
 
-        using var handler = new GatewayWebSocketMessageHandler(socket, formatter);
+        using var handler = new GatewayWebSocketMessageHandler(loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
         using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), handler);
 
         targetRegistrar.RegisterTargets(rpc);
@@ -61,13 +61,16 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             //// Client sent malformed JSON - not a valid JSON-RPC message, keep the connection in case of older clients
             //// But also for testing purposes. This also ensures the server won't end up with a massive stacktrace
             //// and ensures it won't crash if someone attempts to connect and play the game with an older client.
-            logger.LogWarning("Client sent malformed JSON: {Message}", ex.Message);
+            //// Also, this is handled in the GatewayWebSocketMessageHandler, but broken messages may still surface here
+            //// and logging in debug because bad or old clients could make this noisy.
+            logger.LogDebug("Client sent malformed JSON: {Message}", ex.Message);
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException ex) when (ex.Source == "StreamJsonRpc")
         {
-            //// Client sent structurally invalid JSON-RPC (e.g. wrong argument kind) - good for debug.
+            //// Client sent structurally invalid JSON-RPC (e.g. wrong argument kind)
+            //// This is good to log for debugging purposes but would be noisy in production.
             //// It's also good for the reasons mentioned in the catch above.
-            logger.LogWarning("Client sent invalid JSON-RPC payload: {Message}", ex.Message);
+            logger.LogDebug("Client sent invalid JSON-RPC payload: {Message}", ex.Message);
         }
     }
 }

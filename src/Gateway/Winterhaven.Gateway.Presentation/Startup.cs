@@ -11,6 +11,7 @@ using Winterhaven.Gateway.Presentation.Middleware;
 using Winterhaven.Gateway.Presentation.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
+using Winterhaven.Gateway.Presentation.Targets.Users;
 
 namespace Winterhaven.Gateway.Presentation;
 
@@ -71,6 +72,7 @@ internal sealed class Startup
         services.AddScoped<IRpcWebSocketSession, RpcWebSocketSession>();
 
         services.AddRpcSessionTarget<HealthRpcTarget>();
+        services.AddRpcSessionTarget<UserRpcTarget>();
 
         services.AddGatewayInfrastructureServices(Configuration);
     }

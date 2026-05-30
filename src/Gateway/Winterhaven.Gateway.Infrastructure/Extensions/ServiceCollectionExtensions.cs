@@ -7,8 +7,10 @@ using Microsoft.Extensions.Options;
 using Refit;
 using Winterhaven.Common.Extensions;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Infrastructure.Options.Client;
-using Winterhaven.Gateway.Infrastructure.Pipeline.Handlers;
+using Winterhaven.Gateway.Infrastructure.Pipeline.Factories;
+using Winterhaven.Gateway.Infrastructure.Services.Users;
 
 namespace Winterhaven.Gateway.Infrastructure.Extensions;
 
@@ -37,10 +39,11 @@ public static class ServiceCollectionExtensions
 
         services.AddValidatedOptions<ClientOptions>(configuration);
 
-        services.AddTransient<LoggingHandler>();
-        services.AddTransient<ApiExceptionHandler>();
+        services.AddScoped<IUserAccountService, UserAccountService>();
 
         services.AddGatewayClient<IUserAccountClient>("api/UserAccount");
+
+        services.AddSingleton<ApiExceptionFactory>();
 
         return services;
     }
@@ -48,20 +51,21 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddGatewayClient<TClient>(this IServiceCollection services, string route)
         where TClient : class
     {
-        services.AddRefitClient<TClient>()
-            .ConfigureHttpClient((provider, client) =>
-            {
-                var settings = provider.GetRequiredService<IOptions<ClientOptions>>();
-                string version = Assembly
-                    .GetExecutingAssembly()
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    ?.InformationalVersion ?? "unknown";
+        services.AddRefitClient<TClient>(x => new RefitSettings()
+        {
+            ExceptionFactory = x.GetRequiredService<ApiExceptionFactory>().CreateAsync,
+        })
+        .ConfigureHttpClient((provider, client) =>
+        {
+            var settings = provider.GetRequiredService<IOptions<ClientOptions>>();
+            string version = Assembly
+                .GetExecutingAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion ?? "unknown";
 
-                client.BaseAddress = new Uri($"{settings.Value.BaseUrl}/{route}/");
-                client.DefaultRequestHeaders.UserAgent.ParseAdd($"Winterhaven Gateway/{version}");
-            })
-            .AddHttpMessageHandler<LoggingHandler>()
-            .AddHttpMessageHandler<ApiExceptionHandler>();
+            client.BaseAddress = new Uri($"{settings.Value.BaseUrl}/{route}");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($"Winterhaven Gateway/{version}");
+        });
 
         return services;
     }
