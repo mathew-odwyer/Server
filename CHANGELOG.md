@@ -13,12 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#72] GML NATS Client (_by [@mathew-odwyer]_).
   - [#97] - Gateway Infrastructure Setup (_by [@mathew-odwyer]_).
   - [#94] - Gateway Registration Flow (_by [@mathew-odwyer]_).
+  - [#93] - Gateway Login Flow (_by [@mathew-odwyer]_).
 
 ### Fixed
 
 - [#59] - Server Sends Error Messages to Client (_by [@mathew-odwyer]_).
 
-## [v0.3.0] - 08-06-2026
+## [v0.3.0] - 27-05-2026
 
 ### Added
 
@@ -72,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#93]: https://github.com/mathew-odwyer/Server/issues/93
 [#94]: https://github.com/mathew-odwyer/Server/issues/94
 [#97]: https://github.com/mathew-odwyer/Server/issues/97
 [#91]: https://github.com/mathew-odwyer/Server/issues/91

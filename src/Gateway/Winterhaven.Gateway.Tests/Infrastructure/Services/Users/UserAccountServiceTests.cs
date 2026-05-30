@@ -30,7 +30,116 @@ internal sealed class UserAccountServiceTests
         Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, null));
 
     [Test]
-    public async Task RegisterAsyncShouldCancelWhenUserAccountClientRegusterUserAsyncCancels()
+    public async Task LoginAsyncShouldCancelWhenUserAccountClientLoginAsyncCancels()
+    {
+        // Arrange
+        const string username = "test-user";
+        const string password = "MyCoolPassword";
+
+        userAccountClient.LoginUserAsync(
+            Arg.Is<LoginUserRequestDto>(dto =>
+                dto.Username == username &&
+                dto.Password == password),
+            Arg.Any<CancellationToken>()).Returns(Task.FromResult(new LoginUserResponseDto(
+                AccessToken: "accessToken",
+                RefreshToken: "refreshToken",
+                ExpirationSeconds: 900)));
+
+        // Act
+        await userAccountService.LoginAsync(username, password, new CancellationToken(true)).ConfigureAwait(false);
+
+        // Assert
+        await userAccountClient.Received(1).LoginUserAsync(
+            Arg.Is<LoginUserRequestDto>(dto =>
+                dto.Username == username &&
+                dto.Password == password),
+            Arg.Is<CancellationToken>(ct => ct.IsCancellationRequested)
+        ).ConfigureAwait(false);
+    }
+
+    [Test]
+    public async Task LoginAsyncShouldInvokeUserAccountServiceLoginUserAsyncWhenParametersAreNotNullEmptyOrWhiteSpace()
+    {
+        // Arrange
+        const string username = "test-user";
+        const string password = "MyCoolPassword";
+
+        userAccountClient.LoginUserAsync(
+            Arg.Is<LoginUserRequestDto>(dto =>
+                dto.Username == username &&
+                dto.Password == password),
+            Arg.Any<CancellationToken>()).Returns(Task.FromResult(new LoginUserResponseDto(
+                AccessToken: "accessToken",
+                RefreshToken: "refreshToken",
+                ExpirationSeconds: 900)));
+
+        // Act
+        await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
+
+        // Assert
+        await userAccountClient.Received(1).LoginUserAsync(
+            Arg.Is<LoginUserRequestDto>(dto =>
+                dto.Username == username &&
+                dto.Password == password),
+            Arg.Is<CancellationToken>(ct => !ct.IsCancellationRequested)
+        ).ConfigureAwait(false);
+    }
+
+    [Test]
+    public async Task LoginAsyncShouldReturnRefreshTokenWhenParametersAreNotNullEmptyOrWhiteSpace()
+    {
+        // Arrange
+        const string username = "test-user";
+        const string password = "MyCoolPassword";
+
+        userAccountClient.LoginUserAsync(Arg.Is<LoginUserRequestDto>(
+            dto =>
+                dto.Username == username &&
+                dto.Password == password),
+            Arg.Any<CancellationToken>()).Returns(Task.FromResult(new LoginUserResponseDto(
+                AccessToken: "accessToken",
+                RefreshToken: "refreshToken",
+                ExpirationSeconds: 900)));
+
+        // Act
+        var response = await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
+
+        // Assert
+        Assert.That(response.RefreshToken, Is.EqualTo("refreshToken"));
+    }
+
+    [Test]
+    public void LoginAsyncShouldThrowArgumentExceptionWhenPasswordIsEmpty() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("username", string.Empty));
+
+    [Test]
+    public void LoginAsyncShouldThrowArgumentExceptionWhenPasswordIsWhiteSpace() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("username", "\r\t\n "));
+
+    [Test]
+    public void LoginAsyncShouldThrowArgumentExceptionWhenUsernameIsEmpty() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync(string.Empty, "password"));
+
+    [Test]
+    public void LoginAsyncShouldThrowArgumentExceptionWhenUsernameIsWhiteSpace() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("\r\t\n ", "password"));
+
+    [Test]
+    public void LoginAsyncShouldThrowArgumentNullExceptionWhenPasswordIsNull() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentNullException>(() => userAccountService.LoginAsync("username", null));
+
+    [Test]
+    public void LoginAsyncShouldThrowArgumentNullExceptionWhenUsernameIsNull() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentNullException>(() => userAccountService.LoginAsync(null, "password"));
+
+    [Test]
+    public async Task RegisterAsyncShouldCancelWhenUserAccountClientRegusterAsyncCancels()
     {
         // Arrange
         const string username = "test-user";

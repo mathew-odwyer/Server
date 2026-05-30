@@ -20,6 +20,25 @@ internal sealed class UserAccountService : IUserAccountService
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
     }
 
+    public async Task<UserLoginResult> LoginAsync(string username, string password, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentException.ThrowIfNullOrWhiteSpace(password);
+
+        var dto = new LoginUserRequestDto()
+        {
+            Username = username,
+            Password = password,
+        };
+
+        logger.LogInformation("User logging in: '{Username}'", username);
+        var response = await userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
+        logger.LogInformation("User logged in: '{Username}'", username);
+
+        return new UserLoginResult(
+            RefreshToken: response.RefreshToken);
+    }
+
     public async Task RegisterAsync(string username, string password, string emailAddress, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
