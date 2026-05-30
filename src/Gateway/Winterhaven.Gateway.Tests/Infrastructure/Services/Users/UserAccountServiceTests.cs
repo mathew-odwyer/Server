@@ -140,6 +140,7 @@ internal sealed class UserAccountServiceTests
 
         // Assert
         userTokenParser.Received(1).ParseUserToken("accessToken", 5);
+        Assert.Pass();
     }
 
     [Test]
