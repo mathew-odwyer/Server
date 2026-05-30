@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
-using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 
 namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 
@@ -22,16 +19,20 @@ internal sealed class UserAccountService : IUserAccountService
 
     private readonly IUserSessionContext userSessionContext;
 
+    private readonly IUserTokenParser userTokenParser;
+
     public UserAccountService(
         ILogger<UserAccountService> logger,
         IUserAccountClient userAccountClient,
         IUserSessionAuthenticator userSessionAuthenticator,
-        IUserSessionContext userSessionContext)
+        IUserSessionContext userSessionContext,
+        IUserTokenParser userTokenParser)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
         this.userSessionAuthenticator = userSessionAuthenticator ?? throw new ArgumentNullException(nameof(userSessionAuthenticator));
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
+        this.userTokenParser = userTokenParser ?? throw new ArgumentNullException(nameof(userTokenParser));
     }
 
     public async Task<UserLoginResult> LoginAsync(string username, string password, CancellationToken cancellationToken = default)
@@ -45,9 +46,6 @@ internal sealed class UserAccountService : IUserAccountService
             Password = password,
         };
 
-        logger.LogInformation("User logging in: '{Username}'", username);
-        var response = await userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
-
         //// If some how this user session is already authenticated, let's just return a 401
         //// as this should never really happen in production unless there's a bug or someone
         //// is probing the server.
@@ -57,8 +55,11 @@ internal sealed class UserAccountService : IUserAccountService
             throw new AuthorizationException("An active session already exists for this connection.");
         }
 
+        logger.LogInformation("User logging in: '{Username}'", username);
+        var response = await userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
+
         //// Create the user session and authenticate the user.
-        var userSession = CreateUserSession(response.AccessToken, response.ExpirationSeconds);
+        var userSession = userTokenParser.ParseUserToken(response.AccessToken, response.ExpirationSeconds);
         userSessionAuthenticator.Authenticate(userSession);
 
         logger.LogInformation("User logged in: '{Username}'", username);
@@ -100,19 +101,5 @@ internal sealed class UserAccountService : IUserAccountService
         logger.LogInformation("Registering potential user: '{Username}'", username);
         await userAccountClient.RegisterUserAsync(dto, cancellationToken).ConfigureAwait(false);
         logger.LogInformation("Registered potential user: '{Username}'", username);
-    }
-
-    private static UserSession CreateUserSession(string accessToken, double accessTokenExpirationSeconds)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
-
-        var jwt = new JsonWebTokenHandler().ReadJsonWebToken(accessToken);
-        var claims = jwt.Claims;
-
-        return new UserSession(
-            UserAccountId: Guid.Parse(jwt.Claims.First(c => c.Type == "identifier").Value),
-            Username: jwt.Claims.First(x => x.Type == "username").Value,
-            AccessToken: accessToken,
-            AccessTokenExpiry: TimeSpan.FromSeconds(accessTokenExpirationSeconds));
     }
 }

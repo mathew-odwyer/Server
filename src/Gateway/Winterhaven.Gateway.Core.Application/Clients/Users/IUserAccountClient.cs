@@ -23,7 +23,7 @@ public interface IUserAccountClient
     ///   A task representing the asynchronous operation, containing the authenticated user response.
     /// </returns>
     [Post("/Login")]
-    public Task<LoginUserResponseDto> LoginUserAsync([Body] LoginUserRequestDto dto, CancellationToken cancellationToken);
+    public Task<LoginUserResponseDto> LoginUserAsync([Body] LoginUserRequestDto dto, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///   Logs out the currently authenticated user.
@@ -36,7 +36,7 @@ public interface IUserAccountClient
     /// </returns>
     [Post("/Logout")]
     [Headers("Authorization: Bearer")]
-    public Task LogoutUserAsync(CancellationToken cancellationToken);
+    public Task LogoutUserAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     ///   Refreshes the authentication token using the provided refresh token request.
@@ -51,7 +51,7 @@ public interface IUserAccountClient
     ///   A task representing the asynchronous operation, containing the refreshed token response.
     /// </returns>
     [Post("/RefreshToken")]
-    public Task<RefreshTokenResponseDto> RefreshTokenAsync([Body] RefreshTokenRequestDto dto, CancellationToken cancellationToken);
+    public Task<RefreshTokenResponseDto> RefreshTokenAsync([Body] RefreshTokenRequestDto dto, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///   Registers a new user account using the provided registration details.
@@ -66,5 +66,5 @@ public interface IUserAccountClient
     ///   A task representing the asynchronous user registration operation.
     /// </returns>
     [Post("/Register")]
-    public Task RegisterUserAsync([Body] RegisterUserRequestDto dto, CancellationToken cancellationToken);
+    public Task RegisterUserAsync([Body] RegisterUserRequestDto dto, CancellationToken cancellationToken = default);
 }

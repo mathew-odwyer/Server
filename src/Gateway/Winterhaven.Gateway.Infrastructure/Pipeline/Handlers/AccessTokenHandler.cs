@@ -18,9 +18,9 @@ internal sealed class AccessTokenHandler : DelegatingHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var sessionContext = httpContextAccessor.HttpContext?.RequestServices.GetRequiredService<IUserSessionContext>();
+        var sessionContext = httpContextAccessor.HttpContext?.RequestServices?.GetService<IUserSessionContext>();
 
-        if (sessionContext?.UserSession is not null && !string.IsNullOrWhiteSpace(sessionContext.UserSession.AccessToken))
+        if (sessionContext?.UserSession != null && !string.IsNullOrWhiteSpace(sessionContext.UserSession.AccessToken))
         {
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionContext.UserSession.AccessToken);
         }

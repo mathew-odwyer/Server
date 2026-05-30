@@ -44,6 +44,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserSessionContext>(x => x.GetRequiredService<UserSessionAuthenticator>());
         services.AddScoped<IUserSessionAuthenticator>(sp => sp.GetRequiredService<UserSessionAuthenticator>());
 
+        services.AddSingleton<IUserTokenParser, UserTokenParser>();
         services.AddScoped<IUserAccountService, UserAccountService>();
 
         services.AddGatewayClient<IUserAccountClient>("api/UserAccount");

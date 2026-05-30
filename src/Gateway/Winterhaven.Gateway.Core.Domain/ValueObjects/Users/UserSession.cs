@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 
@@ -17,6 +18,7 @@ namespace Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 /// <param name="AccessTokenExpiry">
 ///   The duration until the access token expires, measured from the time the token was issued.
 /// </param>
+[ExcludeFromCodeCoverage]
 public sealed record UserSession(
     Guid UserAccountId,
     string Username,
