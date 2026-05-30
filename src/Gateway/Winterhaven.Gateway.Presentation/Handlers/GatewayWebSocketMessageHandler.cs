@@ -94,17 +94,17 @@ internal sealed class GatewayWebSocketMessageHandler : WebSocketMessageHandler
                         break;
 
                     case JsonRpcErrorCode.InvocationErrorWithException:
-                        // Same as above but with a serialized exception attached, server-side fault. Arguably more severe since it carries exception detail; keep at Warning.
+                        // Same as above but with a serialized exception attached, server-side fault.
                         logger.LogWarning("Method invocation failed with exception detail. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.ResponseSerializationFailure:
-                        // Your server produced a response it then couldn't serialize, server-side fault. This one is worth Error since it indicates a broken contract on your side.
+                        // Server produced a response it then couldn't serialize, server-side fault.
                         logger.LogError("Failed to serialize RPC response. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.NoMarshaledObjectFound:
-                        // Client referenced a marshaled object handle that no longer exists. Could be a race (Debug) or a bad actor replaying stale handles.
+                        // Client referenced a marshaled object handle that no longer exists. Could be a race condition or a bad actor replaying stale handles.
                         logger.LogDebug("Client referenced an unknown or expired marshaled object. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
@@ -114,7 +114,7 @@ internal sealed class GatewayWebSocketMessageHandler : WebSocketMessageHandler
                         break;
 
                     default:
-                        logger.LogDebug("Unrecognised protocol error. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        logger.LogWarning("Unrecognised protocol error. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
                 }
 

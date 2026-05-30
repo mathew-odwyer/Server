@@ -4,15 +4,6 @@ using System.Threading.Tasks;
 namespace Winterhaven.Gateway.Core.Application.Services.Users;
 
 /// <summary>
-///   Represents a user registration result.
-/// </summary>
-/// <param name="Success">
-///   Indicates whether the user has been registered.
-/// </param>
-public sealed record UserRegistrationResult(
-    bool Success);
-
-/// <summary>
 ///   Defines an interface that provides functions to handle user accounts (registration, login, etc).
 /// </summary>
 public interface IUserAccountService
@@ -33,7 +24,7 @@ public interface IUserAccountService
     ///   The cancellation token used to cancel the registration.
     /// </param>
     /// <returns>
-    ///   Returns a result that indicates whether the registration was successful.
+    ///   Returns a task that completes when the registration succeeds.
     /// </returns>
-    public Task<UserRegistrationResult> RegisterAsync(string username, string password, string emailAddress, CancellationToken cancellationToken = default);
+    public Task RegisterAsync(string username, string password, string emailAddress, CancellationToken cancellationToken = default);
 }

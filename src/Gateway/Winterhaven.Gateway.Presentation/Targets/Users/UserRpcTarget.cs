@@ -7,13 +7,13 @@ using Winterhaven.Gateway.Core.Application.Services.Users;
 
 namespace Winterhaven.Gateway.Presentation.Targets.Users;
 
+[ExcludeFromCodeCoverage]
 internal sealed record UserRegisterRpcParameters(
     string Username,
     string Password,
     string EmailAddress);
 
-internal sealed record UserRegisterRpcResult(
-    bool Success);
+internal sealed record UserRegisterRpcResult;
 
 [ExcludeFromCodeCoverage]
 internal sealed class UserRpcTarget : IRpcTarget
@@ -28,14 +28,13 @@ internal sealed class UserRpcTarget : IRpcTarget
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        var response = await userAccountService.RegisterAsync(
+        await userAccountService.RegisterAsync(
             username: parameters.Username,
             password: parameters.Password,
             emailAddress: parameters.EmailAddress,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        return new UserRegisterRpcResult(
-            Success: response.Success);
+        return new UserRegisterRpcResult();
     }
 }

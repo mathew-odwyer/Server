@@ -20,7 +20,7 @@ internal sealed class UserAccountService : IUserAccountService
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
     }
 
-    public async Task<UserRegistrationResult> RegisterAsync(string username, string password, string emailAddress, CancellationToken cancellationToken = default)
+    public async Task RegisterAsync(string username, string password, string emailAddress, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
@@ -36,11 +36,5 @@ internal sealed class UserAccountService : IUserAccountService
         logger.LogInformation("Registering potential user: '{Username}'", username);
         await userAccountClient.RegisterUserAsync(dto, cancellationToken).ConfigureAwait(false);
         logger.LogInformation("Registered potential user: '{Username}'", username);
-
-        //// TODO: Fix this, this is a code smell
-        ////       We will always succeed unless an exception is thrown.
-        //// TODO: Figure out whether StreamJsonRpc returns anything if the return type is void in UserRpcTarget.
-        return new UserRegistrationResult(
-            Success: true);
     }
 }
