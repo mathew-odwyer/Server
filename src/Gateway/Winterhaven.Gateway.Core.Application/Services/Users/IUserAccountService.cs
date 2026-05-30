@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 namespace Winterhaven.Gateway.Core.Application.Services.Users;
 
 /// <summary>
+///   Represents a user loggin result.
 /// </summary>
+/// <param name="RefreshToken">
+///   The refresh token used to refresh the users session.
+/// </param>
 [ExcludeFromCodeCoverage]
 public sealed record UserLoginResult(
     string RefreshToken);
@@ -16,7 +20,20 @@ public sealed record UserLoginResult(
 public interface IUserAccountService
 {
     /// <summary>
+    ///   Authenticates and logs in a potential user.
     /// </summary>
+    /// <param name="username">
+    ///   The username of the potential user to be logged in.
+    /// </param>
+    /// <param name="password">
+    ///   The password of the potential user to be logged in.
+    /// </param>
+    /// <param name="cancellationToken">
+    ///   The cancellation token used to cancel the login request.
+    /// </param>
+    /// <returns>
+    ///   Returns a <see cref="UserLoginResult"/> that is the result of the login operation.
+    /// </returns>
     public Task<UserLoginResult> LoginAsync(string username, string password, CancellationToken cancellationToken = default);
 
     /// <summary>
