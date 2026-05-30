@@ -1,0 +1,24 @@
+﻿using System;
+
+namespace Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
+
+/// <summary>
+///   Represents an authenticated user session.
+/// </summary>
+/// <param name="UserAccountId">
+///   The unique identifier of the user account associated with the session.
+/// </param>
+/// <param name="Username">
+///   The username of the authenticated user.
+/// </param>
+/// <param name="AccessToken">
+///   The access token used to authorize requests to protected resources.
+/// </param>
+/// <param name="AccessTokenExpiry">
+///   The duration until the access token expires, measured from the time the token was issued.
+/// </param>
+public sealed record UserSession(
+    Guid UserAccountId,
+    string Username,
+    string AccessToken,
+    TimeSpan AccessTokenExpiry);

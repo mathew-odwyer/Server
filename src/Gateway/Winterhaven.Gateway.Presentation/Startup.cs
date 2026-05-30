@@ -75,5 +75,7 @@ internal sealed class Startup
         services.AddRpcSessionTarget<UserRpcTarget>();
 
         services.AddGatewayInfrastructureServices(Configuration);
+
+        services.AddHttpContextAccessor();
     }
 }

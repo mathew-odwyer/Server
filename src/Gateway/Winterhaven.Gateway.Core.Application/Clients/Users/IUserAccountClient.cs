@@ -35,6 +35,7 @@ public interface IUserAccountClient
     ///   A task representing the asynchronous logout operation.
     /// </returns>
     [Post("/Logout")]
+    [Headers("Authorization: Bearer")]
     public Task LogoutUserAsync(CancellationToken cancellationToken);
 
     /// <summary>
