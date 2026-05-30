@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using StreamJsonRpc;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
@@ -22,20 +23,50 @@ internal sealed class RpcWebSocketSessionTests
 
     private IJsonRpcTargetRegistrar targetRegistrar;
 
+    private IUserAccountService userAccountService;
+
     [Test]
     public void ConstructorShouldThrowWhenLoggerFactoryIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, null, targetRegistrar));
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, null, targetRegistrar, userAccountService));
 
     [Test]
     public void ConstructorShouldThrowWhenLoggerIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(null, loggerFactory, targetRegistrar));
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(null, loggerFactory, targetRegistrar, userAccountService));
 
     [Test]
     public void ConstructorShouldThrowWhenTargetRegistrarIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, null));
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, null, userAccountService));
+
+    [Test]
+    public void ConstructorShouldThrowWhenUserAccountServiceIsNull() =>
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, null));
 
     [TearDown]
     public void Dispose() => loggerFactory.Dispose();
+
+    [Test]
+    public async Task RunAsyncShouldInvokeUserAccountServiceLogoutAsyncWhenSessionIsComplete()
+    {
+        // Arrange
+        var socket = Substitute.For<WebSocket>();
+        socket.State.Returns(WebSocketState.Open);
+        var cts = new CancellationTokenSource();
+        await cts.CancelAsync().ConfigureAwait(false);
+
+        // Act
+        try
+        {
+            await session.RunAsync(socket, cts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected because cancellation propagates up intentionally to WebSocketMiddleware. This is because we let the exception through for the websocket middleware to handle it, as it's a protocol concern.
+        }
+
+        // Assert
+        await userAccountService.Received(1).LogoutAsync(Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        cts.Dispose();
+    }
 
     [Test]
     public async Task RunAsyncShouldRegisterTargetsOnStartup()
@@ -71,7 +102,8 @@ internal sealed class RpcWebSocketSessionTests
         logger = Substitute.For<ILogger<RpcWebSocketSession>>();
         loggerFactory = Substitute.For<ILoggerFactory>();
         targetRegistrar = Substitute.For<IJsonRpcTargetRegistrar>();
+        userAccountService = Substitute.For<IUserAccountService>();
         loggerFactory.CreateLogger(Arg.Any<string>()).Returns(Substitute.For<ILogger>());
-        session = new RpcWebSocketSession(logger, loggerFactory, targetRegistrar);
+        session = new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, userAccountService);
     }
 }

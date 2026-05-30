@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StreamJsonRpc;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation.Handlers;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
@@ -19,14 +20,18 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
     private readonly IJsonRpcTargetRegistrar targetRegistrar;
 
+    private readonly IUserAccountService userAccountService;
+
     public RpcWebSocketSession(
         ILogger<RpcWebSocketSession> logger,
         ILoggerFactory loggerFactory,
-        IJsonRpcTargetRegistrar targetRegistrar)
+        IJsonRpcTargetRegistrar targetRegistrar,
+        IUserAccountService userAccountService)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.targetRegistrar = targetRegistrar ?? throw new ArgumentNullException(nameof(targetRegistrar));
+        this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
     }
 
     public async Task RunAsync(WebSocket socket, CancellationToken cancellationToken = default)
@@ -49,8 +54,6 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         targetRegistrar.RegisterTargets(rpc);
         rpc.StartListening();
 
-        // TODO: finally block: logout the user if they've logged in.
-
         try
         {
             // Finally, start the session, and only complete once the socket has disconnected or the user logs out.
@@ -71,6 +74,10 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             //// This is good to log for debugging purposes but would be noisy in production.
             //// It's also good for the reasons mentioned in the catch above.
             logger.LogDebug("Client sent invalid JSON-RPC payload: {Message}", ex.Message);
+        }
+        finally
+        {
+            await userAccountService.LogoutAsync(CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

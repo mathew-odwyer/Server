@@ -37,6 +37,17 @@ public interface IUserAccountService
     public Task<UserLoginResult> LoginAsync(string username, string password, CancellationToken cancellationToken = default);
 
     /// <summary>
+    ///   Logs out the currently authenticated user and invalidates their active session.
+    /// </summary>
+    /// <param name="cancellationToken">
+    ///   The cancellation token used to cancel the logout request.
+    /// </param>
+    /// <returns>
+    ///   Returns a task that completes when the logout operation succeeds.
+    /// </returns>
+    public Task LogoutAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
     ///   Registers a potential user.
     /// </summary>
     /// <param name="username">

@@ -10,6 +10,7 @@ using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Infrastructure.Options.Client;
 using Winterhaven.Gateway.Infrastructure.Pipeline.Factories;
+using Winterhaven.Gateway.Infrastructure.Pipeline.Handlers;
 using Winterhaven.Gateway.Infrastructure.Services.Users;
 
 namespace Winterhaven.Gateway.Infrastructure.Extensions;
@@ -39,11 +40,17 @@ public static class ServiceCollectionExtensions
 
         services.AddValidatedOptions<ClientOptions>(configuration);
 
+        services.AddScoped<UserSessionAuthenticator>();
+        services.AddScoped<IUserSessionContext>(x => x.GetRequiredService<UserSessionAuthenticator>());
+        services.AddScoped<IUserSessionAuthenticator>(sp => sp.GetRequiredService<UserSessionAuthenticator>());
+
+        services.AddSingleton<IUserTokenParser, UserTokenParser>();
         services.AddScoped<IUserAccountService, UserAccountService>();
 
         services.AddGatewayClient<IUserAccountClient>("api/UserAccount");
 
         services.AddSingleton<ApiExceptionFactory>();
+        services.AddTransient<AccessTokenHandler>();
 
         return services;
     }
@@ -65,7 +72,8 @@ public static class ServiceCollectionExtensions
 
             client.BaseAddress = new Uri($"{settings.Value.BaseUrl}/{route}");
             client.DefaultRequestHeaders.UserAgent.ParseAdd($"Winterhaven Gateway/{version}");
-        });
+        })
+        .AddHttpMessageHandler<AccessTokenHandler>();
 
         return services;
     }
