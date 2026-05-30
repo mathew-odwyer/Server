@@ -43,29 +43,29 @@ public static class ServiceCollectionExtensions
 
         services.AddGatewayClient<IUserAccountClient>("api/UserAccount");
 
+        services.AddSingleton<ApiExceptionFactory>();
+
         return services;
     }
 
     private static IServiceCollection AddGatewayClient<TClient>(this IServiceCollection services, string route)
         where TClient : class
     {
-        var refitSettings = new RefitSettings()
+        services.AddRefitClient<TClient>(x => new RefitSettings()
         {
-            ExceptionFactory = ApiExceptionFactory.CreateAsync,
-        };
+            ExceptionFactory = x.GetRequiredService<ApiExceptionFactory>().CreateAsync,
+        })
+        .ConfigureHttpClient((provider, client) =>
+        {
+            var settings = provider.GetRequiredService<IOptions<ClientOptions>>();
+            string version = Assembly
+                .GetExecutingAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion ?? "unknown";
 
-        services.AddRefitClient<TClient>(refitSettings)
-            .ConfigureHttpClient((provider, client) =>
-            {
-                var settings = provider.GetRequiredService<IOptions<ClientOptions>>();
-                string version = Assembly
-                    .GetExecutingAssembly()
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    ?.InformationalVersion ?? "unknown";
-
-                client.BaseAddress = new Uri($"{settings.Value.BaseUrl}/{route}");
-                client.DefaultRequestHeaders.UserAgent.ParseAdd($"Winterhaven Gateway/{version}");
-            });
+            client.BaseAddress = new Uri($"{settings.Value.BaseUrl}/{route}");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($"Winterhaven Gateway/{version}");
+        });
 
         return services;
     }

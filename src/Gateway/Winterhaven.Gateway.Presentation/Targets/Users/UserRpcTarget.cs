@@ -13,6 +13,7 @@ internal sealed record UserRegisterRpcParameters(
     string Password,
     string EmailAddress);
 
+[ExcludeFromCodeCoverage]
 internal sealed record UserRegisterRpcResult;
 
 [ExcludeFromCodeCoverage]
