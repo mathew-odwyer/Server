@@ -1,13 +1,24 @@
-﻿using System.Threading;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Winterhaven.Gateway.Core.Application.Services.Users;
+
+/// <summary>
+/// </summary>
+[ExcludeFromCodeCoverage]
+public sealed record UserLoginResult(
+    string RefreshToken);
 
 /// <summary>
 ///   Defines an interface that provides functions to handle user accounts (registration, login, etc).
 /// </summary>
 public interface IUserAccountService
 {
+    /// <summary>
+    /// </summary>
+    public Task<UserLoginResult> LoginAsync(string username, string password, CancellationToken cancellationToken = default);
+
     /// <summary>
     ///   Registers a potential user.
     /// </summary>
