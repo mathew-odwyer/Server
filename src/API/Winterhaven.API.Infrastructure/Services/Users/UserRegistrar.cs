@@ -52,7 +52,7 @@ internal sealed class UserRegistrar : IUserRegistrar
                 );
 
             string message = string.Join("; ", errors.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
-            logger.LogWarning("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
+            logger.LogInformation("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
 
             throw new ValidationException(errors);
         }
