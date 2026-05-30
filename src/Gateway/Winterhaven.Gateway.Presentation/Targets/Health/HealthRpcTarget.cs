@@ -16,6 +16,7 @@ internal sealed record HealthPingRpcResult(
 internal sealed record HealthHeartbeatRpcResult(
     bool IsAlive);
 
+[ExcludeFromCodeCoverage]
 internal sealed class HealthRpcTarget : IRpcTarget
 {
     [JsonRpcMethod("health.heartbeat")]
