@@ -40,15 +40,25 @@ COPY Gateway/ Gateway/
 COPY Common/ Common/
 
 RUN dotnet test Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj -c Release --no-restore
-RUN dotnet test Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj -c Relase --no-restore
+RUN dotnet test Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj -c Release --no-restore
 RUN dotnet publish Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj -c Release -o /out
 
 # Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
 
+# Create a new user (non-root) this fixes
+# This is because running containers as a privileged user is security-sensitive
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 WORKDIR /app
 
 COPY --from=build /out .
+
+# Ensure the application files are owned by the non-root user
+RUN chown -R appuser:appgroup /app
+
+# Switch to the non-root user
+USER appuser
 
 EXPOSE 8080
 
