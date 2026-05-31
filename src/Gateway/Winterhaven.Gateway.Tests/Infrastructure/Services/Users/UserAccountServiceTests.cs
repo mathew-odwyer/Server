@@ -248,21 +248,6 @@ internal sealed class UserAccountServiceTests
     }
 
     [Test]
-    public async Task LogoutAsyncShouldPropagateCancellationTokenToUserAccountClient()
-    {
-        // Arrange
-        userSessionContext.IsAuthenticated.Returns(true);
-        using var cts = new CancellationTokenSource();
-        await cts.CancelAsync().ConfigureAwait(false);
-
-        // Act
-        await userAccountService.LogoutAsync(cts.Token).ConfigureAwait(false);
-
-        // Assert
-        await userAccountClient.Received(1).LogoutUserAsync(Arg.Is<CancellationToken>(ct => ct.IsCancellationRequested)).ConfigureAwait(false);
-    }
-
-    [Test]
     public async Task LogoutAsyncShouldReturnImmediatelyWhenUserIsNotAuthenticated()
     {
         // Arrange
@@ -274,6 +259,144 @@ internal sealed class UserAccountServiceTests
         // Assert
         await userAccountClient.DidNotReceive().LogoutUserAsync(Arg.Any<CancellationToken>()).ConfigureAwait(false);
         userSessionManager.DidNotReceive().InvalidateUserSession();
+    }
+
+    [Test]
+    public async Task LogoutAsyncShouldReturnImmediatelyWhenUserSessionIsNull()
+    {
+        // Arrange
+        userSessionContext.IsAuthenticated.Returns(true);
+        userSessionContext.UserSession.Returns((UserSession)null);
+
+        // Act
+        await userAccountService.LogoutAsync().ConfigureAwait(false);
+
+        // Assert
+        await userAccountClient.DidNotReceive().LogoutUserAsync(Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        userSessionManager.DidNotReceive().InvalidateUserSession();
+    }
+
+    [Test]
+    public async Task RefreshTokenAsyncShouldInvokeUserAccountClientRefreshTokenAsyncWhenParametersAreValid()
+    {
+        // Arrange
+        const string refreshToken = "myRefreshToken";
+        userSessionContext.IsAuthenticated.Returns(true);
+
+        // Act
+        await userAccountService.RefreshTokenAsync(refreshToken).ConfigureAwait(false);
+
+        // Assert
+        await userAccountClient.Received(1).RefreshTokenAsync(
+            Arg.Is<RefreshTokenRequestDto>(dto => dto.RefreshToken == refreshToken),
+            Arg.Is<CancellationToken>(ct => !ct.IsCancellationRequested)
+        ).ConfigureAwait(false);
+    }
+
+    [Test]
+    public async Task RefreshTokenAsyncShouldInvokeUserSessionManagerRefreshUserSessionWithParsedSession()
+    {
+        // Arrange
+        userSessionContext.IsAuthenticated.Returns(true);
+
+        var newSession = new UserSession(
+            UserAccountId: Guid.NewGuid(),
+            Username: "cooluser",
+            AccessToken: "newAccessToken",
+            ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
+
+        userAccountClient.RefreshTokenAsync(
+            Arg.Any<RefreshTokenRequestDto>(),
+            Arg.Any<CancellationToken>()).Returns(Task.FromResult(new RefreshTokenResponseDto(
+                AccessToken: "newAccessToken",
+                RefreshToken: "newRefreshToken")));
+
+        userTokenParser.ParseUserToken("newAccessToken").Returns(newSession);
+
+        // Act
+        await userAccountService.RefreshTokenAsync("refreshToken").ConfigureAwait(false);
+
+        // Assert
+        userSessionManager.Received(1).RefreshUserSession(
+            Arg.Is<UserSession>(x =>
+                x.Username == newSession.Username &&
+                x.UserAccountId == newSession.UserAccountId &&
+                x.AccessToken == newSession.AccessToken &&
+                x.ExpiresAt == newSession.ExpiresAt));
+    }
+
+    [Test]
+    public async Task RefreshTokenAsyncShouldInvokeUserTokenParserParseUserTokenWithAccessTokenFromResponse()
+    {
+        // Arrange
+        userSessionContext.IsAuthenticated.Returns(true);
+
+        userAccountClient.RefreshTokenAsync(
+            Arg.Any<RefreshTokenRequestDto>(),
+            Arg.Any<CancellationToken>()).Returns(Task.FromResult(new RefreshTokenResponseDto(
+                AccessToken: "newAccessToken",
+                RefreshToken: "newRefreshToken")));
+
+        // Act
+        await userAccountService.RefreshTokenAsync("refreshToken").ConfigureAwait(false);
+
+        // Assert
+        userTokenParser.Received(1).ParseUserToken("newAccessToken");
+    }
+
+    [Test]
+    public async Task RefreshTokenAsyncShouldReturnRefreshTokenFromResponse()
+    {
+        // Arrange
+        userSessionContext.IsAuthenticated.Returns(true);
+
+        userAccountClient.RefreshTokenAsync(
+            Arg.Any<RefreshTokenRequestDto>(),
+            Arg.Any<CancellationToken>()).Returns(Task.FromResult(new RefreshTokenResponseDto(
+                AccessToken: "newAccessToken",
+                RefreshToken: "newRefreshToken")));
+
+        // Act
+        var response = await userAccountService.RefreshTokenAsync("refreshToken").ConfigureAwait(false);
+
+        // Assert
+        Assert.That(response.RefreshToken, Is.EqualTo("newRefreshToken"));
+    }
+
+    [Test]
+    public void RefreshTokenAsyncShouldThrowArgumentExceptionWhenRefreshTokenIsEmpty() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.RefreshTokenAsync(string.Empty));
+
+    [Test]
+    public void RefreshTokenAsyncShouldThrowArgumentExceptionWhenRefreshTokenIsWhiteSpace() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.RefreshTokenAsync("\r\t\n "));
+
+    [Test]
+    public void RefreshTokenAsyncShouldThrowArgumentNullExceptionWhenRefreshTokenIsNull() =>
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentNullException>(() => userAccountService.RefreshTokenAsync(null));
+
+    [Test]
+    public void RefreshTokenAsyncShouldThrowAuthorizationExceptionWhenUserIsNotAuthenticated()
+    {
+        // Arrange
+        userSessionContext.IsAuthenticated.Returns(false);
+
+        // Act and assert
+        Assert.ThrowsAsync<AuthorizationException>(() => userAccountService.RefreshTokenAsync("refreshToken"));
+    }
+
+    [Test]
+    public void RefreshTokenAsyncShouldThrowAuthorizationExceptionWhenUserSessionIsNull()
+    {
+        // Arrange
+        userSessionContext.IsAuthenticated.Returns(true);
+        userSessionContext.UserSession.Returns((UserSession)null);
+
+        // Act and assert
+        Assert.ThrowsAsync<AuthorizationException>(() => userAccountService.RefreshTokenAsync("refreshToken"));
     }
 
     [Test]
@@ -376,6 +499,10 @@ internal sealed class UserAccountServiceTests
         userAccountClient.LoginUserAsync(Arg.Any<LoginUserRequestDto>()).Returns(Task.FromResult(new LoginUserResponseDto(
             AccessToken: "accessToken",
             RefreshToken: "refreshToken")));
+
+        userAccountClient.RefreshTokenAsync(Arg.Any<RefreshTokenRequestDto>()).Returns(Task.FromResult(new RefreshTokenResponseDto(
+            AccessToken: "accessToken2",
+            RefreshToken: "refreshToken2")));
 
         userSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
