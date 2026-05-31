@@ -38,6 +38,9 @@ jobs:
       - name: Build
         run: dotnet build src/Server.slnx --no-incremental
 
+      - name: Find Test DLLs
+        run: find . -name "*.Tests.dll" -not -path "*/obj/*"
+
       - name: Test with Coverage
         run: |
           coverlet "src/API/bin/Winterhaven.API.Tests/Debug/net9.0/Winterhaven.API.Tests.dll" \
