@@ -41,6 +41,9 @@ jobs:
       - name: Find Test DLLs
         run: find . -name "*.Tests.dll" -not -path "*/obj/*"
 
+      - name: Find Test Projects
+        run: find . -name "*.Tests.csproj"
+
       - name: Test with Coverage
         run: |
           coverlet "src/API/Tests/bin/Winterhaven.API.Tests/x64/Debug/net9.0/Winterhaven.API.Tests.dll" \
