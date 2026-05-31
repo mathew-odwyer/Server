@@ -59,7 +59,7 @@ internal sealed class UserAccountService : IUserAccountService
         var response = await userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
 
         //// Create the user session and authenticate the user.
-        var userSession = userTokenParser.ParseUserToken(response.AccessToken, response.ExpirationSeconds);
+        var userSession = userTokenParser.ParseUserToken(response.AccessToken);
         userSessionAuthenticator.Authenticate(userSession);
 
         logger.LogInformation("User logged in: '{Username}'", username);

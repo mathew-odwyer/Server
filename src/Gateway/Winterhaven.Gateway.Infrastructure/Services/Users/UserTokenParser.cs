@@ -9,7 +9,7 @@ namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 [ExcludeFromCodeCoverage]
 internal sealed class UserTokenParser : IUserTokenParser
 {
-    public UserSession ParseUserToken(string userToken, double userTokenExpirationSeconds)
+    public UserSession ParseUserToken(string userToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(userToken);
 
@@ -20,6 +20,6 @@ internal sealed class UserTokenParser : IUserTokenParser
             UserAccountId: Guid.Parse(claims.First(c => c.Type == "identifier").Value),
             Username: claims.First(x => x.Type == "username").Value,
             AccessToken: userToken,
-            AccessTokenExpiry: TimeSpan.FromSeconds(userTokenExpirationSeconds));
+            ExpiresAt: jwt.ValidTo);
     }
 }

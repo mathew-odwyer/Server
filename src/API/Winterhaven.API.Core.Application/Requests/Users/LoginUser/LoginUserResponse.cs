@@ -9,10 +9,6 @@
 /// <param name="RefreshToken">
 ///   The refresh token used to obtain a new access token.
 /// </param>
-/// <param name="ExpirationSeconds">
-///   The access token expiry (in seconds).
-/// </param>
 public sealed record LoginUserResponse(
     string AccessToken,
-    string RefreshToken,
-    double ExpirationSeconds);
+    string RefreshToken);

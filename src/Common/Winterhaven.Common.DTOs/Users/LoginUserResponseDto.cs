@@ -11,11 +11,7 @@ namespace Winterhaven.Common.DTOs.Users;
 /// <param name="RefreshToken">
 ///   The refresh token for the user who has logged in.
 /// </param>
-/// <param name="ExpirationSeconds">
-///   The expiration time (in seconds) of the access token.
-/// </param>
 [ExcludeFromCodeCoverage]
 public sealed record LoginUserResponseDto(
     string AccessToken,
-    string RefreshToken,
-    double ExpirationSeconds);
+    string RefreshToken);

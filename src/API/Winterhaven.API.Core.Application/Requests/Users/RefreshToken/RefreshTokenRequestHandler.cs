@@ -175,7 +175,6 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
 
         return new RefreshTokenResponse(
             AccessToken: userToken.AccessToken,
-            RefreshToken: userToken.RefreshToken,
-            ExpirationSeconds: newSessionToken.AccessTokenExpirationDate.Subtract(DateTime.UtcNow).TotalSeconds);
+            RefreshToken: userToken.RefreshToken);
     }
 }
