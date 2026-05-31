@@ -40,7 +40,7 @@ jobs:
 
       - name: Test with Coverage
         run: |
-          coverlet "src/API/bin/Winterhaven.API.Tests/x64/Debug/net9.0/Winterhaven.API.Tests.dll" \
+          coverlet "src/API/bin/Winterhaven.API.Tests/Debug/net9.0/Winterhaven.API.Tests.dll" \
             --target "dotnet" --targetargs "test --no-build" \
             -f=opencover -o="coverage-api.xml"
 # coverlet "src/Gateway/bin/Winterhaven.Gateway.Tests/Debug/net9.0/Winterhaven.Gateway.Tests.dll" \
