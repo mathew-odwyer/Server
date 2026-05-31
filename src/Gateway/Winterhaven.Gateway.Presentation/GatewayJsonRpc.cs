@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
+using Winterhaven.Gateway.Presentation.Attributes;
 
 namespace Winterhaven.Gateway.Presentation;
 
@@ -11,10 +16,17 @@ internal sealed class GatewayJsonRpc : JsonRpc
 {
     private readonly ILogger<GatewayJsonRpc> logger;
 
+    private readonly IUserSessionContext userSessionContext;
+
     public GatewayJsonRpc(
         ILogger<GatewayJsonRpc> logger,
+        IUserSessionContext userSessionContext,
         IJsonRpcMessageHandler messageHandler)
-        : base(messageHandler) => this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        : base(messageHandler)
+    {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
+    }
 
     protected override JsonRpcError.ErrorDetail CreateErrorDetails(JsonRpcRequest request, Exception exception)
     {
@@ -54,5 +66,17 @@ internal sealed class GatewayJsonRpc : JsonRpc
                     Message = "An unexpected error occurred. Please try again later.",
                 };
         }
+    }
+
+    protected override ValueTask<JsonRpcMessage> DispatchRequestAsync(JsonRpcRequest request, TargetMethod targetMethod, CancellationToken cancellationToken)
+    {
+        var methodInfo = targetMethod.TargetMethodInfo;
+        bool isAuthRequired = methodInfo?.GetCustomAttribute<JsonRpcAuthorizeAttribute>() is not null;
+
+        logger.LogTrace("Handling JSON-RPC 2.0 request: '{RequestName}'", methodInfo?.Name ?? "unknown");
+
+        return isAuthRequired && !userSessionContext.IsAuthenticated
+            ? throw new AuthorizationException("Authentication is required to perform this action.")
+            : base.DispatchRequestAsync(request, targetMethod, cancellationToken);
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StreamJsonRpc;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Presentation.Handlers;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
@@ -22,16 +23,20 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
     private readonly IUserAccountService userAccountService;
 
+    private readonly IUserSessionContext userSessionContext;
+
     public RpcWebSocketSession(
         ILogger<RpcWebSocketSession> logger,
         ILoggerFactory loggerFactory,
         IJsonRpcTargetRegistrar targetRegistrar,
-        IUserAccountService userAccountService)
+        IUserAccountService userAccountService,
+        IUserSessionContext userSessionContext)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.targetRegistrar = targetRegistrar ?? throw new ArgumentNullException(nameof(targetRegistrar));
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
+        this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
     }
 
     public async Task RunAsync(WebSocket socket, CancellationToken cancellationToken = default)
@@ -49,14 +54,18 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         };
 
         using var handler = new GatewayWebSocketMessageHandler(loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
-        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), handler);
+        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionContext, handler);
+
+        // Ensure that the connection will be closed if the user session is invalidated.
+        void OnSessionInvalidated(object? sender, EventArgs e) => rpc.Dispose();
+        userSessionContext.Invalidated += OnSessionInvalidated;
 
         targetRegistrar.RegisterTargets(rpc);
         rpc.StartListening();
 
         try
         {
-            // Finally, start the session, and only complete once the socket has disconnected or the user logs out.
+            // Finally, start the session, and only complete once the socket has disconnected.
             await rpc.Completion.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (JsonException ex)
@@ -77,7 +86,18 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         }
         finally
         {
-            await userAccountService.LogoutAsync(CancellationToken.None).ConfigureAwait(false);
+            userSessionContext.Invalidated -= OnSessionInvalidated;
+
+            try
+            {
+                await userAccountService.LogoutAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (AuthorizationException ex)
+            {
+                //// A 401 here is expected when the session was already invalidated server-side,
+                //// For exampale, after a failed token refresh.
+                logger.LogWarning(ex, "Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession?.Username ?? "Unknown Username");
+            }
         }
     }
 }

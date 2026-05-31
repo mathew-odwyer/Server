@@ -40,9 +40,10 @@ public static class ServiceCollectionExtensions
 
         services.AddValidatedOptions<ClientOptions>(configuration);
 
-        services.AddScoped<UserSessionAuthenticator>();
-        services.AddScoped<IUserSessionContext>(x => x.GetRequiredService<UserSessionAuthenticator>());
-        services.AddScoped<IUserSessionAuthenticator>(sp => sp.GetRequiredService<UserSessionAuthenticator>());
+        services.AddScoped<UserSessionManager>();
+
+        services.AddScoped<IUserSessionContext>(x => x.GetRequiredService<UserSessionManager>());
+        services.AddScoped<IUserSessionManager>(x => x.GetRequiredService<UserSessionManager>());
 
         services.AddSingleton<IUserTokenParser, UserTokenParser>();
         services.AddScoped<IUserAccountService, UserAccountService>();

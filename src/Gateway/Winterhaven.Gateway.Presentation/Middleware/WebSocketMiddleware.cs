@@ -45,17 +45,19 @@ internal sealed class WebSocketMiddleware
         var clientIp = context.Connection.RemoteIpAddress;
         string clientId = context.Connection.Id;
 
-        logger.LogInformation("WebSocket Client Connected: Client ID: '{ClientId}', Client IP: '{ClientIp}'", clientId, clientIp);
+        logger.LogDebug("WebSocket Client Connected: Client ID: '{ClientId}', Client IP: '{ClientIp}'", clientId, clientIp);
 
         try
         {
             //// Run the RPC session, abort if the client disconnects.
             //// Whether any exception is caught or not, we still properly dispose of the connection in the finally block.
+            logger.LogInformation("Starting RPC session: Client ID: '{ClientId}', Client IP: '{ClientIp}'", clientId, clientIp);
             await session.RunAsync(socket, context.RequestAborted).ConfigureAwait(false);
             logger.LogInformation("WebSocket Client Disconnected: Client ID: '{ClientId}', Client IP: '{ClientIp}'", clientId, clientIp);
         }
-        catch (OperationCanceledException ex) when (ex.CancellationToken == context.RequestAborted)
+        catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
         {
+            //// Client disconnected abruptly (closed the window, network dropped, etc).
             logger.LogInformation("WebSocket Client Disconnected Abruptly. ConnectionId: {ConnectionId}, IP: {ClientIp}", clientId, clientIp);
         }
         catch (Exception ex)

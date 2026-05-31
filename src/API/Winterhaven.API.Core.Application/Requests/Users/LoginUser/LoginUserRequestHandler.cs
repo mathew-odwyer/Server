@@ -163,7 +163,6 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
 
         return new LoginUserResponse(
             AccessToken: userToken.AccessToken,
-            RefreshToken: userToken.RefreshToken,
-            ExpirationSeconds: userSessionToken.AccessTokenExpirationDate.Subtract(DateTime.UtcNow).TotalSeconds);
+            RefreshToken: userToken.RefreshToken);
     }
 }

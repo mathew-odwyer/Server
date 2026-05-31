@@ -68,24 +68,6 @@ internal sealed class RefreshTokenRequestHandlerTests
     }
 
     [Test]
-    public async Task HandleShouldReturnCorrectExpirationSecondsWhenNewSessionHasBeenCreated()
-    {
-        // Arrange
-        var request = new RefreshTokenRequest(RefreshToken: userToken.RefreshToken);
-        var before = DateTime.UtcNow;
-
-        // Act
-        var response = await handler.Handle(request, default).ConfigureAwait(false);
-
-        var after = DateTime.UtcNow;
-
-        // Assert — should be roughly 15 minutes worth of seconds
-        Assert.That(response.ExpirationSeconds, Is.InRange(
-            userToken.AccessTokenExpiryDate.Subtract(after).TotalSeconds,
-            userToken.AccessTokenExpiryDate.Subtract(before).TotalSeconds));
-    }
-
-    [Test]
     public void HandleShouldThrowResourceNotFoundExceptionWhenUserAccountRepositoryReturnsNull()
     {
         // Arrange

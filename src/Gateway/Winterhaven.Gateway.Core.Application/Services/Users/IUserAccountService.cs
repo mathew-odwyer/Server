@@ -15,6 +15,16 @@ public sealed record UserLoginResult(
     string RefreshToken);
 
 /// <summary>
+///   Represents a user refresh token result.
+/// </summary>
+/// <param name="RefreshToken">
+///   The refresh token used to refresh the users session.
+/// </param>
+[ExcludeFromCodeCoverage]
+public sealed record UserRefreshTokenResult(
+    string RefreshToken);
+
+/// <summary>
 ///   Defines an interface that provides functions to handle user accounts (registration, login, etc).
 /// </summary>
 public interface IUserAccountService
@@ -46,6 +56,20 @@ public interface IUserAccountService
     ///   Returns a task that completes when the logout operation succeeds.
     /// </returns>
     public Task LogoutAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///   Refreshes an authenticated users session.
+    /// </summary>
+    /// <param name="refreshToken">
+    ///   The user reresh token used to refresh the users session.
+    /// </param>
+    /// <param name="cancellationToken">
+    ///   The cancellation token used to cancel the refresh.
+    /// </param>
+    /// <returns>
+    ///   Returns a <see cref="UserRefreshTokenResult"/> that contains the users refreshed session tokens.
+    /// </returns>
+    public Task<UserRefreshTokenResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///   Registers a potential user.

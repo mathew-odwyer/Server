@@ -14,6 +14,7 @@ public sealed class AuthorizationException : Exception
     ///   Initializes a new instance of the <see cref="AuthorizationException"/> class.
     /// </summary>
     public AuthorizationException()
+        : base("Authentication is required to perform the request.")
     {
     }
 

@@ -25,24 +25,30 @@ internal sealed class RpcWebSocketSessionTests
 
     private IUserAccountService userAccountService;
 
+    private IUserSessionContext userSessionContext;
+
     [Test]
     public void ConstructorShouldThrowWhenLoggerFactoryIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, null, targetRegistrar, userAccountService));
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, null, targetRegistrar, userAccountService, userSessionContext));
 
     [Test]
     public void ConstructorShouldThrowWhenLoggerIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(null, loggerFactory, targetRegistrar, userAccountService));
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(null, loggerFactory, targetRegistrar, userAccountService, userSessionContext));
 
     [Test]
     public void ConstructorShouldThrowWhenTargetRegistrarIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, null, userAccountService));
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, null, userAccountService, userSessionContext));
 
     [Test]
     public void ConstructorShouldThrowWhenUserAccountServiceIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, null));
+        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, null, userSessionContext));
 
     [TearDown]
-    public void Dispose() => loggerFactory.Dispose();
+    public void Dispose()
+    {
+        loggerFactory.Dispose();
+        userSessionContext.Dispose();
+    }
 
     [Test]
     public async Task RunAsyncShouldInvokeUserAccountServiceLogoutAsyncWhenSessionIsComplete()
@@ -103,7 +109,15 @@ internal sealed class RpcWebSocketSessionTests
         loggerFactory = Substitute.For<ILoggerFactory>();
         targetRegistrar = Substitute.For<IJsonRpcTargetRegistrar>();
         userAccountService = Substitute.For<IUserAccountService>();
+        userSessionContext = Substitute.For<IUserSessionContext>();
+
         loggerFactory.CreateLogger(Arg.Any<string>()).Returns(Substitute.For<ILogger>());
-        session = new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, userAccountService);
+
+        session = new RpcWebSocketSession(
+            logger,
+            loggerFactory,
+            targetRegistrar,
+            userAccountService,
+            userSessionContext);
     }
 }

@@ -49,6 +49,24 @@ internal sealed class WebSocketMiddlewareTests
     }
 
     [Test]
+    public async Task InvokeAsyncShouldCloseSocketWhenSocketStateIsCloseReceived()
+    {
+        // Arrange
+        var (context, socket) = BuildWebSocketHttpContext(socketState: WebSocketState.CloseReceived);
+
+        rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await middleware.InvokeAsync(context, rpcSession).ConfigureAwait(false);
+
+        // Assert
+        await socket.Received(1)
+            .CloseAsync(WebSocketCloseStatus.NormalClosure, "Session Ended", CancellationToken.None)
+            .ConfigureAwait(false);
+    }
+
+    [Test]
     public async Task InvokeAsyncShouldInvokeNextWhenRequestPathIsNotWs()
     {
         // Arrange
@@ -68,6 +86,24 @@ internal sealed class WebSocketMiddlewareTests
 
         // Assert
         Assert.That(isCalled, Is.True);
+    }
+
+    [Test]
+    public async Task InvokeAsyncShouldNotCloseSocketWhenSocketStateIsNotOpenOrCloseReceived()
+    {
+        // Arrange
+        var (context, socket) = BuildWebSocketHttpContext(socketState: WebSocketState.Aborted);
+
+        rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await middleware.InvokeAsync(context, rpcSession).ConfigureAwait(false);
+
+        // Assert
+        await socket.DidNotReceive()
+            .CloseAsync(Arg.Any<WebSocketCloseStatus>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -98,7 +134,7 @@ internal sealed class WebSocketMiddlewareTests
     public async Task InvokeAsyncShouldNotRethrowWhenRequestIsCancelled()
     {
         var cts = new CancellationTokenSource();
-        var (context, _) = BuildWebSocketHttpContext(cts.Token);
+        var (context, _) = BuildWebSocketHttpContext(requestAborted: cts.Token);
 
         rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
             .Returns(_ => throw new OperationCanceledException(cts.Token));
@@ -107,6 +143,42 @@ internal sealed class WebSocketMiddlewareTests
 
         Assert.DoesNotThrowAsync(() => middleware.InvokeAsync(context, rpcSession));
         cts.Dispose();
+    }
+
+    [Test]
+    public async Task InvokeAsyncShouldPassAcceptedWebSocketToRunAsync()
+    {
+        // Arrange
+        var (context, socket) = BuildWebSocketHttpContext();
+        rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await middleware.InvokeAsync(context, rpcSession).ConfigureAwait(false);
+
+        // Assert
+        await rpcSession.Received(1)
+            .RunAsync(socket, Arg.Any<CancellationToken>())
+            .ConfigureAwait(false);
+    }
+
+    [Test]
+    public async Task InvokeAsyncShouldPassRequestAbortedTokenToRunAsync()
+    {
+        // Arrange
+        using var cts = new CancellationTokenSource();
+        var (context, _) = BuildWebSocketHttpContext(requestAborted: cts.Token);
+
+        rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await middleware.InvokeAsync(context, rpcSession).ConfigureAwait(false);
+
+        // Assert
+        await rpcSession.Received(1)
+            .RunAsync(Arg.Any<WebSocket>(), cts.Token)
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -121,6 +193,21 @@ internal sealed class WebSocketMiddlewareTests
 
         // Assert
         Assert.That(httpContext.Response.StatusCode, Is.EqualTo(StatusCodes.Status400BadRequest));
+    }
+
+    [Test]
+    public void InvokeAsyncShouldRethrowOperationCanceledExceptionWhenRequestIsNotCancelled()
+    {
+        // Arrange
+
+        //// RequestAborted is default (not cancelled), so the `when` filter will be false.
+        var (context, _) = BuildWebSocketHttpContext();
+
+        rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
+            .Returns(_ => throw new OperationCanceledException());
+
+        // Act and assert
+        Assert.ThrowsAsync<OperationCanceledException>(() => middleware.InvokeAsync(context, rpcSession));
     }
 
     [Test]
@@ -156,10 +243,12 @@ internal sealed class WebSocketMiddlewareTests
     [TearDown]
     public void TearDown() => webSocket.Dispose();
 
-    private static (HttpContext context, WebSocket socket) BuildWebSocketHttpContext(CancellationToken requestAborted = default)
+    private static (HttpContext context, WebSocket socket) BuildWebSocketHttpContext(
+        WebSocketState socketState = WebSocketState.Open,
+        CancellationToken requestAborted = default)
     {
         var socket = Substitute.For<WebSocket>();
-        socket.State.Returns(WebSocketState.Open);
+        socket.State.Returns(socketState);
 
         var webSocketManager = Substitute.For<WebSocketManager>();
         webSocketManager.IsWebSocketRequest.Returns(true);

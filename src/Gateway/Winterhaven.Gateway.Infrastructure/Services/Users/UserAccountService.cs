@@ -15,22 +15,22 @@ internal sealed class UserAccountService : IUserAccountService
 
     private readonly IUserAccountClient userAccountClient;
 
-    private readonly IUserSessionAuthenticator userSessionAuthenticator;
-
     private readonly IUserSessionContext userSessionContext;
+
+    private readonly IUserSessionManager userSessionManager;
 
     private readonly IUserTokenParser userTokenParser;
 
     public UserAccountService(
         ILogger<UserAccountService> logger,
         IUserAccountClient userAccountClient,
-        IUserSessionAuthenticator userSessionAuthenticator,
+        IUserSessionManager userSessionManager,
         IUserSessionContext userSessionContext,
         IUserTokenParser userTokenParser)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
-        this.userSessionAuthenticator = userSessionAuthenticator ?? throw new ArgumentNullException(nameof(userSessionAuthenticator));
+        this.userSessionManager = userSessionManager ?? throw new ArgumentNullException(nameof(userSessionManager));
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
         this.userTokenParser = userTokenParser ?? throw new ArgumentNullException(nameof(userTokenParser));
     }
@@ -49,18 +49,19 @@ internal sealed class UserAccountService : IUserAccountService
         //// If some how this user session is already authenticated, let's just return a 401
         //// as this should never really happen in production unless there's a bug or someone
         //// is probing the server.
-        if (userSessionAuthenticator.IsAuthenticated)
+        if (userSessionContext.IsAuthenticated)
         {
+            // Choose error over debug, we should know about it just to be safe.
             logger.LogError("An active session already exists for user: '{Username}'", username);
             throw new AuthorizationException("An active session already exists for this connection.");
         }
 
-        logger.LogInformation("User logging in: '{Username}'", username);
+        logger.LogDebug("User logging in: '{Username}'", username);
         var response = await userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
 
         //// Create the user session and authenticate the user.
-        var userSession = userTokenParser.ParseUserToken(response.AccessToken, response.ExpirationSeconds);
-        userSessionAuthenticator.Authenticate(userSession);
+        var userSession = userTokenParser.ParseUserToken(response.AccessToken);
+        userSessionManager.EstablishUserSession(userSession);
 
         logger.LogInformation("User logged in: '{Username}'", username);
 
@@ -70,19 +71,50 @@ internal sealed class UserAccountService : IUserAccountService
 
     public async Task LogoutAsync(CancellationToken cancellationToken = default)
     {
-        if (!userSessionAuthenticator.IsAuthenticated)
+        if (!userSessionContext.IsAuthenticated || userSessionContext.UserSession == null)
         {
             return;
         }
 
-        string username = userSessionContext.UserSession!.Username;
+        string username = userSessionContext.UserSession.Username;
 
-        logger.LogInformation("Attempting to log out user with username '{Username}'", username);
+        logger.LogDebug("Attempting to log out user with username '{Username}'", username);
 
         await userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
-        userSessionAuthenticator.Invalidate();
+        userSessionManager.InvalidateUserSession();
 
         logger.LogInformation("User logout attempt completed for username '{Username}'", username);
+    }
+
+    public async Task<UserRefreshTokenResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(refreshToken);
+
+        //// This shouldn't happen unless someone is probing the server or
+        //// the client has become majorly out of sync, either way big issue.
+        if (!userSessionContext.IsAuthenticated || userSessionContext.UserSession == null)
+        {
+            // Choose warning over debug, we should know about it just to be safe.
+            logger.LogWarning("User with name: '{Username}' attempted to refresh their session but is not authenticated.", userSessionContext.UserSession?.Username ?? "Unknown User");
+            throw new AuthorizationException("You must be logged in to refresh your session.");
+        }
+
+        var dto = new RefreshTokenRequestDto()
+        {
+            RefreshToken = refreshToken,
+        };
+
+        logger.LogDebug("Attempting to refresh user session for user: '{Username}'", userSessionContext.UserSession.Username);
+
+        var response = await userAccountClient.RefreshTokenAsync(dto, cancellationToken).ConfigureAwait(false);
+        var newSession = userTokenParser.ParseUserToken(response.AccessToken);
+
+        userSessionManager.RefreshUserSession(newSession);
+
+        logger.LogInformation("User session refreshed for user: '{Username}'", userSessionContext.UserSession.Username);
+
+        return new UserRefreshTokenResult(
+            RefreshToken: response.RefreshToken);
     }
 
     public async Task RegisterAsync(string username, string password, string emailAddress, CancellationToken cancellationToken = default)
@@ -98,8 +130,8 @@ internal sealed class UserAccountService : IUserAccountService
             EmailAddress = emailAddress,
         };
 
-        logger.LogInformation("Registering potential user: '{Username}'", username);
+        logger.LogDebug("Registering potential user: '{Username}'", username);
         await userAccountClient.RegisterUserAsync(dto, cancellationToken).ConfigureAwait(false);
-        logger.LogInformation("Registered potential user: '{Username}'", username);
+        logger.LogInformation("User registered: '{Username}'", username);
     }
 }

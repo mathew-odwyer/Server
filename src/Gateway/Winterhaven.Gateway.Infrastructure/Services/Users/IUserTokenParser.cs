@@ -4,5 +4,5 @@ namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 
 internal interface IUserTokenParser
 {
-    public UserSession ParseUserToken(string userToken, double userTokenExpirationSeconds);
+    public UserSession ParseUserToken(string userToken);
 }

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using StreamJsonRpc;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Presentation.Attributes;
 
 namespace Winterhaven.Gateway.Presentation.Targets.Users;
 
@@ -26,6 +27,17 @@ internal sealed record UserLoginRpcResult(
     string RefreshToken);
 
 [ExcludeFromCodeCoverage]
+internal sealed record UserRefreshRpcParameters(
+    string RefreshToken);
+
+[ExcludeFromCodeCoverage]
+internal sealed record UserRefreshRpcResult(
+    string RefreshToken);
+
+[ExcludeFromCodeCoverage]
+internal sealed record UserLogoutRpcResult;
+
+[ExcludeFromCodeCoverage]
 internal sealed class UserRpcTarget : IRpcTarget
 {
     private readonly IUserAccountService userAccountService;
@@ -45,6 +57,21 @@ internal sealed class UserRpcTarget : IRpcTarget
             .ConfigureAwait(false);
 
         return new UserLoginRpcResult(
+            RefreshToken: response.RefreshToken);
+    }
+
+    [JsonRpcAuthorize]
+    [JsonRpcMethod("user.refresh", UseSingleObjectParameterDeserialization = true)]
+    public async Task<UserRefreshRpcResult> RefreshAsync(UserRefreshRpcParameters parameters, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(parameters);
+
+        var response = await userAccountService.RefreshTokenAsync(
+            refreshToken: parameters.RefreshToken,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return new UserRefreshRpcResult(
             RefreshToken: response.RefreshToken);
     }
 
