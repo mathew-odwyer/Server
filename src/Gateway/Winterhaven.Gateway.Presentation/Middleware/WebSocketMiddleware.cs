@@ -60,12 +60,6 @@ internal sealed class WebSocketMiddleware
             //// Client disconnected abruptly (closed the window, network dropped, etc).
             logger.LogInformation("WebSocket Client Disconnected Abruptly. ConnectionId: {ConnectionId}, IP: {ClientIp}", clientId, clientIp);
         }
-        catch (Exception ex)
-        {
-            // Anything else is a server-side bug. Log the exception and re-throw.
-            logger.LogError(ex, "Unexpected server-side error in RPC session");
-            throw;
-        }
         finally
         {
             if (socket.State is WebSocketState.Open or WebSocketState.CloseReceived)
