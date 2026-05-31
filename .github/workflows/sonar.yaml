@@ -44,7 +44,8 @@ jobs:
       - name: Test with Coverage
         run: |
           coverlet "src/API/Tests/bin/Winterhaven.API.Tests/x64/Debug/net9.0/Winterhaven.API.Tests.dll" \
-            --target "dotnet" --targetargs "test --no-build" \
+            --target "dotnet" \
+            --targetargs "test src/API/Tests --no-build" \
             -f=opencover -o="coverage-api.xml"
 # coverlet "src/Gateway/bin/Winterhaven.Gateway.Tests/Debug/net9.0/Winterhaven.Gateway.Tests.dll" \
 #   --target "dotnet" --targetargs "test --no-build" \
@@ -52,5 +53,6 @@ jobs:
 
       - name: Sonar End
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ${{ github.workspace }} 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
