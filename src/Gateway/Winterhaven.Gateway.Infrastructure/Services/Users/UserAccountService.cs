@@ -9,9 +9,6 @@ using Winterhaven.Gateway.Core.Domain.Exceptions;
 
 namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 
-//// TODO: Be more defensive and instead throw an exception if there's no valid user session when accessing it.
-////       While yes, this shouldn't happen we should still defend against it just incase I make changes in the future.
-
 internal sealed class UserAccountService : IUserAccountService
 {
     private readonly ILogger<UserAccountService> logger;
@@ -74,12 +71,12 @@ internal sealed class UserAccountService : IUserAccountService
 
     public async Task LogoutAsync(CancellationToken cancellationToken = default)
     {
-        if (!userSessionAuthenticator.IsAuthenticated)
+        if (!userSessionAuthenticator.IsAuthenticated || userSessionContext.UserSession == null)
         {
             return;
         }
 
-        string username = userSessionContext.UserSession!.Username;
+        string username = userSessionContext.UserSession.Username;
 
         logger.LogDebug("Attempting to log out user with username '{Username}'", username);
 
@@ -95,10 +92,10 @@ internal sealed class UserAccountService : IUserAccountService
 
         //// This shouldn't happen unless someone is probing the server or
         //// the client has become majorly out of sync, either way big issue.
-        if (!userSessionAuthenticator.IsAuthenticated)
+        if (!userSessionAuthenticator.IsAuthenticated || userSessionContext.UserSession == null)
         {
             // Choose error over debug, we should know about it just to be safe.
-            logger.LogError("User with name: '{Username}' attempted to refresh their session but is not authenticated.", userSessionContext.UserSession!.Username);
+            logger.LogWarning("User with name: '{Username}' attempted to refresh their session but is not authenticated.", userSessionContext.UserSession.Username);
             throw new AuthorizationException("You must be logged in to refresh your session.");
         }
 
@@ -107,14 +104,14 @@ internal sealed class UserAccountService : IUserAccountService
             RefreshToken = refreshToken,
         };
 
-        logger.LogDebug("Attempting to refresh user session for user: '{Username}'", userSessionContext.UserSession!.Username);
+        logger.LogDebug("Attempting to refresh user session for user: '{Username}'", userSessionContext.UserSession.Username);
 
         var response = await userAccountClient.RefreshTokenAsync(dto, cancellationToken).ConfigureAwait(false);
         var newSession = userTokenParser.ParseUserToken(response.AccessToken);
 
         userSessionAuthenticator.Refresh(newSession);
 
-        logger.LogInformation("User session refreshed for user: '{Username}'", userSessionContext.UserSession!.Username);
+        logger.LogInformation("User session refreshed for user: '{Username}'", userSessionContext.UserSession.Username);
 
         return new UserRefreshTokenResult(
             RefreshToken: response.RefreshToken);

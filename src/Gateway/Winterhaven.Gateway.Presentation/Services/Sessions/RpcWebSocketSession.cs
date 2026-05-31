@@ -24,6 +24,8 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
     private readonly IUserAccountService userAccountService;
 
+    private readonly IUserSessionAuthenticator userSessionAuthenticator;
+
     private readonly IUserSessionContext userSessionContext;
 
     private readonly IUserSessionExpiryNotifier userSessionExpiryNotifier;
@@ -34,7 +36,8 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         IJsonRpcTargetRegistrar targetRegistrar,
         IUserAccountService userAccountService,
         IUserSessionContext userSessionContext,
-        IUserSessionExpiryNotifier userSessionExpiryNotifier)
+        IUserSessionExpiryNotifier userSessionExpiryNotifier,
+        IUserSessionAuthenticator userSessionAuthenticator)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
@@ -42,6 +45,7 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
         this.userSessionExpiryNotifier = userSessionExpiryNotifier ?? throw new ArgumentNullException(nameof(userSessionExpiryNotifier));
+        this.userSessionAuthenticator = userSessionAuthenticator ?? throw new ArgumentNullException(nameof(userSessionAuthenticator));
     }
 
     public async Task RunAsync(WebSocket socket, CancellationToken cancellationToken = default)
@@ -65,7 +69,7 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             userSessionExpiryNotifier.SessionExpiredToken);
 
         using var handler = new GatewayWebSocketMessageHandler(loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
-        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), handler);
+        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionAuthenticator, handler);
 
         targetRegistrar.RegisterTargets(rpc);
         rpc.StartListening();
@@ -108,9 +112,7 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             {
                 //// A 401 here is expected when the session was already invalidated server-side,
                 //// For exampale, after a failed token refresh.
-
-                // TODO: Check if user session is null probs.
-                logger.LogWarning("Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession!.Username);
+                logger.LogWarning("Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession?.Username ?? "Unknown Username");
             }
         }
     }

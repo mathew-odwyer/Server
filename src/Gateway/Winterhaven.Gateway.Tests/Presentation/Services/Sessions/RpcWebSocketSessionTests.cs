@@ -42,6 +42,8 @@ internal sealed class RpcWebSocketSessionTests
     ////public void ConstructorShouldThrowWhenUserAccountServiceIsNull() =>
     ////    Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, null));
 
+    private IUserSessionAuthenticator userSessionAuthenticator;
+
     private IUserSessionContext userSessionContext;
 
     private IUserSessionExpiryNotifier userSessionExpiryNotifier;
@@ -114,7 +116,17 @@ internal sealed class RpcWebSocketSessionTests
         userAccountService = Substitute.For<IUserAccountService>();
         userSessionContext = Substitute.For<IUserSessionContext>();
         userSessionExpiryNotifier = Substitute.For<IUserSessionExpiryNotifier>();
+        userSessionAuthenticator = Substitute.For<IUserSessionAuthenticator>();
+
         loggerFactory.CreateLogger(Arg.Any<string>()).Returns(Substitute.For<ILogger>());
-        session = new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, userAccountService, userSessionContext, userSessionExpiryNotifier);
+
+        session = new RpcWebSocketSession(
+            logger,
+            loggerFactory,
+            targetRegistrar,
+            userAccountService,
+            userSessionContext,
+            userSessionExpiryNotifier,
+            userSessionAuthenticator);
     }
 }

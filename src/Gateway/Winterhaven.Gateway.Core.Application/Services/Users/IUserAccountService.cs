@@ -58,7 +58,7 @@ public interface IUserAccountService
     public Task LogoutAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///   Refreshes an authenticate users session.
+    ///   Refreshes an authenticated users session.
     /// </summary>
     /// <param name="refreshToken">
     ///   The user reresh token used to refresh the users session.

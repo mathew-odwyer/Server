@@ -117,7 +117,6 @@ internal sealed class UserSessionAuthenticator : IUserSessionAuthenticator, IUse
         isDisposed = true;
     }
 
-    // TODO: Unit tests for this.
     private void ScheduleExpiry()
     {
         ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionAuthenticator));
