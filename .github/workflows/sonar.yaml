@@ -22,9 +22,6 @@ jobs:
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Install Coverlet
-        run: dotnet tool install --global coverlet.console
-
       - name: Sonar Begin
         run: |
           dotnet sonarscanner begin \
@@ -32,20 +29,18 @@ jobs:
             /o:"mathew-odwyer" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths=coverage-api.xml
-#coverage-gateway.xml
+            /d:sonar.cs.opencover.reportsPaths="coverage/**/coverage.opencover.xml"
 
       - name: Build
-        run: dotnet build --no-incremental
+        run: dotnet build src/Server.slnx --no-incremental
 
       - name: Test with Coverage
         run: |
-          coverlet "src/API/bin/Winterhaven.API.Tests/x64/Debug/net9.0/Winterhaven.API.Tests.dll" \
-            --target "dotnet" --targetargs "test --no-build" \
-            -f=opencover -o="coverage-api.xml"
-# coverlet "src/Gateway/bin/Winterhaven.Gateway.Tests/Debug/net9.0/Winterhaven.Gateway.Tests.dll" \
-#   --target "dotnet" --targetargs "test --no-build" \
-#   -f=opencover -o="coverage-gateway.xml"
+          dotnet test src/Server.slnx \
+            --no-build \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./coverage \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
       - name: Sonar End
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
