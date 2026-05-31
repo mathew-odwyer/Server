@@ -68,8 +68,7 @@ internal sealed class UserAccountServiceTests
                 dto.Password == password),
             Arg.Any<CancellationToken>()).Returns(Task.FromResult(new LoginUserResponseDto(
                 AccessToken: "accessToken",
-                RefreshToken: "refreshToken",
-                ExpirationSeconds: 900)));
+                RefreshToken: "refreshToken")));
 
         // Act
         await userAccountService.LoginAsync(username, password, new CancellationToken(true)).ConfigureAwait(false);
@@ -96,8 +95,7 @@ internal sealed class UserAccountServiceTests
                 dto.Password == password),
             Arg.Any<CancellationToken>()).Returns(Task.FromResult(new LoginUserResponseDto(
                 AccessToken: "accessToken",
-                RefreshToken: "refreshToken",
-                ExpirationSeconds: 900)));
+                RefreshToken: "refreshToken")));
 
         // Act
         await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
@@ -126,7 +124,7 @@ internal sealed class UserAccountServiceTests
                 x.Username == userSession.Username &&
                 x.UserAccountId == userSession.UserAccountId &&
                 x.AccessToken == userSession.AccessToken &&
-                x.AccessTokenExpiry == userSession.AccessTokenExpiry));
+                x.ExpiresAt == userSession.ExpiresAt));
     }
 
     [Test]
@@ -139,7 +137,7 @@ internal sealed class UserAccountServiceTests
         await userAccountService.LoginAsync(userSession.Username, "password").ConfigureAwait(false);
 
         // Assert
-        userTokenParser.Received(1).ParseUserToken("accessToken", 5);
+        userTokenParser.Received(1).ParseUserToken("accessToken");
         Assert.Pass();
     }
 
@@ -156,8 +154,7 @@ internal sealed class UserAccountServiceTests
                 dto.Password == password),
             Arg.Any<CancellationToken>()).Returns(Task.FromResult(new LoginUserResponseDto(
                 AccessToken: "accessToken",
-                RefreshToken: "refreshToken",
-                ExpirationSeconds: 900)));
+                RefreshToken: "refreshToken")));
 
         // Act
         var response = await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
@@ -378,16 +375,15 @@ internal sealed class UserAccountServiceTests
 
         userAccountClient.LoginUserAsync(Arg.Any<LoginUserRequestDto>()).Returns(Task.FromResult(new LoginUserResponseDto(
             AccessToken: "accessToken",
-            RefreshToken: "refreshToken",
-            ExpirationSeconds: 5)));
+            RefreshToken: "refreshToken")));
 
         userSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
             Username: "cooluser",
             AccessToken: "accessToken",
-            AccessTokenExpiry: TimeSpan.FromSeconds(5));
+            ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 
-        userTokenParser.ParseUserToken("accessToken", 5).Returns(userSession);
+        userTokenParser.ParseUserToken("accessToken").Returns(userSession);
 
         userSessionAuthenticator.IsAuthenticated.Returns(false);
         userSessionContext.UserSession.Returns(userSession);

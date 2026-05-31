@@ -39,7 +39,7 @@ internal sealed class AccessTokenHandlerTests
     public async Task SendAsyncShouldNotSetAuthorizationHeaderWhenAccessTokenIsInvalid(string token)
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "user", token, TimeSpan.FromMinutes(5));
+        var session = new UserSession(Guid.NewGuid(), "user", token, DateTimeOffset.UtcNow.AddSeconds(5));
         userSessionContext.UserSession.Returns(session);
         serviceProvider.GetService(typeof(IUserSessionContext)).Returns(userSessionContext);
 
@@ -117,7 +117,7 @@ internal sealed class AccessTokenHandlerTests
     public async Task SendAsyncShouldOverwriteExistingAuthorizationHeaderWhenValidTokenExists()
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "user", "new-token", TimeSpan.FromMinutes(5));
+        var session = new UserSession(Guid.NewGuid(), "user", "new-token", DateTimeOffset.UtcNow.AddSeconds(5));
         userSessionContext.UserSession.Returns(session);
         serviceProvider.GetService(typeof(IUserSessionContext)).Returns(userSessionContext);
 
@@ -135,7 +135,7 @@ internal sealed class AccessTokenHandlerTests
     public async Task SendAsyncShouldSetBearerAuthorizationHeaderWhenAccessTokenIsValid()
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "user", "valid-token", TimeSpan.FromMinutes(5));
+        var session = new UserSession(Guid.NewGuid(), "user", "valid-token", DateTimeOffset.UtcNow.AddSeconds(5));
         userSessionContext.UserSession.Returns(session);
         serviceProvider.GetService(typeof(IUserSessionContext)).Returns(userSessionContext);
 

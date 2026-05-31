@@ -18,7 +18,7 @@ internal sealed class UserSessionAuthenticatorTests
     public void AuthenticateShouldMarkAsAuthenticated()
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", TimeSpan.FromHours(1));
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         // Act
         authenticator.Authenticate(session);
@@ -31,8 +31,8 @@ internal sealed class UserSessionAuthenticatorTests
     public void AuthenticateShouldNotOverrideExistingSession()
     {
         // Arrange
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", TimeSpan.FromHours(1));
-        var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", TimeSpan.FromHours(2));
+        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
         authenticator.Authenticate(session1);
 
         // Act
@@ -46,7 +46,7 @@ internal sealed class UserSessionAuthenticatorTests
     public void AuthenticateShouldSetUserSession()
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", TimeSpan.FromHours(1));
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         // Act
         authenticator.Authenticate(session);
@@ -69,7 +69,7 @@ internal sealed class UserSessionAuthenticatorTests
     public void InvalidateShouldClearUserSession()
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", TimeSpan.FromHours(1));
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.Authenticate(session);
 
         // Act
@@ -93,7 +93,7 @@ internal sealed class UserSessionAuthenticatorTests
     public void InvalidateShouldMarkAsNotAuthenticated()
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", TimeSpan.FromHours(1));
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.Authenticate(session);
 
         // Act
@@ -112,7 +112,7 @@ internal sealed class UserSessionAuthenticatorTests
     public void RefreshShouldDoNothingWhenNotAuthenticated()
     {
         // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", TimeSpan.FromHours(1));
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         // Act
         authenticator.Refresh(session);
@@ -130,8 +130,8 @@ internal sealed class UserSessionAuthenticatorTests
     public void RefreshShouldUpdateUserSessionWhenAuthenticated()
     {
         // Arrange
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", TimeSpan.FromHours(1));
-        var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", TimeSpan.FromHours(2));
+        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
         authenticator.Authenticate(session1);
 
         // Act
@@ -148,6 +148,9 @@ internal sealed class UserSessionAuthenticatorTests
         logger = Substitute.For<ILogger<UserSessionAuthenticator>>();
         authenticator = new UserSessionAuthenticator(logger);
     }
+
+    [TearDown]
+    public void TearDown() => authenticator.Dispose();
 
     [Test]
     public void UserSessionShouldBeNullByDefault() =>

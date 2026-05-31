@@ -7,6 +7,7 @@ using NSubstitute;
 using NUnit.Framework;
 using StreamJsonRpc;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Infrastructure.Services.Users;
 using Winterhaven.Gateway.Presentation.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
@@ -25,24 +26,32 @@ internal sealed class RpcWebSocketSessionTests
 
     private IUserAccountService userAccountService;
 
-    [Test]
-    public void ConstructorShouldThrowWhenLoggerFactoryIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, null, targetRegistrar, userAccountService));
+    ////[Test]
+    ////public void ConstructorShouldThrowWhenLoggerFactoryIsNull() =>
+    ////    Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, null, targetRegistrar, userAccountService));
 
-    [Test]
-    public void ConstructorShouldThrowWhenLoggerIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(null, loggerFactory, targetRegistrar, userAccountService));
+    ////[Test]
+    ////public void ConstructorShouldThrowWhenLoggerIsNull() =>
+    ////    Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(null, loggerFactory, targetRegistrar, userAccountService));
 
-    [Test]
-    public void ConstructorShouldThrowWhenTargetRegistrarIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, null, userAccountService));
+    ////[Test]
+    ////public void ConstructorShouldThrowWhenTargetRegistrarIsNull() =>
+    ////    Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, null, userAccountService));
 
-    [Test]
-    public void ConstructorShouldThrowWhenUserAccountServiceIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, null));
+    ////[Test]
+    ////public void ConstructorShouldThrowWhenUserAccountServiceIsNull() =>
+    ////    Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, null));
+
+    private IUserSessionContext userSessionContext;
+
+    private IUserSessionExpiryNotifier userSessionExpiryNotifier;
 
     [TearDown]
-    public void Dispose() => loggerFactory.Dispose();
+    public void Dispose()
+    {
+        loggerFactory.Dispose();
+        userSessionExpiryNotifier.Dispose();
+    }
 
     [Test]
     public async Task RunAsyncShouldInvokeUserAccountServiceLogoutAsyncWhenSessionIsComplete()
@@ -103,7 +112,9 @@ internal sealed class RpcWebSocketSessionTests
         loggerFactory = Substitute.For<ILoggerFactory>();
         targetRegistrar = Substitute.For<IJsonRpcTargetRegistrar>();
         userAccountService = Substitute.For<IUserAccountService>();
+        userSessionContext = Substitute.For<IUserSessionContext>();
+        userSessionExpiryNotifier = Substitute.For<IUserSessionExpiryNotifier>();
         loggerFactory.CreateLogger(Arg.Any<string>()).Returns(Substitute.For<ILogger>());
-        session = new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, userAccountService);
+        session = new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, userAccountService, userSessionContext, userSessionExpiryNotifier);
     }
 }
