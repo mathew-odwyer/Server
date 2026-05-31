@@ -42,7 +42,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<UserSessionAuthenticator>();
         services.AddScoped<IUserSessionContext>(x => x.GetRequiredService<UserSessionAuthenticator>());
-        services.AddScoped<IUserSessionAuthenticator>(sp => sp.GetRequiredService<UserSessionAuthenticator>());
+        services.AddScoped<IUserSessionAuthenticator>(x => x.GetRequiredService<UserSessionAuthenticator>());
+        services.AddScoped<IUserSessionExpiryNotifier>(x => x.GetRequiredService<UserSessionAuthenticator>());
 
         services.AddSingleton<IUserTokenParser, UserTokenParser>();
         services.AddScoped<IUserAccountService, UserAccountService>();

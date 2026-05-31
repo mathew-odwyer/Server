@@ -9,6 +9,9 @@ using Winterhaven.Gateway.Core.Domain.Exceptions;
 
 namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 
+//// TODO: Be more defensive and instead throw an exception if there's no valid user session when accessing it.
+////       While yes, this shouldn't happen we should still defend against it just incase I make changes in the future.
+
 internal sealed class UserAccountService : IUserAccountService
 {
     private readonly ILogger<UserAccountService> logger;
@@ -51,11 +54,12 @@ internal sealed class UserAccountService : IUserAccountService
         //// is probing the server.
         if (userSessionAuthenticator.IsAuthenticated)
         {
+            // Choose error over debug, we should know about it just to be safe.
             logger.LogError("An active session already exists for user: '{Username}'", username);
             throw new AuthorizationException("An active session already exists for this connection.");
         }
 
-        logger.LogInformation("User logging in: '{Username}'", username);
+        logger.LogDebug("User logging in: '{Username}'", username);
         var response = await userAccountClient.LoginUserAsync(dto, cancellationToken).ConfigureAwait(false);
 
         //// Create the user session and authenticate the user.
@@ -77,12 +81,43 @@ internal sealed class UserAccountService : IUserAccountService
 
         string username = userSessionContext.UserSession!.Username;
 
-        logger.LogInformation("Attempting to log out user with username '{Username}'", username);
+        logger.LogDebug("Attempting to log out user with username '{Username}'", username);
 
         await userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
         userSessionAuthenticator.Invalidate();
 
         logger.LogInformation("User logout attempt completed for username '{Username}'", username);
+    }
+
+    public async Task<UserRefreshTokenResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(refreshToken);
+
+        //// This shouldn't happen unless someone is probing the server or
+        //// the client has become majorly out of sync, either way big issue.
+        if (!userSessionAuthenticator.IsAuthenticated)
+        {
+            // Choose error over debug, we should know about it just to be safe.
+            logger.LogError("User with name: '{Username}' attempted to refresh their session but is not authenticated.", userSessionContext.UserSession!.Username);
+            throw new AuthorizationException("You must be logged in to refresh your session.");
+        }
+
+        var dto = new RefreshTokenRequestDto()
+        {
+            RefreshToken = refreshToken,
+        };
+
+        logger.LogDebug("Attempting to refresh user session for user: '{Username}'", userSessionContext.UserSession!.Username);
+
+        var response = await userAccountClient.RefreshTokenAsync(dto, cancellationToken).ConfigureAwait(false);
+        var newSession = userTokenParser.ParseUserToken(response.AccessToken);
+
+        userSessionAuthenticator.Refresh(newSession);
+
+        logger.LogInformation("User session refreshed for user: '{Username}'", userSessionContext.UserSession!.Username);
+
+        return new UserRefreshTokenResult(
+            RefreshToken: response.RefreshToken);
     }
 
     public async Task RegisterAsync(string username, string password, string emailAddress, CancellationToken cancellationToken = default)
@@ -98,8 +133,8 @@ internal sealed class UserAccountService : IUserAccountService
             EmailAddress = emailAddress,
         };
 
-        logger.LogInformation("Registering potential user: '{Username}'", username);
+        logger.LogDebug("Registering potential user: '{Username}'", username);
         await userAccountClient.RegisterUserAsync(dto, cancellationToken).ConfigureAwait(false);
-        logger.LogInformation("Registered potential user: '{Username}'", username);
+        logger.LogInformation("User registered: '{Username}'", username);
     }
 }
