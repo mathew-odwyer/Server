@@ -94,7 +94,7 @@ internal sealed class UserAccountService : IUserAccountService
         //// the client has become majorly out of sync, either way big issue.
         if (!userSessionContext.IsAuthenticated || userSessionContext.UserSession == null)
         {
-            // Choose error over debug, we should know about it just to be safe.
+            // Choose warning over debug, we should know about it just to be safe.
             logger.LogWarning("User with name: '{Username}' attempted to refresh their session but is not authenticated.", userSessionContext.UserSession?.Username ?? "Unknown User");
             throw new AuthorizationException("You must be logged in to refresh your session.");
         }

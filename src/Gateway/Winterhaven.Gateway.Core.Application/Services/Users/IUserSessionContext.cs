@@ -9,14 +9,17 @@ namespace Winterhaven.Gateway.Core.Application.Services.Users;
 public interface IUserSessionContext : IDisposable
 {
     /// <summary>
+    ///   Occurs when we the user session has been established.
     /// </summary>
     public event EventHandler<EventArgs>? Established;
 
     /// <summary>
+    ///   Occurs when the user session has been invalidated.
     /// </summary>
     public event EventHandler<EventArgs>? Invalidated;
 
     /// <summary>
+    ///   Occurs when the user session has been refreshed.
     /// </summary>
     public event EventHandler<EventArgs>? Refreshed;
 

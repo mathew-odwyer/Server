@@ -82,7 +82,6 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         }
 
         string username = UserSession!.Username;
-        string accessToken = UserSession!.AccessToken;
 
         StopExpiryTimer();
         UserSession = null;
