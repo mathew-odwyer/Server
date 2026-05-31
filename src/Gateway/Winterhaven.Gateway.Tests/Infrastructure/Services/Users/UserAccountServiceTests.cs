@@ -279,17 +279,24 @@ internal sealed class UserAccountServiceTests
     public async Task RefreshTokenAsyncShouldCancelWhenUserAccountClientRefreshTokenAsyncCancels()
     {
         // Arrange
-        const string refreshToken = "myRefreshToken";
+        const string refreshToken = "refreshToken";
+
         userSessionContext.IsAuthenticated.Returns(true);
 
+        userAccountClient.RefreshTokenAsync(
+            Arg.Is<RefreshTokenRequestDto>(dto =>
+                dto.RefreshToken == refreshToken),
+            Arg.Any<CancellationToken>()).Returns(Task.FromResult(new RefreshTokenResponseDto(
+                AccessToken: "accessToken",
+                RefreshToken: "refreshToken")));
+
         // Act
-        await userAccountService
-            .RefreshTokenAsync(refreshToken, new CancellationToken(true))
-            .ConfigureAwait(false);
+        await userAccountService.RefreshTokenAsync(refreshToken, new CancellationToken(true)).ConfigureAwait(false);
 
         // Assert
         await userAccountClient.Received(1).RefreshTokenAsync(
-            Arg.Is<RefreshTokenRequestDto>(dto => dto.RefreshToken == refreshToken),
+            Arg.Is<RefreshTokenRequestDto>(dto =>
+                dto.RefreshToken == refreshToken),
             Arg.Is<CancellationToken>(ct => ct.IsCancellationRequested)
         ).ConfigureAwait(false);
     }

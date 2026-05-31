@@ -12,16 +12,20 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
 
     private readonly TimeProvider timeProvider;
 
-    private bool isDisposed;
+    private readonly ITimer timer;
 
-    private CancellationTokenSource? sessionTokenSource;
+    private bool isDisposed;
 
     public UserSessionManager(ILogger<UserSessionManager> logger, TimeProvider timeProvider)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
-        sessionTokenSource = new CancellationTokenSource();
+        timer = timeProvider.CreateTimer(
+            callback: _ => InvalidateUserSession(),
+            state: null,
+            dueTime: Timeout.InfiniteTimeSpan,
+            period: Timeout.InfiniteTimeSpan);
     }
 
     ~UserSessionManager()
@@ -30,15 +34,6 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
     }
 
     public bool IsAuthenticated => UserSession != null;
-
-    public CancellationToken SessionExpiredToken
-    {
-        get
-        {
-            ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
-            return sessionTokenSource!.Token;
-        }
-    }
 
     public UserSession? UserSession { get; private set; }
 
@@ -59,7 +54,7 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         }
 
         UserSession = userSession;
-        ScheduleExpiry();
+        StartExpiryTimer();
 
         logger.LogDebug("Session authenticated: '{Username}'", UserSession.Username);
     }
@@ -75,12 +70,10 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
 
         string username = UserSession!.Username;
 
+        StopExpiryTimer();
         UserSession = null;
 
-        // Cancel session expiration as we've invalidated.
-        sessionTokenSource!.Cancel();
-
-        logger.LogDebug("Session invalidated: '{Username}'", username);
+        logger.LogInformation("Session invalidated: '{Username}'", username);
     }
 
     public void RefreshUserSession(UserSession userSession)
@@ -93,16 +86,10 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
             return;
         }
 
-        if (sessionTokenSource!.IsCancellationRequested)
-        {
-            logger.LogWarning("Refresh arrived for '{Username}' but the session token has already expired. Connection is closing.", UserSession!.Username);
-            return;
-        }
-
         UserSession = userSession;
-        ScheduleExpiry();
+        ResetExpiryTimer();
 
-        logger.LogDebug("Session refreshed: '{Username}'", UserSession.Username);
+        logger.LogInformation("Session refreshed: '{Username}'", UserSession.Username);
     }
 
     private void Dispose(bool disposing)
@@ -112,16 +99,21 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
             return;
         }
 
-        if (disposing && sessionTokenSource != null)
+        if (disposing && timer != null)
         {
-            sessionTokenSource.Dispose();
-            sessionTokenSource = null;
+            timer.Dispose();
         }
 
         isDisposed = true;
     }
 
-    private void ScheduleExpiry()
+    private void ResetExpiryTimer()
+    {
+        StopExpiryTimer();
+        StartExpiryTimer();
+    }
+
+    private void StartExpiryTimer()
     {
         ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
 
@@ -134,16 +126,25 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         var now = timeProvider.GetUtcNow();
         var delay = UserSession!.ExpiresAt - now;
 
-        if (delay < TimeSpan.Zero)
+        if (delay <= TimeSpan.Zero)
         {
-            // Disconnect straight away if for some reason we should.
-            sessionTokenSource!.Cancel();
+            // Invalidate the user session right away if the user token has expired.
+            InvalidateUserSession();
             return;
         }
 
-        logger.LogDebug("User session for user '{Username}' is expiring in: {Seconds}s", UserSession!.Username, delay.TotalSeconds);
+        // Start the timer.
+        timer.Change(delay, Timeout.InfiniteTimeSpan);
 
-        // Schedule the cancellation token to expiry once the session expires.
-        sessionTokenSource!.CancelAfter(delay);
+        logger.LogDebug(
+            "User session for '{Username}' expires in {Seconds}s",
+            UserSession.Username,
+            delay.TotalSeconds);
+    }
+
+    private void StopExpiryTimer()
+    {
+        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
+        timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 }

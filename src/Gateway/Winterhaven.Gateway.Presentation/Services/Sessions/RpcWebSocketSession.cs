@@ -53,10 +53,6 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             }
         };
 
-        //// Create a link between the web socket connection and the user session expiry.
-        //// This way if the user session expires, we disconnect automatically.
-        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, userSessionContext.SessionExpiredToken);
-
         using var handler = new GatewayWebSocketMessageHandler(loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
         using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionContext, handler);
 
@@ -65,15 +61,8 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
         try
         {
-            // Finally, start the session, and only complete once the socket has disconnected or the user logs out.
-            await rpc.Completion.WaitAsync(linkedCts.Token).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException ex) when (userSessionContext.SessionExpiredToken.IsCancellationRequested &&
-                                                 !cancellationToken.IsCancellationRequested)
-        {
-            //// Session expired (timer elapsed or explicit server-side invalidation).
-            //// Let the finally block handle logout and the websocket middleware will disconnect.
-            logger.LogInformation(ex, "Session expired for '{Username}', disconnecting.", userSessionContext.UserSession?.Username ?? "unknown");
+            // Finally, start the session, and only complete once the socket has disconnected.
+            await rpc.Completion.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (JsonException ex)
         {

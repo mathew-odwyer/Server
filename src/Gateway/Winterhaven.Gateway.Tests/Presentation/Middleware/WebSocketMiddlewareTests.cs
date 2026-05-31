@@ -134,7 +134,7 @@ internal sealed class WebSocketMiddlewareTests
     public async Task InvokeAsyncShouldNotRethrowWhenRequestIsCancelled()
     {
         var cts = new CancellationTokenSource();
-        var (context, _) = BuildWebSocketHttpContext(cts.Token);
+        var (context, _) = BuildWebSocketHttpContext(requestAborted: cts.Token);
 
         rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
             .Returns(_ => throw new OperationCanceledException(cts.Token));
@@ -167,7 +167,7 @@ internal sealed class WebSocketMiddlewareTests
     {
         // Arrange
         using var cts = new CancellationTokenSource();
-        var (context, _) = BuildWebSocketHttpContext(cts.Token);
+        var (context, _) = BuildWebSocketHttpContext(requestAborted: cts.Token);
 
         rpcSession.RunAsync(Arg.Any<WebSocket>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
@@ -244,8 +244,8 @@ internal sealed class WebSocketMiddlewareTests
     public void TearDown() => webSocket.Dispose();
 
     private static (HttpContext context, WebSocket socket) BuildWebSocketHttpContext(
-        CancellationToken requestAborted = default,
-        WebSocketState socketState = WebSocketState.Open)
+        WebSocketState socketState = WebSocketState.Open,
+        CancellationToken requestAborted = default)
     {
         var socket = Substitute.For<WebSocket>();
         socket.State.Returns(socketState);

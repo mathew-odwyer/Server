@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Time.Testing;
 using NSubstitute;
 using NUnit.Framework;
 using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
@@ -14,6 +15,8 @@ internal sealed class UserSessionManagerTests
     private UserSessionManager authenticator;
 
     private ILogger<UserSessionManager> logger;
+
+    private FakeTimeProvider timeProvider;
 
     [Test]
     public void AuthenticateShouldMarkAsAuthenticated()
@@ -64,7 +67,12 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UserSessionManager(null));
+        Assert.Throws<ArgumentNullException>(() => new UserSessionManager(null, timeProvider));
+
+    [Test]
+    public void ConstructorShouldThrowArgumentNullExceptionWhenTimeProviderIsNull() =>
+        // Act and assert
+        Assert.Throws<ArgumentNullException>(() => new UserSessionManager(logger, null));
 
     [Test]
     public void DisposeCalledMultipleTimesShouldNotThrow() =>
@@ -74,19 +82,6 @@ internal sealed class UserSessionManagerTests
             authenticator.Dispose();
             authenticator.Dispose();
         });
-
-    [Test]
-    public void EstablishUserSessionShouldNotCancelSessionExpiredTokenWhenExpiryIsInTheFuture()
-    {
-        // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
-
-        // Act
-        authenticator.EstablishUserSession(session);
-
-        // Assert
-        Assert.That(authenticator.SessionExpiredToken.IsCancellationRequested, Is.False);
-    }
 
     [Test]
     public void EstablishUserSessionShouldThrowObjectDisposedExceptionWhenDisposed()
@@ -138,20 +133,6 @@ internal sealed class UserSessionManagerTests
     }
 
     [Test]
-    public void InvalidateUserSessionShouldCancelSessionExpiredToken()
-    {
-        // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
-        authenticator.EstablishUserSession(session);
-
-        // Act
-        authenticator.InvalidateUserSession();
-
-        // Assert
-        Assert.That(authenticator.SessionExpiredToken.IsCancellationRequested, Is.True);
-    }
-
-    [Test]
     public void InvalidateUserSessionShouldThrowObjectDisposedExceptionWhenDisposed()
     {
         // Arrange
@@ -184,7 +165,6 @@ internal sealed class UserSessionManagerTests
     {
         // Arrange
 
-        //// An already-expired ExpiresAt causes ScheduleExpiry to call CancelAfter(TimeSpan.Zero).
         var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(-1));
         var newSession = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(15));
 
@@ -231,27 +211,16 @@ internal sealed class UserSessionManagerTests
         Assert.Throws<ObjectDisposedException>(() => authenticator.RefreshUserSession(session));
     }
 
-    [Test]
-    public void SessionExpiredTokenShouldNotBeCancelledByDefault() =>
-        // Assert
-        Assert.That(authenticator.SessionExpiredToken.IsCancellationRequested, Is.False);
-
-    [Test]
-    public void SessionExpiredTokenShouldThrowObjectDisposedExceptionWhenDisposed()
-    {
-        // Arrange
-        authenticator.Dispose();
-
-        // Act and assert
-        Assert.Throws<ObjectDisposedException>(() => _ = authenticator.SessionExpiredToken);
-    }
-
     [SetUp]
     public void Setup()
     {
         // Arrange
         logger = Substitute.For<ILogger<UserSessionManager>>();
-        authenticator = new UserSessionManager(logger);
+
+        timeProvider = new FakeTimeProvider();
+        timeProvider.SetUtcNow(DateTimeOffset.UtcNow);
+
+        authenticator = new UserSessionManager(logger, timeProvider);
     }
 
     [TearDown]
