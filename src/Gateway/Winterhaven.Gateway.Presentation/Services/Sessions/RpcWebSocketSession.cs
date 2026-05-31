@@ -75,14 +75,14 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             //// and ensures it won't crash if someone attempts to connect and play the game with an older client.
             //// Also, this is handled in the GatewayWebSocketMessageHandler, but broken messages may still surface here
             //// and logging in debug because bad or old clients could make this noisy.
-            logger.LogDebug("Client sent malformed JSON: {Message}", ex.Message);
+            logger.LogDebug(ex, "Client sent malformed JSON.");
         }
         catch (InvalidOperationException ex) when (ex.Source == "StreamJsonRpc")
         {
             //// Client sent structurally invalid JSON-RPC (e.g. wrong argument kind)
             //// This is good to log for debugging purposes but would be noisy in production.
             //// It's also good for the reasons mentioned in the catch above.
-            logger.LogDebug("Client sent invalid JSON-RPC payload: {Message}", ex.Message);
+            logger.LogDebug(ex, "Client sent invalid JSON-RPC payload.");
         }
         finally
         {
