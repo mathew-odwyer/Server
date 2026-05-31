@@ -68,12 +68,12 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             // Finally, start the session, and only complete once the socket has disconnected or the user logs out.
             await rpc.Completion.WaitAsync(linkedCts.Token).ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (userSessionContext.SessionExpiredToken.IsCancellationRequested &&
+        catch (OperationCanceledException ex) when (userSessionContext.SessionExpiredToken.IsCancellationRequested &&
                                                  !cancellationToken.IsCancellationRequested)
         {
             //// Session expired (timer elapsed or explicit server-side invalidation).
             //// Let the finally block handle logout and the websocket middleware will disconnect.
-            logger.LogInformation("Session expired for '{Username}', disconnecting.", userSessionContext.UserSession?.Username ?? "unknown");
+            logger.LogInformation(ex, "Session expired for '{Username}', disconnecting.", userSessionContext.UserSession?.Username ?? "unknown");
         }
         catch (JsonException ex)
         {
@@ -97,11 +97,11 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             {
                 await userAccountService.LogoutAsync(CancellationToken.None).ConfigureAwait(false);
             }
-            catch (AuthorizationException)
+            catch (AuthorizationException ex)
             {
                 //// A 401 here is expected when the session was already invalidated server-side,
                 //// For exampale, after a failed token refresh.
-                logger.LogWarning("Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession?.Username ?? "Unknown Username");
+                logger.LogWarning(ex, "Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession?.Username ?? "Unknown Username");
             }
         }
     }
