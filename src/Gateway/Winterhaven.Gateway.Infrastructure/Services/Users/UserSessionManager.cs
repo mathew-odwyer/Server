@@ -10,13 +10,17 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
 {
     private readonly ILogger<UserSessionManager> logger;
 
+    private readonly TimeProvider timeProvider;
+
     private bool isDisposed;
 
     private CancellationTokenSource? sessionTokenSource;
 
-    public UserSessionManager(ILogger<UserSessionManager> logger)
+    public UserSessionManager(ILogger<UserSessionManager> logger, TimeProvider timeProvider)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+
         sessionTokenSource = new CancellationTokenSource();
     }
 
@@ -127,11 +131,19 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         }
 
         // Determine how long we have to wait before session expiry.
-        var delay = UserSession!.ExpiresAt - DateTimeOffset.UtcNow;
+        var now = timeProvider.GetUtcNow();
+        var delay = UserSession!.ExpiresAt - now;
 
-        logger.LogDebug("User session for user '{Username}' is expiring in: {Seconds}s", UserSession!.Username, delay.Seconds);
+        if (delay < TimeSpan.Zero)
+        {
+            // Disconnect straight away if for some reason we should.
+            sessionTokenSource!.Cancel();
+            return;
+        }
+
+        logger.LogDebug("User session for user '{Username}' is expiring in: {Seconds}s", UserSession!.Username, delay.TotalSeconds);
 
         // Schedule the cancellation token to expiry once the session expires.
-        sessionTokenSource!.CancelAfter(delay > TimeSpan.Zero ? delay : TimeSpan.Zero);
+        sessionTokenSource!.CancelAfter(delay);
     }
 }
