@@ -36,7 +36,7 @@ jobs:
 #coverage-gateway.xml
 
       - name: Build
-        run: dotnet build src/Server.sln --no-incremental
+        run: dotnet build src/Server.slnx --no-incremental
 
       - name: Test with Coverage
         run: |
