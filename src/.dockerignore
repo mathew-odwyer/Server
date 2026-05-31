@@ -1,0 +1,22 @@
+# Build outputs
+**/obj/
+**/bin/
+
+# Visual Studio
+**/.vs/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+
+# Test results
+**/TestResults/
+**/coverage/
+
+# Logs
+**/*.log
+
+# Docker files (no need to copy these into the build context)
+**/Dockerfile
+**/.dockerignore
+**/docker-compose*.yml

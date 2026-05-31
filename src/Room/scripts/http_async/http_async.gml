@@ -42,6 +42,7 @@ function http_async(url, type, body = {}, options = {})
 			reject(new TimeoutError("Timeout: Failed to receive response from Web API."));
 		}), false);
 		
+        /// @localvar {Any} http_async 
 		http_async.RequestToContextMap[$ request] = {
 			resolve: resolve,
 			reject: reject,

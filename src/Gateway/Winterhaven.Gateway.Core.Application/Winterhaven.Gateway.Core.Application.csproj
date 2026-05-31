@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Winterhaven.Common.DTOs\Winterhaven.Common.DTOs.csproj" />
+    <ProjectReference Include="..\Winterhaven.Gateway.Core.Domain\Winterhaven.Gateway.Core.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Winterhaven.Gateway.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Refit" />
+  </ItemGroup>
+</Project>

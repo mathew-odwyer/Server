@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - DD-MM-YYYY
 
-## [v0.3.0] - 08-06-2026
+### Added
+
+- [#91] - Gateway Server (_by [@mathew-odwyer]_).
+  - [#72] GML NATS Client (_by [@mathew-odwyer]_).
+  - [#97] - Gateway Infrastructure Setup (_by [@mathew-odwyer]_).
+  - [#94] - Gateway Registration Flow (_by [@mathew-odwyer]_).
+  - [#93] - Gateway Login Flow (_by [@mathew-odwyer]_).
+  - [#96] - Gateway Logout Flow (_by [@mathew-odwyer]_).
+  - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
+
+### Fixed
+
+- [#59] - Server Sends Error Messages to Client (_by [@mathew-odwyer]_).
+
+## [v0.3.0] - 27-05-2026
 
 ### Added
 
@@ -61,6 +75,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#95]: https://github.com/mathew-odwyer/Server/issues/95
+[#59]: https://github.com/mathew-odwyer/Server/issues/59
+[#96]: https://github.com/mathew-odwyer/Server/issues/96
+[#93]: https://github.com/mathew-odwyer/Server/issues/93
+[#94]: https://github.com/mathew-odwyer/Server/issues/94
+[#97]: https://github.com/mathew-odwyer/Server/issues/97
+[#91]: https://github.com/mathew-odwyer/Server/issues/91
+[#72]: https://github.com/mathew-odwyer/Server/issues/72
 [#158]: https://github.com/mathew-odwyer/Server/issues/158
 [#69]: https://github.com/mathew-odwyer/Server/issues/69
 [#129]: https://github.com/mathew-odwyer/Server/issues/129
