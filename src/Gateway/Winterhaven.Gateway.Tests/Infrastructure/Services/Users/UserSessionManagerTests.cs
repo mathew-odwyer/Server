@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
 using NSubstitute;
@@ -19,64 +18,15 @@ internal sealed class UserSessionManagerTests
     private FakeTimeProvider timeProvider;
 
     [Test]
-    public void AuthenticateShouldMarkAsAuthenticated()
-    {
-        // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
-
-        // Act
-        authenticator.EstablishUserSession(session);
-
-        // Assert
-        Assert.That(authenticator.IsAuthenticated, Is.True);
-    }
-
-    [Test]
-    public void AuthenticateShouldNotOverrideExistingSession()
-    {
-        // Arrange
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
-        var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
-        authenticator.EstablishUserSession(session1);
-
-        // Act
-        authenticator.EstablishUserSession(session2);
-
-        // Assert
-        Assert.That(authenticator.UserSession, Is.EqualTo(session1));
-    }
-
-    [Test]
-    public void AuthenticateShouldSetUserSession()
-    {
-        // Arrange
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
-
-        // Act
-        authenticator.EstablishUserSession(session);
-
-        // Assert
-        Assert.That(authenticator.UserSession, Is.EqualTo(session));
-    }
-
-    [Test]
-    public void AuthenticateShouldThrowArgumentNullExceptionWhenSessionIsNull() =>
-        // Act and assert
-        Assert.Throws<ArgumentNullException>(() => authenticator.EstablishUserSession(null));
-
-    [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
-        // Act and assert
         Assert.Throws<ArgumentNullException>(() => new UserSessionManager(null, timeProvider));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenTimeProviderIsNull() =>
-        // Act and assert
         Assert.Throws<ArgumentNullException>(() => new UserSessionManager(logger, null));
 
     [Test]
     public void DisposeCalledMultipleTimesShouldNotThrow() =>
-        // Act and assert
         Assert.DoesNotThrow(() =>
         {
             authenticator.Dispose();
@@ -84,142 +34,329 @@ internal sealed class UserSessionManagerTests
         });
 
     [Test]
+    public void DisposeShouldStopExpiryTimerSoSessionIsNotInvalidatedAfterwards()
+    {
+        var expiry = TimeSpan.FromMinutes(15);
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow() + expiry);
+        authenticator.EstablishUserSession(session);
+
+        authenticator.Dispose();
+
+        Assert.DoesNotThrow(() => timeProvider.Advance(expiry));
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldDoNothingWhenSessionIsAlreadyExpired()
+    {
+        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow().AddMinutes(-1));
+
+        authenticator.EstablishUserSession(expiredSession);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(authenticator.IsAuthenticated, Is.False);
+            Assert.That(authenticator.UserSession, Is.Null);
+        }
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldFireEstablishedEvent()
+    {
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        int raisedCount = 0;
+        authenticator.Established += (_, _) => raisedCount++;
+
+        authenticator.EstablishUserSession(session);
+
+        Assert.That(raisedCount, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldMarkAsAuthenticated()
+    {
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+
+        authenticator.EstablishUserSession(session);
+
+        Assert.That(authenticator.IsAuthenticated, Is.True);
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldNotFireEstablishedEventWhenAlreadyAuthenticated()
+    {
+        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
+        authenticator.EstablishUserSession(session1);
+
+        int raisedCount = 0;
+        authenticator.Established += (_, _) => raisedCount++;
+        authenticator.EstablishUserSession(session2);
+
+        Assert.That(raisedCount, Is.Zero);
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldNotFireEstablishedEventWhenSessionIsAlreadyExpired()
+    {
+        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow().AddMinutes(-1));
+        int raisedCount = 0;
+        authenticator.Established += (_, _) => raisedCount++;
+
+        authenticator.EstablishUserSession(expiredSession);
+
+        Assert.That(raisedCount, Is.Zero);
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldNotOverrideExistingSession()
+    {
+        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
+        authenticator.EstablishUserSession(session1);
+
+        authenticator.EstablishUserSession(session2);
+
+        Assert.That(authenticator.UserSession, Is.EqualTo(session1));
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldSetUserSession()
+    {
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+
+        authenticator.EstablishUserSession(session);
+
+        Assert.That(authenticator.UserSession, Is.EqualTo(session));
+    }
+
+    [Test]
+    public void EstablishUserSessionShouldThrowArgumentNullExceptionWhenSessionIsNull() =>
+        Assert.Throws<ArgumentNullException>(() => authenticator.EstablishUserSession(null));
+
+    [Test]
     public void EstablishUserSessionShouldThrowObjectDisposedExceptionWhenDisposed()
     {
-        // Arrange
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.Dispose();
 
-        // Act and assert
         Assert.Throws<ObjectDisposedException>(() => authenticator.EstablishUserSession(session));
     }
 
     [Test]
-    public void InvalidateShouldClearUserSession()
+    public void InvalidateUserSessionShouldClearUserSession()
     {
-        // Arrange
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.EstablishUserSession(session);
 
-        // Act
         authenticator.InvalidateUserSession();
 
-        // Assert
         Assert.That(authenticator.UserSession, Is.Null);
     }
 
     [Test]
-    public void InvalidateShouldDoNothingWhenNotAuthenticated()
+    public void InvalidateUserSessionShouldDoNothingWhenNotAuthenticated()
     {
-        // Act
         authenticator.InvalidateUserSession();
 
-        // Assert
         Assert.That(authenticator.UserSession, Is.Null);
     }
 
     [Test]
-    public void InvalidateShouldMarkAsNotAuthenticated()
+    public void InvalidateUserSessionShouldFireInvalidatedEvent()
     {
-        // Arrange
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.EstablishUserSession(session);
 
-        // Act
+        int raisedCount = 0;
+        authenticator.Invalidated += (_, _) => raisedCount++;
         authenticator.InvalidateUserSession();
 
-        // Assert
+        Assert.That(raisedCount, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InvalidateUserSessionShouldMarkAsNotAuthenticated()
+    {
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        authenticator.EstablishUserSession(session);
+
+        authenticator.InvalidateUserSession();
+
         Assert.That(authenticator.IsAuthenticated, Is.False);
+    }
+
+    [Test]
+    public void InvalidateUserSessionShouldNotFireInvalidatedEventWhenNotAuthenticated()
+    {
+        int raisedCount = 0;
+        authenticator.Invalidated += (_, _) => raisedCount++;
+
+        authenticator.InvalidateUserSession();
+
+        Assert.That(raisedCount, Is.Zero);
     }
 
     [Test]
     public void InvalidateUserSessionShouldThrowObjectDisposedExceptionWhenDisposed()
     {
-        // Arrange
         authenticator.Dispose();
 
-        // Act and assert
         Assert.Throws<ObjectDisposedException>(authenticator.InvalidateUserSession);
     }
 
     [Test]
     public void IsAuthenticatedShouldBeFalseByDefault() =>
-        // Assert
         Assert.That(authenticator.IsAuthenticated, Is.False);
 
     [Test]
-    public void RefreshShouldDoNothingWhenNotAuthenticated()
+    public void RefreshUserSessionShouldDoNothingWhenNewSessionIsAlreadyExpired()
     {
-        // Arrange
+        var validSession = new UserSession(Guid.NewGuid(), "User1", "token1", timeProvider.GetUtcNow().AddMinutes(15));
+        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token2", timeProvider.GetUtcNow().AddMinutes(-1));
+        authenticator.EstablishUserSession(validSession);
+
+        authenticator.RefreshUserSession(expiredSession);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(authenticator.UserSession, Is.EqualTo(validSession));
+            Assert.That(authenticator.IsAuthenticated, Is.True);
+        }
+    }
+
+    [Test]
+    public void RefreshUserSessionShouldDoNothingWhenNotAuthenticated()
+    {
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
-        // Act
         authenticator.RefreshUserSession(session);
 
-        // Assert
         Assert.That(authenticator.UserSession, Is.Null);
     }
 
     [Test]
-    public async Task RefreshShouldDoNothingWhenSessionTokenHasAlreadyExpired()
+    public void RefreshUserSessionShouldFireRefreshedEvent()
     {
-        // Arrange
-
-        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(-1));
-        var newSession = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(15));
-
-        authenticator.EstablishUserSession(expiredSession);
-
-        //// Give the zero-delay CancelAfter time to fire before attempting the refresh.
-        await Task.Delay(50).ConfigureAwait(false);
-
-        // Act
-        authenticator.RefreshUserSession(newSession);
-
-        // Assert
-        Assert.That(authenticator.UserSession, Is.EqualTo(expiredSession));
-    }
-
-    [Test]
-    public void RefreshShouldThrowArgumentNullExceptionWhenSessionIsNull() =>
-        // Act and assert
-        Assert.Throws<ArgumentNullException>(() => authenticator.RefreshUserSession(null));
-
-    [Test]
-    public void RefreshShouldUpdateUserSessionWhenAuthenticated()
-    {
-        // Arrange
         var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
         var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
         authenticator.EstablishUserSession(session1);
 
-        // Act
+        int raisedCount = 0;
+        authenticator.Refreshed += (_, _) => raisedCount++;
         authenticator.RefreshUserSession(session2);
 
-        // Assert
-        Assert.That(authenticator.UserSession, Is.EqualTo(session2));
+        Assert.That(raisedCount, Is.EqualTo(1));
     }
+
+    [Test]
+    public void RefreshUserSessionShouldNotFireRefreshedEventWhenNewSessionIsAlreadyExpired()
+    {
+        var validSession = new UserSession(Guid.NewGuid(), "User1", "token1", timeProvider.GetUtcNow().AddMinutes(15));
+        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token2", timeProvider.GetUtcNow().AddMinutes(-1));
+        authenticator.EstablishUserSession(validSession);
+
+        int raisedCount = 0;
+        authenticator.Refreshed += (_, _) => raisedCount++;
+        authenticator.RefreshUserSession(expiredSession);
+
+        Assert.That(raisedCount, Is.Zero);
+    }
+
+    [Test]
+    public void RefreshUserSessionShouldNotFireRefreshedEventWhenNotAuthenticated()
+    {
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        int raisedCount = 0;
+        authenticator.Refreshed += (_, _) => raisedCount++;
+
+        authenticator.RefreshUserSession(session);
+
+        Assert.That(raisedCount, Is.Zero);
+    }
+
+    [Test]
+    public void RefreshUserSessionShouldResetExpiryTimer()
+    {
+        var now = timeProvider.GetUtcNow();
+        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", now + TimeSpan.FromMinutes(5));
+        var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", now + TimeSpan.FromMinutes(20));
+        authenticator.EstablishUserSession(session1);
+
+        timeProvider.Advance(TimeSpan.FromMinutes(4));
+        authenticator.RefreshUserSession(session2);
+
+        // Advance past session1's original expiry — session2 should still be active.
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(authenticator.IsAuthenticated, Is.True);
+            Assert.That(authenticator.UserSession, Is.EqualTo(session2));
+        }
+    }
+
+    [Test]
+    public void RefreshUserSessionShouldThrowArgumentNullExceptionWhenSessionIsNull() =>
+        Assert.Throws<ArgumentNullException>(() => authenticator.RefreshUserSession(null));
 
     [Test]
     public void RefreshUserSessionShouldThrowObjectDisposedExceptionWhenDisposed()
     {
-        // Arrange
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.Dispose();
 
-        // Act and assert
         Assert.Throws<ObjectDisposedException>(() => authenticator.RefreshUserSession(session));
+    }
+
+    [Test]
+    public void RefreshUserSessionShouldUpdateSessionWhenAuthenticated()
+    {
+        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
+        authenticator.EstablishUserSession(session1);
+
+        authenticator.RefreshUserSession(session2);
+
+        Assert.That(authenticator.UserSession, Is.EqualTo(session2));
+    }
+
+    [Test]
+    public void SessionShouldBeInvalidatedAutomaticallyWhenTimerElapses()
+    {
+        var expiry = TimeSpan.FromMinutes(15);
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow() + expiry);
+        authenticator.EstablishUserSession(session);
+
+        timeProvider.Advance(expiry);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(authenticator.IsAuthenticated, Is.False);
+            Assert.That(authenticator.UserSession, Is.Null);
+        }
+    }
+
+    [Test]
+    public void SessionShouldFireInvalidatedEventWhenTimerElapses()
+    {
+        var expiry = TimeSpan.FromMinutes(15);
+        var session = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow() + expiry);
+        authenticator.EstablishUserSession(session);
+
+        int raisedCount = 0;
+        authenticator.Invalidated += (_, _) => raisedCount++;
+
+        timeProvider.Advance(expiry);
+
+        Assert.That(raisedCount, Is.EqualTo(1));
     }
 
     [SetUp]
     public void Setup()
     {
-        // Arrange
         logger = Substitute.For<ILogger<UserSessionManager>>();
-
         timeProvider = new FakeTimeProvider();
         timeProvider.SetUtcNow(DateTimeOffset.UtcNow);
-
         authenticator = new UserSessionManager(logger, timeProvider);
     }
 
@@ -228,6 +365,5 @@ internal sealed class UserSessionManagerTests
 
     [Test]
     public void UserSessionShouldBeNullByDefault() =>
-        // Assert
         Assert.That(authenticator.UserSession, Is.Null);
 }

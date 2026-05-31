@@ -33,6 +33,12 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         Dispose(false);
     }
 
+    public event EventHandler<EventArgs>? Established;
+
+    public event EventHandler<EventArgs>? Invalidated;
+
+    public event EventHandler<EventArgs>? Refreshed;
+
     public bool IsAuthenticated => UserSession != null;
 
     public UserSession? UserSession { get; private set; }
@@ -53,9 +59,16 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
             return;
         }
 
+        if (userSession.ExpiresAt <= timeProvider.GetUtcNow())
+        {
+            logger.LogWarning("Attempted to establish an already-expired session for '{Username}'", userSession.Username);
+            return;
+        }
+
         UserSession = userSession;
         StartExpiryTimer();
 
+        Established?.Invoke(this, EventArgs.Empty);
         logger.LogDebug("Session authenticated: '{Username}'", UserSession.Username);
     }
 
@@ -69,9 +82,12 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         }
 
         string username = UserSession!.Username;
+        string accessToken = UserSession!.AccessToken;
 
         StopExpiryTimer();
         UserSession = null;
+
+        Invalidated?.Invoke(this, EventArgs.Empty);
 
         logger.LogInformation("Session invalidated: '{Username}'", username);
     }
@@ -86,8 +102,15 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
             return;
         }
 
+        if (userSession.ExpiresAt <= timeProvider.GetUtcNow())
+        {
+            logger.LogWarning("Attempted to refresh with an already-expired session for '{Username}'", userSession.Username);
+            return;
+        }
+
         UserSession = userSession;
         ResetExpiryTimer();
+        Refreshed?.Invoke(this, EventArgs.Empty);
 
         logger.LogInformation("Session refreshed: '{Username}'", UserSession.Username);
     }
@@ -115,25 +138,8 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
 
     private void StartExpiryTimer()
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
+        var delay = UserSession!.ExpiresAt - timeProvider.GetUtcNow();
 
-        if (!IsAuthenticated)
-        {
-            return;
-        }
-
-        // Determine how long we have to wait before session expiry.
-        var now = timeProvider.GetUtcNow();
-        var delay = UserSession!.ExpiresAt - now;
-
-        if (delay <= TimeSpan.Zero)
-        {
-            // Invalidate the user session right away if the user token has expired.
-            InvalidateUserSession();
-            return;
-        }
-
-        // Start the timer.
         timer.Change(delay, Timeout.InfiniteTimeSpan);
 
         logger.LogDebug(

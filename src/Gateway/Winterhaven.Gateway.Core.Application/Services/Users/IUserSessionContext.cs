@@ -9,6 +9,18 @@ namespace Winterhaven.Gateway.Core.Application.Services.Users;
 public interface IUserSessionContext : IDisposable
 {
     /// <summary>
+    /// </summary>
+    public event EventHandler<EventArgs>? Established;
+
+    /// <summary>
+    /// </summary>
+    public event EventHandler<EventArgs>? Invalidated;
+
+    /// <summary>
+    /// </summary>
+    public event EventHandler<EventArgs>? Refreshed;
+
+    /// <summary>
     ///   Gets a value indicating whether the current user session is authenticated.
     /// </summary>
     /// <value>

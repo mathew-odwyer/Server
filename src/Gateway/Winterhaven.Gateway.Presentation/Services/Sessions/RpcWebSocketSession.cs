@@ -56,6 +56,10 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         using var handler = new GatewayWebSocketMessageHandler(loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
         using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionContext, handler);
 
+        // Ensure that the connection will be closed if the user session is invalidated.
+        void OnSessionInvalidated(object? sender, EventArgs e) => rpc.Dispose();
+        userSessionContext.Invalidated += OnSessionInvalidated;
+
         targetRegistrar.RegisterTargets(rpc);
         rpc.StartListening();
 
@@ -82,6 +86,8 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         }
         finally
         {
+            userSessionContext.Invalidated -= OnSessionInvalidated;
+
             try
             {
                 await userAccountService.LogoutAsync(CancellationToken.None).ConfigureAwait(false);
