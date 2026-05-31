@@ -7,4 +7,4 @@ namespace Winterhaven.Gateway.Presentation.Attributes;
 /// </summary>
 /// <seealso cref="Attribute"/>
 [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-internal sealed class RpcAuthorizeAttribute : Attribute;
+internal sealed class JsonRpcAuthorizeAttribute : Attribute;

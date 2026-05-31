@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using StreamJsonRpc;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
-using Winterhaven.Gateway.Infrastructure.Services.Users;
 using Winterhaven.Gateway.Presentation.Handlers;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
@@ -24,28 +23,20 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
     private readonly IUserAccountService userAccountService;
 
-    private readonly IUserSessionAuthenticator userSessionAuthenticator;
-
     private readonly IUserSessionContext userSessionContext;
-
-    private readonly IUserSessionExpiryNotifier userSessionExpiryNotifier;
 
     public RpcWebSocketSession(
         ILogger<RpcWebSocketSession> logger,
         ILoggerFactory loggerFactory,
         IJsonRpcTargetRegistrar targetRegistrar,
         IUserAccountService userAccountService,
-        IUserSessionContext userSessionContext,
-        IUserSessionExpiryNotifier userSessionExpiryNotifier,
-        IUserSessionAuthenticator userSessionAuthenticator)
+        IUserSessionContext userSessionContext)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.targetRegistrar = targetRegistrar ?? throw new ArgumentNullException(nameof(targetRegistrar));
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
-        this.userSessionExpiryNotifier = userSessionExpiryNotifier ?? throw new ArgumentNullException(nameof(userSessionExpiryNotifier));
-        this.userSessionAuthenticator = userSessionAuthenticator ?? throw new ArgumentNullException(nameof(userSessionAuthenticator));
     }
 
     public async Task RunAsync(WebSocket socket, CancellationToken cancellationToken = default)
@@ -64,12 +55,10 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
         //// Create a link between the web socket connection and the user session expiry.
         //// This way if the user session expires, we disconnect automatically.
-        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
-            cancellationToken,
-            userSessionExpiryNotifier.SessionExpiredToken);
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, userSessionContext.SessionExpiredToken);
 
         using var handler = new GatewayWebSocketMessageHandler(loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
-        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionAuthenticator, handler);
+        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionContext, handler);
 
         targetRegistrar.RegisterTargets(rpc);
         rpc.StartListening();
@@ -79,7 +68,7 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             // Finally, start the session, and only complete once the socket has disconnected or the user logs out.
             await rpc.Completion.WaitAsync(linkedCts.Token).ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (userSessionExpiryNotifier.SessionExpiredToken.IsCancellationRequested &&
+        catch (OperationCanceledException) when (userSessionContext.SessionExpiredToken.IsCancellationRequested &&
                                                  !cancellationToken.IsCancellationRequested)
         {
             //// Session expired (timer elapsed or explicit server-side invalidation).

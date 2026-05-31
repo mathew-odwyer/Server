@@ -8,11 +8,11 @@ using Winterhaven.Gateway.Infrastructure.Services.Users;
 namespace Winterhaven.Gateway.Tests.Infrastructure.Services.Users;
 
 [TestFixture]
-internal sealed class UserSessionAuthenticatorTests
+internal sealed class userSessionManagerTests
 {
-    private UserSessionAuthenticator authenticator;
+    private UserSessionManager authenticator;
 
-    private ILogger<UserSessionAuthenticator> logger;
+    private ILogger<UserSessionManager> logger;
 
     [Test]
     public void AuthenticateShouldMarkAsAuthenticated()
@@ -21,7 +21,7 @@ internal sealed class UserSessionAuthenticatorTests
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         // Act
-        authenticator.Authenticate(session);
+        authenticator.EstablishUserSession(session);
 
         // Assert
         Assert.That(authenticator.IsAuthenticated, Is.True);
@@ -33,10 +33,10 @@ internal sealed class UserSessionAuthenticatorTests
         // Arrange
         var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
         var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
-        authenticator.Authenticate(session1);
+        authenticator.EstablishUserSession(session1);
 
         // Act
-        authenticator.Authenticate(session2);
+        authenticator.EstablishUserSession(session2);
 
         // Assert
         Assert.That(authenticator.UserSession, Is.EqualTo(session1));
@@ -49,7 +49,7 @@ internal sealed class UserSessionAuthenticatorTests
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         // Act
-        authenticator.Authenticate(session);
+        authenticator.EstablishUserSession(session);
 
         // Assert
         Assert.That(authenticator.UserSession, Is.EqualTo(session));
@@ -58,22 +58,22 @@ internal sealed class UserSessionAuthenticatorTests
     [Test]
     public void AuthenticateShouldThrowArgumentNullExceptionWhenSessionIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => authenticator.Authenticate(null));
+        Assert.Throws<ArgumentNullException>(() => authenticator.EstablishUserSession(null));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UserSessionAuthenticator(null));
+        Assert.Throws<ArgumentNullException>(() => new UserSessionManager(null));
 
     [Test]
     public void InvalidateShouldClearUserSession()
     {
         // Arrange
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
-        authenticator.Authenticate(session);
+        authenticator.EstablishUserSession(session);
 
         // Act
-        authenticator.Invalidate();
+        authenticator.InvalidateUserSession();
 
         // Assert
         Assert.That(authenticator.UserSession, Is.Null);
@@ -83,7 +83,7 @@ internal sealed class UserSessionAuthenticatorTests
     public void InvalidateShouldDoNothingWhenNotAuthenticated()
     {
         // Act
-        authenticator.Invalidate();
+        authenticator.InvalidateUserSession();
 
         // Assert
         Assert.That(authenticator.UserSession, Is.Null);
@@ -94,10 +94,10 @@ internal sealed class UserSessionAuthenticatorTests
     {
         // Arrange
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
-        authenticator.Authenticate(session);
+        authenticator.EstablishUserSession(session);
 
         // Act
-        authenticator.Invalidate();
+        authenticator.InvalidateUserSession();
 
         // Assert
         Assert.That(authenticator.IsAuthenticated, Is.False);
@@ -115,7 +115,7 @@ internal sealed class UserSessionAuthenticatorTests
         var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         // Act
-        authenticator.Refresh(session);
+        authenticator.RefreshUserSession(session);
 
         // Assert
         Assert.That(authenticator.UserSession, Is.Null);
@@ -124,7 +124,7 @@ internal sealed class UserSessionAuthenticatorTests
     [Test]
     public void RefreshShouldThrowArgumentNullExceptionWhenSessionIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => authenticator.Refresh(null));
+        Assert.Throws<ArgumentNullException>(() => authenticator.RefreshUserSession(null));
 
     [Test]
     public void RefreshShouldUpdateUserSessionWhenAuthenticated()
@@ -132,10 +132,10 @@ internal sealed class UserSessionAuthenticatorTests
         // Arrange
         var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
         var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
-        authenticator.Authenticate(session1);
+        authenticator.EstablishUserSession(session1);
 
         // Act
-        authenticator.Refresh(session2);
+        authenticator.RefreshUserSession(session2);
 
         // Assert
         Assert.That(authenticator.UserSession, Is.EqualTo(session2));
@@ -145,8 +145,8 @@ internal sealed class UserSessionAuthenticatorTests
     public void Setup()
     {
         // Arrange
-        logger = Substitute.For<ILogger<UserSessionAuthenticator>>();
-        authenticator = new UserSessionAuthenticator(logger);
+        logger = Substitute.For<ILogger<UserSessionManager>>();
+        authenticator = new UserSessionManager(logger);
     }
 
     [TearDown]

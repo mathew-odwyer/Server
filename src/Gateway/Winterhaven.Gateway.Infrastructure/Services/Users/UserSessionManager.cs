@@ -6,21 +6,21 @@ using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 
 namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 
-internal sealed class UserSessionAuthenticator : IUserSessionAuthenticator, IUserSessionContext, IUserSessionExpiryNotifier
+internal sealed class UserSessionManager : IUserSessionManager, IUserSessionContext
 {
-    private readonly ILogger<UserSessionAuthenticator> logger;
+    private readonly ILogger<UserSessionManager> logger;
 
     private bool isDisposed;
 
     private CancellationTokenSource? sessionTokenSource;
 
-    public UserSessionAuthenticator(ILogger<UserSessionAuthenticator> logger)
+    public UserSessionManager(ILogger<UserSessionManager> logger)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         sessionTokenSource = new CancellationTokenSource();
     }
 
-    ~UserSessionAuthenticator()
+    ~UserSessionManager()
     {
         Dispose(false);
     }
@@ -31,16 +31,22 @@ internal sealed class UserSessionAuthenticator : IUserSessionAuthenticator, IUse
     {
         get
         {
-            ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionAuthenticator));
+            ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
             return sessionTokenSource!.Token;
         }
     }
 
     public UserSession? UserSession { get; private set; }
 
-    public void Authenticate(UserSession userSession)
+    public void Dispose()
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionAuthenticator));
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    public void EstablishUserSession(UserSession userSession)
+    {
+        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
         ArgumentNullException.ThrowIfNull(userSession);
 
         if (IsAuthenticated)
@@ -54,15 +60,9 @@ internal sealed class UserSessionAuthenticator : IUserSessionAuthenticator, IUse
         logger.LogDebug("Session authenticated: '{Username}'", UserSession.Username);
     }
 
-    public void Dispose()
+    public void InvalidateUserSession()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    public void Invalidate()
-    {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionAuthenticator));
+        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
 
         if (!IsAuthenticated)
         {
@@ -79,9 +79,9 @@ internal sealed class UserSessionAuthenticator : IUserSessionAuthenticator, IUse
         logger.LogDebug("Session invalidated: '{Username}'", username);
     }
 
-    public void Refresh(UserSession userSession)
+    public void RefreshUserSession(UserSession userSession)
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionAuthenticator));
+        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
         ArgumentNullException.ThrowIfNull(userSession);
 
         if (!IsAuthenticated)
@@ -119,7 +119,7 @@ internal sealed class UserSessionAuthenticator : IUserSessionAuthenticator, IUse
 
     private void ScheduleExpiry()
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionAuthenticator));
+        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
 
         if (!IsAuthenticated)
         {

@@ -60,7 +60,7 @@ internal sealed class UserRpcTarget : IRpcTarget
             RefreshToken: response.RefreshToken);
     }
 
-    [RpcAuthorize]
+    [JsonRpcAuthorize]
     [JsonRpcMethod("user.refresh", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserRefreshRpcResult> RefreshAsync(UserRefreshRpcParameters parameters, CancellationToken cancellationToken = default)
     {

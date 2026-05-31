@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using StreamJsonRpc;
-using Winterhaven.Gateway.Infrastructure.Services.Users;
+using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation;
 
 namespace Winterhaven.Gateway.Tests.Presentation;
@@ -17,7 +17,7 @@ internal sealed class GatewayJsonRpcTests
 
     private GatewayJsonRpc rpc;
 
-    private IUserSessionAuthenticator userSessionAuthenticator;
+    private IUserSessionContext userSessionContext;
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenAuthenticatorIsNull() =>
@@ -27,23 +27,27 @@ internal sealed class GatewayJsonRpcTests
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and Assert
-        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(null, userSessionAuthenticator, messageHandler));
+        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(null, userSessionContext, messageHandler));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenMessageHandlerIsNull() =>
         // Act and Assert
-        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(logger, userSessionAuthenticator, null));
+        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(logger, userSessionContext, null));
 
     [SetUp]
     public void Setup()
     {
         logger = Substitute.For<ILogger<GatewayJsonRpc>>();
         messageHandler = Substitute.For<IJsonRpcMessageHandler>();
-        userSessionAuthenticator = Substitute.For<IUserSessionAuthenticator>();
+        userSessionContext = Substitute.For<IUserSessionContext>();
 
-        rpc = new GatewayJsonRpc(logger, userSessionAuthenticator, messageHandler);
+        rpc = new GatewayJsonRpc(logger, userSessionContext, messageHandler);
     }
 
     [TearDown]
-    public void TearDown() => rpc.Dispose();
+    public void TearDown()
+    {
+        userSessionContext.Dispose();
+        rpc.Dispose();
+    }
 }

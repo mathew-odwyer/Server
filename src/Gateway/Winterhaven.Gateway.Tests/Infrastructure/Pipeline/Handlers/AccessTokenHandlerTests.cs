@@ -177,6 +177,7 @@ internal sealed class AccessTokenHandlerTests
     {
         client.Dispose();
         handler.Dispose();
+        userSessionContext.Dispose();
     }
 
     private sealed class TestHttpMessageHandler : HttpMessageHandler
