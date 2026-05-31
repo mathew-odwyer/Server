@@ -48,11 +48,8 @@ jobs:
         run: |
           coverlet "src/API/Tests/bin/Winterhaven.API.Tests/x64/Debug/net9.0/Winterhaven.API.Tests.dll" \
             --target "dotnet" \
-            --targetargs "test src/API/Tests --no-build" \
+            --targetargs "test src/API/Tests/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj --no-build" \
             -f=opencover -o="coverage-api.xml"
-# coverlet "src/Gateway/bin/Winterhaven.Gateway.Tests/Debug/net9.0/Winterhaven.Gateway.Tests.dll" \
-#   --target "dotnet" --targetargs "test --no-build" \
-#   -f=opencover -o="coverage-gateway.xml"
 
       - name: Sonar End
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
