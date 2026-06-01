@@ -20,7 +20,7 @@ internal abstract class TestHostBase
 {
     protected IHost Host { get; private set; }
 
-    protected MockUserSessionContext UserSessionManager { get; } = new();
+    protected MockUserSessionManager UserSessionManager { get; } = new();
 
     protected async Task<WebSocketRpcConnection> CreateConnectionAsync(
         Action<WebSocketRpcConnectionBuilder> configure,

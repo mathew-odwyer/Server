@@ -5,13 +5,21 @@ using Winterhaven.Gateway.Infrastructure.Services.Users;
 
 namespace Winterhaven.Gateway.Integrations.Services.Users;
 
-internal sealed class MockUserSessionContext : IUserSessionManager, IUserSessionContext
+internal sealed class MockUserSessionManager : IUserSessionManager, IUserSessionContext
 {
+    static MockUserSessionManager() => DummySession = new UserSession(
+        UserAccountId: Guid.NewGuid(),
+        Username: "Dummy Dumb Dumb",
+        AccessToken: "accessToken",
+        ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
+
     public event EventHandler<EventArgs> Established;
 
     public event EventHandler<EventArgs> Invalidated;
 
     public event EventHandler<EventArgs> Refreshed;
+
+    public static UserSession DummySession { get; }
 
     public bool IsAuthenticated => UserSession != null;
 

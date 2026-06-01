@@ -121,7 +121,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
 
         var authProxy = connection.GetProxy<IAuthClientProxy>();
 
-        UserSessionManager.EstablishUserSession(UserSessionFactory.DummySession);
+        UserSessionManager.EstablishUserSession(MockUserSessionManager.DummySession);
 
         // Act
         string actual = await authProxy.GetUserSecret();
