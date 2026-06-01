@@ -38,7 +38,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
     {
         // Arrange
         const int expectedErrorCode = 401;
-        const string expectedMessage = "Authentication is required to perform this action.";
+        const string expectedMessage = "Authentication is required to perform the request.";
 
         await using var connection = await CreateConnectionAsync(x => x
             .WithProxy<IErrorClientProxy>());
