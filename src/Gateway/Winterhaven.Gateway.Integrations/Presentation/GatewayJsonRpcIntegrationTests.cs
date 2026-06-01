@@ -1,144 +1,171 @@
-﻿using System;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Winterhaven.Gateway.Integrations.Presentation.Targets;
-using Winterhaven.Gateway.Presentation;
-using Winterhaven.Gateway.Presentation.Targets;
+using StreamJsonRpc;
+using StreamJsonRpc.Protocol;
+using Winterhaven.Gateway.Integrations.Services.Clients;
+using Winterhaven.Gateway.Integrations.Services.Users;
 
 namespace Winterhaven.Gateway.Integrations.Presentation;
 
 [TestFixture]
-internal sealed class GatewayJsonRpcIntegrationTests
+internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
 {
-    private IHost host;
-
     [Test]
-    public async Task CreateErrorDetailsShouldReturnAuthorizationErrorWhenAuthorizationExceptionIsThrown()
+    public async Task GatewayShouldReturnAuthorizationErrorWhenAuthenticationIsRequiredByRpc()
     {
         // Arrange
-        var client = host.GetTestServer().CreateWebSocketClient();
-        var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
-            .ConfigureAwait(false);
+        const int expectedErrorCode = 401;
+        const string expectedMessage = "Authentication is required to perform this action.";
 
-        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ """
-        {
-          "jsonrpc": "2.0",
-          "method": "test.throwAuthorization",
-          "id": 2
-        }
-        """);
+        await using var connection = await CreateConnectionAsync(x => x
+            .WithProxy<IAuthClientProxy>());
 
-        // Act
-        await webSocket.SendAsync(request, WebSocketMessageType.Text, true, CancellationToken.None)
-            .ConfigureAwait(false);
+        var authProxy = connection.GetProxy<IAuthClientProxy>();
 
-        byte[] buffer = new byte[1024];
-        var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None).ConfigureAwait(false);
-        string response = Encoding.UTF8.GetString(buffer, 0, result.Count);
-
-        // Assert
+        // Act and assert
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(response, Does.Contain("\"id\":2"));
-            Assert.That(response, Does.Contain("\"error\""));
-            Assert.That(response, Does.Contain("\"code\":401"));
-            Assert.That(response, Does.Contain("Authorization failed."));
+            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => authProxy.RequireAuthentication());
+
+            Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
     }
 
     [Test]
-    public async Task CreateErrorDetailsShouldReturnInternalErrorWhenUnhandledExceptionIsThrown()
+    public async Task GatewayShouldReturnAuthorizationErrorWhenAuthorizationExceptionIsThrownInRpc()
     {
         // Arrange
-        var client = host.GetTestServer().CreateWebSocketClient();
-        var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
-            .ConfigureAwait(false);
+        const int expectedErrorCode = 401;
+        const string expectedMessage = "Authentication is required to perform the request.";
 
-        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ """
-        {
-          "jsonrpc": "2.0",
-          "method": "test.throwUnhandled",
-          "id": 3
-        }
-        """);
+        await using var connection = await CreateConnectionAsync(x => x
+            .WithProxy<IErrorClientProxy>());
 
-        // Act
-        await webSocket.SendAsync(request, WebSocketMessageType.Text, true, CancellationToken.None)
-            .ConfigureAwait(false);
+        var errorProxy = connection.GetProxy<IErrorClientProxy>();
 
-        byte[] buffer = new byte[1024];
-        var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None).ConfigureAwait(false);
-        string response = Encoding.UTF8.GetString(buffer, 0, result.Count);
-
-        // Assert
+        // Act and assert
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(response, Does.Contain("\"id\":3"));
-            Assert.That(response, Does.Contain("\"error\""));
-            Assert.That(response, Does.Contain("An unexpected error occurred. Please try again later."));
+            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => errorProxy.GenerateUnauthorizedError());
+
+            Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
     }
 
     [Test]
-    public async Task CreateErrorDetailsShouldReturnValidationErrorWhenValidationExceptionIsThrown()
+    public async Task GatewayShouldReturnDefaultValidationErrorWhenExceptionHasNoErrorsInRpc()
     {
         // Arrange
-        var client = host.GetTestServer().CreateWebSocketClient();
-        var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
-            .ConfigureAwait(false);
+        const int expectedErrorCode = 400;
+        const string expectedMessage = "One or more validation failures have occurred.";
 
-        byte[] request = Encoding.UTF8.GetBytes(/*lang=json,strict*/ """
+        var expectedErrors = new Dictionary<string, string[]>()
         {
-          "jsonrpc": "2.0",
-          "method": "test.throwValidation",
-          "id": 1
-        }
-        """);
+            { "General", ["One or more validation errors occurred."] }
+        };
 
-        // Act
-        await webSocket.SendAsync(request, WebSocketMessageType.Text, true, CancellationToken.None)
-            .ConfigureAwait(false);
+        await using var connection = await CreateConnectionAsync(x => x
+            .WithProxy<IErrorClientProxy>());
 
-        byte[] buffer = new byte[1024];
-        var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None).ConfigureAwait(false);
-        string response = Encoding.UTF8.GetString(buffer, 0, result.Count);
+        var errorProxy = connection.GetProxy<IErrorClientProxy>();
 
-        // Assert
+        // Act and assert
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(response, Does.Contain("\"id\":1"));
-            Assert.That(response, Does.Contain("\"error\""));
-            Assert.That(response, Does.Contain("\"code\":400"));
-            Assert.That(response, Does.Contain("Validation failed."));
+            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => errorProxy.GenerateValidationErrorWithNullErrors());
+
+            Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+
+            var actualErrors = ((JObject)exception.ErrorData).ToObject<Dictionary<string, string[]>>();
+
+            Assert.That(actualErrors.Keys, Is.EquivalentTo(expectedErrors.Keys));
+            Assert.That(actualErrors["General"], Is.EqualTo(expectedErrors["General"]));
+        }
+    }
+
+    [Test]
+    public async Task GatewayShouldReturnInternalErrorWhenUnhandledExceptionIsThrownInRpc()
+    {
+        // Arrange
+        const int expectedErrorCode = (int)JsonRpcErrorCode.InternalError;
+        const string expectedMessage = "An unexpected error occurred. Please try again later.";
+
+        await using var connection = await CreateConnectionAsync(x => x
+            .WithProxy<IErrorClientProxy>());
+
+        var errorProxy = connection.GetProxy<IErrorClientProxy>();
+
+        // Act and assert
+        using (Assert.EnterMultipleScope())
+        {
+            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => errorProxy.GenerateUnhandledError());
+
+            Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+        }
+    }
+
+    [Test]
+    public async Task GatewayShouldReturnResourceWhenAuthenticationIsRequiredAndConnectionIsAuthenticated()
+    {
+        // Arrange
+        const string expectedSecret = "secret";
+
+        await using var connection = await CreateConnectionAsync(x => x
+            .WithProxy<IAuthClientProxy>());
+
+        var authProxy = connection.GetProxy<IAuthClientProxy>();
+
+        UserSessionManager.EstablishUserSession(MockUserSessionManager.DummySession);
+
+        // Act
+        string actual = await authProxy.GetUserSecret();
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expectedSecret));
+    }
+
+    [Test]
+    public async Task GatewayShouldReturnValidationErrorWhenValidationExceptionIsThrownInRpc()
+    {
+        // Arrange
+        const int expectedErrorCode = 400;
+        const string expectedMessage = "One or more validation failures have occurred.";
+
+        var expectedErrors = new Dictionary<string, string[]>()
+        {
+            { "General", ["One or more validation errors occurred."] },
+            { "Other", ["This is a cool test lol", "seriously cool"] }
+        };
+
+        await using var connection = await CreateConnectionAsync(x => x
+            .WithProxy<IErrorClientProxy>());
+
+        var errorProxy = connection.GetProxy<IErrorClientProxy>();
+
+        // Act and assert
+        using (Assert.EnterMultipleScope())
+        {
+            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => errorProxy.GenerateValidationError());
+
+            Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+
+            var actualErrors = ((JObject)exception.ErrorData).ToObject<Dictionary<string, string[]>>();
+
+            Assert.That(actualErrors.Keys, Is.EquivalentTo(expectedErrors.Keys));
+            Assert.That(actualErrors["General"], Is.EqualTo(expectedErrors["General"]));
         }
     }
 
     [SetUp]
-    public async Task Setup()
-    {
-        var builder = new HostBuilder();
-        builder.ConfigureWebHost(x => x
-             .ConfigureAppConfiguration(x => x.AddJsonFile("appsettings.Tests.json", optional: false))
-             .ConfigureServices(x => x.AddScoped<IRpcTarget, ErrorThrowingTestTarget>())
-             .UseTestServer()
-             .UseStartup<Startup>());
-
-        host = builder.Build();
-        await host.StartAsync().ConfigureAwait(false);
-    }
+    public async Task SetUp() => await SetUpTestHost().ConfigureAwait(false);
 
     [TearDown]
-    public async Task TearDown()
-    {
-        await host.StopAsync().ConfigureAwait(false);
-        host.Dispose();
-    }
+    public async Task TearDown() => await TearDownTestHost().ConfigureAwait(false);
 }
