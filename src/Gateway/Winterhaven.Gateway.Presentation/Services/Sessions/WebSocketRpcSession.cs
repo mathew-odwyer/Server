@@ -13,7 +13,7 @@ using Winterhaven.Gateway.Presentation.Services.Targets;
 
 namespace Winterhaven.Gateway.Presentation.Services.Sessions;
 
-internal sealed class WebSocketRpcSession : IRpcWebSocketSession
+internal sealed class WebSocketRpcSession : IWebSocketRpcSession
 {
     private readonly ILogger<WebSocketRpcSession> logger;
 

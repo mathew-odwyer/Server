@@ -13,7 +13,7 @@ using Winterhaven.Gateway.Presentation;
 namespace Winterhaven.Gateway.Integrations.Presentation.Services.Sessions;
 
 [TestFixture]
-internal sealed class RpcWebSocketSessionIntegrationTests
+internal sealed class WebSocketRpcSessionIntegrationTests
 {
     private IHost host;
 

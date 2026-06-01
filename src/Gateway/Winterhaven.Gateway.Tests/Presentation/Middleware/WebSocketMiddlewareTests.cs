@@ -20,7 +20,7 @@ internal sealed class WebSocketMiddlewareTests
 
     private RequestDelegate requestDelegate;
 
-    private IRpcWebSocketSession rpcSession;
+    private IWebSocketRpcSession rpcSession;
 
     private ClientWebSocket webSocket;
 
@@ -236,7 +236,7 @@ internal sealed class WebSocketMiddlewareTests
         webSocket = new ClientWebSocket();
         logger = Substitute.For<ILogger<WebSocketMiddleware>>();
         requestDelegate = new RequestDelegate(_ => Task.CompletedTask);
-        rpcSession = Substitute.For<IRpcWebSocketSession>();
+        rpcSession = Substitute.For<IWebSocketRpcSession>();
         middleware = new WebSocketMiddleware(logger, requestDelegate);
     }
 

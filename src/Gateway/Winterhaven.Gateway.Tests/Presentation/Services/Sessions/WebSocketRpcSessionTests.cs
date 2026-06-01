@@ -13,13 +13,13 @@ using Winterhaven.Gateway.Presentation.Services.Targets;
 namespace Winterhaven.Gateway.Tests.Presentation.Services.Sessions;
 
 [TestFixture]
-internal sealed class RpcWebSocketSessionTests
+internal sealed class WebSocketRpcSessionTests
 {
-    private ILogger<RpcWebSocketSession> logger;
+    private ILogger<WebSocketRpcSession> logger;
 
     private ILoggerFactory loggerFactory;
 
-    private RpcWebSocketSession session;
+    private WebSocketRpcSession session;
 
     private IJsonRpcTargetRegistrar targetRegistrar;
 
@@ -29,19 +29,19 @@ internal sealed class RpcWebSocketSessionTests
 
     [Test]
     public void ConstructorShouldThrowWhenLoggerFactoryIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, null, targetRegistrar, userAccountService, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, null, targetRegistrar, userAccountService, userSessionContext));
 
     [Test]
     public void ConstructorShouldThrowWhenLoggerIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(null, loggerFactory, targetRegistrar, userAccountService, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(null, loggerFactory, targetRegistrar, userAccountService, userSessionContext));
 
     [Test]
     public void ConstructorShouldThrowWhenTargetRegistrarIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, null, userAccountService, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, null, userAccountService, userSessionContext));
 
     [Test]
     public void ConstructorShouldThrowWhenUserAccountServiceIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new RpcWebSocketSession(logger, loggerFactory, targetRegistrar, null, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, targetRegistrar, null, userSessionContext));
 
     [TearDown]
     public void Dispose()
@@ -105,7 +105,7 @@ internal sealed class RpcWebSocketSessionTests
     [SetUp]
     public void SetUp()
     {
-        logger = Substitute.For<ILogger<RpcWebSocketSession>>();
+        logger = Substitute.For<ILogger<WebSocketRpcSession>>();
         loggerFactory = Substitute.For<ILoggerFactory>();
         targetRegistrar = Substitute.For<IJsonRpcTargetRegistrar>();
         userAccountService = Substitute.For<IUserAccountService>();
@@ -113,7 +113,7 @@ internal sealed class RpcWebSocketSessionTests
 
         loggerFactory.CreateLogger(Arg.Any<string>()).Returns(Substitute.For<ILogger>());
 
-        session = new RpcWebSocketSession(
+        session = new WebSocketRpcSession(
             logger,
             loggerFactory,
             targetRegistrar,
