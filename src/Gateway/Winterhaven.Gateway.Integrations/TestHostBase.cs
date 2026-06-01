@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Infrastructure.Services.Users;
 using Winterhaven.Gateway.Integrations.Services.Builders;
 using Winterhaven.Gateway.Integrations.Services.Targets;
 using Winterhaven.Gateway.Integrations.Services.Users;
@@ -19,7 +20,7 @@ internal abstract class TestHostBase
 {
     protected IHost Host { get; private set; }
 
-    protected MockUserSessionContext UserSessionContext { get; } = new();
+    protected MockUserSessionContext UserSessionManager { get; } = new();
 
     protected async Task<WebSocketRpcConnection> CreateConnectionAsync(
         Action<WebSocketRpcConnectionBuilder> configure,
@@ -51,7 +52,9 @@ internal abstract class TestHostBase
             {
                 services.AddScoped<IRpcTarget, TestErrorRpcTarget>();
                 services.AddScoped<IRpcTarget, TestAuthRpcTarget>();
-                services.AddSingleton<IUserSessionContext>(UserSessionContext);
+
+                services.AddSingleton<IUserSessionContext>(UserSessionManager);
+                services.AddSingleton<IUserSessionManager>(UserSessionManager);
             });
         });
 

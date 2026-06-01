@@ -4,7 +4,7 @@ using System.Net.WebSockets;
 
 namespace Winterhaven.Gateway.Integrations.Services.Builders;
 
-internal class WebSocketRpcConnectionBuilder
+internal sealed class WebSocketRpcConnectionBuilder
 {
     private readonly List<Type> proxyTypes;
 

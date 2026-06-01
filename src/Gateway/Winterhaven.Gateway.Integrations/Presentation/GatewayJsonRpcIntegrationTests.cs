@@ -5,6 +5,7 @@ using NUnit.Framework;
 using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
 using Winterhaven.Gateway.Integrations.Services.Clients;
+using Winterhaven.Gateway.Integrations.Services.Users;
 
 namespace Winterhaven.Gateway.Integrations.Presentation;
 
@@ -120,7 +121,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
 
         var authProxy = connection.GetProxy<IAuthClientProxy>();
 
-        UserSessionContext.IsAuthenticated = true;
+        UserSessionManager.EstablishUserSession(UserSessionFactory.DummySession);
 
         // Act
         string actual = await authProxy.GetUserSecret();
