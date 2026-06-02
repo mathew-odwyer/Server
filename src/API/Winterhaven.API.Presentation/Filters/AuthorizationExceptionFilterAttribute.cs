@@ -7,7 +7,7 @@ using Winterhaven.API.Core.Domain.Exceptions;
 namespace Winterhaven.API.Presentation.Filters;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-internal sealed class UnauthorizedExceptionFilterAttribute : ExceptionFilterAttribute
+internal sealed class AuthorizationExceptionFilterAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext context)
     {
@@ -23,7 +23,7 @@ internal sealed class UnauthorizedExceptionFilterAttribute : ExceptionFilterAttr
             var details = new ProblemDetails
             {
                 Type = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1",
-                Title = "Unauthorized Error",
+                Title = "Authorization Error",
                 Detail = exception.Message,
                 Status = StatusCodes.Status401Unauthorized,
             };
