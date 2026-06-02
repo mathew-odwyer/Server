@@ -69,7 +69,7 @@ internal sealed class Startup
         services.AddControllers();
 
         services.AddScoped<IJsonRpcTargetRegistrar, JsonRpcTargetRegistrar>();
-        services.AddScoped<IRpcWebSocketSession, RpcWebSocketSession>();
+        services.AddScoped<IWebSocketRpcSession, WebSocketRpcSession>();
 
         services.AddRpcSessionTarget<HealthRpcTarget>();
         services.AddRpcSessionTarget<UserRpcTarget>();

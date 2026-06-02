@@ -21,7 +21,7 @@ internal sealed class WebSocketMiddleware
         this.next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
-    public async Task InvokeAsync(HttpContext context, IRpcWebSocketSession session)
+    public async Task InvokeAsync(HttpContext context, IWebSocketRpcSession session)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(session);

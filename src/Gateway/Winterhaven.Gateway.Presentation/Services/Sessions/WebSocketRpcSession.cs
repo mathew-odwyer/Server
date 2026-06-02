@@ -13,9 +13,9 @@ using Winterhaven.Gateway.Presentation.Services.Targets;
 
 namespace Winterhaven.Gateway.Presentation.Services.Sessions;
 
-internal sealed class RpcWebSocketSession : IRpcWebSocketSession
+internal sealed class WebSocketRpcSession : IWebSocketRpcSession
 {
-    private readonly ILogger<RpcWebSocketSession> logger;
+    private readonly ILogger<WebSocketRpcSession> logger;
 
     private readonly ILoggerFactory loggerFactory;
 
@@ -25,8 +25,8 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
 
     private readonly IUserSessionContext userSessionContext;
 
-    public RpcWebSocketSession(
-        ILogger<RpcWebSocketSession> logger,
+    public WebSocketRpcSession(
+        ILogger<WebSocketRpcSession> logger,
         ILoggerFactory loggerFactory,
         IJsonRpcTargetRegistrar targetRegistrar,
         IUserAccountService userAccountService,
@@ -57,14 +57,21 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
         using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionContext, handler);
 
         // Ensure that the connection will be closed if the user session is invalidated.
-        void OnSessionInvalidated(object? sender, EventArgs e) => rpc.Dispose();
-        userSessionContext.Invalidated += OnSessionInvalidated;
+        void OnSessionInvalidated(object? sender, EventArgs e)
+        {
+            if (!rpc.IsDisposed)
+            {
+                rpc.Dispose();
+            }
+        }
 
-        targetRegistrar.RegisterTargets(rpc);
-        rpc.StartListening();
+        userSessionContext.Invalidated += OnSessionInvalidated;
 
         try
         {
+            targetRegistrar.RegisterTargets(rpc);
+            rpc.StartListening();
+
             // Finally, start the session, and only complete once the socket has disconnected.
             await rpc.Completion.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -96,7 +103,10 @@ internal sealed class RpcWebSocketSession : IRpcWebSocketSession
             {
                 //// A 401 here is expected when the session was already invalidated server-side,
                 //// For exampale, after a failed token refresh.
-                logger.LogWarning(ex, "Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession?.Username ?? "Unknown Username");
+                if (userSessionContext.UserSession != null)
+                {
+                    logger.LogWarning(ex, "Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession.Username);
+                }
             }
         }
     }

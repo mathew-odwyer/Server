@@ -41,6 +41,15 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
         jsonRpc.StartListening();
     }
 
+    public WebSocketState State
+    {
+        get
+        {
+            ObjectDisposedException.ThrowIf(isDisposed, nameof(WebSocketRpcConnection));
+            return webSocket.State;
+        }
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (isDisposed)
@@ -79,6 +88,8 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
     public TProxy GetProxy<TProxy>()
                 where TProxy : class
     {
+        ObjectDisposedException.ThrowIf(isDisposed, nameof(WebSocketRpcConnection));
+
         var type = typeof(TProxy);
 
         return !typeToProxyMap.TryGetValue(type, out object proxy)

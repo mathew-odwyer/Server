@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Winterhaven.Gateway.Presentation.Services.Sessions;
 
-internal interface IRpcWebSocketSession
+internal interface IWebSocketRpcSession
 {
     public Task RunAsync(WebSocket socket, CancellationToken cancellationToken = default);
 }

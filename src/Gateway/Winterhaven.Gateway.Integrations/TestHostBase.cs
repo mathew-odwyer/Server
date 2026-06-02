@@ -23,15 +23,14 @@ internal abstract class TestHostBase
     protected MockUserSessionManager UserSessionManager { get; } = new();
 
     protected async Task<WebSocketRpcConnection> CreateConnectionAsync(
-        Action<WebSocketRpcConnectionBuilder> configure,
+        Action<WebSocketRpcConnectionBuilder> configure = null,
         string uri = "ws://localhost/ws",
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(configure);
         ArgumentException.ThrowIfNullOrWhiteSpace(uri);
 
         var builder = new WebSocketRpcConnectionBuilder();
-        configure(builder);
+        configure?.Invoke(builder);
 
         var client = Host.GetTestServer().CreateWebSocketClient();
         var webSocket = await client.ConnectAsync(new Uri(uri), cancellationToken).ConfigureAwait(false);
