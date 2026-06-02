@@ -50,7 +50,7 @@ internal abstract class TestHostBase
     }
 
     protected async Task<WebSocketRpcConnection> CreateConnectionAsync(
-            Action<WebSocketRpcConnectionBuilder> configure = null,
+        Action<WebSocketRpcConnectionBuilder> configure = null,
         string uri = "ws://localhost/ws",
         CancellationToken cancellationToken = default)
     {

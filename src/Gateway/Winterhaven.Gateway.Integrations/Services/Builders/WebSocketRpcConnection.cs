@@ -31,6 +31,7 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
             JsonSerializerOptions = new JsonSerializerOptions()
             {
                 PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                ////UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
             }
         };
 
