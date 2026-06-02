@@ -103,7 +103,10 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
             {
                 //// A 401 here is expected when the session was already invalidated server-side,
                 //// For exampale, after a failed token refresh.
-                logger.LogWarning(ex, "Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession?.Username ?? "Unknown Username");
+                if (userSessionContext.UserSession != null)
+                {
+                    logger.LogWarning(ex, "Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession.Username);
+                }
             }
         }
     }

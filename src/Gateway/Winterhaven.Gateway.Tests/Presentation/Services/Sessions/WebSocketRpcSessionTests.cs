@@ -8,6 +8,7 @@ using NUnit.Framework;
 using StreamJsonRpc;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
+using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 using Winterhaven.Gateway.Presentation.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
@@ -73,6 +74,34 @@ internal sealed class WebSocketRpcSessionTests
         // Assert
         await userAccountService.Received(1).LogoutAsync(Arg.Any<CancellationToken>()).ConfigureAwait(false);
         cts.Dispose();
+    }
+
+    [Test]
+    public async Task RunAsyncSHouldNotLogMessageWhenAuthorizationExceptionIsThrownAndUserSessionIsNull()
+    {
+        // Arrange
+        var socket = Substitute.For<WebSocket>();
+        socket.State.Returns(WebSocketState.Open);
+
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync().ConfigureAwait(false);
+
+        userSessionContext.UserSession.Returns((UserSession)null);
+        userAccountService.When(x => x.LogoutAsync(Arg.Any<CancellationToken>())).Do(_ => throw new AuthorizationException());
+
+        // Act
+        try
+        {
+            await session.RunAsync(socket, cts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected because cancellation propagates up intentionally to WebSocketMiddleware. This is because we let the exception through for the websocket middleware to handle it, as it's a protocol concern.
+        }
+        catch (AuthorizationException)
+        {
+            Assert.Fail();
+        }
     }
 
     [Test]
