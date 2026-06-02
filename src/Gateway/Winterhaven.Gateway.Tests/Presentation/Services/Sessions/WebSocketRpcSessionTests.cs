@@ -85,7 +85,7 @@ internal sealed class WebSocketRpcSessionTests
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync().ConfigureAwait(false);
 
-        userAccountService.When(x => x.LogoutAsync(Arg.Any<CancellationToken>())).Do(_ => throw new AuthorizationException("User is not authorized."));
+        userAccountService.When(x => x.LogoutAsync(Arg.Any<CancellationToken>())).Do(_ => throw new AuthorizationException());
 
         // Act
         try
@@ -97,6 +97,38 @@ internal sealed class WebSocketRpcSessionTests
             // Expected because cancellation propagates up intentionally to WebSocketMiddleware. This is because we let the exception through for the websocket middleware to handle it, as it's a protocol concern.
         }
         catch (AuthorizationException)
+        {
+            Assert.Fail();
+        }
+    }
+
+    [Test]
+    public async Task RunAsyncShouldNotThrowInvalidOperationExceptionWhenExceptionIsThrowFromStreamJsonRpc()
+    {
+        // Arrange
+        var socket = Substitute.For<WebSocket>();
+        socket.State.Returns(WebSocketState.Open);
+
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync().ConfigureAwait(false);
+
+        var exception = new InvalidOperationException()
+        {
+            Source = "StreamJsonRpc",
+        };
+
+        targetRegistrar.When(x => x.RegisterTargets(Arg.Any<JsonRpc>())).Do(_ => throw exception);
+
+        // Act & Assert
+        try
+        {
+            await session.RunAsync(socket, cts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected because cancellation propagates up intentionally to WebSocketMiddleware. This is because we let the exception through for the websocket middleware to handle it, as it's a protocol concern.
+        }
+        catch (InvalidOperationException)
         {
             Assert.Fail();
         }

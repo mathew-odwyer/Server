@@ -67,11 +67,11 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
 
         userSessionContext.Invalidated += OnSessionInvalidated;
 
-        targetRegistrar.RegisterTargets(rpc);
-        rpc.StartListening();
-
         try
         {
+            targetRegistrar.RegisterTargets(rpc);
+            rpc.StartListening();
+
             // Finally, start the session, and only complete once the socket has disconnected.
             await rpc.Completion.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
