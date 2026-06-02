@@ -9,7 +9,7 @@ using Winterhaven.Gateway.Presentation.Attributes;
 namespace Winterhaven.Gateway.Presentation.Targets.Users;
 
 [ExcludeFromCodeCoverage]
-internal record UserRegisterRpcParameters(
+internal sealed record UserRegisterRpcParameters(
     string Username,
     string Password,
     string EmailAddress);
