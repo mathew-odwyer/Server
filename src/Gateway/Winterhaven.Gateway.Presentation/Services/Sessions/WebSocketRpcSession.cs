@@ -57,7 +57,14 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
         using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionContext, handler);
 
         // Ensure that the connection will be closed if the user session is invalidated.
-        void OnSessionInvalidated(object? sender, EventArgs e) => rpc.Dispose();
+        void OnSessionInvalidated(object? sender, EventArgs e)
+        {
+            if (!rpc.IsDisposed)
+            {
+                rpc.Dispose();
+            }
+        }
+
         userSessionContext.Invalidated += OnSessionInvalidated;
 
         targetRegistrar.RegisterTargets(rpc);

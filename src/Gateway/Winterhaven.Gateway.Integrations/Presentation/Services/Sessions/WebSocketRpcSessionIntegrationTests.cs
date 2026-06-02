@@ -3,25 +3,38 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using Winterhaven.Gateway.Presentation;
+using Winterhaven.Gateway.Integrations.Services.Users;
 
 namespace Winterhaven.Gateway.Integrations.Presentation.Services.Sessions;
 
 [TestFixture]
-internal sealed class WebSocketRpcSessionIntegrationTests
+internal sealed class WebSocketRpcSessionIntegrationTests : TestHostBase
 {
-    private IHost host;
+    [Test]
+    public async Task RunAsyncShouldDisconnectClientWhenSessionHasInvalidated()
+    {
+        // Arrange
+        await using var connection = await CreateConnectionAsync(null);
+
+        UserSessionManager.EstablishUserSession(MockUserSessionManager.DummySession);
+
+        // Act
+        UserSessionManager.InvalidateUserSession();
+
+        // TODO: This needs to be addressed, Task.Delay is a hack solution.
+        await Task.Delay(500);
+
+        // Assert
+        Assert.That(connection.State, Is.EqualTo(WebSocketState.Closed));
+    }
 
     [Test]
     public async Task RunAsyncShouldRespondToValidJsonRpcRequest()
     {
         // Arrange
-        var client = host.GetTestServer().CreateWebSocketClient();
+        var client = Host.GetTestServer().CreateWebSocketClient();
         var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
             .ConfigureAwait(false);
 
@@ -53,7 +66,7 @@ internal sealed class WebSocketRpcSessionIntegrationTests
     public async Task RunAsyncShouldReturnErrorForMalformedJson()
     {
         // Arrange
-        var client = host.GetTestServer().CreateWebSocketClient();
+        var client = Host.GetTestServer().CreateWebSocketClient();
         var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
             .ConfigureAwait(false);
 
@@ -74,7 +87,7 @@ internal sealed class WebSocketRpcSessionIntegrationTests
     public async Task RunAsyncShouldReturnErrorForUnknownMethod()
     {
         // Arrange
-        var client = host.GetTestServer().CreateWebSocketClient();
+        var client = Host.GetTestServer().CreateWebSocketClient();
         var webSocket = await client.ConnectAsync(new Uri("ws://localhost/ws"), CancellationToken.None)
             .ConfigureAwait(false);
 
@@ -100,23 +113,8 @@ internal sealed class WebSocketRpcSessionIntegrationTests
     }
 
     [SetUp]
-    public async Task Setup()
-    {
-        var builder = new HostBuilder();
-        builder.ConfigureWebHost(x =>
-        {
-            x.ConfigureAppConfiguration(x => x.AddJsonFile("appsettings.Tests.json", optional: false));
-            x.UseTestServer();
-            x.UseStartup<Startup>();
-        });
-        host = builder.Build();
-        await host.StartAsync().ConfigureAwait(false);
-    }
+    public async Task Setup() => await SetUpTestHost();
 
     [TearDown]
-    public async Task TearDown()
-    {
-        await host.StopAsync().ConfigureAwait(false);
-        host.Dispose();
-    }
+    public async Task TearDown() => await TearDownTestHost();
 }
