@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.WebSockets;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -48,7 +47,7 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
         {
             JsonSerializerOptions = new JsonSerializerOptions()
             {
-                UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+                ////UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
                 PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             }
         };

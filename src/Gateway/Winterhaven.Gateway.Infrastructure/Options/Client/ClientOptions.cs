@@ -7,8 +7,8 @@ namespace Winterhaven.Gateway.Infrastructure.Options.Client;
 internal sealed class ClientOptions
 {
     [Required]
-    public required string ApiKey { get; init; }
+    public required string ApiKey { get; set; }
 
     [Required]
-    public required string BaseUrl { get; init; }
+    public required string BaseUrl { get; set; }
 }
