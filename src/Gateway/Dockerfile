@@ -3,6 +3,10 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 
 WORKDIR /app
 
+# TODO: Remove this, hack fix for this issue: https://github.com/reactiveui/refit/issues/2114
+# Stops NuGet from going online to check revocation status
+ENV NUGET_CERT_REVOCATION_MODE=offline
+
 # Copy shared properties first
 COPY Directory.Build.props .
 COPY Directory.Packages.props .
@@ -25,6 +29,9 @@ COPY Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj \
 
 COPY Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj \
     Gateway/Winterhaven.Gateway.Integrations/
+
+COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
+    Common/Winterhaven.Common/
 
 COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
     Common/Winterhaven.Common.DTOs/

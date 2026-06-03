@@ -33,6 +33,9 @@ jobs:
 
       - name: Build
         run: dotnet build src/Server.slnx --no-incremental
+        env: # TODO: Remove this, hack fix for this issue: https://github.com/reactiveui/refit/issues/2114
+          # Stops NuGet from going online to check revocation status
+          NUGET_CERT_REVOCATION_MODE: offline          
 
       - name: Test with Coverage
         run: |

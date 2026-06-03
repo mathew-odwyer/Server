@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#59] - Server Sends Error Messages to Client (_by [@mathew-odwyer]_).
 
+### Changed
+
+- [#174] - Consolidated Version Numbering Logic (_by [@mathew-odwyer]_).
+
 ## [v0.3.0] - 27-05-2026
 
 ### Added
@@ -75,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#174]: https://github.com/mathew-odwyer/Server/issues/174
 [#95]: https://github.com/mathew-odwyer/Server/issues/95
 [#59]: https://github.com/mathew-odwyer/Server/issues/59
 [#96]: https://github.com/mathew-odwyer/Server/issues/96

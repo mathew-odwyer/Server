@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +16,7 @@ using Winterhaven.API.Presentation.Mappings.Players;
 using Winterhaven.API.Presentation.Mappings.Users;
 using Winterhaven.API.Presentation.Transformers;
 using Winterhaven.API.Presentation.Transformers.Security;
+using Winterhaven.Common;
 
 namespace Winterhaven.API.Presentation.Extensions;
 
@@ -104,12 +104,7 @@ internal static class ServiceCollectionExtensions
         services.AddHealthChecks();
         services.AddEndpointsApiExplorer();
 
-        string version = Assembly
-            .GetExecutingAssembly()
-            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-            ?.InformationalVersion ?? "unknown";
-
-        services.AddOpenApi($"v{version}", x => x
+        services.AddOpenApi($"v{BuildInformation.Version}", x => x
                 .AddDocumentTransformer<WinterhavenTransformer>()
                 .AddDocumentTransformer<BearerSecuritySchemeTransformer>()
                 .AddDocumentTransformer<ApiKeySecuritySchemeTransformer>());
