@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Refit;
+using Winterhaven.Common;
 using Winterhaven.Common.Extensions;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Users;
@@ -66,13 +66,9 @@ public static class ServiceCollectionExtensions
         .ConfigureHttpClient((provider, client) =>
         {
             var settings = provider.GetRequiredService<IOptions<ClientOptions>>();
-            string version = Assembly
-                .GetExecutingAssembly()
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion ?? "unknown";
 
             client.BaseAddress = new Uri($"{settings.Value.BaseUrl}/{route}");
-            client.DefaultRequestHeaders.UserAgent.ParseAdd($"Winterhaven Gateway/{version}");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($"Winterhaven Gateway/{BuildInformation.Version}");
         })
         .AddHttpMessageHandler<AccessTokenHandler>();
 
