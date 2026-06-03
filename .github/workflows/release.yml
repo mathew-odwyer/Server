@@ -5,6 +5,10 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g. v1.2.3)"
+        required: true
 
 permissions:
   contents: write
@@ -13,6 +17,7 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,10 +29,23 @@ jobs:
 
       - name: Extract Version
         id: version
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="${GITHUB_REF_NAME}"
+          fi
+          echo "TAG=${TAG}" >> $GITHUB_OUTPUT
+          echo "VERSION=${TAG#v}" >> $GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore src/Server.slnx
+        env: # TODO: Remove this, hack fix for this issue: https://github.com/reactiveui/refit/issues/2114
+          # Stops NuGet from going online to check revocation status
+          NUGET_CERT_REVOCATION_MODE: offline
 
       - name: Build
-        run: dotnet build src/Server.slnx --configuration Release /p:Version=${{ steps.version.outputs.VERSION }}
+        run: dotnet build src/Server.slnx --configuration Release /p:Version=${{ steps.version.outputs.VERSION }} --no-restore
 
       - name: Test
         run: dotnet test src/Server.slnx --configuration Release --no-build --verbosity normal
@@ -35,7 +53,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ steps.version.outputs.TAG }}
+          name: Release ${{ steps.version.outputs.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

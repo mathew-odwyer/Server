@@ -15,6 +15,7 @@ jobs:
   build_server:
     name: Build Server
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Checkout
@@ -40,6 +41,7 @@ jobs:
   build_room:
     name: Build Room Service
     runs-on: windows-latest
+    if: github.event.pull_request.draft == false
 
     steps:
       - uses: actions/checkout@v4
