@@ -1,4 +1,4 @@
-# Build Stage
+﻿# Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 
 WORKDIR /app
@@ -22,6 +22,9 @@ COPY API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj \
 
 COPY API/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj \
     API/Winterhaven.API.Tests/
+
+COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
+    Common/Winterhaven.Common/
 
 COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
     Common/Winterhaven.Common.DTOs/

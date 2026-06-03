@@ -26,6 +26,9 @@ COPY Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj \
 COPY Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj \
     Gateway/Winterhaven.Gateway.Integrations/
 
+COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
+    Common/Winterhaven.Common/
+
 COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
     Common/Winterhaven.Common.DTOs/
 
