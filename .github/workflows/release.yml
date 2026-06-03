@@ -34,7 +34,7 @@ jobs:
           NUGET_CERT_REVOCATION_MODE: offline
 
       - name: Build
-        run: dotnet build src/Server.slnx --configuration Release /p:Version=${{ steps.version.outputs.VERSION }}
+        run: dotnet build src/Server.slnx --configuration Release /p:Version=${{ steps.version.outputs.VERSION }} --no-restore
 
       - name: Test
         run: dotnet test src/Server.slnx --configuration Release --no-build --verbosity normal
