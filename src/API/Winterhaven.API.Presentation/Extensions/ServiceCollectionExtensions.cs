@@ -80,7 +80,7 @@ internal static class ServiceCollectionExtensions
             x.Filters.Add<ForbiddenAccessExceptionFilterAttribute>();
             x.Filters.Add<ResourceNotFoundExceptionFilterAttribute>();
             x.Filters.Add<ConflictExceptionFilterAttribute>();
-            x.Filters.Add<UnauthorizedExceptionFilterAttribute>();
+            x.Filters.Add<AuthorizationExceptionFilterAttribute>();
             x.Filters.Add<AcceptCaseActionFilterAttribute>();
         });
 

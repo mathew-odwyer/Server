@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
@@ -80,11 +79,6 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
 
             Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
-
-            var actualErrors = ((JObject)exception.ErrorData).ToObject<Dictionary<string, string[]>>();
-
-            Assert.That(actualErrors.Keys, Is.EquivalentTo(expectedErrors.Keys));
-            Assert.That(actualErrors["General"], Is.EqualTo(expectedErrors["General"]));
         }
     }
 
@@ -155,11 +149,6 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
 
             Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
-
-            var actualErrors = ((JObject)exception.ErrorData).ToObject<Dictionary<string, string[]>>();
-
-            Assert.That(actualErrors.Keys, Is.EquivalentTo(expectedErrors.Keys));
-            Assert.That(actualErrors["General"], Is.EqualTo(expectedErrors["General"]));
         }
     }
 

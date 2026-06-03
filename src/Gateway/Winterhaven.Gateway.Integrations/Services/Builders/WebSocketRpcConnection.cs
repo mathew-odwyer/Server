@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
+using System.Text.Json;
 using System.Threading.Tasks;
 using StreamJsonRpc;
 
@@ -8,6 +9,8 @@ namespace Winterhaven.Gateway.Integrations.Services.Builders;
 
 internal sealed class WebSocketRpcConnection : IAsyncDisposable
 {
+    private SystemTextJsonFormatter formatter;
+
     private bool isDisposed;
 
     private JsonRpc jsonRpc;
@@ -23,14 +26,23 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
         this.webSocket = webSocket ?? throw new ArgumentNullException(nameof(webSocket));
         ArgumentNullException.ThrowIfNull(proxyTypes);
 
-        messageHandler = new WebSocketMessageHandler(this.webSocket);
+        formatter = new SystemTextJsonFormatter()
+        {
+            JsonSerializerOptions = new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                ////UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+            }
+        };
+
+        messageHandler = new WebSocketMessageHandler(this.webSocket, formatter);
         jsonRpc = new JsonRpc(messageHandler);
 
         typeToProxyMap = [];
 
         var proxyOptions = new JsonRpcProxyOptions()
         {
-            ServerRequiresNamedArguments = true
+            ServerRequiresNamedArguments = true,
         };
 
         foreach (var type in proxyTypes)
@@ -67,6 +79,12 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
         {
             await messageHandler.DisposeAsync().ConfigureAwait(false);
             messageHandler = null;
+        }
+
+        if (formatter != null)
+        {
+            formatter.Dispose();
+            formatter = null;
         }
 
         if (typeToProxyMap != null)
