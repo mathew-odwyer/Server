@@ -10,6 +10,6 @@ internal sealed class BuildInformationTests
     public void VersionShouldReturnValidSemVer()
     {
         string version = BuildInformation.Version;
-        Assert.DoesNotThrow(() => Version.Parse(version));
+        Assert.DoesNotThrow(() => Version.Parse(version), $"Version '{version}' is not a valid semantic version.");
     }
 }
