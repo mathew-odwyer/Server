@@ -27,6 +27,12 @@ jobs:
         id: version
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
 
+      - name: Restore
+        run: dotnet restore src/Server.slnx
+        env: # TODO: Remove this, hack fix for this issue: https://github.com/reactiveui/refit/issues/2114
+          # Stops NuGet from going online to check revocation status
+          NUGET_CERT_REVOCATION_MODE: offline
+
       - name: Build
         run: dotnet build src/Server.slnx --configuration Release /p:Version=${{ steps.version.outputs.VERSION }}
 
