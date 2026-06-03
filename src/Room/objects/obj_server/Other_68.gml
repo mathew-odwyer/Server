@@ -10,7 +10,6 @@ switch (type)
 		break;
 		
 	case network_type_disconnect:
-		user_logout(undefined, _server.get_connection(socket));
 		_server.remove_connection(socket);
 		break;
 		

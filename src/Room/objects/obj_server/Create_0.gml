@@ -33,14 +33,5 @@ _protocol = new JsonRpcServerProtocol(_server);
 /// @inheritdoc
 notify = _protocol.notify;
 
-_protocol.register("health.ping", health_ping);
-_protocol.register("health.heartbeat", health_heartbeat);
-
-_protocol.register("user.register", user_register);
-_protocol.register("user.login", user_login);
-_protocol.register("user.refresh", user_refresh);
-_protocol.register("user.logout", user_logout);
-
 _protocol.register("player.action", player_action);
-
 _protocol.register("chat.send_message", chat_send_message);
