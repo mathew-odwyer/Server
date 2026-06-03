@@ -59,5 +59,5 @@ public sealed class ValidationException : Exception
     /// <value>
     ///   The errors that describe the reason for the <see cref="ValidationException"/>.
     /// </value>
-    public IDictionary<string, string[]>? Errors { get; }
+    public IDictionary<string, string[]>? Errors { get; init; }
 }

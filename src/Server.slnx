@@ -33,10 +33,10 @@
     <Project Path="Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj" Id="20cb5f40-08c9-424c-80aa-d6974ce4b194">
       <Platform Project="x64" />
     </Project>
-    <Project Path="Common/Winterhaven.Common/Winterhaven.Common.csproj" Id="eb80781c-be20-45b9-a6a6-709cb22890fc">
+    <Project Path="Common/Winterhaven.Common.Tests/Winterhaven.Common.Tests.csproj">
       <Platform Project="x64" />
     </Project>
-    <Project Path="Winterhaven.Common.Tests/Winterhaven.Common.Tests.csproj" Id="395b7b17-bda7-4023-bb67-a8027577d107">
+    <Project Path="Common/Winterhaven.Common/Winterhaven.Common.csproj" Id="eb80781c-be20-45b9-a6a6-709cb22890fc">
       <Platform Project="x64" />
     </Project>
   </Folder>
