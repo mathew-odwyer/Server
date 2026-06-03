@@ -21,5 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
+    <ProjectReference Include="..\Winterhaven.Common\Winterhaven.Common.csproj" />
   </ItemGroup>
 </Project>
