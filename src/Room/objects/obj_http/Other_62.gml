@@ -65,12 +65,6 @@ else if (status == 0 && http_status >= 200 && http_status <= 299)
 }
 else
 {
-	// Convert to JSON-RPC error response.
-	if (options[$ "jsonrpc_error"] ?? false)
-	{
-		data = _convert_problem_details_to_jsonrpc(http_status, data);
-	}
-	
 	// Failure
 	reject(data);
 }
