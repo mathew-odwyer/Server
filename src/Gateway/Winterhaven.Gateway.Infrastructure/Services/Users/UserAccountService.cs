@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Winterhaven.Brokering;
+using Winterhaven.Brokering.Events.Users;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Users;
@@ -12,6 +14,8 @@ namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 internal sealed class UserAccountService : IUserAccountService
 {
     private readonly ILogger<UserAccountService> logger;
+
+    private readonly IMessageBus messageBus;
 
     private readonly IUserAccountClient userAccountClient;
 
@@ -26,13 +30,15 @@ internal sealed class UserAccountService : IUserAccountService
         IUserAccountClient userAccountClient,
         IUserSessionManager userSessionManager,
         IUserSessionContext userSessionContext,
-        IUserTokenParser userTokenParser)
+        IUserTokenParser userTokenParser,
+        IMessageBus messageBus)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userAccountClient = userAccountClient ?? throw new ArgumentNullException(nameof(userAccountClient));
         this.userSessionManager = userSessionManager ?? throw new ArgumentNullException(nameof(userSessionManager));
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
         this.userTokenParser = userTokenParser ?? throw new ArgumentNullException(nameof(userTokenParser));
+        this.messageBus = messageBus ?? throw new ArgumentNullException(nameof(messageBus));
     }
 
     public async Task<UserLoginResult> LoginAsync(string username, string password, CancellationToken cancellationToken = default)
@@ -63,6 +69,10 @@ internal sealed class UserAccountService : IUserAccountService
         var userSession = userTokenParser.ParseUserToken(response.AccessToken);
         userSessionManager.EstablishUserSession(userSession);
 
+        await messageBus.PublishAsync(new UserLoggedInEvent(
+            Username: userSession.Username,
+            AccessToken: userSession.AccessToken), cancellationToken).ConfigureAwait(false);
+
         logger.LogInformation("User logged in: '{Username}'", username);
 
         return new UserLoginResult(
@@ -82,6 +92,9 @@ internal sealed class UserAccountService : IUserAccountService
 
         await userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
         userSessionManager.InvalidateUserSession();
+
+        await messageBus.PublishAsync(new UserLoggedOutEvent(
+            Username: username), cancellationToken).ConfigureAwait(false);
 
         logger.LogInformation("User logout attempt completed for username '{Username}'", username);
     }
