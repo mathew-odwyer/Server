@@ -55,7 +55,7 @@ internal sealed class UserAccountService : IUserAccountService
         //// If some how this user session is already authenticated, let's just return a 401
         //// as this should never really happen in production unless there's a bug or someone
         //// is probing the server.
-        if (userSessionContext.IsAuthenticated || userSessionContext.UserSession == null)
+        if (userSessionContext.IsAuthenticated)
         {
             // Choose error over debug, we should know about it just to be safe.
             logger.LogError("An active session already exists for user: '{Username}'", username);
