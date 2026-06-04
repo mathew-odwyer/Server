@@ -39,12 +39,19 @@ COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
 COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
     Common/Winterhaven.Common.Extensions/
 
+COPY Brokering/Winterhaven.Brokering/Winterhaven.Brokering.csproj \
+    Brokering/Winterhaven.Brokering/
+
+COPY Brokering/Winterhaven.Brokering.NATS/Winterhaven.Brokering.NATS.csproj \
+    Brokering/Winterhaven.Brokering.NATS/
+
 COPY appsettings.json Gateway/Winterhaven.Gateway.Presentation/
 
 RUN dotnet restore Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj
 
 COPY Gateway/ Gateway/
 COPY Common/ Common/
+COPY Brokering/ Brokering/
 
 RUN dotnet test Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj -c Release --no-restore
 RUN dotnet test Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj -c Release --no-restore

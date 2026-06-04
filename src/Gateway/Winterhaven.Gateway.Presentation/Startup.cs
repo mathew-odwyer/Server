@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Winterhaven.Brokering.NATS.Extensions;
 using Winterhaven.Gateway.Infrastructure.Extensions;
 using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
@@ -75,6 +76,8 @@ internal sealed class Startup
         services.AddRpcSessionTarget<UserRpcTarget>();
 
         services.AddGatewayInfrastructureServices(Configuration);
+
+        services.AddBrokeringServices();
 
         services.AddHttpContextAccessor();
     }
