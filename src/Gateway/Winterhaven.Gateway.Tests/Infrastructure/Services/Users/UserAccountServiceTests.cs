@@ -98,6 +98,17 @@ internal sealed class UserAccountServiceTests
         const string username = "test-user";
         const string password = "MyCoolPassword";
 
+        userSessionManager.InvalidateUserSession();
+        userSessionContext.IsAuthenticated.Returns(false);
+
+        var testSession = new UserSession(
+            UserAccountId: Guid.NewGuid(),
+            Username: username,
+            AccessToken: "accessToken",
+            ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
+
+        userTokenParser.ParseUserToken("accessToken").Returns(testSession);
+
         // Act
         await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
 
@@ -244,14 +255,31 @@ internal sealed class UserAccountServiceTests
     public async Task LogoutAsyncShouldInvokeMessageBusPublishAsyncWhenUserLoggedOut()
     {
         // Arrange
+        const string username = "test-user";
+        const string password = "MyCoolPassword";
+
+        userSessionManager.InvalidateUserSession();
+        userSessionContext.IsAuthenticated.Returns(false);
+
+        var testSession = new UserSession(
+            UserAccountId: Guid.NewGuid(),
+            Username: username,
+            AccessToken: "accessToken",
+            ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
+
+        userTokenParser.ParseUserToken("accessToken").Returns(testSession);
+
+        await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
+
         userSessionContext.IsAuthenticated.Returns(true);
+        userSessionContext.UserSession.Returns(testSession);
 
         // Act
         await userAccountService.LogoutAsync().ConfigureAwait(false);
 
         // Assert
         await messageBus.Received(1).PublishAsync(
-            Arg.Is<UserLoggedOutEvent>(msg => msg.Username == userSession.Username),
+            Arg.Is<UserLoggedOutEvent>(msg => msg.Username == username),
             Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
