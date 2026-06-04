@@ -1,4 +1,8 @@
-﻿namespace Winterhaven.Brokering.NATS;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Winterhaven.Brokering.NATS;
 
 internal sealed class NatsMessageBus : IMessageBus
 {
