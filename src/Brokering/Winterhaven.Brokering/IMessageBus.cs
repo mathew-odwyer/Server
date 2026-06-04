@@ -24,6 +24,8 @@ public interface IMessageBus
     /// </param>
     /// <param name="cancellationToken">
     /// </param>
+    /// <returns>
+    /// </returns>
     public Task PublishAsync<TData>(TData data, CancellationToken cancellationToken = default)
         where TData : class;
 
@@ -35,6 +37,8 @@ public interface IMessageBus
     /// </param>
     /// <param name="cancellationToken">
     /// </param>
+    /// <returns>
+    /// </returns>
     public Task SubscribeAsync<TData>(MessageConsumer<TData> consumer, CancellationToken cancellationToken = default)
         where TData : class;
 }
