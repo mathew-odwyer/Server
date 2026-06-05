@@ -21,6 +21,7 @@
     <PackageReference Include="NUnit3TestAdapter">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
+    <PackageReference Include="Testcontainers.Nats" />
     <PackageReference Include="WireMock.Net" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
@@ -31,5 +32,11 @@
     <ProjectReference Include="..\Winterhaven.Gateway.Core.Domain\Winterhaven.Gateway.Core.Domain.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Infrastructure\Winterhaven.Gateway.Infrastructure.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Presentation\Winterhaven.Gateway.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="nats-test.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

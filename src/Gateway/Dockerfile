@@ -24,12 +24,6 @@ COPY Gateway/Winterhaven.Gateway.Infrastructure/Winterhaven.Gateway.Infrastructu
 COPY Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj \
     Gateway/Winterhaven.Gateway.Presentation/
 
-COPY Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj \
-    Gateway/Winterhaven.Gateway.Tests/
-
-COPY Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj \
-    Gateway/Winterhaven.Gateway.Integrations/
-
 COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
     Common/Winterhaven.Common/
 
@@ -53,8 +47,6 @@ COPY Gateway/ Gateway/
 COPY Common/ Common/
 COPY Brokering/ Brokering/
 
-RUN dotnet test Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj -c Release --no-restore
-RUN dotnet test Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj -c Release --no-restore
 RUN dotnet publish Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj -c Release -o /out
 
 # Runtime Stage

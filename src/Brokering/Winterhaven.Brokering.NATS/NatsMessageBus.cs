@@ -1,12 +1,124 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using NATS.Client.Core;
 
 namespace Winterhaven.Brokering.NATS;
 
-// TODO: Update UserRpcTargetIntegrationTests to check that the NATS message bus is actually working and delivering messages to subscribers, instead of just being a no-op implementation. This will help ensure that the NATS integration is functioning correctly and that messages are being published and consumed as expected.
 internal sealed class NatsMessageBus : IMessageBus
 {
-    public Task PublishAsync<TData>(TData data, CancellationToken cancellationToken = default) where TData : class => Task.CompletedTask;
+    private readonly INatsConnection connection;
 
-    public Task SubscribeAsync<TData>(MessageConsumer<TData> consumer, CancellationToken cancellationToken = default) where TData : class => Task.CompletedTask;
+    private readonly ILogger<NatsMessageBus> logger;
+
+    public NatsMessageBus(ILogger<NatsMessageBus> logger, INatsConnection connection)
+    {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+    }
+
+    public async Task PublishAsync<TData>(TData data, CancellationToken cancellationToken = default)
+        where TData : class
+    {
+        ArgumentNullException.ThrowIfNull(data);
+
+        string subject = typeof(TData).Name;
+
+        logger.LogTrace("Publishing message of type '{MessageType}' to subject '{Subject}'", typeof(TData).FullName, subject);
+
+        await connection.PublishAsync(
+            subject: subject,
+            data: data,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IAsyncDisposable> SubscribeAsync<TData>(
+        MessageConsumer<TData> consumer,
+        CancellationToken cancellationToken = default)
+        where TData : class
+    {
+        ArgumentNullException.ThrowIfNull(consumer);
+
+        string subject = typeof(TData).Name;
+
+        logger.LogTrace("Subscribing to '{MessageType}' on '{Subject}'", typeof(TData).FullName, subject);
+
+        //// Link to the caller's token so either the caller cancelling or DisposeAsync()
+        //// can stop the loop. Without this we'd have no owned handle to cancel on disposal.
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+        var subscription = await connection
+            .SubscribeCoreAsync<TData>(subject, cancellationToken: cts.Token)
+            .ConfigureAwait(false);
+
+        var loopTask = Task.Run(async () =>
+        {
+            // Exceptions are caught per-message so a single bad message doesn't kill the entire subscription. OperationCanceledException is intentionally let through so the loop exits cleanly when the token is cancelled.
+            await foreach (var msg in subscription.Msgs.ReadAllAsync(cts.Token).ConfigureAwait(false))
+            {
+                if (msg.Data is null) continue;
+
+                try
+                {
+                    await consumer(msg.Data, cts.Token).ConfigureAwait(false);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    logger.LogError(ex, "Unhandled exception in consumer for subject '{Subject}'", subject);
+                }
+            }
+        }, cts.Token);
+
+        return new NatsSubscription<TData>(subscription, cts, loopTask, logger);
+    }
+
+    private class NatsSubscription<TData> : IAsyncDisposable
+        where TData : class
+    {
+        private readonly CancellationTokenSource cts;
+
+        private readonly ILogger<NatsMessageBus> logger;
+
+        private readonly Task loopTask;
+
+        private readonly INatsSub<TData> subscription;
+
+        public NatsSubscription(
+            INatsSub<TData> subscription,
+            CancellationTokenSource cts,
+            Task loopTask,
+            ILogger<NatsMessageBus> logger)
+        {
+            this.subscription = subscription;
+            this.cts = cts;
+            this.loopTask = loopTask;
+            this.logger = logger;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            //// Cancel first, then wait for the loop to fully exit before disposing the NATS subscription.
+            //// This avoids a race where the loop tries to read from a disposed channel.
+            await cts.CancelAsync().ConfigureAwait(false);
+
+            try
+            {
+                await loopTask.ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected if the token is cancelled.
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Exception during subscription loop teardown");
+                throw;
+            }
+
+            await subscription.DisposeAsync().ConfigureAwait(false);
+            cts.Dispose();
+        }
+    }
 }

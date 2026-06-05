@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Winterhaven.Brokering;
@@ -12,7 +13,10 @@ namespace Winterhaven.Brokering;
 /// <param name="data">
 ///   The message data that the consumer will process.
 /// </param>
-public delegate Task MessageConsumer<TData>(TData data)
+/// <param name="cancellationToken">
+///   The cancellation token used to cancel the operation.
+/// </param>
+public delegate Task MessageConsumer<TData>(TData data, CancellationToken cancellationToken = default)
     where TData : class;
 
 /// <summary>
@@ -59,6 +63,8 @@ public interface IMessageBus
     /// <remarks>
     ///   The contract does not guarantee that the consumer will receive all messages of the specified type, as it is possible for some messages to be missed due to various reasons such as network issues or subscriber downtime. Therefore, it is the responsibility of the implementation to document the delivery guarantees and behavior of the message bus, including any potential limitations or scenarios where messages may not be delivered to subscribers.
     /// </remarks>
-    public Task SubscribeAsync<TData>(MessageConsumer<TData> consumer, CancellationToken cancellationToken = default)
+    public Task<IAsyncDisposable> SubscribeAsync<TData>(
+        MessageConsumer<TData> consumer,
+        CancellationToken cancellationToken = default)
         where TData : class;
 }
