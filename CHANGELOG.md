@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
 - [#103] - Player Sessions via NATS (_by [@mathew-odwyer]_).
   - [#105] - Event Contracts and Application Interfaces (_by [@mathew-odwyer]_).
+  - [#104] - NATS Infrastructure Foundation (_by [@mathew-odwyer]_).
+  - [#107] - Room Service Event Consumers and Publising (_by [@mathew-odwyer]_).
 
 ### Fixed
 
@@ -83,6 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#107]: https://github.com/mathew-odwyer/Server/issues/107
+[#104]: https://github.com/mathew-odwyer/Server/issues/104
 [#103]: https://github.com/mathew-odwyer/Server/issues/103
 [#105]: https://github.com/mathew-odwyer/Server/issues/105
 [#111]: https://github.com/mathew-odwyer/Server/issues/111
