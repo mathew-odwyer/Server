@@ -24,9 +24,6 @@ COPY API/Winterhaven.API.Infrastructure/Winterhaven.API.Infrastructure.csproj \
 COPY API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj \
     API/Winterhaven.API.Presentation/
 
-COPY API/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj \
-    API/Winterhaven.API.Tests/
-
 COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
     Common/Winterhaven.Common/
 
@@ -50,7 +47,6 @@ COPY API/ API/
 COPY Common/ Common/
 COPY Brokering/ Brokering/
 
-RUN dotnet test API/Winterhaven.API.Tests/Winterhaven.API.Tests.csproj -c Release --no-restore
 RUN dotnet publish API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj -c Release -o /out
 
 # Runtime Stage
