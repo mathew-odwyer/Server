@@ -75,9 +75,8 @@ internal sealed class Startup
         services.AddRpcSessionTarget<HealthRpcTarget>();
         services.AddRpcSessionTarget<UserRpcTarget>();
 
+        services.AddBrokeringServices(Configuration);
         services.AddGatewayInfrastructureServices(Configuration);
-
-        services.AddBrokeringServices();
 
         services.AddHttpContextAccessor();
     }
