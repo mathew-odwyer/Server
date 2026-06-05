@@ -27,6 +27,9 @@
     </Project>
   </Folder>
   <Folder Name="/Brokering/">
+    <Project Path="Brokering/Winterhaven.Brokering.NATS.Tests/Winterhaven.Brokering.NATS.Tests.csproj" Id="2b5bc6b6-099d-4946-a269-66adedfe0e9a">
+      <Platform Project="x64" />
+    </Project>
     <Project Path="Brokering/Winterhaven.Brokering.NATS/Winterhaven.Brokering.NATS.csproj" Id="12d8804c-2c64-4873-984b-4dc399755ae3">
       <Platform Project="x64" />
     </Project>
