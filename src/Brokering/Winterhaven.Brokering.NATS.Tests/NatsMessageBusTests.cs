@@ -174,7 +174,7 @@ internal sealed class NatsMessageBusTests
         var received = new List<UserLoggedInEvent>();
         var consumerInvoked = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        Task consumer(UserLoggedInEvent data, CancellationToken _ = default)
+        Task Consumer(UserLoggedInEvent data, CancellationToken _ = default)
         {
             received.Add(data);
             consumerInvoked.TrySetResult();
@@ -184,7 +184,7 @@ internal sealed class NatsMessageBusTests
         var expected = new UserLoggedInEvent(Username: "test-user", AccessToken: "token");
 
         // Act
-        await messageBus.SubscribeAsync<UserLoggedInEvent>(consumer).ConfigureAwait(false);
+        await messageBus.SubscribeAsync<UserLoggedInEvent>(Consumer).ConfigureAwait(false);
 
         await channel.Writer.WriteAsync(new NatsMsg<UserLoggedInEvent> { Data = expected })
             .ConfigureAwait(false);
@@ -211,7 +211,7 @@ internal sealed class NatsMessageBusTests
         var sentinelReceived = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var sentinel = new UserLoggedInEvent(Username: "sentinel", AccessToken: "sentinel");
 
-        Task consumer(UserLoggedInEvent data, CancellationToken _ = default)
+        Task Consumer(UserLoggedInEvent data, CancellationToken _ = default)
         {
             callCount++;
             if (data == sentinel) sentinelReceived.TrySetResult();
@@ -219,7 +219,7 @@ internal sealed class NatsMessageBusTests
         }
 
         // Act
-        await messageBus.SubscribeAsync<UserLoggedInEvent>(consumer).ConfigureAwait(false);
+        await messageBus.SubscribeAsync<UserLoggedInEvent>(Consumer).ConfigureAwait(false);
 
         await channel.Writer.WriteAsync(new NatsMsg<UserLoggedInEvent> { Data = null })
             .ConfigureAwait(false);
@@ -247,7 +247,7 @@ internal sealed class NatsMessageBusTests
             Data = new UserLoggedInEvent(Username: "test-user", AccessToken: "token")
         };
 
-        Task consumer(UserLoggedInEvent _, CancellationToken ct = default)
+        Task Consumer(UserLoggedInEvent _)
         {
             callCount++;
             if (callCount == 1) throw new InvalidOperationException("boom");
@@ -256,7 +256,7 @@ internal sealed class NatsMessageBusTests
         }
 
         // Act
-        await messageBus.SubscribeAsync<UserLoggedInEvent>(consumer).ConfigureAwait(false);
+        await messageBus.SubscribeAsync<UserLoggedInEvent>((_, _) => Consumer(null)).ConfigureAwait(false);
 
         await channel.Writer.WriteAsync(message).ConfigureAwait(false);
         await channel.Writer.WriteAsync(message).ConfigureAwait(false);
@@ -281,14 +281,14 @@ internal sealed class NatsMessageBusTests
 
         var consumerCalled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        Task consumer(UserLoggedInEvent _, CancellationToken ct = default)
+        Task Consumer(UserLoggedInEvent _, CancellationToken ct = default)
         {
             consumerCalled.TrySetResult();
             throw new OperationCanceledException(ct);
         }
 
         // Act
-        var subscription = await messageBus.SubscribeAsync<UserLoggedInEvent>(consumer)
+        var subscription = await messageBus.SubscribeAsync<UserLoggedInEvent>(Consumer)
             .ConfigureAwait(false);
 
         await channel.Writer.WriteAsync(new NatsMsg<UserLoggedInEvent>
