@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Winterhaven.API.Presentation.Authentication;
 using Winterhaven.API.Presentation.Filters;
+using Winterhaven.API.Presentation.Formatters;
 using Winterhaven.API.Presentation.Mappings.Maps;
 using Winterhaven.API.Presentation.Mappings.Players;
 using Winterhaven.API.Presentation.Mappings.Users;
@@ -41,16 +42,22 @@ internal static class ServiceCollectionExtensions
                     ? WinterhavenBearerDefaults.ServerAuthenticationScheme
                     : JwtBearerDefaults.AuthenticationScheme)
         .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(WinterhavenBearerDefaults.ServerAuthenticationScheme, null)
-        .AddJwtBearer(x => x.TokenValidationParameters = new TokenValidationParameters
+        .AddJwtBearer(x =>
         {
-            ClockSkew = TimeSpan.Zero,
-            ValidateLifetime = configuration.GetValue<bool>("JwtOptions:ValidateLifetime"),
-            ValidateIssuerSigningKey = configuration.GetValue<bool>("JwtOptions:ValidateIssuerSigningKey"),
-            ValidateIssuer = configuration.GetValue<bool>("JwtOptions:ValidateIssuer"),
-            ValidateAudience = configuration.GetValue<bool>("JwtOptions:ValidateAudience"),
-            ValidIssuer = configuration["JwtOptions:Issuer"],
-            ValidAudience = configuration["JwtOptions:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Secret"]!)),
+            // Stop .NET from altering claims (for example, "username" ends up lowercase when it should be normalized).
+            x.MapInboundClaims = false;
+
+            x.TokenValidationParameters = new TokenValidationParameters
+            {
+                ClockSkew = TimeSpan.Zero,
+                ValidateLifetime = configuration.GetValue<bool>("JwtOptions:ValidateLifetime"),
+                ValidateIssuerSigningKey = configuration.GetValue<bool>("JwtOptions:ValidateIssuerSigningKey"),
+                ValidateIssuer = configuration.GetValue<bool>("JwtOptions:ValidateIssuer"),
+                ValidateAudience = configuration.GetValue<bool>("JwtOptions:ValidateAudience"),
+                ValidIssuer = configuration["JwtOptions:Issuer"],
+                ValidAudience = configuration["JwtOptions:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Secret"]!)),
+            };
         });
 
         return services;
@@ -74,6 +81,8 @@ internal static class ServiceCollectionExtensions
 
         services.AddControllersWithViews(x =>
         {
+            x.InputFormatters.Insert(0, new SnakeCaseJsonInputFormatter());
+
             x.Filters.Add<UnhandledExceptionFilterAttribute>();
             x.Filters.Add<InvalidModelStateActionFilterAttribute>();
             x.Filters.Add<ValidationExceptionFilterAttribute>();
