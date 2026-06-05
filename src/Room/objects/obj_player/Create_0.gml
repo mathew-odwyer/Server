@@ -1,11 +1,9 @@
 /// @description Initialize default parameters.
 
-/// @instancevar {Struct.ClientConnection} connection The client connection associated with the player.
-
 event_inherited();
 
-/// @type {String}
-/// @description The player entity identifier.
+/// @type {String} 
+/// @description The player identifier.
 identifier = "";
 
 /// @type {Id.DsQueue}
@@ -35,8 +33,6 @@ enqueue_actions = function(actions)
 /// @param {Any} params The parameters of the procedure to send to the `player`
 notify = function(procedure, params)
 {
-	/// @feather ignore once GM1041
-    obj_server.notify(connection, procedure, params);
 }
 
 alarm[0] = tick_rate;
