@@ -111,10 +111,4 @@ internal sealed class WebSocketRpcSessionIntegrationTests : TestHostBase
         Assert.That(response, Does.Contain("\"id\":1"));
         Assert.That(response, Does.Contain("\"error\""));
     }
-
-    [SetUp]
-    public async Task Setup() => await SetUpTestHost();
-
-    [TearDown]
-    public async Task TearDown() => await TearDownTestHost();
 }
