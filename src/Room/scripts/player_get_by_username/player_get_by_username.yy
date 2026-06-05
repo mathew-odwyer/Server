@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"player_get_by_username",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"player_get_by_username",
+  "parent":{
+    "name":"Players",
+    "path":"folders/Scripts/Players.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
