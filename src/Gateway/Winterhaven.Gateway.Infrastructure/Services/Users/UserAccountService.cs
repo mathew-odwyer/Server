@@ -73,7 +73,7 @@ internal sealed class UserAccountService : IUserAccountService
             Username: userSession.Username,
             AccessToken: userSession.AccessToken), cancellationToken).ConfigureAwait(false);
 
-        logger.LogInformation("User logged in: '{Username}'", username);
+        logger.LogInformation("User logged in: '{Username}'", userSession.Username);
 
         return new UserLoginResult(
             RefreshToken: response.RefreshToken);
@@ -87,6 +87,7 @@ internal sealed class UserAccountService : IUserAccountService
         }
 
         string username = userSessionContext.UserSession.Username;
+        string accessToken = userSessionContext.UserSession.AccessToken;
 
         logger.LogDebug("Attempting to log out user with username '{Username}'", username);
 
@@ -94,7 +95,8 @@ internal sealed class UserAccountService : IUserAccountService
         userSessionManager.InvalidateUserSession();
 
         await messageBus.PublishAsync(new UserLoggedOutEvent(
-            Username: username), cancellationToken).ConfigureAwait(false);
+            Username: username,
+            AccessToken: accessToken), cancellationToken).ConfigureAwait(false);
 
         logger.LogInformation("User logout attempt completed for username '{Username}'", username);
     }

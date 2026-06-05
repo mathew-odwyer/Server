@@ -6,5 +6,9 @@
 /// <param name="Username">
 ///   The username of the user who has logged out.
 /// </param>
+/// <param name="AccessToken">
+///   The access token of the user who has logged out.
+/// </param>
 public sealed record UserLoggedOutEvent(
-    string Username);
+    string Username,
+    string AccessToken);

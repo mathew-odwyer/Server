@@ -279,7 +279,9 @@ internal sealed class UserAccountServiceTests
 
         // Assert
         await messageBus.Received(1).PublishAsync(
-            Arg.Is<UserLoggedOutEvent>(msg => msg.Username == username),
+            Arg.Is<UserLoggedOutEvent>(msg =>
+                msg.Username == username &&
+                msg.AccessToken == "accessToken"),
             Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 

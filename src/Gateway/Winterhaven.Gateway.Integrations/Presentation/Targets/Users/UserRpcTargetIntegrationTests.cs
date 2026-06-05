@@ -36,6 +36,8 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
             AccessToken: CreateAccessToken(identifier, username),
             ExpiresAt: DateTime.UtcNow.AddMinutes(15)));
 
+        string accessToken = UserSessionManager.UserSession.AccessToken;
+
         var eventReceived = new TaskCompletionSource<bool>();
 
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(500));
@@ -49,6 +51,7 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(e.Username, Is.EqualTo(username));
+                Assert.That(e.AccessToken, Is.EqualTo(accessToken));
             }
 
             return Task.CompletedTask;
