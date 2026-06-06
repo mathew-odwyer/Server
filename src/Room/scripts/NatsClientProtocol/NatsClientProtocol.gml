@@ -101,7 +101,7 @@ function NatsClientProtocol(send, options = {}) constructor
 	{
 		var info = json_parse(parameters[1]);
 		
-		_logger.log(log_type.information, $"Connecting to: '{info[$ "server_name"]}'...");
+		_logger.log(log_type.debug, $"Connecting to: '{info[$ "server_name"]}'...");
 		
 		var connect = {
 			verbose: _options[$ "verbose"] ?? false,

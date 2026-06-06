@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using Winterhaven.API.Core.Domain.Attributes.Users;
 
 namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
@@ -7,6 +8,9 @@ namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 /// </summary>
 /// <seealso cref="IRequest"/>
 /// <seealso cref="IBaseRequest"/>
+/// <param name="PlayerId">
+///   The identifier of the player to update.
+/// </param>
 /// <param name="X">
 ///   The optional X-coordinate of the player.
 /// </param>
@@ -15,6 +19,7 @@ namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 /// </param>
 [Authorize]
 public sealed record UpdatePlayerRequest(
+    Guid PlayerId,
     double? X,
     double? Y)
     : IRequest;

@@ -32,9 +32,10 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
 
         UserSessionManager.EstablishUserSession(new UserSession(
             UserAccountId: identifier,
-            Username: username,
             AccessToken: CreateAccessToken(identifier, username),
             ExpiresAt: DateTime.UtcNow.AddMinutes(15)));
+
+        string accessToken = UserSessionManager.UserSession.AccessToken;
 
         var eventReceived = new TaskCompletionSource<bool>();
 
@@ -48,7 +49,8 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(e.Username, Is.EqualTo(username));
+                Assert.That(e.Identifier, Is.EqualTo(identifier));
+                Assert.That(e.AccessToken, Is.EqualTo(accessToken));
             }
 
             return Task.CompletedTask;
@@ -123,7 +125,6 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
 
         UserSessionManager.EstablishUserSession(new UserSession(
             UserAccountId: identifier,
-            Username: username,
             AccessToken: CreateAccessToken(identifier, username),
             ExpiresAt: DateTime.UtcNow.AddMinutes(15)));
 
@@ -170,7 +171,6 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(e.Username, Is.EqualTo(username));
                 Assert.That(e.AccessToken, Is.EqualTo(apiResponse.AccessToken));
             }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Winterhaven.API.Core.Application.Requests.Players.GetPlayer;
 using Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
+using Winterhaven.API.Presentation.Authentication;
 using Winterhaven.Common.DTOs.Players;
 
 namespace Winterhaven.API.Presentation.Controllers.Players;
@@ -49,7 +50,7 @@ public sealed class PlayerController : ApiControllerBase
     ///   Returns a <see cref="NoContentResult"/> when the player is successfully updated.
     /// </returns>
     [HttpPatch]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = WinterhavenBearerDefaults.ServerAuthenticationScheme)]
     public async Task<IActionResult> Update([FromBody] UpdatePlayerRequestDto requestDto, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(requestDto);

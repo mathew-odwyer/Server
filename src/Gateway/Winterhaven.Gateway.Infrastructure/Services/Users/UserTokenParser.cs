@@ -18,7 +18,6 @@ internal sealed class UserTokenParser : IUserTokenParser
 
         return new UserSession(
             UserAccountId: Guid.Parse(claims.First(c => c.Type == "identifier").Value),
-            Username: claims.First(x => x.Type == "username").Value,
             AccessToken: userToken,
             ExpiresAt: jwt.ValidTo);
     }

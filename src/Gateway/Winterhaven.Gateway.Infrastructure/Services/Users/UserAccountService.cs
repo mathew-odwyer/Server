@@ -70,10 +70,10 @@ internal sealed class UserAccountService : IUserAccountService
         userSessionManager.EstablishUserSession(userSession);
 
         await messageBus.PublishAsync(new UserLoggedInEvent(
-            Username: userSession.Username,
+            Identifier: userSession.UserAccountId,
             AccessToken: userSession.AccessToken), cancellationToken).ConfigureAwait(false);
 
-        logger.LogInformation("User logged in: '{Username}'", username);
+        logger.LogInformation("User logged in with ID: '{UserAccountId}'", userSession.UserAccountId);
 
         return new UserLoginResult(
             RefreshToken: response.RefreshToken);
@@ -86,17 +86,19 @@ internal sealed class UserAccountService : IUserAccountService
             return;
         }
 
-        string username = userSessionContext.UserSession.Username;
+        var userAccountId = userSessionContext.UserSession.UserAccountId;
+        string accessToken = userSessionContext.UserSession.AccessToken;
 
-        logger.LogDebug("Attempting to log out user with username '{Username}'", username);
+        logger.LogDebug("Attempting to log out user with ID: '{UserAccountId}'", userAccountId);
 
         await userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
         userSessionManager.InvalidateUserSession();
 
         await messageBus.PublishAsync(new UserLoggedOutEvent(
-            Username: username), cancellationToken).ConfigureAwait(false);
+            Identifier: userAccountId,
+            AccessToken: accessToken), cancellationToken).ConfigureAwait(false);
 
-        logger.LogInformation("User logout attempt completed for username '{Username}'", username);
+        logger.LogInformation("User logout attempt completed for user with ID: '{Username}'", userAccountId);
     }
 
     public async Task<UserRefreshTokenResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
@@ -108,7 +110,7 @@ internal sealed class UserAccountService : IUserAccountService
         if (!userSessionContext.IsAuthenticated || userSessionContext.UserSession == null)
         {
             // Choose warning over debug, we should know about it just to be safe.
-            logger.LogWarning("User with name: '{Username}' attempted to refresh their session but is not authenticated.", userSessionContext.UserSession?.Username ?? "Unknown User");
+            logger.LogWarning("User with ID '{UserAccountId}' attempted to refresh their session but is not authenticated.", userSessionContext.UserSession?.UserAccountId ?? Guid.Empty);
             throw new AuthorizationException("You must be logged in to refresh your session.");
         }
 
@@ -117,14 +119,14 @@ internal sealed class UserAccountService : IUserAccountService
             RefreshToken = refreshToken,
         };
 
-        logger.LogDebug("Attempting to refresh user session for user: '{Username}'", userSessionContext.UserSession.Username);
+        logger.LogDebug("Attempting to refresh user session for user with ID: '{UserAccountId}'", userSessionContext.UserSession.UserAccountId);
 
         var response = await userAccountClient.RefreshTokenAsync(dto, cancellationToken).ConfigureAwait(false);
         var newSession = userTokenParser.ParseUserToken(response.AccessToken);
 
         userSessionManager.RefreshUserSession(newSession);
 
-        logger.LogInformation("User session refreshed for user: '{Username}'", userSessionContext.UserSession.Username);
+        logger.LogInformation("User session refreshed for user with ID: '{Username}'", userSessionContext.UserSession.UserAccountId);
 
         return new UserRefreshTokenResult(
             RefreshToken: response.RefreshToken);

@@ -103,7 +103,6 @@ internal sealed class UserAccountServiceTests
 
         var testSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
-            Username: username,
             AccessToken: "accessToken",
             ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 
@@ -114,7 +113,9 @@ internal sealed class UserAccountServiceTests
 
         // Assert
         await messageBus.Received(1).PublishAsync(
-            Arg.Is<UserLoggedInEvent>(msg => msg.Username == username),
+            Arg.Is<UserLoggedInEvent>(msg =>
+                msg.Identifier == testSession.UserAccountId &&
+                msg.AccessToken == testSession.AccessToken),
             Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
@@ -152,12 +153,11 @@ internal sealed class UserAccountServiceTests
         userSessionContext.IsAuthenticated.Returns(false);
 
         // Act
-        await userAccountService.LoginAsync(userSession.Username, "password").ConfigureAwait(false);
+        await userAccountService.LoginAsync("user", "password").ConfigureAwait(false);
 
         // Assert
         userSessionManager.Received(1).EstablishUserSession(
             Arg.Is<UserSession>(x =>
-                x.Username == userSession.Username &&
                 x.UserAccountId == userSession.UserAccountId &&
                 x.AccessToken == userSession.AccessToken &&
                 x.ExpiresAt == userSession.ExpiresAt));
@@ -170,7 +170,7 @@ internal sealed class UserAccountServiceTests
         userSessionContext.IsAuthenticated.Returns(false);
 
         // Act
-        await userAccountService.LoginAsync(userSession.Username, "password").ConfigureAwait(false);
+        await userAccountService.LoginAsync("user", "password").ConfigureAwait(false);
 
         // Assert
         userTokenParser.Received(1).ParseUserToken("accessToken");
@@ -180,7 +180,7 @@ internal sealed class UserAccountServiceTests
     public async Task LoginAsyncShouldReturnRefreshTokenWhenParametersAreNotNullEmptyOrWhiteSpace()
     {
         // Arrange
-        const string username = "test-user";
+        const string username = "user";
         const string password = "MyCoolPassword";
 
         userAccountClient.LoginUserAsync(Arg.Is<LoginUserRequestDto>(
@@ -201,12 +201,12 @@ internal sealed class UserAccountServiceTests
     [Test]
     public void LoginAsyncShouldThrowArgumentExceptionWhenPasswordIsEmpty() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("username", string.Empty));
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("user", string.Empty));
 
     [Test]
     public void LoginAsyncShouldThrowArgumentExceptionWhenPasswordIsWhiteSpace() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("username", "\r\t\n "));
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("user", "\r\t\n "));
 
     [Test]
     public void LoginAsyncShouldThrowArgumentExceptionWhenUsernameIsEmpty() =>
@@ -221,7 +221,7 @@ internal sealed class UserAccountServiceTests
     [Test]
     public void LoginAsyncShouldThrowArgumentNullExceptionWhenPasswordIsNull() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => userAccountService.LoginAsync("username", null));
+        Assert.ThrowsAsync<ArgumentNullException>(() => userAccountService.LoginAsync("user", null));
 
     [Test]
     public void LoginAsyncShouldThrowArgumentNullExceptionWhenUsernameIsNull() =>
@@ -235,7 +235,7 @@ internal sealed class UserAccountServiceTests
         userSessionContext.IsAuthenticated.Returns(true);
 
         // Act and assert
-        Assert.ThrowsAsync<AuthorizationException>(() => userAccountService.LoginAsync("username", "password"));
+        Assert.ThrowsAsync<AuthorizationException>(() => userAccountService.LoginAsync("user", "password"));
     }
 
     [Test]
@@ -255,7 +255,7 @@ internal sealed class UserAccountServiceTests
     public async Task LogoutAsyncShouldInvokeMessageBusPublishAsyncWhenUserLoggedOut()
     {
         // Arrange
-        const string username = "test-user";
+        const string username = "user";
         const string password = "MyCoolPassword";
 
         userSessionManager.InvalidateUserSession();
@@ -263,7 +263,6 @@ internal sealed class UserAccountServiceTests
 
         var testSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
-            Username: username,
             AccessToken: "accessToken",
             ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 
@@ -279,7 +278,9 @@ internal sealed class UserAccountServiceTests
 
         // Assert
         await messageBus.Received(1).PublishAsync(
-            Arg.Is<UserLoggedOutEvent>(msg => msg.Username == username),
+            Arg.Is<UserLoggedOutEvent>(msg =>
+                msg.Identifier == testSession.UserAccountId &&
+                msg.AccessToken == "accessToken"),
             Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
@@ -394,7 +395,6 @@ internal sealed class UserAccountServiceTests
 
         var newSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
-            Username: "cooluser",
             AccessToken: "newAccessToken",
             ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 
@@ -412,7 +412,6 @@ internal sealed class UserAccountServiceTests
         // Assert
         userSessionManager.Received(1).RefreshUserSession(
             Arg.Is<UserSession>(x =>
-                x.Username == newSession.Username &&
                 x.UserAccountId == newSession.UserAccountId &&
                 x.AccessToken == newSession.AccessToken &&
                 x.ExpiresAt == newSession.ExpiresAt));
@@ -600,7 +599,6 @@ internal sealed class UserAccountServiceTests
 
         userSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
-            Username: "cooluser",
             AccessToken: "accessToken",
             ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 

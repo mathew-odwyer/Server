@@ -14,7 +14,7 @@ _logger = new Logger(nameof(obj_map_loader));
 /// @description The map client used to fetch and load the servers map.
 _map_client = new MapClient({ x_api_key: api_key });
 
-_logger.log(log_type.information, "Loading map...");
+_logger.log(log_type.debug, "Loading map...");
 
 _map_client
 	.get_async("bellmare_tavern")

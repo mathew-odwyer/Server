@@ -10,6 +10,4 @@ with (obj_player)
     notify("player.delete_remote", other.name);
 }
 
-connection.cleanup();
-
 ds_queue_destroy(_action_queue);

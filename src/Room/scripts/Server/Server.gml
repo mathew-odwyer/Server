@@ -25,7 +25,7 @@ function Server(type, port, max_clients) constructor
 		throw new SocketError("Failed to create network server socket.");
 	}
 	
-	_logger.log(log_type.information, $"Server listening on port: '{port}'");
+	_logger.log(log_type.debug, $"Server listening on port: '{port}'");
 	
 	/// @description Adds a new client connection to the server.
 	/// @param {Id.Socket} socket The socket identifier used to create the client connection.
@@ -40,7 +40,7 @@ function Server(type, port, max_clients) constructor
 		var connection = new ClientConnection(socket);
 		_socket_to_connection_map[$ string(socket)] = connection;
 		
-		_logger.log(log_type.information, $"Socket connected with ID: '{socket}'!");
+		_logger.log(log_type.debug, $"Socket connected with ID: '{socket}'!");
 		
 		return connection;
 	}
@@ -62,7 +62,7 @@ function Server(type, port, max_clients) constructor
 			connection.cleanup();
 			struct_remove(_socket_to_connection_map, string(socket));
 			
-			_logger.log(log_type.information, $"Socket disconnected with ID: '{socket}'");
+			_logger.log(log_type.debug, $"Socket disconnected with ID: '{socket}'");
 		}
 	}
 	
@@ -74,7 +74,7 @@ function Server(type, port, max_clients) constructor
 			throw new ObjectDisposedError(nameof(ClientConnection));
 		}
 		
-		_logger.log(log_type.information, "Removing all connections from the server...");
+		_logger.log(log_type.debug, "Removing all connections from the server...");
 		
 		var names = struct_get_names(_socket_to_connection_map);
 		var length = array_length(names);

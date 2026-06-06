@@ -18,7 +18,8 @@ function http_async(url, type, body = {}, options = {})
 	
 	headers[? "Accept"] = "application/json, application/problem+json, text/xml";
 	headers[? "Content-Type"] = "application/json";
-	headers[? "Accept-Case"] = "snake_case";
+    headers[? "Content-Case"] = "snake_case";
+    headers[? "Accept-Case"] = "snake_case";
 	
 	if (struct_exists(options, "bearer"))
 	{

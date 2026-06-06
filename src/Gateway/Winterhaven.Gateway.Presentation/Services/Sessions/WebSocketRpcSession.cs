@@ -104,7 +104,7 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
                 //// For exampale, after a failed token refresh.
                 if (userSessionContext.UserSession != null)
                 {
-                    logger.LogWarning(ex, "Logout request for '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession.Username);
+                    logger.LogWarning(ex, "Logout request for user with ID '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession.UserAccountId);
                 }
             }
         }

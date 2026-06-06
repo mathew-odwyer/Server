@@ -6,12 +6,10 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
-using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 using Winterhaven.API.Core.Application.Work;
-using Winterhaven.API.Core.Application.Work.Users;
+using Winterhaven.API.Core.Application.Work.Players;
 using Winterhaven.API.Core.Domain.Entities.Players;
-using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 namespace Winterhaven.API.Tests.Core.Application.Requests.Players.UpdatePlayer;
@@ -25,35 +23,29 @@ internal sealed class UpdatePlayerRequestHandlerTests
 
     private Player player;
 
-    private IActorContext actorContext;
+    private IPlayerRepository playerRepository;
 
     private IUnitOfWork unitOfWork;
 
     private IUnitOfWorkFactory unitOfWorkFactory;
 
-    private IUserAccountRepository userAccountRepository;
-
-    private Actor actor;
-
-    private UserAccount userAccount;
-
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(null, unitOfWorkFactory, actorContext, userAccountRepository));
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(null, unitOfWorkFactory, playerRepository));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountContextIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, null, userAccountRepository));
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, null));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, null, actorContext, userAccountRepository));
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, null, playerRepository));
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountRepositoryIsNull() => Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, actorContext, null));
+    public void ConstructorShouldThrowArgumentNullExceptionWhenPlayerRepositoryIsNull() => Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, null));
 
     [Test]
     public async Task HandleShouldOnlyUpdateProvidedCoordinatesWhenPartialRequestIsGiven()
@@ -61,7 +53,7 @@ internal sealed class UpdatePlayerRequestHandlerTests
         // Arrange
         double originalY = player.Y;
 
-        var request = new UpdatePlayerRequest(X: 99, Y: null);
+        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: 99, Y: null);
 
         // Act
         await handler.Handle(request, default).ConfigureAwait(false);
@@ -74,38 +66,25 @@ internal sealed class UpdatePlayerRequestHandlerTests
     }
 
     [Test]
-    public async Task HandleShouldAccessActorContextWhenRequestIsNotNull()
-    {
-        // Arrange
-        var request = new UpdatePlayerRequest(X: 0, Y: 0);
-
-        // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
-
-        // Assert
-        _ = actorContext.Received(1).Actor;
-    }
-
-    [Test]
     public async Task HandleShouldInvokeGetByIdAsyncWithActorIdWhenRequestIsNotNull()
     {
         // Arrange
-        var request = new UpdatePlayerRequest(X: 0, Y: 0);
+        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: 0, Y: 0);
 
         // Act
         await handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        await userAccountRepository.Received(1).GetByIdAsync(actor.Id, Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        await playerRepository.Received(1).GetByIdAsync(player.Id, Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
-    public void HandleShouldThrowResourceNotFoundExceptionWhenUserAccountRepositoryReturnsNull()
+    public void HandleShouldThrowResourceNotFoundExceptionWhenPlayerRepositoryyReturnsNull()
     {
         // Arrange
-        var request = new UpdatePlayerRequest(X: 0, Y: 0);
+        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: 0, Y: 0);
 
-        userAccountRepository.GetByIdAsync(actor.Id).ReturnsNull();
+        playerRepository.GetByIdAsync(player.Id).ReturnsNull();
 
         // Act and assert
         Assert.ThrowsAsync<ResourceNotFoundException>(() => handler.Handle(request, default));
@@ -121,6 +100,7 @@ internal sealed class UpdatePlayerRequestHandlerTests
     {
         // Arrange
         var request = new UpdatePlayerRequest(
+            PlayerId: player.Id,
             X: 0,
             Y: 0);
 
@@ -136,6 +116,7 @@ internal sealed class UpdatePlayerRequestHandlerTests
     {
         // Arrange
         var request = new UpdatePlayerRequest(
+            PlayerId: player.Id,
             X: 0,
             Y: 0);
 
@@ -152,7 +133,7 @@ internal sealed class UpdatePlayerRequestHandlerTests
         double originalX = player.X;
         double originalY = player.Y;
 
-        var request = new UpdatePlayerRequest(X: null, Y: null);
+        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: null, Y: null);
 
         // Act
         await handler.Handle(request, default).ConfigureAwait(false);
@@ -169,6 +150,7 @@ internal sealed class UpdatePlayerRequestHandlerTests
     {
         // Arrange
         var request = new UpdatePlayerRequest(
+            player.Id,
             X: 1,
             Y: 2);
 
@@ -188,6 +170,7 @@ internal sealed class UpdatePlayerRequestHandlerTests
     {
         // Arrange
         var request = new UpdatePlayerRequest(
+            PlayerId: player.Id,
             X: 0,
             Y: 0);
 
@@ -208,33 +191,18 @@ internal sealed class UpdatePlayerRequestHandlerTests
         logger = Substitute.For<ILogger<UpdatePlayerRequestHandler>>();
         unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
         unitOfWork = Substitute.For<IUnitOfWork>();
-        actorContext = Substitute.For<IActorContext>();
-        userAccountRepository = Substitute.For<IUserAccountRepository>();
+        playerRepository = Substitute.For<IPlayerRepository>();
 
         unitOfWorkFactory.CreateUnitOfWork().Returns(unitOfWork);
 
-        actor = new Actor()
+        player = new Player()
         {
             Id = Guid.NewGuid(),
             Name = "Player",
-            Type = ActorType.User,
         };
 
-        player = new Player()
-        {
-            Name = "Player",
-        };
+        playerRepository.GetByIdAsync(player.Id).Returns(player);
 
-        userAccount = new UserAccount()
-        {
-            Id = actor.Id,
-            EmailAddress = "test@gmail.com",
-            Username = player.Name,
-            Player = player,
-        };
-
-        actorContext.Actor.Returns(actor);
-        userAccountRepository.GetByIdAsync(actor.Id).Returns(userAccount);
-        handler = new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, actorContext, userAccountRepository);
+        handler = new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, playerRepository);
     }
 }

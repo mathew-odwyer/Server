@@ -419,87 +419,90 @@ for (var i = 0; i<ds_list_size(layers); i++) {
 
 			}
 			break;
-		case "tile":
-			// data
-			var raw = layer_map[? "data"];
-			var encoding = layer_map[? "encoding"];
-			var compression = layer_map[? "compression"];
+        case "tile":
+            // data
+            var raw = layer_map[? "data"];
+            var encoding = layer_map[? "encoding"];
+            var compression = layer_map[? "compression"];
 
-			if (encoding == "base64") {
-				var trimmed = string_replace_all(raw, " ", "");
-				var decoded = buffer_base64_decode(trimmed);
+            if (encoding == "base64") {
+                var trimmed = string_replace_all(raw, " ", "");
+                var decoded = buffer_base64_decode(trimmed);
 
-				if (compression == "zlib") {
-					var data = buffer_decompress(decoded);
-					buffer_delete(decoded);
-				}
-				else if (is_undefined(compression)) {
-					var data = decoded;
-				}
-				else {
-					show_error("Compression " + compression + " not supported! Use zlib or raw", true)
-				}
-			}
-			else {
-				show_error("Encoding " + encoding + " not supported! use base64", true);
-			}
+                if (compression == "zlib") {
+                    var data = buffer_decompress(decoded);
+                    buffer_delete(decoded);
+                }
+                else if (is_undefined(compression)) {
+                    var data = decoded;
+                }
+                else {
+                    show_error("Compression " + compression + " not supported! Use zlib or raw", true)
+                }
+            }
+            else {
+                show_error("Encoding " + encoding + " not supported! use base64", true);
+            }
 
-			// prep assets
-			var new_tilelayers = ds_map_create();
+            // prep assets
+            var new_tilelayers = ds_map_create();
 
-			// loop through data
-			buffer_seek(data, buffer_seek_start, 0);
-			for (var j=0; j<buffer_get_size(data)/4; j++) {
-				var tile_raw = buffer_read(data, buffer_u32);
-				if (tile_raw == 0) continue;
+            // loop through data
+            buffer_seek(data, buffer_seek_start, 0);
+            for (var j=0; j<buffer_get_size(data)/4; j++) {
+                var tile_raw = buffer_read(data, buffer_u32);
+                if (tile_raw == 0) continue;
 
-				// TODO: filter tile number here
-				var tile = tile_raw & 0x1fffffff;
-				var props = tile_raw >> 29;
-				var gmprops = propmap[props];
+                // TODO: filter tile number here
+                var tile = tile_raw & 0x1fffffff;
+                var props = tile_raw >> 29;
+                var gmprops = propmap[props];
 
-				// fetch tile data
-				var tileset_name = tilesets_gid[tile];
-				var tileset_map = tilesets[? tileset_name];
+                // fetch tile data
+                var tileset_name = tilesets_gid[tile];
+                var tileset_map = tilesets[? tileset_name];
 
-				// calculate tile number
-				var tile_number = tile - tileset_map[? "firstgid"];
-				tile_number |= gmprops << 28; // re-attach tile properties
+                // calculate tile number
+                var tile_number = tile - tileset_map[? "firstgid"];
+                tile_number |= gmprops << 28; // re-attach tile properties
 
-				// calculate tilelayer, create tilemap if it doesn't exist
-				var tilelayer = new_tilelayers[? tileset_name]
-				if (is_undefined(tilelayer)) {
-					var tileset = asset_get_index(tileset_name);
-					if (tileset == -1) {
-						show_error("Could not find tileset " + tileset_name, true);
-					}
-					var tilewidth = layer_map[? "width"];
-					var tileheight = layer_map[? "height"];
+                // calculate tilelayer, create tilemap if it doesn't exist
+                var tilelayer = new_tilelayers[? tileset_name]
+                if (is_undefined(tilelayer)) {
+                    var tileset = asset_get_index(tileset_name);
+                    if (tileset == -1) {
+                        show_error("Could not find tileset " + tileset_name, true);
+                    }
+                    var tilewidth = layer_map[? "width"];
+                    var tileheight = layer_map[? "height"];
 
-					var offsetx = layer_map[? "offsetx"]
-					var offsety = layer_map[? "offsety"]
-					if (is_undefined(offsetx)) offsetx = 0;
-					if (is_undefined(offsety)) offsety = 0;
-					tilelayer = layer_tilemap_create(layer_id, offsetx, offsety, tileset, tilewidth, tileheight);
-					new_tilelayers[? tileset_name] = tilelayer;
-				}
+                    var offsetx = layer_map[? "offsetx"]
+                    var offsety = layer_map[? "offsety"]
+                    if (is_undefined(offsetx)) offsetx = 0;
+                    if (is_undefined(offsety)) offsety = 0;
+                    tilelayer = layer_tilemap_create(layer_id, offsetx, offsety, tileset, tilewidth, tileheight);
+                    new_tilelayers[? tileset_name] = tilelayer;
+                }
 
-				// calculate cell position
-				var xscale = map_attribs[? "tilewidth"] / tileset_map[? "tilewidth"];
-				var yscale = map_attribs[? "tileheight"] / tileset_map[? "tileheight"];
-				var xcell = floor(xscale * (j % layer_map[? "width"]));
-				var ycell = floor(yscale * (j / layer_map[? "width"]));
+                // calculate cell position
+                var xscale = map_attribs[? "tilewidth"] / tileset_map[? "tilewidth"];
+                var yscale = map_attribs[? "tileheight"] / tileset_map[? "tileheight"];
+                var xcell = floor(xscale * (j % layer_map[? "width"]));
+                var ycell = floor(yscale * (j / layer_map[? "width"]));
 
-				// assign tile
-				tilemap_set(tilelayer, tile_number, xcell, ycell);
-				//show_debug_message(tileset_name + ": " + string(tile) + "("+string(gmprops)+"), " + string(xcell) + ", " + string(ycell));
-			}
+                // assign tile (skip if base index is outside tileset bounds)
+                var base_tile_number = tile_number & 0x0fffffff;
+                var tileset_info = tileset_get_info(tilemap_get_tileset(tilelayer));
+                if (base_tile_number > 0 && base_tile_number < tileset_info.tile_count) {
+                    tilemap_set(tilelayer, tile_number, xcell, ycell);
+                }
+            }
 
-			buffer_delete(data);
-			ds_map_destroy(new_tilelayers);
+            buffer_delete(data);
+            ds_map_destroy(new_tilelayers);
 
-			break;
-		default:
+            break;
+        default:
 			show_error("Layer type " + type + " not supported", true);
 	}
 
@@ -987,7 +990,7 @@ while (DerpXmlRead_Read()) {
 	var type = DerpXmlRead_CurType();
 	var value =  DerpXmlRead_CurValue();
 
-  show_debug_message("Parse to skip: " + type + ", " + value)
+//  show_debug_message("Parse to skip: " + type + ", " + value)
 	if (type == DerpXmlType_CloseTag and value == tag_to_skip) {
 		return;
 	}
@@ -1031,7 +1034,7 @@ while (DerpXmlRead_Read()) {
 				default:
 					show_debug_message("Tiled Parse error: OpenTag " + value + " not supported in tileset");
 					break;	
-				// show_error("Tiled Parse error: OpenTag " + value + " not supported in tileset", true)
+				show_error("Tiled Parse error: OpenTag " + value + " not supported in tileset", true)
 			}
 			break;
 		case DerpXmlType_CloseTag:

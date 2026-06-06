@@ -37,7 +37,7 @@ internal sealed class UserSessionManagerTests
     public void DisposeShouldStopExpiryTimerSoSessionIsNotInvalidatedAfterwards()
     {
         var expiry = TimeSpan.FromMinutes(15);
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow() + expiry);
+        var session = new UserSession(Guid.NewGuid(), "token", timeProvider.GetUtcNow() + expiry);
         authenticator.EstablishUserSession(session);
 
         authenticator.Dispose();
@@ -48,7 +48,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldDoNothingWhenSessionIsAlreadyExpired()
     {
-        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow().AddMinutes(-1));
+        var expiredSession = new UserSession(Guid.NewGuid(), "token", timeProvider.GetUtcNow().AddMinutes(-1));
 
         authenticator.EstablishUserSession(expiredSession);
 
@@ -62,7 +62,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldFireEstablishedEvent()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
         int raisedCount = 0;
         authenticator.Established += (_, _) => raisedCount++;
 
@@ -74,7 +74,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldMarkAsAuthenticated()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         authenticator.EstablishUserSession(session);
 
@@ -84,8 +84,8 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldNotFireEstablishedEventWhenAlreadyAuthenticated()
     {
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
-        var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
+        var session1 = new UserSession(Guid.NewGuid(), "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "token2", DateTimeOffset.UtcNow.AddMinutes(16));
         authenticator.EstablishUserSession(session1);
 
         int raisedCount = 0;
@@ -98,7 +98,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldNotFireEstablishedEventWhenSessionIsAlreadyExpired()
     {
-        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow().AddMinutes(-1));
+        var expiredSession = new UserSession(Guid.NewGuid(), "token", timeProvider.GetUtcNow().AddMinutes(-1));
         int raisedCount = 0;
         authenticator.Established += (_, _) => raisedCount++;
 
@@ -110,8 +110,8 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldNotOverrideExistingSession()
     {
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
-        var session2 = new UserSession(Guid.NewGuid(), "User2", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
+        var session1 = new UserSession(Guid.NewGuid(), "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "token2", DateTimeOffset.UtcNow.AddMinutes(16));
         authenticator.EstablishUserSession(session1);
 
         authenticator.EstablishUserSession(session2);
@@ -122,7 +122,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldSetUserSession()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         authenticator.EstablishUserSession(session);
 
@@ -136,7 +136,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void EstablishUserSessionShouldThrowObjectDisposedExceptionWhenDisposed()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.Dispose();
 
         Assert.Throws<ObjectDisposedException>(() => authenticator.EstablishUserSession(session));
@@ -145,7 +145,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void InvalidateUserSessionShouldClearUserSession()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.EstablishUserSession(session);
 
         authenticator.InvalidateUserSession();
@@ -164,7 +164,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void InvalidateUserSessionShouldFireInvalidatedEvent()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.EstablishUserSession(session);
 
         int raisedCount = 0;
@@ -177,7 +177,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void InvalidateUserSessionShouldMarkAsNotAuthenticated()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.EstablishUserSession(session);
 
         authenticator.InvalidateUserSession();
@@ -211,8 +211,8 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void RefreshUserSessionShouldDoNothingWhenNewSessionIsAlreadyExpired()
     {
-        var validSession = new UserSession(Guid.NewGuid(), "User1", "token1", timeProvider.GetUtcNow().AddMinutes(15));
-        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token2", timeProvider.GetUtcNow().AddMinutes(-1));
+        var validSession = new UserSession(Guid.NewGuid(), "token1", timeProvider.GetUtcNow().AddMinutes(15));
+        var expiredSession = new UserSession(Guid.NewGuid(), "token2", timeProvider.GetUtcNow().AddMinutes(-1));
         authenticator.EstablishUserSession(validSession);
 
         authenticator.RefreshUserSession(expiredSession);
@@ -227,7 +227,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void RefreshUserSessionShouldDoNothingWhenNotAuthenticated()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
 
         authenticator.RefreshUserSession(session);
 
@@ -237,8 +237,8 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void RefreshUserSessionShouldFireRefreshedEvent()
     {
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
-        var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
+        var session1 = new UserSession(Guid.NewGuid(), "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "token2", DateTimeOffset.UtcNow.AddMinutes(16));
         authenticator.EstablishUserSession(session1);
 
         int raisedCount = 0;
@@ -251,8 +251,8 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void RefreshUserSessionShouldNotFireRefreshedEventWhenNewSessionIsAlreadyExpired()
     {
-        var validSession = new UserSession(Guid.NewGuid(), "User1", "token1", timeProvider.GetUtcNow().AddMinutes(15));
-        var expiredSession = new UserSession(Guid.NewGuid(), "User1", "token2", timeProvider.GetUtcNow().AddMinutes(-1));
+        var validSession = new UserSession(Guid.NewGuid(), "token1", timeProvider.GetUtcNow().AddMinutes(15));
+        var expiredSession = new UserSession(Guid.NewGuid(), "token2", timeProvider.GetUtcNow().AddMinutes(-1));
         authenticator.EstablishUserSession(validSession);
 
         int raisedCount = 0;
@@ -265,7 +265,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void RefreshUserSessionShouldNotFireRefreshedEventWhenNotAuthenticated()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
         int raisedCount = 0;
         authenticator.Refreshed += (_, _) => raisedCount++;
 
@@ -278,8 +278,8 @@ internal sealed class UserSessionManagerTests
     public void RefreshUserSessionShouldResetExpiryTimer()
     {
         var now = timeProvider.GetUtcNow();
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", now + TimeSpan.FromMinutes(5));
-        var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", now + TimeSpan.FromMinutes(20));
+        var session1 = new UserSession(Guid.NewGuid(), "token1", now + TimeSpan.FromMinutes(5));
+        var session2 = new UserSession(Guid.NewGuid(), "token2", now + TimeSpan.FromMinutes(20));
         authenticator.EstablishUserSession(session1);
 
         timeProvider.Advance(TimeSpan.FromMinutes(4));
@@ -302,7 +302,7 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void RefreshUserSessionShouldThrowObjectDisposedExceptionWhenDisposed()
     {
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session = new UserSession(Guid.NewGuid(), "token", DateTimeOffset.UtcNow.AddMinutes(15));
         authenticator.Dispose();
 
         Assert.Throws<ObjectDisposedException>(() => authenticator.RefreshUserSession(session));
@@ -311,8 +311,8 @@ internal sealed class UserSessionManagerTests
     [Test]
     public void RefreshUserSessionShouldUpdateSessionWhenAuthenticated()
     {
-        var session1 = new UserSession(Guid.NewGuid(), "User1", "token1", DateTimeOffset.UtcNow.AddMinutes(15));
-        var session2 = new UserSession(Guid.NewGuid(), "User1", "token2", DateTimeOffset.UtcNow.AddMinutes(16));
+        var session1 = new UserSession(Guid.NewGuid(), "token1", DateTimeOffset.UtcNow.AddMinutes(15));
+        var session2 = new UserSession(Guid.NewGuid(), "token2", DateTimeOffset.UtcNow.AddMinutes(16));
         authenticator.EstablishUserSession(session1);
 
         authenticator.RefreshUserSession(session2);
@@ -324,7 +324,7 @@ internal sealed class UserSessionManagerTests
     public void SessionShouldBeInvalidatedAutomaticallyWhenTimerElapses()
     {
         var expiry = TimeSpan.FromMinutes(15);
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow() + expiry);
+        var session = new UserSession(Guid.NewGuid(), "token", timeProvider.GetUtcNow() + expiry);
         authenticator.EstablishUserSession(session);
 
         timeProvider.Advance(expiry);
@@ -340,7 +340,7 @@ internal sealed class UserSessionManagerTests
     public void SessionShouldFireInvalidatedEventWhenTimerElapses()
     {
         var expiry = TimeSpan.FromMinutes(15);
-        var session = new UserSession(Guid.NewGuid(), "User1", "token", timeProvider.GetUtcNow() + expiry);
+        var session = new UserSession(Guid.NewGuid(), "token", timeProvider.GetUtcNow() + expiry);
         authenticator.EstablishUserSession(session);
 
         int raisedCount = 0;

@@ -19,7 +19,7 @@ function JsonRpcServerProtocol(server) constructor
 	/// @param {Function} callback The function to execute when the method is received.
 	register = function(procedure, callback)
 	{
-		_logger.log(log_type.information, $"Registering request handler for '{procedure}'...");
+		_logger.log(log_type.debug, $"Registering request handler for '{procedure}'...");
 		_request_to_handler_map[$ procedure] = callback;
 	}
 	
