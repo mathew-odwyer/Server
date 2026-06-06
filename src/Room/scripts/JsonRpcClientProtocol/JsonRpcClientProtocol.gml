@@ -19,7 +19,7 @@ function JsonRpcClientProtocol(send) constructor
 	/// @param {Function} callback The callback to execute when the notification arrives.
 	register = function(procedure, callback)
 	{
-		_logger.log(log_type.information, $"Registering notification handler for: '{procedure}'...");
+		_logger.log(log_type.debug, $"Registering notification handler for: '{procedure}'...");
 		_command_to_handler_map[$ procedure] = callback;
 	}
 	

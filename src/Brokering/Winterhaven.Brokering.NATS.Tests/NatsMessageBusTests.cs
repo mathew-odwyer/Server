@@ -46,12 +46,10 @@ internal sealed class NatsMessageBusTests
     [Test]
     public async Task PublishAsyncShouldInvokeNatsConnectionPublishAsyncOnceWhenInvoked()
     {
-        // Arrange
-        const string username = "test-user";
         const string accessToken = "access-token";
 
         var notification = new UserLoggedInEvent(
-            Username: username,
+            Identifier: Guid.NewGuid(),
             AccessToken: accessToken);
 
         var cancellationToken = new CancellationToken();
@@ -63,7 +61,7 @@ internal sealed class NatsMessageBusTests
         await connection.Received(1).PublishAsync(
             subject: Arg.Is(nameof(UserLoggedInEvent)),
             data: Arg.Is<UserLoggedInEvent>(x =>
-                x.Username == username &&
+                x.Identifier == notification.Identifier &&
                 x.AccessToken == accessToken),
             cancellationToken: Arg.Is(cancellationToken))
             .ConfigureAwait(false);
@@ -181,7 +179,7 @@ internal sealed class NatsMessageBusTests
             return Task.CompletedTask;
         }
 
-        var expected = new UserLoggedInEvent(Username: "test-user", AccessToken: "token");
+        var expected = new UserLoggedInEvent(Identifier: Guid.NewGuid(), AccessToken: "token");
 
         // Act
         await messageBus.SubscribeAsync<UserLoggedInEvent>(Consumer).ConfigureAwait(false);
@@ -193,10 +191,10 @@ internal sealed class NatsMessageBusTests
         channel.Writer.Complete();
 
         // Assert
-        Assert.That(received, Has.Count.EqualTo(1));
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(received[0].Username, Is.EqualTo(expected.Username));
+            Assert.That(received, Has.Count.EqualTo(1));
+            Assert.That(received[0].Identifier, Is.EqualTo(expected.Identifier));
             Assert.That(received[0].AccessToken, Is.EqualTo(expected.AccessToken));
         }
     }
@@ -209,7 +207,7 @@ internal sealed class NatsMessageBusTests
 
         int callCount = 0;
         var sentinelReceived = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        var sentinel = new UserLoggedInEvent(Username: "sentinel", AccessToken: "sentinel");
+        var sentinel = new UserLoggedInEvent(Identifier: Guid.NewGuid(), AccessToken: "sentinel");
 
         Task Consumer(UserLoggedInEvent data, CancellationToken _ = default)
         {
@@ -244,7 +242,7 @@ internal sealed class NatsMessageBusTests
 
         var message = new NatsMsg<UserLoggedInEvent>
         {
-            Data = new UserLoggedInEvent(Username: "test-user", AccessToken: "token")
+            Data = new UserLoggedInEvent(Identifier: Guid.NewGuid(), AccessToken: "token")
         };
 
         Task Consumer(UserLoggedInEvent _)
@@ -293,7 +291,7 @@ internal sealed class NatsMessageBusTests
 
         await channel.Writer.WriteAsync(new NatsMsg<UserLoggedInEvent>
         {
-            Data = new UserLoggedInEvent(Username: "test-user", AccessToken: "token")
+            Data = new UserLoggedInEvent(Identifier: Guid.NewGuid(), AccessToken: "token")
         }).ConfigureAwait(false);
 
         await consumerCalled.Task.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);

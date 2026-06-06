@@ -14,12 +14,12 @@ function user_logged_in_event_handler(event)
         return;
     }
 
-    var username = event[$ "Username"];
+    var identifier = event[$ "Identifier"];
     var access_token = event[$ "AccessToken"];
 
-    if (!is_string(username))
+    if (!is_string(identifier))
     {
-        _logger.log(log_type.error, $"Username field is required.");
+        _logger.log(log_type.error, $"Identifier field is required.");
         return;
     }
 
@@ -29,13 +29,13 @@ function user_logged_in_event_handler(event)
         return;
     }
 
-    if (player_exists(username))
+    if (player_exists(identifier))
     {
-        _logger.log(log_type.warning, $"Player '{username}' already exists in this room.");
+        _logger.log(log_type.warning, $"Player with ID '{identifier}' already exists in this room.");
         return;
     }
 
-    _logger.log(log_type.debug, $"Adding player to room with naem: '{username}'...");
+    _logger.log(log_type.debug, $"Adding player to room with ID: '{identifier}'...");
 
     var player_client = new PlayerClient({
         bearer: access_token,
@@ -48,11 +48,8 @@ function user_logged_in_event_handler(event)
             /// @type {Id.Instance.obj_player}
             var inst = instance_create_layer(response.x, response.y, "Instances", obj_player);
 
-            with (inst)
-            {
-                identifier = response.id;
-                name = response.name;
-            }
+            inst.identifier = response.id;
+            inst.name = response.name;
 
             _logger.log(log_type.information, $"Player joined room with ID: '{inst.identifier}'");
 

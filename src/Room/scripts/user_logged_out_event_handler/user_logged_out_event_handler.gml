@@ -14,12 +14,12 @@ function user_logged_out_event_handler(event)
         return;
     }
 
-    var username = event[$ "Username"];
+    var identifier = event[$ "Identifier"];
     var access_token = event[$ "AccessToken"];
 
-    if (!is_string(username))
+    if (!is_string(identifier))
     {
-        _logger.log(log_type.error, $"Username field is required.");
+        _logger.log(log_type.error, $"Identifier field is required.");
         return;
     }
 
@@ -29,15 +29,15 @@ function user_logged_out_event_handler(event)
         return;
     }
 
-    var player = player_get_by_username(username);
+    var player = player_get_by_identifier(identifier);
 
     if (player == noone)
     {
-        _logger.log(log_type.warning, $"Player '{username}' doesn't exist in this room.");
+        _logger.log(log_type.warning, $"Player with ID '{identifier}' doesn't exist in this room.");
         return;
     }
 
-    _logger.log(log_type.debug, $"Removing player from room with naem: '{username}'...");
+    _logger.log(log_type.debug, $"Removing player from room with ID: '{identifier}'...");
 
     var player_client = new PlayerClient({
         x_api_key: api_key,
@@ -49,8 +49,8 @@ function user_logged_out_event_handler(event)
         y: player.y,
     };
 
-    player_client.update_async(dto);
     instance_destroy(player);
+    player_client.update_async(dto);
 
-    _logger.log(log_type.information, $"Player removed from room with ID: '{dto.player_id}'");
+    _logger.log(log_type.information, $"Player removed from room with ID: '{player.identifier}'");
 }

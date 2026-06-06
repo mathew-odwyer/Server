@@ -1,3 +1,4 @@
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,8 @@ internal sealed class SnakeCaseJsonInputFormatter : TextInputFormatter
 
     public override bool CanRead(InputFormatterContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var request = context.HttpContext.Request;
         string? contentCase = request.Headers["Content-Case"].FirstOrDefault();
 
@@ -33,6 +36,9 @@ internal sealed class SnakeCaseJsonInputFormatter : TextInputFormatter
 
     public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
     {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(encoding);
+
         var request = context.HttpContext.Request;
 
         using var reader = new StreamReader(request.Body, encoding);

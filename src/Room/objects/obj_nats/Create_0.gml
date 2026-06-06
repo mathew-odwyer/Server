@@ -1,8 +1,20 @@
 /// @description Initialize default parameters.
 
+/// @type {String}
+/// @description The NATS host url.
 #macro nats_host "ws://nats"
 
+/// @type {Real}
+/// @description The NATS port number.
 #macro nats_port 9222
+
+/// @inheritdoc
+#macro event_publish obj_nats._protocol.publish
+
+/// @inheritdoc
+#macro event_subscribe obj_nats._protocol.subscribe
+
+instance_singleton(obj_nats);
 
 /// @type {Struct.Logger}
 /// @description The logger.

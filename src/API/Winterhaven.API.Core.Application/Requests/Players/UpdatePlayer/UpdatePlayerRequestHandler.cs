@@ -21,14 +21,14 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     private readonly ILogger<UpdatePlayerRequestHandler> logger;
 
     /// <summary>
-    ///   The unit of work factory, used to save the changes of the player to update.
-    /// </summary>
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-
-    /// <summary>
     ///   The player repository, used to fetch the player to update.
     /// </summary>
     private readonly IPlayerRepository playerRepository;
+
+    /// <summary>
+    ///   The unit of work factory, used to save the changes of the player to update.
+    /// </summary>
+    private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="UpdatePlayerRequestHandler"/> class.
@@ -82,5 +82,7 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
         player.Y = request.Y ?? player.Y;
 
         await work.SaveAsync(cancellationToken).ConfigureAwait(false);
+
+        logger.LogInformation("Player updated with ID: '{PlayerId}'", player.Id);
     }
 }

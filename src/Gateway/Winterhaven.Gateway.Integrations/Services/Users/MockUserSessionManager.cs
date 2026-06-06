@@ -9,7 +9,6 @@ internal sealed class MockUserSessionManager : IUserSessionManager, IUserSession
 {
     static MockUserSessionManager() => DummySession = new UserSession(
         UserAccountId: Guid.NewGuid(),
-        Username: "Dummy Dumb Dumb",
         AccessToken: "accessToken",
         ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 
