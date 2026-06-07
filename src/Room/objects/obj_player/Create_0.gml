@@ -28,15 +28,4 @@ enqueue_actions = function(actions)
     });
 }
 
-/// @description Sends a JSON-RPC 2.0 notification to the `player`.
-/// @param {String} procedure The procedure to send to the `player`.
-/// @param {Any} params The parameters of the procedure to send to the `player`
-notify = function(procedure, params)
-{
-    event_publish($"player.{identifier}.notify", {
-        method: procedure,
-        params: params,
-    });
-}
-
 alarm[0] = tick_rate;
