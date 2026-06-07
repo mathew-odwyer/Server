@@ -14,12 +14,12 @@ function user_logged_out_event_handler(event)
         return;
     }
 
-    var identifier = event[$ "Identifier"];
+    var identifier = event[$ "UserAccountId"];
     var access_token = event[$ "AccessToken"];
 
     if (!is_string(identifier))
     {
-        _logger.log(log_type.error, $"Identifier field is required.");
+        _logger.log(log_type.error, $"UserAccountId field is required.");
         return;
     }
 
