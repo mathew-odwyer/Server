@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
+using Winterhaven.Brokering.Events;
 
 namespace Winterhaven.Brokering.NATS;
 
@@ -18,12 +19,16 @@ internal sealed class NatsMessageBus : IMessageBus
         this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
     }
 
-    public async Task PublishAsync<TData>(TData data, CancellationToken cancellationToken = default)
-        where TData : class
+    public async Task PublishAsync<TData>(
+        TData data,
+        PublishOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TData : IEvent
     {
         ArgumentNullException.ThrowIfNull(data);
 
-        string subject = typeof(TData).Name;
+        var publishOptions = options ?? new PublishOptions();
+        string subject = TData.GetPublishEventRoute(publishOptions);
 
         logger.LogTrace("Publishing message of type '{MessageType}' to subject '{Subject}'", typeof(TData).FullName, subject);
 
@@ -36,12 +41,14 @@ internal sealed class NatsMessageBus : IMessageBus
 
     public async Task<IAsyncDisposable> SubscribeAsync<TData>(
         MessageConsumer<TData> consumer,
+        SubscribeOptions? options = null,
         CancellationToken cancellationToken = default)
-        where TData : class
+        where TData : IEvent
     {
         ArgumentNullException.ThrowIfNull(consumer);
 
-        string subject = typeof(TData).Name;
+        var subscribeOptions = options ?? new SubscribeOptions();
+        string subject = TData.GetSubscribeEventRoute(subscribeOptions);
 
         logger.LogTrace("Subscribing to '{MessageType}' on '{Subject}'", typeof(TData).FullName, subject);
 
@@ -75,7 +82,7 @@ internal sealed class NatsMessageBus : IMessageBus
     }
 
     private class NatsSubscription<TData> : IAsyncDisposable
-        where TData : class
+        where TData : IEvent
     {
         private readonly CancellationTokenSource cts;
 

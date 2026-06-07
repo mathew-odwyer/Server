@@ -3,14 +3,22 @@
 namespace Winterhaven.Brokering.Events.Users;
 
 /// <summary>
-///   Represents an event that is triggered when a user successfully logs out.
 /// </summary>
-/// <param name="Identifier">
-///   The unique identifier of the user who has logged out.
-/// </param>
-/// <param name="AccessToken">
-///   The access token of the user who has logged out.
-/// </param>
-public sealed record UserLoggedOutEvent(
-    Guid Identifier,
-    string AccessToken);
+public sealed record UserLoggedOutEvent : IEvent
+{
+    private const string EventRoute = "user.logged_out";
+
+    /// <summary>
+    /// </summary>
+    public required Guid UserAccountId { get; init; }
+
+    /// <summary>
+    /// </summary>
+    public required string AccessToken { get; init; }
+
+    /// <inheritdoc/>
+    public static string GetPublishEventRoute(PublishOptions options) => EventRoute;
+
+    /// <inheritdoc/>
+    public static string GetSubscribeEventRoute(SubscribeOptions options) => EventRoute;
+}

@@ -3,14 +3,22 @@
 namespace Winterhaven.Brokering.Events.Users;
 
 /// <summary>
-///   Represents an event that is triggered when a user successfully logs in.
 /// </summary>
-/// <param name="Identifier">
-///   The unique identifier of the user who has logged in.
-/// </param>
-/// <param name="AccessToken">
-///   The access token issued to the user upon successful login, which can be used for authentication of subsequent requests.
-/// </param>
-public sealed record UserLoggedInEvent(
-    Guid Identifier,
-    string AccessToken);
+public sealed record UserLoggedInEvent : IEvent
+{
+    private const string EventRoute = "user.logged_in";
+
+    /// <summary>
+    /// </summary>
+    public required Guid UserAccountId { get; init; }
+
+    /// <summary>
+    /// </summary>
+    public required string AccessToken { get; init; }
+
+    /// <inheritdoc/>
+    public static string GetPublishEventRoute(PublishOptions options) => EventRoute;
+
+    /// <inheritdoc/>
+    public static string GetSubscribeEventRoute(SubscribeOptions options) => EventRoute;
+}

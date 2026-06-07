@@ -69,9 +69,16 @@ internal sealed class UserAccountService : IUserAccountService
         var userSession = userTokenParser.ParseUserToken(response.AccessToken);
         userSessionManager.EstablishUserSession(userSession);
 
-        await messageBus.PublishAsync(new UserLoggedInEvent(
-            Identifier: userSession.UserAccountId,
-            AccessToken: userSession.AccessToken), cancellationToken).ConfigureAwait(false);
+        var notification = new UserLoggedInEvent()
+        {
+            UserAccountId = userSession.UserAccountId,
+            AccessToken = userSession.AccessToken,
+        };
+
+        await messageBus.PublishAsync(
+            data: notification,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         logger.LogInformation("User logged in with ID: '{UserAccountId}'", userSession.UserAccountId);
 
@@ -94,9 +101,16 @@ internal sealed class UserAccountService : IUserAccountService
         await userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
         userSessionManager.InvalidateUserSession();
 
-        await messageBus.PublishAsync(new UserLoggedOutEvent(
-            Identifier: userAccountId,
-            AccessToken: accessToken), cancellationToken).ConfigureAwait(false);
+        var notification = new UserLoggedOutEvent()
+        {
+            UserAccountId = userAccountId,
+            AccessToken = accessToken,
+        };
+
+        await messageBus.PublishAsync(
+            data: notification,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         logger.LogInformation("User logout attempt completed for user with ID: '{Username}'", userAccountId);
     }
