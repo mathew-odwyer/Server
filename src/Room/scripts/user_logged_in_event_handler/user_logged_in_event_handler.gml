@@ -45,14 +45,35 @@ function user_logged_in_event_handler(event)
         .get_async()
         .next(method({_logger}, function(response)
         {
+            var players = [];
+
             /// @type {Id.Instance.obj_player}
             var inst = instance_create_layer(response.x, response.y, "Instances", obj_player);
 
-            inst.identifier = response.id;
             inst.name = response.name;
+            inst.identifier = response.id;
+
+            var snapshot = player_snapshot(inst);
+
+            with (obj_player)
+            {
+                if (self.identifier == inst.identifier)
+                {
+                    continue;
+                }
+
+                notify("room.player.join", snapshot);
+                array_push(players, player_snapshot(self));
+            }
+
+            inst.notify("room.player.synchronize", {
+                player: snapshot,
+                players: players,
+                map: {
+                    data: obj_map_loader.map_data,
+                }
+            });
 
             _logger.log(log_type.information, $"Player joined room with ID: '{inst.identifier}'");
-
-            return inst;
         }));
 }

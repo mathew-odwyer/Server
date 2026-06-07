@@ -34,9 +34,17 @@ enqueue_actions = function(actions)
 notify = function(procedure, params)
 {
     event_publish($"player.{identifier}.notify", {
-        method: procedure,
-        params: params,
+        Method: procedure,
+        Params: params,
     });
 }
 
 alarm[0] = tick_rate;
+
+call_later(1, time_source_units_frames, function()
+{
+    event_subscribe($"player.{identifier}.action", function(event)
+    {
+        enqueue_actions(event[$ "ActionQueue"]);
+    });
+});

@@ -18,7 +18,7 @@ internal sealed class PlayerEventForwarder : EventForwarderBase
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
 
     protected override bool CanForward() =>
-        CanForward() &&
+        base.CanForward() &&
         userSessionContext.IsAuthenticated &&
         userSessionContext.UserSession != null;
 
@@ -37,6 +37,6 @@ internal sealed class PlayerEventForwarder : EventForwarderBase
         await SubscribeAsync<PlayerNotifiedEvent>(OnPlayerNotified, subscribeOptions, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task OnPlayerNotified(PlayerNotifiedEvent data, CancellationToken cancellationToken) =>
-        await ForwardAsync(data.Method, data.Params, cancellationToken).ConfigureAwait(false);
+    private async Task OnPlayerNotified(PlayerNotifiedEvent data, CancellationToken cancellationToken)
+        => await ForwardAsync(data.Method, data.Params, cancellationToken).ConfigureAwait(false);
 }

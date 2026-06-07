@@ -4,6 +4,7 @@
 function player_snapshot(player)
 {
 	return {
+        identifier: player.identifier,
 		name: string_empty(player.name) ? "Player" : player.name,
 		x: player.x,
 		y: player.y,
