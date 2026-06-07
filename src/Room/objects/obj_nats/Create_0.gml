@@ -1,4 +1,4 @@
-/// @description Initialize default parameters.
+﻿/// @description Initialize default parameters.
 
 /// @type {String}
 /// @description The NATS host url.
@@ -33,5 +33,5 @@ if (!_client.connect(nats_host, nats_port))
     throw new SocketError($"Failed to connect to NATS server: '{nats_host}:{nats_port}'")
 }
 
-_protocol.subscribe("user.logged_in", user_logged_in_event_handler);
-_protocol.subscribe("user.logged_out", user_logged_out_event_handler);
+event_subscribe("user.logged_in", user_logged_in_event_handler);
+event_subscribe("user.logged_out", user_logged_out_event_handler);
