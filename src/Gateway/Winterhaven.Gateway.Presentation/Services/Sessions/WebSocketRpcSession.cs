@@ -15,7 +15,7 @@ namespace Winterhaven.Gateway.Presentation.Services.Sessions;
 
 internal sealed class WebSocketRpcSession : IWebSocketRpcSession
 {
-    private readonly IEventForwarderRegistrar eventForwarderRegistrar;
+    private readonly IEventForwarderCoordinator eventForwarderCoordinator;
 
     private readonly ILogger<WebSocketRpcSession> logger;
 
@@ -33,14 +33,14 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
         IJsonRpcTargetRegistrar targetRegistrar,
         IUserAccountService userAccountService,
         IUserSessionContext userSessionContext,
-        IEventForwarderRegistrar eventForwarderRegistrar)
+        IEventForwarderCoordinator eventForwarderCoordinator)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.targetRegistrar = targetRegistrar ?? throw new ArgumentNullException(nameof(targetRegistrar));
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
-        this.eventForwarderRegistrar = eventForwarderRegistrar ?? throw new ArgumentNullException(nameof(eventForwarderRegistrar));
+        this.eventForwarderCoordinator = eventForwarderCoordinator ?? throw new ArgumentNullException(nameof(eventForwarderCoordinator));
     }
 
     public async Task RunAsync(WebSocket socket, CancellationToken cancellationToken = default)
@@ -78,13 +78,7 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
 
             //// Fire and forget, we're registering Services -> NATS -> Gateway -> Client forwarders.
             //// No manual call to DisposeAsync is required thanks to services being scoped.
-
-            //// TODO: Write an issue about this and to come up with a better solution for this.
-            //// TODO: Write issue about snake case issue (NATS headers, perhaps?)
-            //// TODO: Write issue about player.reconcile issue - hard snapping is an issue I think?
-            ////		- But still, only local host this LIKELY shouldn't be an issue, right?
-            //// TODO: Add chat.add_message as well as add messages to synchronize
-            eventForwarderRegistrar.RegisterForwardersAsync(rpc, cancellationToken);
+            eventForwarderCoordinator.StartAllForwardersAsync(rpc, cancellationToken);
         }
 
         userSessionContext.Invalidated += OnSessionInvalidated;
@@ -116,8 +110,8 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
         }
         finally
         {
-            userSessionContext.Invalidated -= OnSessionInvalidated;
             userSessionContext.Established -= OnSessionEstablished;
+            userSessionContext.Invalidated -= OnSessionInvalidated;
 
             try
             {

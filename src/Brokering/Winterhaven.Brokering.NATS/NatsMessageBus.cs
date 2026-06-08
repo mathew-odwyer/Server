@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
 using Winterhaven.Brokering.Events;
+using Winterhaven.Brokering.Exceptions;
 
 namespace Winterhaven.Brokering.NATS;
 
@@ -32,11 +33,18 @@ internal sealed class NatsMessageBus : IMessageBus
 
         logger.LogTrace("Publishing message of type '{MessageType}' to subject '{Subject}'", typeof(TData).FullName, subject);
 
-        await connection.PublishAsync(
-            subject: subject,
-            data: data,
-            cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+        try
+        {
+            await connection.PublishAsync(
+                subject: subject,
+                data: data,
+                cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (NatsException ex)
+        {
+            throw new MessageBusException($"Failed to publish event: '{subject}'", ex);
+        }
     }
 
     public async Task<IAsyncDisposable> SubscribeAsync<TData>(
@@ -56,29 +64,36 @@ internal sealed class NatsMessageBus : IMessageBus
         //// can stop the loop. Without this we'd have no owned handle to cancel on disposal.
         var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-        var subscription = await connection
-            .SubscribeCoreAsync<TData>(subject, cancellationToken: cts.Token)
-            .ConfigureAwait(false);
-
-        var loopTask = Task.Run(async () =>
+        try
         {
-            // Exceptions are caught per-message so a single bad message doesn't kill the entire subscription. OperationCanceledException is intentionally let through so the loop exits cleanly when the token is cancelled.
-            await foreach (var msg in subscription.Msgs.ReadAllAsync(cts.Token).ConfigureAwait(false))
+            var subscription = await connection
+                .SubscribeCoreAsync<TData>(subject, cancellationToken: cts.Token)
+                .ConfigureAwait(false);
+
+            var loopTask = Task.Run(async () =>
             {
-                if (msg.Data is null) continue;
-
-                try
+                // Exceptions are caught per-message so a single bad message doesn't kill the entire subscription. OperationCanceledException is intentionally let through so the loop exits cleanly when the token is cancelled.
+                await foreach (var msg in subscription.Msgs.ReadAllAsync(cts.Token).ConfigureAwait(false))
                 {
-                    await consumer(msg.Data, cts.Token).ConfigureAwait(false);
-                }
-                catch (Exception ex) when (ex is not OperationCanceledException)
-                {
-                    logger.LogError(ex, "Unhandled exception in consumer for subject '{Subject}'", subject);
-                }
-            }
-        }, cts.Token);
+                    if (msg.Data is null) continue;
 
-        return new NatsSubscription<TData>(subscription, cts, loopTask, logger);
+                    try
+                    {
+                        await consumer(msg.Data, cts.Token).ConfigureAwait(false);
+                    }
+                    catch (Exception ex) when (ex is not OperationCanceledException)
+                    {
+                        logger.LogError(ex, "Unhandled exception in consumer for subject '{Subject}'", subject);
+                    }
+                }
+            }, cts.Token);
+
+            return new NatsSubscription<TData>(subscription, cts, loopTask, logger);
+        }
+        catch (MessageBusException ex)
+        {
+            throw new MessageBusException($"Failed to subscribe to event: '{subject}'", ex);
+        }
     }
 
     private class NatsSubscription<TData> : IAsyncDisposable

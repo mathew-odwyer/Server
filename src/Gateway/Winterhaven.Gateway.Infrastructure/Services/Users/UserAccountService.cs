@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Winterhaven.Brokering;
 using Winterhaven.Brokering.Events.Users;
+using Winterhaven.Brokering.Exceptions;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Users;
@@ -69,16 +70,24 @@ internal sealed class UserAccountService : IUserAccountService
         var userSession = userTokenParser.ParseUserToken(response.AccessToken);
         userSessionManager.EstablishUserSession(userSession);
 
-        var notification = new UserLoggedInEvent()
-        {
-            UserAccountId = userSession.UserAccountId,
-            AccessToken = userSession.AccessToken,
-        };
+        var notification = new UserLoggedInEvent(
+            userAccountId: userSession.UserAccountId,
+            accessToken: userSession.AccessToken);
 
-        await messageBus.PublishAsync(
-            data: notification,
-            cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+        try
+        {
+            await messageBus.PublishAsync(
+                data: notification,
+                cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (MessageBusException)
+        {
+            //// If for some reason we failed to publish on login, rollback and invalidate the user session.
+            //// Re-throw to return an internal server error to the client.
+            userSessionManager.InvalidateUserSession();
+            throw;
+        }
 
         logger.LogInformation("User logged in with ID: '{UserAccountId}'", userSession.UserAccountId);
 
@@ -98,19 +107,36 @@ internal sealed class UserAccountService : IUserAccountService
 
         logger.LogDebug("Attempting to log out user with ID: '{UserAccountId}'", userAccountId);
 
-        await userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
-        userSessionManager.InvalidateUserSession();
+        var notification = new UserLoggedOutEvent(
+            userAccountId: userAccountId,
+            accessToken: accessToken);
 
-        var notification = new UserLoggedOutEvent()
+        try
         {
-            UserAccountId = userAccountId,
-            AccessToken = accessToken,
-        };
+            //// Attempt to logout and persist to the database.
+            await userAccountClient.LogoutUserAsync(cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            //// Invalidate the session and publish an event regardless of whether we failed to save or not.
+            //// This ensures that other services can still be notified regardless of persistence.
+            //// Also, safe to call InvalidateUserSession here because we know for certain it's not disposed.
+            userSessionManager.InvalidateUserSession();
 
-        await messageBus.PublishAsync(
-            data: notification,
-            cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+            try
+            {
+                await messageBus.PublishAsync(
+                    data: notification,
+                    cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (MessageBusException ex)
+            {
+                //// Catch and log here to prevent the MessageBusException from replacing the true exception.
+                //// If something happened when attempting to logout and persist - we won't know what happened if we don't catch exceptoins here.
+                logger.LogError(ex, "Failed to publish {Event} for user with ID: '{UserAccountId}'", nameof(UserLoggedOutEvent), userAccountId);
+            }
+        }
 
         logger.LogInformation("User logout attempt completed for user with ID: '{Username}'", userAccountId);
     }

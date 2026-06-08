@@ -7,19 +7,19 @@ using StreamJsonRpc;
 
 namespace Winterhaven.Gateway.Presentation.Services.Events;
 
-internal sealed class EventForwarderRegistrar : IEventForwarderRegistrar
+internal sealed class EventForwarderCoordinator : IEventForwarderCoordinator
 {
     private readonly IEnumerable<EventForwarderBase> eventForwarders;
 
-    private readonly ILogger<EventForwarderRegistrar> logger;
+    private readonly ILogger<EventForwarderCoordinator> logger;
 
-    public EventForwarderRegistrar(ILogger<EventForwarderRegistrar> logger, IEnumerable<EventForwarderBase> eventForwarders)
+    public EventForwarderCoordinator(ILogger<EventForwarderCoordinator> logger, IEnumerable<EventForwarderBase> eventForwarders)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.eventForwarders = eventForwarders ?? throw new ArgumentNullException(nameof(eventForwarders));
     }
 
-    public async Task RegisterForwardersAsync(JsonRpc rpc, CancellationToken cancellationToken = default)
+    public async Task StartAllForwardersAsync(JsonRpc rpc, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(rpc);
 

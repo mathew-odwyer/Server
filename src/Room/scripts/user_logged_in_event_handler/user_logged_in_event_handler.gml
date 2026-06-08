@@ -1,33 +1,21 @@
+// TODO: Unit tests
 function user_logged_in_event_handler(event)
 {
-    /// @type {String}
-    /// @description The name of the event that triggers the handler.
-    static EventName = "UserLoggedInEvent";
-
     /// @type {Struct.Logger}
     /// @description The logger.
     static _logger = new Logger(nameof(user_logged_in_event_handler));
 
-    if (!is_struct(event))
-    {
-        _logger.log(log_type.error, $"{EventName} must be a struct.");
-        return;
-    }
+    /// @type {Struct}
+    /// @description The schema of the event.
+    static _schema = {
+        UserAccountId: t_string,
+        AccessToken: t_string,
+    };
 
-    var identifier = event[$ "UserAccountId"];
-    var access_token = event[$ "AccessToken"];
+    assert_type(event, nameof(event), _schema);
 
-    if (!is_string(identifier))
-    {
-        _logger.log(log_type.error, $"UserAccountId field is required.");
-        return;
-    }
-
-    if (!is_string(access_token))
-    {
-        _logger.log(log_type.error, $"AccessToken field is required.");
-        return;
-    }
+    var identifier = event.UserAccountId;
+    var access_token = event.AccessToken;
 
     if (player_exists(identifier))
     {
@@ -50,30 +38,42 @@ function user_logged_in_event_handler(event)
             /// @type {Id.Instance.obj_player}
             var inst = instance_create_layer(response.x, response.y, "Instances", obj_player);
 
-            inst.name = response.name;
-            inst.identifier = response.id;
-
-            var snapshot = player_snapshot(inst);
-
-            with (obj_player)
+            try
             {
-                if (self.identifier == inst.identifier)
+                inst.name = response.name;
+                inst.identifier = response.id;
+
+                var snapshot = player_snapshot(inst);
+
+                with (obj_player)
                 {
-                    continue;
+                    if (self.identifier == inst.identifier)
+                    {
+                        continue;
+                    }
+
+                    notify("room.player.join", snapshot);
+                    array_push(players, player_snapshot(self));
                 }
 
-                notify("room.player.join", snapshot);
-                array_push(players, player_snapshot(self));
+                inst.notify("room.player.synchronize", {
+                    player: snapshot,
+                    players: players,
+                    map: {
+                        data: obj_map_loader.map_data,
+                    }
+                });
+            }
+            catch (ex)
+            {
+                instance_destroy(inst);
+                throw ex;
             }
 
-            inst.notify("room.player.synchronize", {
-                player: snapshot,
-                players: players,
-                map: {
-                    data: obj_map_loader.map_data,
-                }
-            });
-
             _logger.log(log_type.information, $"Player joined room with ID: '{inst.identifier}'");
+        }))
+        .fail(method({_logger, identifier}, function(error)
+        {
+            _logger.log(log_type.error, $"Failed to add player '{identifier}' to room: '{error}'");
         }));
 }

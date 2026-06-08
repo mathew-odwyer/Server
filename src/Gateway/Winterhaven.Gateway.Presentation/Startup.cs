@@ -73,14 +73,14 @@ internal sealed class Startup
         services.AddControllers();
 
         services.AddScoped<IJsonRpcTargetRegistrar, JsonRpcTargetRegistrar>();
-        services.AddScoped<IEventForwarderRegistrar, EventForwarderRegistrar>();
+        services.AddScoped<IEventForwarderCoordinator, EventForwarderCoordinator>();
         services.AddScoped<IWebSocketRpcSession, WebSocketRpcSession>();
 
         services.AddRpcSessionTarget<HealthRpcTarget>();
         services.AddRpcSessionTarget<UserRpcTarget>();
         services.AddRpcSessionTarget<PlayerRpcTarget>();
 
-        services.AddScoped<EventForwarderBase, PlayerEventForwarder>();
+        services.AddEventForwarder<PlayerEventForwarder>();
 
         services.AddBrokeringServices(Configuration);
         services.AddGatewayInfrastructureServices(Configuration);

@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamJsonRpc;
 using Winterhaven.Brokering;
 using Winterhaven.Brokering.Events.Players;
+using Winterhaven.Common.DTOs.Players;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation.Attributes;
 
 namespace Winterhaven.Gateway.Presentation.Targets.Players;
 
-internal sealed record PlayerActionData(
-    string Type,
-    double MoveX,
-    double MoveY,
-    double Identifier);
-
 internal sealed record PlayerActionRpcParameters(
-    PlayerActionData[] ActionQueue);
+    PlayerActionDto[] ActionQueue);
 
 internal sealed class PlayerRpcTarget : IRpcTarget
 {
@@ -35,16 +29,12 @@ internal sealed class PlayerRpcTarget : IRpcTarget
     [JsonRpcMethod("player.action", UseSingleObjectParameterDeserialization = true)]
     public async Task PerformAction(PlayerActionRpcParameters parameters, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(parameters);
+
+        var notification = new PlayerActionEvent(parameters.ActionQueue);
+
         var options = new PublishOptions()
             .WithRouteKey("playerId", userSessionContext.UserSession!.UserAccountId.ToString());
-
-        var notification = new PlayerActionEvent(
-            [.. parameters.ActionQueue
-                .Select(x => new PlayerActionEventData(
-                    x.Type,
-                    x.MoveX,
-                    x.MoveY,
-                    x.Identifier))]);
 
         await messageBus.PublishAsync(notification, options, cancellationToken).ConfigureAwait(false);
     }
