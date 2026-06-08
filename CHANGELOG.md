@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#91] - Gateway Server (_by [@mathew-odwyer]_).
-  - [#72] GML NATS Client (_by [@mathew-odwyer]_).
+  - [#72] - GML NATS Client (_by [@mathew-odwyer]_).
   - [#97] - Gateway Infrastructure Setup (_by [@mathew-odwyer]_).
   - [#94] - Gateway Registration Flow (_by [@mathew-odwyer]_).
   - [#93] - Gateway Login Flow (_by [@mathew-odwyer]_).
