@@ -19,7 +19,7 @@ internal static class ServiceCollectionExtensions
     }
 
     internal static IServiceCollection AddRpcSessionTarget<TRpcTarget>(this IServiceCollection services)
-            where TRpcTarget : class, IRpcTarget
+        where TRpcTarget : class, IRpcTarget
     {
         ArgumentNullException.ThrowIfNull(services);
 
