@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using Winterhaven.Brokering.Exceptions;
 
 namespace Winterhaven.Brokering.NATS;
 
+[ExcludeFromCodeCoverage]
 internal sealed class NatsMessageBus : IMessageBus
 {
     private readonly INatsConnection connection;

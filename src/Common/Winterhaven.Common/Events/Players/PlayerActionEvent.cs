@@ -5,7 +5,6 @@ namespace Winterhaven.Brokering.Events.Players;
 
 /// <summary>
 /// </summary>
-//// TODO: Move this into application layer obviously now.
 public sealed record PlayerActionEvent : IEvent
 {
     private const string RouteKey = "playerId";
