@@ -8,18 +8,21 @@ internal sealed class WebSocketRpcConnectionBuilder
 {
     private readonly List<Type> proxyTypes;
 
-    public WebSocketRpcConnectionBuilder() => proxyTypes = [];
+    public WebSocketRpcConnectionBuilder()
+    {
+        this.proxyTypes = [];
+    }
 
     public WebSocketRpcConnection Build(WebSocket webSocket)
     {
         ArgumentNullException.ThrowIfNull(webSocket);
-        return new WebSocketRpcConnection(webSocket, proxyTypes);
+        return new WebSocketRpcConnection(webSocket, this.proxyTypes);
     }
 
     public WebSocketRpcConnectionBuilder WithProxy<TProxy>()
         where TProxy : class
     {
-        proxyTypes.Add(typeof(TProxy));
+        this.proxyTypes.Add(typeof(TProxy));
         return this;
     }
 }

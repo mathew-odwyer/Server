@@ -71,18 +71,18 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var player = await playerRepository.GetByIdAsync(request.PlayerId, cancellationToken).ConfigureAwait(false)
+        var player = await this.playerRepository.GetByIdAsync(request.PlayerId, cancellationToken).ConfigureAwait(false)
             ?? throw new ResourceNotFoundException(nameof(Player), request.PlayerId);
 
-        logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
+        this.logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
 
-        var work = unitOfWorkFactory.CreateUnitOfWork();
+        var work = this.unitOfWorkFactory.CreateUnitOfWork();
 
         player.X = request.X ?? player.X;
         player.Y = request.Y ?? player.Y;
 
         await work.SaveAsync(cancellationToken).ConfigureAwait(false);
 
-        logger.LogInformation("Player updated with ID: '{PlayerId}'", player.Id);
+        this.logger.LogInformation("Player updated with ID: '{PlayerId}'", player.Id);
     }
 }

@@ -17,29 +17,48 @@ internal abstract class RepositoryBase<TEntity> : IRepository<TEntity>
 {
     private readonly DbContext context;
 
-    protected RepositoryBase(DbContext context) => this.context = context ?? throw new ArgumentNullException(nameof(context));
+    protected RepositoryBase(DbContext context)
+    {
+        this.context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
-        => await context.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+    {
+        await this.context.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
-        => await context.Set<TEntity>().AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
+    {
+        await this.context.Set<TEntity>().AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
+    }
 
     public void Delete(TEntity entity)
-        => context.Set<TEntity>().Remove(entity);
+    {
+        this.context.Set<TEntity>().Remove(entity);
+    }
 
     public void DeleteRange(IEnumerable<TEntity> entities)
-        => context.Set<TEntity>().RemoveRange(entities);
+    {
+        this.context.Set<TEntity>().RemoveRange(entities);
+    }
 
     public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        => await context.Set<TEntity>().Where(predicate).ToListAsync(cancellationToken).ConfigureAwait(false);
+    {
+        return await this.context.Set<TEntity>().Where(predicate).ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
 
     public IEnumerable<TEntity> GetAll()
-        => context.Set<TEntity>();
+    {
+        return this.context.Set<TEntity>();
+    }
 
     public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
+    {
+        return await this.context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
+    }
 
     public IQueryable<TEntity> Query()
-        => context.Set<TEntity>().AsQueryable();
+    {
+        return this.context.Set<TEntity>().AsQueryable();
+    }
 }

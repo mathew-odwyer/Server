@@ -19,8 +19,10 @@ internal class ApiExceptionFactory
 
     private readonly ILogger<ApiExceptionFactory> logger;
 
-    public ApiExceptionFactory(ILogger<ApiExceptionFactory> logger) =>
+    public ApiExceptionFactory(ILogger<ApiExceptionFactory> logger)
+    {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
     public async Task<Exception?> CreateAsync(HttpResponseMessage response)
     {
@@ -34,7 +36,7 @@ internal class ApiExceptionFactory
 
         return response.StatusCode switch
         {
-            HttpStatusCode.BadRequest => BuildValidationException(problem, detail),
+            HttpStatusCode.BadRequest => this.BuildValidationException(problem, detail),
             HttpStatusCode.Unauthorized => new AuthorizationException(detail),
             HttpStatusCode.InternalServerError => new InvalidOperationException(detail),
             _ => new InvalidOperationException($"Unexpected status {(int)response.StatusCode}: {detail}")
@@ -60,7 +62,7 @@ internal class ApiExceptionFactory
 
         if (problem == null)
         {
-            logger.LogWarning("Received a 400 response but the problem body could not be deserialised. Falling back to a generic validation error.");
+            this.logger.LogWarning("Received a 400 response but the problem body could not be deserialised. Falling back to a generic validation error.");
             return new ValidationException(detail);
         }
 

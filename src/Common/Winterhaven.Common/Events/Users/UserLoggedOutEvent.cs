@@ -10,6 +10,8 @@ public sealed record UserLoggedOutEvent : IEvent
 
     /// <summary>
     /// </summary>
+    /// <param name="userAccountId"></param>
+    /// <param name="accessToken"></param>
     public UserLoggedOutEvent(Guid userAccountId, string accessToken)
     {
         if (userAccountId == Guid.Empty)
@@ -17,8 +19,8 @@ public sealed record UserLoggedOutEvent : IEvent
 
         ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
 
-        UserAccountId = userAccountId;
-        AccessToken = accessToken;
+        this.UserAccountId = userAccountId;
+        this.AccessToken = accessToken;
     }
 
     /// <summary>
@@ -30,8 +32,14 @@ public sealed record UserLoggedOutEvent : IEvent
     public Guid UserAccountId { get; init; }
 
     /// <inheritdoc/>
-    public static string GetPublishEventRoute(PublishOptions options) => EventRoute;
+    public static string GetPublishEventRoute(PublishOptions options)
+    {
+        return EventRoute;
+    }
 
     /// <inheritdoc/>
-    public static string GetSubscribeEventRoute(SubscribeOptions options) => EventRoute;
+    public static string GetSubscribeEventRoute(SubscribeOptions options)
+    {
+        return EventRoute;
+    }
 }

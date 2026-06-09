@@ -17,7 +17,10 @@ namespace Winterhaven.API.Presentation;
 [ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
-    public Startup(IConfiguration configuration) => Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    public Startup(IConfiguration configuration)
+    {
+        this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
 
     public IConfiguration Configuration { get; }
 
@@ -26,7 +29,7 @@ internal sealed class Startup
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
 
-        if (environment.IsDevelopment() || Configuration.GetValue<bool>("SCALAR_ENABLED"))
+        if (environment.IsDevelopment() || this.Configuration.GetValue<bool>("SCALAR_ENABLED"))
         {
             application.MapOpenApi();
             application.MapScalarApiReference(x =>
@@ -62,12 +65,12 @@ internal sealed class Startup
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddValidatedOptions<ApiOptions>(Configuration);
+        services.AddValidatedOptions<ApiOptions>(this.Configuration);
 
         services.AddApiMappings();
-        services.AddApiInfrastructureServices(Configuration);
+        services.AddApiInfrastructureServices(this.Configuration);
         services.AddApiControllersWithFilters();
-        services.AddApiAuthentication(Configuration);
+        services.AddApiAuthentication(this.Configuration);
         services.AddApiAuthorization();
         services.AddApiServices();
     }

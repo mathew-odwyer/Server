@@ -13,12 +13,14 @@ internal sealed class AccessTokenHandler : DelegatingHandler
 {
     private readonly IHttpContextAccessor httpContextAccessor;
 
-    public AccessTokenHandler(IHttpContextAccessor httpContextAccessor) =>
+    public AccessTokenHandler(IHttpContextAccessor httpContextAccessor)
+    {
         this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+    }
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var sessionContext = httpContextAccessor.HttpContext?.RequestServices?.GetService<IUserSessionContext>();
+        var sessionContext = this.httpContextAccessor.HttpContext?.RequestServices?.GetService<IUserSessionContext>();
 
         if (sessionContext?.UserSession != null && !string.IsNullOrWhiteSpace(sessionContext.UserSession.AccessToken))
         {

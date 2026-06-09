@@ -21,8 +21,8 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
-        timer = timeProvider.CreateTimer(
-            callback: _ => InvalidateUserSession(),
+        this.timer = timeProvider.CreateTimer(
+            callback: _ => this.InvalidateUserSession(),
             state: null,
             dueTime: Timeout.InfiniteTimeSpan,
             period: Timeout.InfiniteTimeSpan);
@@ -30,7 +30,7 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
 
     ~UserSessionManager()
     {
-        Dispose(false);
+        this.Dispose(false);
     }
 
     public event EventHandler<EventArgs>? Established;
@@ -39,121 +39,127 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
 
     public event EventHandler<EventArgs>? Refreshed;
 
-    public bool IsAuthenticated => UserSession != null;
+    public bool IsAuthenticated
+    {
+        get
+        {
+            return this.UserSession != null;
+        }
+    }
 
     public UserSession? UserSession { get; private set; }
 
     public void Dispose()
     {
-        Dispose(true);
+        this.Dispose(true);
         GC.SuppressFinalize(this);
     }
 
     public void EstablishUserSession(UserSession userSession)
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserSessionManager));
         ArgumentNullException.ThrowIfNull(userSession);
 
-        if (IsAuthenticated)
+        if (this.IsAuthenticated)
         {
             return;
         }
 
-        logger.LogDebug("Establishing session for user with ID: '{UserAccountId}'", userSession.UserAccountId);
+        this.logger.LogDebug("Establishing session for user with ID: '{UserAccountId}'", userSession.UserAccountId);
 
-        if (userSession.ExpiresAt <= timeProvider.GetUtcNow())
+        if (userSession.ExpiresAt <= this.timeProvider.GetUtcNow())
         {
-            logger.LogWarning("Attempting to refresh user session for user with ID: '{UserAccountId}'", userSession.UserAccountId);
+            this.logger.LogWarning("Attempting to refresh user session for user with ID: '{UserAccountId}'", userSession.UserAccountId);
             return;
         }
 
-        UserSession = userSession;
-        StartExpiryTimer();
+        this.UserSession = userSession;
+        this.StartExpiryTimer();
 
         Established?.Invoke(this, EventArgs.Empty);
-        logger.LogInformation("User session established for user with ID: '{UserAccountId}'", UserSession.UserAccountId);
+        this.logger.LogInformation("User session established for user with ID: '{UserAccountId}'", this.UserSession.UserAccountId);
     }
 
     public void InvalidateUserSession()
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserSessionManager));
 
-        if (!IsAuthenticated)
+        if (!this.IsAuthenticated)
         {
             return;
         }
 
-        var userAccountId = UserSession!.UserAccountId;
+        var userAccountId = this.UserSession!.UserAccountId;
 
-        logger.LogDebug("Invalidating user session for user with ID: '{UserAccountId}'", userAccountId);
+        this.logger.LogDebug("Invalidating user session for user with ID: '{UserAccountId}'", userAccountId);
 
-        StopExpiryTimer();
-        UserSession = null;
+        this.StopExpiryTimer();
+        this.UserSession = null;
 
         Invalidated?.Invoke(this, EventArgs.Empty);
 
-        logger.LogInformation("User session invalidated for user with ID: '{UserAccountId}'", userAccountId);
+        this.logger.LogInformation("User session invalidated for user with ID: '{UserAccountId}'", userAccountId);
     }
 
     public void RefreshUserSession(UserSession userSession)
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserSessionManager));
         ArgumentNullException.ThrowIfNull(userSession);
 
-        if (!IsAuthenticated)
+        if (!this.IsAuthenticated)
         {
             return;
         }
 
         var userAccountId = userSession!.UserAccountId;
 
-        logger.LogDebug("Refresh user session for user with ID: '{UserAccountId}'", userAccountId);
+        this.logger.LogDebug("Refresh user session for user with ID: '{UserAccountId}'", userAccountId);
 
-        if (userSession.ExpiresAt <= timeProvider.GetUtcNow())
+        if (userSession.ExpiresAt <= this.timeProvider.GetUtcNow())
         {
-            logger.LogWarning("Attempted to refresh with an already-expired session for user with ID: '{UserAccountId}'", userAccountId);
+            this.logger.LogWarning("Attempted to refresh with an already-expired session for user with ID: '{UserAccountId}'", userAccountId);
             return;
         }
 
-        UserSession = userSession;
-        ResetExpiryTimer();
+        this.UserSession = userSession;
+        this.ResetExpiryTimer();
         Refreshed?.Invoke(this, EventArgs.Empty);
 
-        logger.LogInformation("User session refreshed for user with ID: '{UserAccountId}'", userAccountId);
+        this.logger.LogInformation("User session refreshed for user with ID: '{UserAccountId}'", userAccountId);
     }
 
     private void Dispose(bool disposing)
     {
-        if (isDisposed)
+        if (this.isDisposed)
         {
             return;
         }
 
-        if (disposing && timer != null)
+        if (disposing && this.timer != null)
         {
-            timer.Dispose();
+            this.timer.Dispose();
         }
 
-        isDisposed = true;
+        this.isDisposed = true;
     }
 
     private void ResetExpiryTimer()
     {
-        StopExpiryTimer();
-        StartExpiryTimer();
+        this.StopExpiryTimer();
+        this.StartExpiryTimer();
     }
 
     private void StartExpiryTimer()
     {
-        var delay = UserSession!.ExpiresAt - timeProvider.GetUtcNow();
-        timer.Change(delay, Timeout.InfiniteTimeSpan);
+        var delay = this.UserSession!.ExpiresAt - this.timeProvider.GetUtcNow();
+        this.timer.Change(delay, Timeout.InfiniteTimeSpan);
 
-        logger.LogInformation("User session for user with ID '{UserAccountId}' expires in {Seconds}s", UserSession.UserAccountId, delay.TotalSeconds);
+        this.logger.LogInformation("User session for user with ID '{UserAccountId}' expires in {Seconds}s", this.UserSession.UserAccountId, delay.TotalSeconds);
     }
 
     private void StopExpiryTimer()
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(UserSessionManager));
-        timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(UserSessionManager));
+        this.timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 }

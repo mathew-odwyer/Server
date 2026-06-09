@@ -15,5 +15,8 @@ internal sealed class UserAccountRepository : RepositoryBase<UserAccount>, IUser
     {
     }
 
-    public UserAccount? GetById(Guid id) => Query().FirstOrDefault(x => x.Id == id);
+    public UserAccount? GetById(Guid id)
+    {
+        return this.Query().FirstOrDefault(x => x.Id == id);
+    }
 }

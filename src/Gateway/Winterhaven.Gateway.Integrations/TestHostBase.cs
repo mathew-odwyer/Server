@@ -35,7 +35,13 @@ internal abstract class TestHostBase
 
     protected IHost Host { get; private set; }
 
-    protected IMessageBus MessageBus => Host.Services.GetRequiredService<IMessageBus>();
+    protected IMessageBus MessageBus
+    {
+        get
+        {
+            return Host.Services.GetRequiredService<IMessageBus>();
+        }
+    }
 
     protected MockUserSessionManager UserSessionManager { get; } = new();
 

@@ -15,8 +15,6 @@ public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="configuration"></param>
     public static IServiceCollection AddEventServices(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);

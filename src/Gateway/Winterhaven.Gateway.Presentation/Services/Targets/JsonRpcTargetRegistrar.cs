@@ -10,13 +10,15 @@ internal sealed class JsonRpcTargetRegistrar : IJsonRpcTargetRegistrar
     private readonly IEnumerable<IRpcTarget> targets;
 
     public JsonRpcTargetRegistrar(IEnumerable<IRpcTarget> targets)
-        => this.targets = targets ?? throw new ArgumentNullException(nameof(targets));
+    {
+        this.targets = targets ?? throw new ArgumentNullException(nameof(targets));
+    }
 
     public void RegisterTargets(JsonRpc rpc)
     {
         ArgumentNullException.ThrowIfNull(rpc);
 
-        foreach (var target in targets)
+        foreach (var target in this.targets)
         {
             rpc.AddLocalRpcTarget(target);
         }

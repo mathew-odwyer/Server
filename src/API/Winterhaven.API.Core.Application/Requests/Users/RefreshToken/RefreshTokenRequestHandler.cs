@@ -127,52 +127,52 @@ public sealed class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenReq
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var actor = actorContext.Actor;
-        var userAccount = await userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
+        var actor = this.actorContext.Actor;
+        var userAccount = await this.userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
             ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
 
-        var work = unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccount!.Id, cancellationToken).ConfigureAwait(false);
+        var work = this.unitOfWorkFactory.CreateUnitOfWork();
+        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount!.Id, cancellationToken).ConfigureAwait(false);
 
         if (activeSession == null ||
-            activeSession.HashedRefreshToken != secureTokenHasher.HashSecureToken(request.RefreshToken) ||
+            activeSession.HashedRefreshToken != this.secureTokenHasher.HashSecureToken(request.RefreshToken) ||
             activeSession.RefreshTokenExpirationDate < DateTime.UtcNow)
         {
-            logger.LogWarning("Invalid or expired refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
+            this.logger.LogWarning("Invalid or expired refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
             throw new AuthorizationException("Invalid or expired refresh token.");
         }
 
         // Expire the old session before creating a new one just to be safe.
         activeSession.IsRevoked = true;
 
-        logger.LogDebug("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
+        this.logger.LogDebug("Generating new access and refresh tokens for user with ID: '{UserAccountId}'", userAccount.Id);
 
         var parameters = new UserTokenParameters(
             UserAccountId: userAccount.Id,
             Username: userAccount.Username);
 
-        var userToken = secureTokenFactory.GenerateUserToken(parameters);
+        var userToken = this.secureTokenFactory.GenerateUserToken(parameters);
 
         var newSessionToken = new UserSessionToken()
         {
             UserAccount = userAccount,
-            HashedRefreshToken = secureTokenHasher.HashSecureToken(userToken.RefreshToken),
+            HashedRefreshToken = this.secureTokenHasher.HashSecureToken(userToken.RefreshToken),
             AccessTokenExpirationDate = userToken.AccessTokenExpiryDate,
             RefreshTokenExpirationDate = userToken.RefreshTokenExpiryDate,
         };
 
         try
         {
-            await userSessionTokenRepository.AddAsync(newSessionToken, cancellationToken).ConfigureAwait(false);
+            await this.userSessionTokenRepository.AddAsync(newSessionToken, cancellationToken).ConfigureAwait(false);
             await work.SaveAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (EntityPersistenceException ex)
         {
-            logger.LogError(ex, "Failed to refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
+            this.logger.LogError(ex, "Failed to refresh token for user with ID: '{UserAccountId}'", userAccount.Id);
             throw new AuthorizationException("Invalid or expired refresh token.");
         }
 
-        logger.LogDebug("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
+        this.logger.LogDebug("Refreshed JWT for user with ID: '{UserAccountId}'.", userAccount.Id);
 
         return new RefreshTokenResponse(
             AccessToken: userToken.AccessToken,

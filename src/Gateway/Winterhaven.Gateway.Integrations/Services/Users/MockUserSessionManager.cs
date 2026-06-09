@@ -7,10 +7,13 @@ namespace Winterhaven.Gateway.Integrations.Services.Users;
 
 internal sealed class MockUserSessionManager : IUserSessionManager, IUserSessionContext
 {
-    static MockUserSessionManager() => DummySession = new UserSession(
+    static MockUserSessionManager()
+    {
+        DummySession = new UserSession(
         UserAccountId: Guid.NewGuid(),
         AccessToken: "accessToken",
         ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
+    }
 
     public event EventHandler<EventArgs> Established;
 
@@ -20,7 +23,13 @@ internal sealed class MockUserSessionManager : IUserSessionManager, IUserSession
 
     public static UserSession DummySession { get; }
 
-    public bool IsAuthenticated => UserSession != null;
+    public bool IsAuthenticated
+    {
+        get
+        {
+            return this.UserSession != null;
+        }
+    }
 
     public UserSession UserSession { get; private set; }
 
@@ -32,19 +41,19 @@ internal sealed class MockUserSessionManager : IUserSessionManager, IUserSession
     {
         ArgumentNullException.ThrowIfNull(userSession);
 
-        UserSession = userSession;
+        this.UserSession = userSession;
         Established?.Invoke(this, EventArgs.Empty);
     }
 
     public void InvalidateUserSession()
     {
-        UserSession = null;
+        this.UserSession = null;
         Invalidated?.Invoke(this, EventArgs.Empty);
     }
 
     public void RefreshUserSession(UserSession userSession)
     {
-        UserSession = userSession;
+        this.UserSession = userSession;
         Refreshed?.Invoke(this, EventArgs.Empty);
     }
 }

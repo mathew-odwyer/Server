@@ -38,8 +38,10 @@ internal sealed class GatewayWebSocketMessageHandler : WebSocketMessageHandler
         WebSocket webSocket,
         IJsonRpcMessageFormatter formatter,
         int sizeHint = 4096)
-        : base(webSocket, formatter, sizeHint) =>
+        : base(webSocket, formatter, sizeHint)
+    {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
     /// <summary>
     ///   Serializes and writes a <see cref="JsonRpcMessage"/> to the WebSocket, masking protocol-level errors before transmission.
@@ -69,52 +71,52 @@ internal sealed class GatewayWebSocketMessageHandler : WebSocketMessageHandler
                     case JsonRpcErrorCode.MethodNotFound:
                         //// Expected in production, so just log as debug.
                         //// This is because clients can make their own requests.
-                        logger.LogDebug("Client requested unknown method. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogDebug("Client requested unknown method. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.InvalidParams:
                         // Expected in production, just log as debug.
-                        logger.LogDebug("Client sent invalid params. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogDebug("Client sent invalid params. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.ParseError:
                     case JsonRpcErrorCode.InvalidRequest:
                         // Expected in production, just log as debug.
-                        logger.LogDebug("Client sent malformed request. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogDebug("Client sent malformed request. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.InternalError:
                         // Log an error, this is a server side bug most likely.
-                        logger.LogError("Internal JSON-RPC error occurred. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogError("Internal JSON-RPC error occurred. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.InvocationError:
                         // The target method threw an exception, server-side fault.
-                        logger.LogWarning("Method invocation failed. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogWarning("Method invocation failed. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.InvocationErrorWithException:
                         // Same as above but with a serialized exception attached, server-side fault.
-                        logger.LogWarning("Method invocation failed with exception detail. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogWarning("Method invocation failed with exception detail. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.ResponseSerializationFailure:
                         // Server produced a response it then couldn't serialize, server-side fault.
-                        logger.LogError("Failed to serialize RPC response. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogError("Failed to serialize RPC response. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.NoMarshaledObjectFound:
                         // Client referenced a marshaled object handle that no longer exists. Could be a race condition or a bad actor replaying stale handles.
-                        logger.LogDebug("Client referenced an unknown or expired marshaled object. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogDebug("Client referenced an unknown or expired marshaled object. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     case JsonRpcErrorCode.RequestCanceled:
                         // Client cancelled the request, completely normal, not an error at all.
-                        logger.LogDebug("Client cancelled a pending request. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogDebug("Client cancelled a pending request. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
 
                     default:
-                        logger.LogWarning("Unrecognised protocol error. Code: {Code}, Message: {Message}", code, error.Error.Message);
+                        this.logger.LogWarning("Unrecognised protocol error. Code: {Code}, Message: {Message}", code, error.Error.Message);
                         break;
                 }
 

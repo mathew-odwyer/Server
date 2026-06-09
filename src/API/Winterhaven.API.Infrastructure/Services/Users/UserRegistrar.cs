@@ -30,7 +30,7 @@ internal sealed class UserRegistrar : IUserRegistrar
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
-        logger.LogInformation("Attempting to register user with username: '{Username}'", username);
+        this.logger.LogInformation("Attempting to register user with username: '{Username}'", username);
 
         var identityUser = new IdentityUser<Guid>
         {
@@ -38,7 +38,7 @@ internal sealed class UserRegistrar : IUserRegistrar
             Email = emailAddress,
         };
 
-        var result = await userManager.CreateAsync(identityUser, password).ConfigureAwait(false);
+        var result = await this.userManager.CreateAsync(identityUser, password).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
@@ -52,7 +52,7 @@ internal sealed class UserRegistrar : IUserRegistrar
                 );
 
             string message = string.Join("; ", errors.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
-            logger.LogInformation("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
+            this.logger.LogInformation("Failed to register user with username: '{Username}'. Errors: {Error}", username, message ?? "Unknown error");
 
             throw new ValidationException(errors);
         }
@@ -70,7 +70,7 @@ internal sealed class UserRegistrar : IUserRegistrar
             },
         };
 
-        logger.LogInformation("Successfully registered user with username: '{Username}'", username);
+        this.logger.LogInformation("Successfully registered user with username: '{Username}'", username);
 
         return userAccount;
     }

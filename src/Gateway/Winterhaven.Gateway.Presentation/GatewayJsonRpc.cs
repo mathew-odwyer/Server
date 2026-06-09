@@ -30,7 +30,7 @@ internal sealed class GatewayJsonRpc : JsonRpc
 
     protected override JsonRpcError.ErrorDetail CreateErrorDetails(JsonRpcRequest request, Exception exception)
     {
-        logger.LogTrace("Creating error details for exception: '{Name}'", exception.GetType().Name);
+        this.logger.LogTrace("Creating error details for exception: '{Name}'", exception.GetType().Name);
 
         //// Only return errors that are useful to the client
         //// We also chose to use positive codes that can (sometimes) match HTTP Status Codes.
@@ -58,7 +58,7 @@ internal sealed class GatewayJsonRpc : JsonRpc
             //// For everything else, log it and send nothing useful to the client.
             //// It's obviously a bug or some other issue - let's not leak any internals to the client.
             default:
-                logger.LogError(exception, "Unhandled exception processing RPC method '{Method}'.", request.Method);
+                this.logger.LogError(exception, "Unhandled exception processing RPC method '{Method}'.", request.Method);
 
                 return new JsonRpcError.ErrorDetail()
                 {
@@ -73,9 +73,9 @@ internal sealed class GatewayJsonRpc : JsonRpc
         var methodInfo = targetMethod.TargetMethodInfo;
         bool isAuthRequired = methodInfo?.GetCustomAttribute<JsonRpcAuthorizeAttribute>() is not null;
 
-        logger.LogTrace("Handling JSON-RPC 2.0 request: '{RequestName}'", methodInfo?.Name ?? "unknown");
+        this.logger.LogTrace("Handling JSON-RPC 2.0 request: '{RequestName}'", methodInfo?.Name ?? "unknown");
 
-        return isAuthRequired && !userSessionContext.IsAuthenticated
+        return isAuthRequired && !this.userSessionContext.IsAuthenticated
             ? throw new AuthorizationException("Authentication is required to perform this action.")
             : base.DispatchRequestAsync(request, targetMethod, cancellationToken);
     }

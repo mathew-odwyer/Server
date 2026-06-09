@@ -33,11 +33,11 @@ internal sealed class NatsMessageBus : IMessageBus
         var publishOptions = options ?? new PublishOptions();
         string subject = TData.GetPublishEventRoute(publishOptions);
 
-        logger.LogTrace("Publishing message of type '{MessageType}' to subject '{Subject}'", typeof(TData).FullName, subject);
+        this.logger.LogTrace("Publishing message of type '{MessageType}' to subject '{Subject}'", typeof(TData).FullName, subject);
 
         try
         {
-            await connection.PublishAsync(
+            await this.connection.PublishAsync(
                 subject: subject,
                 data: data,
                 cancellationToken: cancellationToken)
@@ -60,7 +60,7 @@ internal sealed class NatsMessageBus : IMessageBus
         var subscribeOptions = options ?? new SubscribeOptions();
         string subject = TData.GetSubscribeEventRoute(subscribeOptions);
 
-        logger.LogTrace("Subscribing to '{MessageType}' on '{Subject}'", typeof(TData).FullName, subject);
+        this.logger.LogTrace("Subscribing to '{MessageType}' on '{Subject}'", typeof(TData).FullName, subject);
 
         //// Link to the caller's token so either the caller cancelling or DisposeAsync()
         //// can stop the loop. Without this we'd have no owned handle to cancel on disposal.
@@ -68,7 +68,7 @@ internal sealed class NatsMessageBus : IMessageBus
 
         try
         {
-            var subscription = await connection
+            var subscription = await this.connection
                 .SubscribeCoreAsync<TData>(subject, cancellationToken: cts.Token)
                 .ConfigureAwait(false);
 
@@ -85,12 +85,12 @@ internal sealed class NatsMessageBus : IMessageBus
                     }
                     catch (Exception ex) when (ex is not OperationCanceledException)
                     {
-                        logger.LogError(ex, "Unhandled exception in consumer for subject '{Subject}'", subject);
+                        this.logger.LogError(ex, "Unhandled exception in consumer for subject '{Subject}'", subject);
                     }
                 }
             }, cts.Token);
 
-            return new NatsSubscription<TData>(subscription, cts, loopTask, logger);
+            return new NatsSubscription<TData>(subscription, cts, loopTask, this.logger);
         }
         catch (MessageBusException ex)
         {
@@ -125,11 +125,11 @@ internal sealed class NatsMessageBus : IMessageBus
         {
             //// Cancel first, then wait for the loop to fully exit before disposing the NATS subscription.
             //// This avoids a race where the loop tries to read from a disposed channel.
-            await cts.CancelAsync().ConfigureAwait(false);
+            await this.cts.CancelAsync().ConfigureAwait(false);
 
             try
             {
-                await loopTask.ConfigureAwait(false);
+                await this.loopTask.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -137,12 +137,12 @@ internal sealed class NatsMessageBus : IMessageBus
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "Exception during subscription loop teardown");
+                this.logger.LogWarning(ex, "Exception during subscription loop teardown");
                 throw;
             }
 
-            await subscription.DisposeAsync().ConfigureAwait(false);
-            cts.Dispose();
+            await this.subscription.DisposeAsync().ConfigureAwait(false);
+            this.cts.Dispose();
         }
     }
 }

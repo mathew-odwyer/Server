@@ -23,7 +23,10 @@ namespace Winterhaven.Gateway.Presentation;
 [ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
-    public Startup(IConfiguration configuration) => Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    public Startup(IConfiguration configuration)
+    {
+        this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
 
     public IConfiguration Configuration { get; }
 
@@ -56,7 +59,7 @@ internal sealed class Startup
         {
             //// How often the server automatically sends small "ping" messages to the other side to verify the connection is still active and functioning.
             //// This is by default set to 30 as we also have the HealthRpcTarget that supports ping and heartbeat requests anyways.
-            KeepAliveInterval = TimeSpan.FromSeconds(Configuration.GetValue("WebSocketOptions:KeepAliveInterval", 30.0)),
+            KeepAliveInterval = TimeSpan.FromSeconds(this.Configuration.GetValue("WebSocketOptions:KeepAliveInterval", 30.0)),
         });
 
         application.UseMiddleware<WebSocketMiddleware>();
@@ -84,8 +87,8 @@ internal sealed class Startup
 
         services.AddEventForwarder<PlayerEventForwarder>();
 
-        services.AddEventServices(Configuration);
-        services.AddGatewayInfrastructureServices(Configuration);
+        services.AddEventServices(this.Configuration);
+        services.AddGatewayInfrastructureServices(this.Configuration);
 
         services.AddHttpContextAccessor();
     }

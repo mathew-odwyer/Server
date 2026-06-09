@@ -46,55 +46,69 @@ internal sealed class LoginUserRequestHandlerTests
     private Player player;
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(null, userAuthenticator, secureTokenFactory, secureTokenHasher, unitOfWorkFactory, userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(null, this.userAuthenticator, this.secureTokenFactory, this.secureTokenHasher, this.unitOfWorkFactory, this.userSessionTokenRepository));
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(logger, userAuthenticator, secureTokenFactory, secureTokenHasher, null, userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(this.logger, this.userAuthenticator, this.secureTokenFactory, this.secureTokenHasher, null, this.userSessionTokenRepository));
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAuthenticatorIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAuthenticatorIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(logger, null, secureTokenFactory, secureTokenHasher, unitOfWorkFactory, userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(this.logger, null, this.secureTokenFactory, this.secureTokenHasher, this.unitOfWorkFactory, this.userSessionTokenRepository));
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenSecureTokenFactoryIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenSecureTokenFactoryIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(logger, userAuthenticator, null, secureTokenHasher, unitOfWorkFactory, userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(this.logger, this.userAuthenticator, null, this.secureTokenHasher, this.unitOfWorkFactory, this.userSessionTokenRepository));
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenSecureTokenHasherIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenSecureTokenHasherIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(logger, userAuthenticator, secureTokenFactory, null, unitOfWorkFactory, userSessionTokenRepository));
+        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(this.logger, this.userAuthenticator, this.secureTokenFactory, null, this.unitOfWorkFactory, this.userSessionTokenRepository));
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserSesionTokenRepositoryIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserSesionTokenRepositoryIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(logger, userAuthenticator, secureTokenFactory, secureTokenHasher, unitOfWorkFactory, null));
+        Assert.Throws<ArgumentNullException>(() => new LoginUserRequestHandler(this.logger, this.userAuthenticator, this.secureTokenFactory, this.secureTokenHasher, this.unitOfWorkFactory, null));
+    }
 
     [Test]
-    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull() =>
+    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
+    {
         // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(null, default));
+        Assert.ThrowsAsync<ArgumentNullException>(() => this.handler.Handle(null, default));
+    }
 
     [Test]
     public async Task HandleShouldInvokeUserSessionTokenRepositoryAddAsyncWhenActiveSessionIsNull()
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        userSessionTokenRepository.Received(1).AddAsync(Arg.Any<UserSessionToken>(), default);
+        this.userSessionTokenRepository.Received(1).AddAsync(Arg.Any<UserSessionToken>(), default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -104,14 +118,14 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        secureTokenHasher.Received(1).HashSecureToken("RefreshToken");
+        this.secureTokenHasher.Received(1).HashSecureToken("RefreshToken");
     }
 
     [Test]
@@ -119,14 +133,14 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        secureTokenFactory.Received(1).GenerateUserToken(Arg.Any<UserTokenParameters>());
+        this.secureTokenFactory.Received(1).GenerateUserToken(Arg.Any<UserTokenParameters>());
     }
 
     [Test]
@@ -134,13 +148,13 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
-        userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, default).Returns(userSessionToken);
+        this.userSessionTokenRepository.GetActiveSessionAsync(this.userAccount.Id, default).Returns(this.userSessionToken);
 
         // Act and assert
-        Assert.ThrowsAsync<AuthorizationException>(() => handler.Handle(request, default));
+        Assert.ThrowsAsync<AuthorizationException>(() => this.handler.Handle(request, default));
     }
 
     [Test]
@@ -148,17 +162,17 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        userSessionTokenRepository.Received(1).GetActiveSessionAsync(userAccount.Id, default);
+        this.userSessionTokenRepository.Received(1).GetActiveSessionAsync(this.userAccount.Id, default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -168,14 +182,14 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        unitOfWorkFactory.Received(1).CreateUnitOfWork();
+        this.unitOfWorkFactory.Received(1).CreateUnitOfWork();
     }
 
     [Test]
@@ -183,16 +197,16 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-        userAuthenticator.Received(1).AuthenticateUser(request.Username, request.Password);
+        this.userAuthenticator.Received(1).AuthenticateUser(request.Username, request.Password);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -202,17 +216,17 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        var response = await handler.Handle(request, default).ConfigureAwait(false);
+        var response = await this.handler.Handle(request, default).ConfigureAwait(false);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(response.AccessToken, Is.EqualTo(jwtToken.AccessToken));
-            Assert.That(response.RefreshToken, Is.EqualTo(jwtToken.RefreshToken));
+            Assert.That(response.AccessToken, Is.EqualTo(this.jwtToken.AccessToken));
+            Assert.That(response.RefreshToken, Is.EqualTo(this.jwtToken.RefreshToken));
         }
     }
 
@@ -221,13 +235,13 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
-        unitOfWork.SaveAsync(default).ThrowsAsync<EntityPersistenceException>();
+        this.unitOfWork.SaveAsync(default).ThrowsAsync<EntityPersistenceException>();
 
         // Act and assert
-        Assert.ThrowsAsync<AuthorizationException>(() => handler.Handle(request, default));
+        Assert.ThrowsAsync<AuthorizationException>(() => this.handler.Handle(request, default));
     }
 
     [Test]
@@ -235,16 +249,16 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        unitOfWork.Received(1).SaveAsync(default);
+        this.unitOfWork.Received(1).SaveAsync(default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
@@ -254,19 +268,19 @@ internal sealed class LoginUserRequestHandlerTests
     {
         // Arrange
         var request = new LoginUserRequest(
-            Username: userAccount.Username,
+            Username: this.userAccount.Username,
             Password: "password");
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        await userSessionTokenRepository.Received(1).AddAsync(
+        await this.userSessionTokenRepository.Received(1).AddAsync(
             Arg.Is<UserSessionToken>(token =>
-                token.UserAccount == userAccount &&
-                token.HashedRefreshToken == userSessionToken.HashedRefreshToken &&
+                token.UserAccount == this.userAccount &&
+                token.HashedRefreshToken == this.userSessionToken.HashedRefreshToken &&
                 token.AccessTokenExpirationDate > DateTime.UtcNow &&
-                token.IsRevoked == userSessionToken.IsRevoked &&
+                token.IsRevoked == this.userSessionToken.IsRevoked &&
                 token.AccessTokenExpirationDate <= DateTime.UtcNow.AddMinutes(15)
             ),
             Arg.Any<CancellationToken>()).ConfigureAwait(false);
@@ -275,53 +289,53 @@ internal sealed class LoginUserRequestHandlerTests
     [SetUp]
     public void Setup()
     {
-        logger = Substitute.For<ILogger<LoginUserRequestHandler>>();
-        unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
-        unitOfWork = Substitute.For<IUnitOfWork>();
-        userAuthenticator = Substitute.For<IUserAuthenticator>();
-        secureTokenFactory = Substitute.For<ISecureTokenFactory>();
-        secureTokenHasher = Substitute.For<ISecureTokenHasher>();
-        userSessionTokenRepository = Substitute.For<IUserSessionTokenRepository>();
+        this.logger = Substitute.For<ILogger<LoginUserRequestHandler>>();
+        this.unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
+        this.unitOfWork = Substitute.For<IUnitOfWork>();
+        this.userAuthenticator = Substitute.For<IUserAuthenticator>();
+        this.secureTokenFactory = Substitute.For<ISecureTokenFactory>();
+        this.secureTokenHasher = Substitute.For<ISecureTokenHasher>();
+        this.userSessionTokenRepository = Substitute.For<IUserSessionTokenRepository>();
 
-        player = new Player()
+        this.player = new Player()
         {
             Name = "username",
         };
 
-        userAccount = new UserAccount()
+        this.userAccount = new UserAccount()
         {
             Id = Guid.NewGuid(),
             Username = "username",
             EmailAddress = "test@email.com",
-            Player = player,
+            Player = this.player,
         };
 
-        jwtToken = new UserToken(
+        this.jwtToken = new UserToken(
             AccessToken: "AccessToken",
             RefreshToken: "RefreshToken",
             AccessTokenExpiryDate: DateTime.UtcNow.AddMinutes(15),
             RefreshTokenExpiryDate: DateTime.UtcNow.AddDays(7));
 
-        userSessionToken = new UserSessionToken()
+        this.userSessionToken = new UserSessionToken()
         {
-            UserAccount = userAccount,
+            UserAccount = this.userAccount,
             HashedRefreshToken = "HashedRefreshToken",
-            AccessTokenExpirationDate = jwtToken.AccessTokenExpiryDate,
-            RefreshTokenExpirationDate = jwtToken.RefreshTokenExpiryDate,
+            AccessTokenExpirationDate = this.jwtToken.AccessTokenExpiryDate,
+            RefreshTokenExpirationDate = this.jwtToken.RefreshTokenExpiryDate,
         };
 
-        unitOfWorkFactory.CreateUnitOfWork().Returns(unitOfWork);
+        this.unitOfWorkFactory.CreateUnitOfWork().Returns(this.unitOfWork);
 
-        userAuthenticator.AuthenticateUser(Arg.Any<string>(), Arg.Any<string>()).Returns(userAccount);
-        secureTokenFactory.GenerateUserToken(Arg.Any<UserTokenParameters>()).Returns(jwtToken);
-        secureTokenHasher.HashSecureToken(jwtToken.RefreshToken).Returns(userSessionToken.HashedRefreshToken);
+        this.userAuthenticator.AuthenticateUser(Arg.Any<string>(), Arg.Any<string>()).Returns(this.userAccount);
+        this.secureTokenFactory.GenerateUserToken(Arg.Any<UserTokenParameters>()).Returns(this.jwtToken);
+        this.secureTokenHasher.HashSecureToken(this.jwtToken.RefreshToken).Returns(this.userSessionToken.HashedRefreshToken);
 
-        handler = new LoginUserRequestHandler(
-            logger,
-            userAuthenticator,
-            secureTokenFactory,
-            secureTokenHasher,
-            unitOfWorkFactory,
-            userSessionTokenRepository);
+        this.handler = new LoginUserRequestHandler(
+            this.logger,
+            this.userAuthenticator,
+            this.secureTokenFactory,
+            this.secureTokenHasher,
+            this.unitOfWorkFactory,
+            this.userSessionTokenRepository);
     }
 }

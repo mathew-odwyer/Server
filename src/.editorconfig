@@ -45,10 +45,10 @@ dotnet_sort_system_directives_first = true # Default: false
 file_header_template = unset
 
 # this. and Me. preferences
-dotnet_style_qualification_for_event = false:warning # Default: false
-dotnet_style_qualification_for_field = false:warning # Default: false
-dotnet_style_qualification_for_method = false:warning # Default: false
-dotnet_style_qualification_for_property = false:warning # Default: false
+dotnet_style_qualification_for_event = true:warning # Default: false
+dotnet_style_qualification_for_field = true:warning # Default: false
+dotnet_style_qualification_for_method = true:warning # Default: false
+dotnet_style_qualification_for_property = true:warning # Default: false
 
 # Language keywords vs BCL types preferences
 dotnet_style_predefined_type_for_locals_parameters_members = true:warning # Default: true
@@ -104,14 +104,14 @@ csharp_style_var_for_built_in_types = false:warning # Default: false:silent
 csharp_style_var_when_type_is_apparent = true:warning # Default: false:silent
 
 # Expression-bodied members
-csharp_style_expression_bodied_accessors = true:warning # Default: true:silent
-csharp_style_expression_bodied_constructors = true:warning # Default: false:silent
-csharp_style_expression_bodied_indexers = true:warning # Default: true:silent
+csharp_style_expression_bodied_accessors = false:warning # Default: true:silent
+csharp_style_expression_bodied_constructors = false:warning # Default: false:silent
+csharp_style_expression_bodied_indexers = false:warning # Default: true:silent
 csharp_style_expression_bodied_lambdas = true:warning # Default: true:suggestion
-csharp_style_expression_bodied_local_functions = true:warning # Default: false:silent
-csharp_style_expression_bodied_methods = true:warning # Default: false:silent
-csharp_style_expression_bodied_operators = true:warning # Default: false:silent
-csharp_style_expression_bodied_properties = true:warning # Default: true:silent
+csharp_style_expression_bodied_local_functions = false:warning # Default: false:silent
+csharp_style_expression_bodied_methods = false:warning # Default: false:silent
+csharp_style_expression_bodied_operators = false:warning # Default: false:silent
+csharp_style_expression_bodied_properties = false:warning # Default: true:silent
 
 # Pattern matching preferences
 csharp_style_pattern_matching_over_as_with_null_check = true:warning # Default: true:suggestion

@@ -44,34 +44,36 @@ internal sealed class AuthorizationExceptionFilterAttributeTests
     }
 
     [Test]
-    public void ConstructorShouldNotThrowExceptionWhenInvoked() =>
+    public void ConstructorShouldNotThrowExceptionWhenInvoked()
+    {
         // Act and assert
         Assert.DoesNotThrow(() => new AuthorizationExceptionFilterAttribute());
+    }
 
     [Test]
     public void OnExceptionShouldNotReturnNotFoundObjectResultWhenExceptionHandled()
     {
         // Arrange
-        exceptionContext.ExceptionHandled = true;
+        this.exceptionContext.ExceptionHandled = true;
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.Result, Is.Null);
+        Assert.That(this.exceptionContext.Result, Is.Null);
     }
 
     [Test]
     public void OnExceptionShouldNotReturnNotFoundObjectResultWhenExceptionIsNotNotFoundException()
     {
         // Arrange
-        exceptionContext.Exception = new InvalidOperationException();
+        this.exceptionContext.Exception = new InvalidOperationException();
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.Result, Is.Not.TypeOf<AuthorizationException>());
+        Assert.That(this.exceptionContext.Result, Is.Not.TypeOf<AuthorizationException>());
     }
 
     [Test]
@@ -79,13 +81,13 @@ internal sealed class AuthorizationExceptionFilterAttributeTests
     {
         // Arrange
         const string message = "This is the message.";
-        exceptionContext.Exception = new AuthorizationException(message);
+        this.exceptionContext.Exception = new AuthorizationException(message);
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.Exception, Is.TypeOf<AuthorizationException>());
+        Assert.That(this.exceptionContext.Exception, Is.TypeOf<AuthorizationException>());
     }
 
     [Test]
@@ -93,17 +95,17 @@ internal sealed class AuthorizationExceptionFilterAttributeTests
     {
         // Arrange
         const string message = "You can't do that lmao.";
-        exceptionContext.Exception = new AuthorizationException(message);
+        this.exceptionContext.Exception = new AuthorizationException(message);
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(exceptionContext.Result, Is.TypeOf<ObjectResult>());
+            Assert.That(this.exceptionContext.Result, Is.TypeOf<ObjectResult>());
 
-            var forbiddenResult = exceptionContext.Result as ObjectResult;
+            var forbiddenResult = this.exceptionContext.Result as ObjectResult;
             var problemDetails = forbiddenResult.Value as ProblemDetails;
 
             Assert.That(problemDetails.Type, Is.EqualTo("https://datatracker.ietf.org/doc/html/rfc7235#section-3.1"));
@@ -117,29 +119,31 @@ internal sealed class AuthorizationExceptionFilterAttributeTests
     public void OnExceptionShouldSetExceptionHandledToTrueWhenExceptionIsNotFoundException()
     {
         // Arrange
-        exceptionContext.Exception = new AuthorizationException();
+        this.exceptionContext.Exception = new AuthorizationException();
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.ExceptionHandled, Is.True);
+        Assert.That(this.exceptionContext.ExceptionHandled, Is.True);
     }
 
     [Test]
-    public void OnExceptionShouldThrowArgumentNullExceptionWhenContextIsNull() =>
+    public void OnExceptionShouldThrowArgumentNullExceptionWhenContextIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => filterAttribute.OnException(null));
+        Assert.Throws<ArgumentNullException>(() => this.filterAttribute.OnException(null));
+    }
 
     [SetUp]
     public void SetUp()
     {
-        httpContext = new DefaultHttpContext();
-        routeData = new RouteData();
-        actionDescriptor = Substitute.For<ActionDescriptor>();
-        actionContext = new ActionContext(httpContext, routeData, actionDescriptor);
-        exceptionContext = new ExceptionContext(actionContext, Array.Empty<IFilterMetadata>());
+        this.httpContext = new DefaultHttpContext();
+        this.routeData = new RouteData();
+        this.actionDescriptor = Substitute.For<ActionDescriptor>();
+        this.actionContext = new ActionContext(this.httpContext, this.routeData, this.actionDescriptor);
+        this.exceptionContext = new ExceptionContext(this.actionContext, Array.Empty<IFilterMetadata>());
 
-        filterAttribute = new AuthorizationExceptionFilterAttribute();
+        this.filterAttribute = new AuthorizationExceptionFilterAttribute();
     }
 }

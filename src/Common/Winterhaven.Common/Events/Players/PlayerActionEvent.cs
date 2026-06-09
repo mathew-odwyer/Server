@@ -12,8 +12,10 @@ public sealed record PlayerActionEvent : IEvent
     /// <summary>
     /// </summary>
     /// <param name="actionQueue"></param>
-    public PlayerActionEvent(PlayerActionDto[] actionQueue) =>
-        ActionQueue = actionQueue ?? throw new ArgumentNullException(nameof(actionQueue));
+    public PlayerActionEvent(PlayerActionDto[] actionQueue)
+    {
+        this.ActionQueue = actionQueue ?? throw new ArgumentNullException(nameof(actionQueue));
+    }
 
     /// <summary>
     /// </summary>

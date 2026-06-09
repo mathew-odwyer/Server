@@ -117,20 +117,20 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
         string username = request.Username;
         string password = request.Password;
 
-        logger.LogInformation("Handling login request for user: '{Username}'...", username);
+        this.logger.LogInformation("Handling login request for user: '{Username}'...", username);
 
-        var userAccount = await userAuthenticator.AuthenticateUser(
+        var userAccount = await this.userAuthenticator.AuthenticateUser(
             username: username,
             password: password)
             .ConfigureAwait(false);
 
-        var work = unitOfWorkFactory.CreateUnitOfWork();
-        var activeSession = await userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
+        var work = this.unitOfWorkFactory.CreateUnitOfWork();
+        var activeSession = await this.userSessionTokenRepository.GetActiveSessionAsync(userAccount.Id, cancellationToken).ConfigureAwait(false);
 
         // If there's currently an active session, reject the login.
         if (activeSession != null)
         {
-            logger.LogInformation("Session already active for user: '{Username}'", userAccount.Username);
+            this.logger.LogInformation("Session already active for user: '{Username}'", userAccount.Username);
             throw new AuthorizationException("You must logout of your current session first.");
         }
 
@@ -138,29 +138,29 @@ public sealed class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, 
           UserAccountId: userAccount.Id,
           Username: userAccount.Username);
 
-        var userToken = secureTokenFactory.GenerateUserToken(parameters);
+        var userToken = this.secureTokenFactory.GenerateUserToken(parameters);
 
         var userSessionToken = new UserSessionToken()
         {
             UserAccount = userAccount,
-            HashedRefreshToken = secureTokenHasher.HashSecureToken(userToken.RefreshToken),
+            HashedRefreshToken = this.secureTokenHasher.HashSecureToken(userToken.RefreshToken),
             AccessTokenExpirationDate = userToken.AccessTokenExpiryDate,
             RefreshTokenExpirationDate = userToken.RefreshTokenExpiryDate,
         };
 
         try
         {
-            await userSessionTokenRepository.AddAsync(userSessionToken, cancellationToken).ConfigureAwait(false);
+            await this.userSessionTokenRepository.AddAsync(userSessionToken, cancellationToken).ConfigureAwait(false);
             await work.SaveAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (EntityPersistenceException ex)
         {
             // There's really no need for concurrency handling, but a DB failure will bubble up as a 500 without context. So let's just be extra safe here.
-            logger.LogError(ex, "Failed to persist login session for {Username}", username);
+            this.logger.LogError(ex, "Failed to persist login session for {Username}", username);
             throw new AuthorizationException("Login failed due to a system error, please try again in a few moments.", ex);
         }
 
-        logger.LogInformation("Login succeeded for user: {Username}", request.Username);
+        this.logger.LogInformation("Login succeeded for user: {Username}", request.Username);
 
         return new LoginUserResponse(
             AccessToken: userToken.AccessToken,
