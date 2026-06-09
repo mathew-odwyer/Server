@@ -2,13 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Winterhaven.Brokering;
-using Winterhaven.Brokering.Events.Users;
-using Winterhaven.Brokering.Exceptions;
 using Winterhaven.Common.DTOs.Users;
+using Winterhaven.Common.Events;
+using Winterhaven.Common.Events.Users;
+using Winterhaven.Common.Exceptions;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Users;
-using Winterhaven.Gateway.Core.Domain.Exceptions;
 
 namespace Winterhaven.Gateway.Infrastructure.Services.Users;
 

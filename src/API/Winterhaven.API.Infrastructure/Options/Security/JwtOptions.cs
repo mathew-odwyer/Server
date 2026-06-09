@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.API.Infrastructure.Options.Security;
 
 /// <summary>
 ///   Provides a set of options used for JSON Web Token (JWT) authentication.
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal sealed class JwtOptions
 {
     /// <summary>

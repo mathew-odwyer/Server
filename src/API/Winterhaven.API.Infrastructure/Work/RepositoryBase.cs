@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -10,6 +11,7 @@ using Winterhaven.API.Core.Domain.Entities;
 
 namespace Winterhaven.API.Infrastructure.Work;
 
+[ExcludeFromCodeCoverage]
 internal abstract class RepositoryBase<TEntity> : IRepository<TEntity>
     where TEntity : EntityBase
 {

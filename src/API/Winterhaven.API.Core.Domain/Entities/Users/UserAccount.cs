@@ -1,4 +1,5 @@
-﻿using Winterhaven.API.Core.Domain.Entities.Players;
+﻿using System.Diagnostics.CodeAnalysis;
+using Winterhaven.API.Core.Domain.Entities.Players;
 
 namespace Winterhaven.API.Core.Domain.Entities.Users;
 
@@ -6,6 +7,7 @@ namespace Winterhaven.API.Core.Domain.Entities.Users;
 ///   Represents a user account for an individual user within the system.
 /// </summary>
 /// <seealso cref="AuditableEntityBase"/>
+[ExcludeFromCodeCoverage]
 public class UserAccount : AuditableEntityBase
 {
     /// <summary>

@@ -14,6 +14,7 @@ using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Core.Domain.ValueObjects.Users;
+using Winterhaven.Common.Exceptions;
 
 namespace Winterhaven.API.Tests.Core.Application.Requests.Users.LoginUser;
 

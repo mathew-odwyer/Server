@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Winterhaven.Gateway.Core.Domain.Exceptions;
+namespace Winterhaven.Common.Exceptions;
 
 /// <summary>
 ///   Represents an exception that is thrown when one or more validation failures occur.
@@ -59,5 +59,5 @@ public sealed class ValidationException : Exception
     /// <value>
     ///   The errors that describe the reason for the <see cref="ValidationException"/>.
     /// </value>
-    public IDictionary<string, string[]>? Errors { get; }
+    public IDictionary<string, string[]>? Errors { get; init; }
 }

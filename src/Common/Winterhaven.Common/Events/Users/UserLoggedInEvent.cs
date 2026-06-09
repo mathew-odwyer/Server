@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Winterhaven.Brokering.Events.Users;
+namespace Winterhaven.Common.Events.Users;
 
 /// <summary>
 /// </summary>
@@ -10,16 +10,10 @@ public sealed record UserLoggedInEvent : IEvent
 
     /// <summary>
     /// </summary>
-    /// <param name="userAccountId">
-    /// </param>
-    /// <param name="accessToken">
-    /// </param>
     public UserLoggedInEvent(Guid userAccountId, string accessToken)
     {
         if (userAccountId == Guid.Empty)
-        {
             throw new ArgumentException($"{userAccountId} must not be empty.", nameof(userAccountId));
-        }
 
         ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using StreamJsonRpc;
-using Winterhaven.Gateway.Core.Domain.Exceptions;
+using Winterhaven.Common.Exceptions;
 using Winterhaven.Gateway.Presentation.Targets;
 
 namespace Winterhaven.Gateway.Integrations.Services.Targets;

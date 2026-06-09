@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
-using Winterhaven.Brokering.Events;
-using Winterhaven.Brokering.Exceptions;
+using Winterhaven.Common.Events;
+using Winterhaven.Common.Exceptions;
 
-namespace Winterhaven.Brokering.NATS;
+namespace Winterhaven.Events;
 
 [ExcludeFromCodeCoverage]
 internal sealed class NatsMessageBus : IMessageBus

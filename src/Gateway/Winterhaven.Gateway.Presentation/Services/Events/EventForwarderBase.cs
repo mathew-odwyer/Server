@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamJsonRpc;
-using Winterhaven.Brokering;
-using Winterhaven.Brokering.Events;
+using Winterhaven.Common.Events;
 
 namespace Winterhaven.Gateway.Presentation.Services.Events;
 

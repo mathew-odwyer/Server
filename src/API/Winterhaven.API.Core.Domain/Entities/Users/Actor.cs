@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.API.Core.Domain.Entities.Users;
 
@@ -21,6 +22,7 @@ public enum ActorType
 /// <summary>
 ///   Represents an actor (a user, the system, etc).
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class Actor : EntityBase
 {
     private static Actor? systemActor;

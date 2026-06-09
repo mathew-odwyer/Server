@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Winterhaven.Gateway.Core.Domain.Exceptions;
+namespace Winterhaven.Common.Exceptions;
 
 /// <summary>
 ///   Represents an exception that is thrown when a request is made without proper authentication or when authentication fails.

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NUnit.Framework;
 using Testcontainers.Nats;
-using Winterhaven.Brokering;
+using Winterhaven.Common.Events;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Infrastructure.Options.Client;
 using Winterhaven.Gateway.Infrastructure.Services.Users;

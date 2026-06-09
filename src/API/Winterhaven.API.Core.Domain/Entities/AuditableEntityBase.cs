@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.API.Core.Domain.Entities;
 
 /// <summary>
 ///   Represents an abstract base class for entities that need auditing information, including tracking creation and modification details.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public abstract class AuditableEntityBase : EntityBase
 {
     /// <summary>

@@ -9,6 +9,9 @@ dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4
 indent_size = 4
 dotnet_style_coalesce_expression = true:warning
+dotnet_style_null_propagation = true:warning
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
+dotnet_style_namespace_match_folder = true:error
 # Note that on save VS 2022 17.9.5 adds some keys in this section that are also specified in the [*.cs] section (with the same values) - see https://github.com/dotnet/roslyn/issues/59325
 # These duplicate key-values dont hurt but they can be removed from this section
 
@@ -460,7 +463,7 @@ dotnet_diagnostic.IDE0072.severity = suggestion
     # Populate switch: switch options should be exhaustive for all expected functionality including expected errors,
     # while truly unexpected returns should throw an exception. Since switch automatically throws a SwitchExpressionException, 
     # it is valid to not explicitly code cases that throw an exception to indicate the return is truly unexpected.
-dotnet_diagnostic.IDE0130.severity = suggestion # IDE0130 "Namespace does not match folder structure" can be deviated from to prevent overstructuring
+dotnet_diagnostic.IDE0130.severity = warning # IDE0130 "Namespace does not match folder structure" can be deviated from to prevent overstructuring
 
 dotnet_diagnostic.CA1873.severity = none
 dotnet_diagnostic.IDE0290.severity = none

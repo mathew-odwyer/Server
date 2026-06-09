@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamJsonRpc;
-using Winterhaven.Brokering;
-using Winterhaven.Brokering.Events.Players;
 using Winterhaven.Common.DTOs.Players;
+using Winterhaven.Common.Events;
+using Winterhaven.Common.Events.Players;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Presentation.Attributes;
 

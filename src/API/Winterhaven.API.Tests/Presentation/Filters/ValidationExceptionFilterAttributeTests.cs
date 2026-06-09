@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using NSubstitute;
 using NUnit.Framework;
-using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Presentation.Filters;
+using Winterhaven.Common.Exceptions;
 
 namespace Winterhaven.API.Tests.Presentation.Filters;
 

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.Gateway.Infrastructure.Options.Client;
 
-[ExcludeFromCodeCoverage(Justification = "No Logic")]
+[ExcludeFromCodeCoverage]
 internal sealed class ClientOptions
 {
     [Required]

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
+using Winterhaven.Common.Exceptions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
-using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Presentation.Attributes;
 
 namespace Winterhaven.Gateway.Presentation;

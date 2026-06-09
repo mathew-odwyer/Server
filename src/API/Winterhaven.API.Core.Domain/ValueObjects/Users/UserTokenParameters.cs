@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.API.Core.Domain.ValueObjects.Users;
 
@@ -11,6 +12,7 @@ namespace Winterhaven.API.Core.Domain.ValueObjects.Users;
 /// <param name="Username">
 ///   Specifies a <see cref="string"/> representing the username associated with the user account.
 /// </param>
+[ExcludeFromCodeCoverage]
 public sealed record UserTokenParameters(
     Guid UserAccountId,
     string Username);

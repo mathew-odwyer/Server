@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.API.Core.Domain.Entities.Users;
 
@@ -6,6 +7,7 @@ namespace Winterhaven.API.Core.Domain.Entities.Users;
 ///   Represents a user session (for single-session management).
 /// </summary>
 /// <seealso cref="EntityBase"/>
+[ExcludeFromCodeCoverage]
 public class UserSessionToken : AuditableEntityBase
 {
     /// <summary>

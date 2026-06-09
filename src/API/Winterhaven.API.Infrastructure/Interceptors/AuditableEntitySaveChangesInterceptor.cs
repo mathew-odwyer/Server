@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace Winterhaven.API.Infrastructure.Interceptors;
 /// <summary>
 ///   Intercepts save changes operations to update auditing fields for entities that inherit from <see cref="AuditableEntityBase"/>.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
     private readonly IServiceProvider serviceProvider;

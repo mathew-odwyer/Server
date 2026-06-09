@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Winterhaven.API.Core.Domain.Exceptions;
 
 namespace Winterhaven.API.Infrastructure.Work;
 
+[ExcludeFromCodeCoverage]
 internal sealed class UnitOfWork : IUnitOfWork
 {
     private readonly DbContext context;

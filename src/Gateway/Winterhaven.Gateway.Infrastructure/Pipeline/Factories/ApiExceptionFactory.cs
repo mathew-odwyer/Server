@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Winterhaven.Gateway.Core.Domain.Exceptions;
+using Winterhaven.Common.Exceptions;
 
 namespace Winterhaven.Gateway.Infrastructure.Pipeline.Factories;
 

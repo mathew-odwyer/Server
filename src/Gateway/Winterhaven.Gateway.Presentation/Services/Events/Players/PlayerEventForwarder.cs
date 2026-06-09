@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Winterhaven.Brokering;
-using Winterhaven.Brokering.Events.Players;
+using Winterhaven.Common.Events;
+using Winterhaven.Common.Events.Players;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 
 namespace Winterhaven.Gateway.Presentation.Services.Events.Players;
