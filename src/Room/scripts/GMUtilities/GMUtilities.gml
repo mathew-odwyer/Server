@@ -83,6 +83,26 @@ function assert_type(parameter, name, expected)
         return true;
     }
 
+    if (typeof(expected) == t_array)
+    {
+        if (typeof(parameter) != t_array)
+        {
+            throw $"Parameter '{name}' type mismatch: expected array but was '{typeof(parameter)}'";
+        }
+
+        if (array_length(expected) > 0)
+        {
+            var element_schema = expected[0];
+            
+            for (var i = 0; i < array_length(parameter); i++)
+            {
+                assert_type(parameter[i], $"{name}[{i}]", element_schema);
+            }
+        }
+
+        return true;
+    }
+
     if (typeof(parameter) != expected)
     {
         throw $"Parameter '{name}' type mismatch: expected type '{expected}' but was '{typeof(parameter)}'";
