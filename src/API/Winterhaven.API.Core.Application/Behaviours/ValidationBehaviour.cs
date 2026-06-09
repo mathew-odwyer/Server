@@ -11,6 +11,8 @@ namespace Winterhaven.API.Core.Application.Behaviours;
 
 /// <summary>
 /// </summary>
+/// <typeparam name="TRequest"></typeparam>
+/// <typeparam name="TResponse"></typeparam>
 public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
      where TRequest : notnull
 {
@@ -25,6 +27,9 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
 
     /// <summary>
     /// </summary>
+    /// <param name="request"></param>
+    /// <param name="next"></param>
+    /// <param name="cancellationToken"></param>
     /// <exception cref="ValidationException">
     /// </exception>
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)

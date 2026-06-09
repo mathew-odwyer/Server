@@ -13,9 +13,7 @@ public sealed record UserLoggedInEvent : IEvent
     public UserLoggedInEvent(Guid userAccountId, string accessToken)
     {
         if (userAccountId == Guid.Empty)
-        {
             throw new ArgumentException($"{userAccountId} must not be empty.", nameof(userAccountId));
-        }
 
         ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
 
