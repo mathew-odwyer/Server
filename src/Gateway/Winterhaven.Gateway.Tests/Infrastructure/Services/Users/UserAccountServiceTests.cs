@@ -114,8 +114,9 @@ internal sealed class UserAccountServiceTests
         // Assert
         await messageBus.Received(1).PublishAsync(
             Arg.Is<UserLoggedInEvent>(msg =>
-                msg.Identifier == testSession.UserAccountId &&
+                msg.UserAccountId == testSession.UserAccountId &&
                 msg.AccessToken == testSession.AccessToken),
+            Arg.Any<PublishOptions>(),
             Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
@@ -279,8 +280,9 @@ internal sealed class UserAccountServiceTests
         // Assert
         await messageBus.Received(1).PublishAsync(
             Arg.Is<UserLoggedOutEvent>(msg =>
-                msg.Identifier == testSession.UserAccountId &&
+                msg.UserAccountId == testSession.UserAccountId &&
                 msg.AccessToken == "accessToken"),
+            Arg.Any<PublishOptions>(),
             Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 

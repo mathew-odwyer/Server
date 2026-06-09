@@ -49,7 +49,7 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(e.Identifier, Is.EqualTo(identifier));
+                Assert.That(e.UserAccountId, Is.EqualTo(identifier));
                 Assert.That(e.AccessToken, Is.EqualTo(accessToken));
             }
 
