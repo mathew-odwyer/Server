@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NATS.Client.Hosting;
+using NATS.Client.Serializers.Json;
 using Refit;
 using Winterhaven.Common;
 using Winterhaven.Common.Extensions;
@@ -39,6 +41,13 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         services.AddValidatedOptions<ClientOptions>(configuration);
+
+        services.AddNats(1, x => x with
+        {
+            Name = "winterhaven-nats",
+            Url = configuration["NATS_URL"] ?? "ws://nats:9222",
+            SerializerRegistry = NatsJsonSerializerRegistry.Default,
+        });
 
         services.AddScoped<UserSessionManager>();
 

@@ -21,7 +21,7 @@
 	</AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Winterhaven.Common.Extensions\Winterhaven.Common.Extensions.csproj" />
+    <ProjectReference Include="..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
     <ProjectReference Include="..\Winterhaven.API.Core.Application\Winterhaven.API.Core.Application.csproj" />
   </ItemGroup>
 </Project>

@@ -20,6 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Winterhaven.Brokering.NATS\Winterhaven.Brokering.NATS.csproj" />
+    <ProjectReference Include="..\Winterhaven.Events\Winterhaven.Events.csproj" />
   </ItemGroup>
 </Project>

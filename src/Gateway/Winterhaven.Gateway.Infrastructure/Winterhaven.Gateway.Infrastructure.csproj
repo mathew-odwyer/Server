@@ -1,8 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\..\Brokering\Winterhaven.Brokering\Winterhaven.Brokering.csproj" />
-    <ProjectReference Include="..\..\Common\Winterhaven.Common.Extensions\Winterhaven.Common.Extensions.csproj" />
-    <ProjectReference Include="..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Core.Application\Winterhaven.Gateway.Core.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -26,5 +23,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
     <PackageReference Include="Refit.HttpClientFactory" />
+    <PackageReference Include="NATS.Net" />
   </ItemGroup>
 </Project>

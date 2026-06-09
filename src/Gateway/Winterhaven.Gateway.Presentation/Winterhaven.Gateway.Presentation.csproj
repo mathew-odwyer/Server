@@ -23,7 +23,7 @@
     <PackageReference Include="StreamJsonRpc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Brokering\Winterhaven.Brokering.NATS\Winterhaven.Brokering.NATS.csproj" />
+    <ProjectReference Include="..\..\Events\Winterhaven.Events\Winterhaven.Events.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Infrastructure\Winterhaven.Gateway.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

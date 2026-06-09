@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamJsonRpc;
@@ -10,6 +11,7 @@ using Winterhaven.Gateway.Presentation.Attributes;
 
 namespace Winterhaven.Gateway.Presentation.Targets.Players;
 
+[ExcludeFromCodeCoverage]
 internal sealed record PlayerActionRpcParameters(
     PlayerActionDto[] ActionQueue);
 

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Winterhaven.Common.DTOs\Winterhaven.Common.DTOs.csproj" />
+    <ProjectReference Include="..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Core.Domain\Winterhaven.Gateway.Core.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>

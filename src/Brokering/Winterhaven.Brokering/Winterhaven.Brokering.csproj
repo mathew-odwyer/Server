@@ -1,5 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\Winterhaven.Common.DTOs\Winterhaven.Common.DTOs.csproj" />
-  </ItemGroup>
-</Project>
