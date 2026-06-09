@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#104] - NATS Infrastructure Foundation (_by [@mathew-odwyer]_).
   - [#107] - Room Service Event Consumers and Publishing (_by [@mathew-odwyer]_).
   - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
+  - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
 
 ### Fixed
 
@@ -86,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#123]: https://github.com/mathew-odwyer/Server/issues/123
 [#108]: https://github.com/mathew-odwyer/Server/issues/108
 [#107]: https://github.com/mathew-odwyer/Server/issues/107
 [#104]: https://github.com/mathew-odwyer/Server/issues/104
