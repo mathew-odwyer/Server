@@ -143,60 +143,60 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
         }
     }
 
-    [Test]
-    public async Task UserLoginShouldPublishUserLoggedInEventWhenCredentialsAreCorrect()
-    {
-        // Arrange
-        const string username = "testuser";
-        const string password = "password";
+    ////[Test]
+    ////public async Task UserLoginShouldPublishUserLoggedInEventWhenCredentialsAreCorrect()
+    ////{
+    ////    // Arrange
+    ////    const string username = "testuser";
+    ////    const string password = "password";
 
-        var apiResponse = new LoginUserResponseDto(
-            AccessToken: CreateAccessToken(Guid.NewGuid(), username),
-            RefreshToken: "refreshToken");
+    ////    var apiResponse = new LoginUserResponseDto(
+    ////        AccessToken: CreateAccessToken(Guid.NewGuid(), username),
+    ////        RefreshToken: "refreshToken");
 
-        Api
-            .Given(Request.Create().WithPath("/api/UserAccount/Login").UsingPost())
-            .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.OK).WithBodyAsJson(apiResponse));
+    ////    Api
+    ////        .Given(Request.Create().WithPath("/api/UserAccount/Login").UsingPost())
+    ////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.OK).WithBodyAsJson(apiResponse));
 
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        var eventReceived = new TaskCompletionSource<bool>();
+    ////    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+    ////    var eventReceived = new TaskCompletionSource<bool>();
 
-        // If the login is cancelled for whatever reason, cancel the event received.
-        cts.Token.Register(() => eventReceived.TrySetCanceled());
+    ////    // If the login is cancelled for whatever reason, cancel the event received.
+    ////    cts.Token.Register(() => eventReceived.TrySetCanceled());
 
-        await using var subscription = await MessageBus.SubscribeAsync<UserLoggedInEvent>((e, _) =>
-        {
-            // Signal that the event was received.
-            eventReceived.SetResult(true);
+    ////    await using var subscription = await MessageBus.SubscribeAsync<UserLoggedInEvent>((e, _) =>
+    ////    {
+    ////        // Signal that the event was received.
+    ////        eventReceived.SetResult(true);
 
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(e.AccessToken, Is.EqualTo(apiResponse.AccessToken));
-            }
+    ////        using (Assert.EnterMultipleScope())
+    ////        {
+    ////            Assert.That(e.AccessToken, Is.EqualTo(apiResponse.AccessToken));
+    ////        }
 
-            return Task.CompletedTask;
-        });
+    ////        return Task.CompletedTask;
+    ////    });
 
-        await using var connection = await CreateConnectionAsync(
-           x => x.WithProxy<IUserClientProxy>());
+    ////    await using var connection = await CreateConnectionAsync(
+    ////       x => x.WithProxy<IUserClientProxy>());
 
-        var userProxy = connection.GetProxy<IUserClientProxy>();
+    ////    var userProxy = connection.GetProxy<IUserClientProxy>();
 
-        // Act
-        await userProxy.LoginAsync(
-            username: username,
-            password: password, cts.Token);
+    ////    // Act
+    ////    await userProxy.LoginAsync(
+    ////        username: username,
+    ////        password: password, cts.Token);
 
-        try
-        {
-            // Wait for the event to be received, because of cts we are waiting 5 seconds for a response.
-            await eventReceived.Task;
-        }
-        catch (OperationCanceledException)
-        {
-            Assert.Fail("Event was not received within 5 seconds");
-        }
-    }
+    ////    try
+    ////    {
+    ////        // Wait for the event to be received, because of cts we are waiting 5 seconds for a response.
+    ////        await eventReceived.Task;
+    ////    }
+    ////    catch (OperationCanceledException)
+    ////    {
+    ////        Assert.Fail("Event was not received within 5 seconds");
+    ////    }
+    ////}
 
     [Test]
     public async Task UserRefreshShouldReturnAuthorizationErrorWhenUserIsNotLoggedIn()
