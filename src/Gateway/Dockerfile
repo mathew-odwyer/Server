@@ -27,17 +27,8 @@ COPY Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.c
 COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
     Common/Winterhaven.Common/
 
-COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
-    Common/Winterhaven.Common.DTOs/
-
-COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
-    Common/Winterhaven.Common.Extensions/
-
-COPY Brokering/Winterhaven.Brokering/Winterhaven.Brokering.csproj \
-    Brokering/Winterhaven.Brokering/
-
-COPY Brokering/Winterhaven.Brokering.NATS/Winterhaven.Brokering.NATS.csproj \
-    Brokering/Winterhaven.Brokering.NATS/
+COPY Events/Winterhaven.Events/Winterhaven.Events.csproj \
+    Events/Winterhaven.Events/
 
 COPY appsettings.json Gateway/Winterhaven.Gateway.Presentation/
 
@@ -45,7 +36,7 @@ RUN dotnet restore Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.
 
 COPY Gateway/ Gateway/
 COPY Common/ Common/
-COPY Brokering/ Brokering/
+COPY Events/ Events/
 
 RUN dotnet publish Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj -c Release -o /out
 

@@ -27,25 +27,12 @@ COPY API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj \
 COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
     Common/Winterhaven.Common/
 
-COPY Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj \
-    Common/Winterhaven.Common.DTOs/
-
-COPY Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj \
-    Common/Winterhaven.Common.Extensions/
-
-COPY Brokering/Winterhaven.Brokering/Winterhaven.Brokering.csproj \
-    Brokering/Winterhaven.Brokering/
-
-COPY Brokering/Winterhaven.Brokering.NATS/Winterhaven.Brokering.NATS.csproj \
-    Brokering/Winterhaven.Brokering.NATS/
-
 COPY appsettings.json API/Winterhaven.API.Presentation/
 
 RUN dotnet restore API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj
 
 COPY API/ API/
 COPY Common/ Common/
-COPY Brokering/ Brokering/
 
 RUN dotnet publish API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj -c Release -o /out
 
