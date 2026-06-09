@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Winterhaven.API.Core.Domain.Entities.Users;
 
 namespace Winterhaven.API.Infrastructure.Work.Users;
 
+[ExcludeFromCodeCoverage]
 internal sealed class UserSessionTokenRepository : RepositoryBase<UserSessionToken>, IUserSessionTokenRepository
 {
     public UserSessionTokenRepository(DbContext context)

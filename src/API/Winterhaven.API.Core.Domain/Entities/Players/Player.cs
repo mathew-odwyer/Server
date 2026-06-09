@@ -1,9 +1,12 @@
-﻿namespace Winterhaven.API.Core.Domain.Entities.Players;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Winterhaven.API.Core.Domain.Entities.Players;
 
 /// <summary>
 ///   Represents a player.
 /// </summary>
 /// <seealso cref="EntityBase"/>
+[ExcludeFromCodeCoverage]
 public class Player : AuditableEntityBase
 {
     /// <summary>

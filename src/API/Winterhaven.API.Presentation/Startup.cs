@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -13,6 +14,7 @@ using Winterhaven.Common.Extensions;
 
 namespace Winterhaven.API.Presentation;
 
+[ExcludeFromCodeCoverage]
 internal sealed class Startup
 {
     public Startup(IConfiguration configuration) => Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

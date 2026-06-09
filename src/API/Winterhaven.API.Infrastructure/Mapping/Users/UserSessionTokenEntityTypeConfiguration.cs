@@ -1,17 +1,14 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
 namespace Winterhaven.API.Infrastructure.Mapping.Users;
 
-/// <summary>
-///   Configures the <see cref="UserSessionToken"/> entity.
-/// </summary>
-/// <seealso cref="EntityTypeConfigurationBase{TEntity}"/>
-public sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserSessionToken>
+[ExcludeFromCodeCoverage]
+internal sealed class UserSessionTokenEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserSessionToken>
 {
-    /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<UserSessionToken> builder)
     {
         base.Configure(builder);

@@ -1,17 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Winterhaven.API.Core.Domain.Entities.Players;
-using Winterhaven.API.Core.Domain.Entities.Users;
 
 namespace Winterhaven.API.Infrastructure.Mapping.Players;
 
-/// <summary>
-///   Configures the <see cref="UserSessionToken"/> entity.
-/// </summary>
-/// <seealso cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
-public sealed class PlayerEntityTypeConfiguration : EntityTypeConfigurationBase<Player>
+[ExcludeFromCodeCoverage]
+internal sealed class PlayerEntityTypeConfiguration : EntityTypeConfigurationBase<Player>
 {
-    /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<Player> builder)
     {
         builder

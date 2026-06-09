@@ -1,17 +1,14 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Entities.Users;
 
 namespace Winterhaven.API.Infrastructure.Mapping.Users;
 
-/// <summary>
-///   Configures the user account entity.
-/// </summary>
-/// <see cref="AuditableEntityTypeConfigurationBase{TEntity}"/>
-public sealed class UserAccountEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserAccount>
+[ExcludeFromCodeCoverage]
+internal sealed class UserAccountEntityTypeConfiguration : AuditableEntityTypeConfigurationBase<UserAccount>
 {
-    /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<UserAccount> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);

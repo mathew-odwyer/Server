@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.API.Core.Domain.Entities;
 
 /// <summary>
 ///   Represents the base class for entities that require a unique identifier.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public abstract class EntityBase
 {
     /// <summary>
