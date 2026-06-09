@@ -2,5 +2,7 @@
 
 delete _protocol;
 
-_server.cleanup();
-delete _server;
+_client.cleanup();
+delete _client;
+
+delete _logger;

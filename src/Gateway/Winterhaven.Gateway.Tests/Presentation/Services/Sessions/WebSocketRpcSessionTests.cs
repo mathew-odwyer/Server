@@ -9,6 +9,7 @@ using StreamJsonRpc;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
+using Winterhaven.Gateway.Presentation.Services.Events;
 using Winterhaven.Gateway.Presentation.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
@@ -17,6 +18,8 @@ namespace Winterhaven.Gateway.Tests.Presentation.Services.Sessions;
 [TestFixture]
 internal sealed class WebSocketRpcSessionTests
 {
+    private IEventForwarderCoordinator eventForwarderCoordinator;
+
     private ILogger<WebSocketRpcSession> logger;
 
     private ILoggerFactory loggerFactory;
@@ -30,20 +33,28 @@ internal sealed class WebSocketRpcSessionTests
     private IUserSessionContext userSessionContext;
 
     [Test]
+    public void ConstructorShouldThrowWhenEventForwarderCoordinatorIsNull() =>
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, targetRegistrar, userAccountService, userSessionContext, null));
+
+    [Test]
     public void ConstructorShouldThrowWhenLoggerFactoryIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, null, targetRegistrar, userAccountService, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, null, targetRegistrar, userAccountService, userSessionContext, eventForwarderCoordinator));
 
     [Test]
     public void ConstructorShouldThrowWhenLoggerIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(null, loggerFactory, targetRegistrar, userAccountService, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(null, loggerFactory, targetRegistrar, userAccountService, userSessionContext, eventForwarderCoordinator));
 
     [Test]
     public void ConstructorShouldThrowWhenTargetRegistrarIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, null, userAccountService, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, null, userAccountService, userSessionContext, eventForwarderCoordinator));
 
     [Test]
     public void ConstructorShouldThrowWhenUserAccountServiceIsNull() =>
-        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, targetRegistrar, null, userSessionContext));
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, targetRegistrar, null, userSessionContext, eventForwarderCoordinator));
+
+    [Test]
+    public void ConstructorShouldThrowWhenUserSessionContextIsNull() =>
+        Assert.Throws<ArgumentNullException>(() => new WebSocketRpcSession(logger, loggerFactory, targetRegistrar, userAccountService, null, eventForwarderCoordinator));
 
     [TearDown]
     public void Dispose()
@@ -199,6 +210,7 @@ internal sealed class WebSocketRpcSessionTests
         targetRegistrar = Substitute.For<IJsonRpcTargetRegistrar>();
         userAccountService = Substitute.For<IUserAccountService>();
         userSessionContext = Substitute.For<IUserSessionContext>();
+        eventForwarderCoordinator = Substitute.For<IEventForwarderCoordinator>();
 
         loggerFactory.CreateLogger(Arg.Any<string>()).Returns(Substitute.For<ILogger>());
 
@@ -207,6 +219,7 @@ internal sealed class WebSocketRpcSessionTests
             loggerFactory,
             targetRegistrar,
             userAccountService,
-            userSessionContext);
+            userSessionContext,
+            eventForwarderCoordinator);
     }
 }

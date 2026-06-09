@@ -17,7 +17,6 @@
 	  <Content Include="..\..\appsettings.json" Link="appsettings.json" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Common\Winterhaven.Common.DTOs\Winterhaven.Common.DTOs.csproj" />
 	  <ProjectReference Include="..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
 	  <ProjectReference Include="..\Winterhaven.API.Infrastructure\Winterhaven.API.Infrastructure.csproj" />
 	</ItemGroup>

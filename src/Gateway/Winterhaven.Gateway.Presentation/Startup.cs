@@ -5,12 +5,16 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Winterhaven.Events.Extensions;
 using Winterhaven.Gateway.Infrastructure.Extensions;
 using Winterhaven.Gateway.Presentation.Extensions;
 using Winterhaven.Gateway.Presentation.Middleware;
+using Winterhaven.Gateway.Presentation.Services.Events;
+using Winterhaven.Gateway.Presentation.Services.Events.Players;
 using Winterhaven.Gateway.Presentation.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 using Winterhaven.Gateway.Presentation.Targets.Health;
+using Winterhaven.Gateway.Presentation.Targets.Players;
 using Winterhaven.Gateway.Presentation.Targets.Users;
 
 namespace Winterhaven.Gateway.Presentation;
@@ -69,11 +73,16 @@ internal sealed class Startup
         services.AddControllers();
 
         services.AddScoped<IJsonRpcTargetRegistrar, JsonRpcTargetRegistrar>();
+        services.AddScoped<IEventForwarderCoordinator, EventForwarderCoordinator>();
         services.AddScoped<IWebSocketRpcSession, WebSocketRpcSession>();
 
         services.AddRpcSessionTarget<HealthRpcTarget>();
         services.AddRpcSessionTarget<UserRpcTarget>();
+        services.AddRpcSessionTarget<PlayerRpcTarget>();
 
+        services.AddEventForwarder<PlayerEventForwarder>();
+
+        services.AddEventServices(Configuration);
         services.AddGatewayInfrastructureServices(Configuration);
 
         services.AddHttpContextAccessor();

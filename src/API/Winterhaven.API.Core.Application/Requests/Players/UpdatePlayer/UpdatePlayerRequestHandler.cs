@@ -3,10 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Winterhaven.API.Core.Application.Contexts.Users;
 using Winterhaven.API.Core.Application.Work;
-using Winterhaven.API.Core.Application.Work.Users;
-using Winterhaven.API.Core.Domain.Entities.Users;
+using Winterhaven.API.Core.Application.Work.Players;
+using Winterhaven.API.Core.Domain.Entities.Players;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
@@ -17,24 +16,19 @@ namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerRequest>
 {
     /// <summary>
-    ///   The actor context, used to fetch the currently authenticated actor.
-    /// </summary>
-    private readonly IActorContext actorContext;
-
-    /// <summary>
     ///   The logger.
     /// </summary>
     private readonly ILogger<UpdatePlayerRequestHandler> logger;
 
     /// <summary>
+    ///   The player repository, used to fetch the player to update.
+    /// </summary>
+    private readonly IPlayerRepository playerRepository;
+
+    /// <summary>
     ///   The unit of work factory, used to save the changes of the player to update.
     /// </summary>
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
-
-    /// <summary>
-    ///   The user account repository, used to fetch the user account (if any) linked to the actor.
-    /// </summary>
-    private readonly IUserAccountRepository userAccountRepository;
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="UpdatePlayerRequestHandler"/> class.
@@ -45,11 +39,8 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     /// <param name="unitOfWorkFactory">
     ///   The unit of work factory, used to save the changes of the player to update.
     /// </param>
-    /// <param name="actorContext">
-    ///   The user account context, used to fetch the currently authenticated user.
-    /// </param>
-    /// <param name="userAccountRepository">
-    ///   The user account repository, used to fetch the user account (if any) linked to the actor.
+    /// <param name="playerRepository">
+    ///   The player repository, used to fetch the player to update.
     /// </param>
     /// <exception cref="ArgumentNullException">
     ///   Thrown when one of the following parameters is <c>null</c>:
@@ -61,23 +52,18 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     ///       <description><paramref name="unitOfWorkFactory"/></description>
     ///     </item>
     ///     <item>
-    ///       <description><paramref name="actorContext"/></description>
-    ///     </item>
-    ///     <item>
-    ///       <description><paramref name="userAccountRepository"/></description>
+    ///       <description><paramref name="playerRepository"/></description>
     ///     </item>
     ///   </list>
     /// </exception>
     public UpdatePlayerRequestHandler(
         ILogger<UpdatePlayerRequestHandler> logger,
         IUnitOfWorkFactory unitOfWorkFactory,
-        IActorContext actorContext,
-        IUserAccountRepository userAccountRepository)
+        IPlayerRepository playerRepository)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
-        this.actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
-        this.userAccountRepository = userAccountRepository ?? throw new ArgumentNullException(nameof(userAccountRepository));
+        this.playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
     }
 
     /// <inheritdoc/>
@@ -85,10 +71,8 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var actor = actorContext.Actor;
-        var userAccount = await userAccountRepository.GetByIdAsync(actor.Id, cancellationToken).ConfigureAwait(false)
-            ?? throw new ResourceNotFoundException(nameof(UserAccount), actor.Id);
-        var player = userAccount!.Player;
+        var player = await playerRepository.GetByIdAsync(request.PlayerId, cancellationToken).ConfigureAwait(false)
+            ?? throw new ResourceNotFoundException(nameof(Player), request.PlayerId);
 
         logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
 
@@ -98,5 +82,7 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
         player.Y = request.Y ?? player.Y;
 
         await work.SaveAsync(cancellationToken).ConfigureAwait(false);
+
+        logger.LogInformation("Player updated with ID: '{PlayerId}'", player.Id);
     }
 }

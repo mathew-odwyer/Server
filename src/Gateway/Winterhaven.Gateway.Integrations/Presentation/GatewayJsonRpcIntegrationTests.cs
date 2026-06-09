@@ -151,10 +151,4 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
     }
-
-    [SetUp]
-    public async Task SetUp() => await SetUpTestHost().ConfigureAwait(false);
-
-    [TearDown]
-    public async Task TearDown() => await TearDownTestHost().ConfigureAwait(false);
 }

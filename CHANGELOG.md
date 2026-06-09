@@ -10,12 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#91] - Gateway Server (_by [@mathew-odwyer]_).
-  - [#72] GML NATS Client (_by [@mathew-odwyer]_).
+  - [#72] - GML NATS Client (_by [@mathew-odwyer]_).
   - [#97] - Gateway Infrastructure Setup (_by [@mathew-odwyer]_).
   - [#94] - Gateway Registration Flow (_by [@mathew-odwyer]_).
   - [#93] - Gateway Login Flow (_by [@mathew-odwyer]_).
   - [#96] - Gateway Logout Flow (_by [@mathew-odwyer]_).
   - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
+- [#103] - Player Sessions via NATS (_by [@mathew-odwyer]_).
+  - [#105] - Event Contracts and Application Interfaces (_by [@mathew-odwyer]_).
+  - [#104] - NATS Infrastructure Foundation (_by [@mathew-odwyer]_).
+  - [#107] - Room Service Event Consumers and Publishing (_by [@mathew-odwyer]_).
+  - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
+  - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
 
 ### Fixed
 
@@ -81,6 +87,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#123]: https://github.com/mathew-odwyer/Server/issues/123
+[#108]: https://github.com/mathew-odwyer/Server/issues/108
+[#107]: https://github.com/mathew-odwyer/Server/issues/107
+[#104]: https://github.com/mathew-odwyer/Server/issues/104
+[#103]: https://github.com/mathew-odwyer/Server/issues/103
+[#105]: https://github.com/mathew-odwyer/Server/issues/105
 [#111]: https://github.com/mathew-odwyer/Server/issues/111
 [#191]: https://github.com/mathew-odwyer/Server/issues/191
 [#174]: https://github.com/mathew-odwyer/Server/issues/174

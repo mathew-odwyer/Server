@@ -69,9 +69,23 @@ function NatsClientProtocol(send, options = {}) constructor
 			return;
 		}
 
-		var control = string_trim(parts[0]);
-		var body = array_length(parts) > 1 ? parts[1] : "";
-		var parameters = string_split(control, " ", true);
+        // Find the end of the control line precisely (first occurrence of terminator).
+        var controlEndPos = string_pos(_terminator, payload);
+        
+        if (controlEndPos == 0)
+        {
+            return;
+        }
+
+        // Control line is everything before the terminator.
+        var control = string_copy(payload, 1, controlEndPos - 1);
+
+        // Body starts immediately after the control-line terminator.
+        var bodyStart = controlEndPos + string_length(_terminator);
+        var remaining = string_length(payload) - (bodyStart - 1);
+        var body = remaining > 0 ? string_copy(payload, bodyStart, remaining) : "";
+
+        var parameters = string_split(control, " ", true);
 
 		if (array_length(parameters) == 0)
 		{
@@ -101,7 +115,7 @@ function NatsClientProtocol(send, options = {}) constructor
 	{
 		var info = json_parse(parameters[1]);
 		
-		_logger.log(log_type.information, $"Connecting to: '{info[$ "server_name"]}'...");
+		_logger.log(log_type.debug, $"Connecting to: '{info[$ "server_name"]}'...");
 		
 		var connect = {
 			verbose: _options[$ "verbose"] ?? false,

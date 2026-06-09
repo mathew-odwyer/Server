@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Winterhaven.Brokering;
+using Winterhaven.Brokering.Events.Users;
 using Winterhaven.Common.DTOs.Users;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
 using Winterhaven.Gateway.Core.Application.Services.Users;
@@ -17,6 +19,8 @@ namespace Winterhaven.Gateway.Tests.Infrastructure.Services.Users;
 internal sealed class UserAccountServiceTests
 {
     private ILogger<UserAccountService> logger;
+
+    private IMessageBus messageBus;
 
     private IUserAccountClient userAccountClient;
 
@@ -33,27 +37,32 @@ internal sealed class UserAccountServiceTests
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UserAccountService(null, userAccountClient, userSessionManager, userSessionContext, userTokenParser));
+        Assert.Throws<ArgumentNullException>(() => new UserAccountService(null, userAccountClient, userSessionManager, userSessionContext, userTokenParser, messageBus));
+
+    [Test]
+    public void ConstructorShouldThrowArgumentNullExceptionWhenMessageBusIsNull() =>
+        // Act and assert
+        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, userAccountClient, userSessionManager, userSessionContext, userTokenParser, null));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountClientIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, null, userSessionManager, userSessionContext, userTokenParser));
+        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, null, userSessionManager, userSessionContext, userTokenParser, messageBus));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUserSessionContextIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, userAccountClient, userSessionManager, null, userTokenParser));
+        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, userAccountClient, userSessionManager, null, userTokenParser, messageBus));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenuserSessionManagerIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, userAccountClient, null, userSessionContext, userTokenParser));
+        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, userAccountClient, null, userSessionContext, userTokenParser, messageBus));
 
     [Test]
     public void ConstructorShouldThrowArgumentNullExceptionWhenUserTokenParserIsNull() =>
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, userAccountClient, userSessionManager, userSessionContext, null));
+        Assert.Throws<ArgumentNullException>(() => new UserAccountService(logger, userAccountClient, userSessionManager, userSessionContext, null, messageBus));
 
     [Test]
     public async Task LoginAsyncShouldCancelWhenUserAccountClientLoginAsyncCancels()
@@ -80,6 +89,35 @@ internal sealed class UserAccountServiceTests
                 dto.Password == password),
             Arg.Is<CancellationToken>(ct => ct.IsCancellationRequested)
         ).ConfigureAwait(false);
+    }
+
+    [Test]
+    public async Task LoginAsyncShouldInvokeMessageBusPublishAsyncWhenUserLoggedIn()
+    {
+        // Arrange
+        const string username = "test-user";
+        const string password = "MyCoolPassword";
+
+        userSessionManager.InvalidateUserSession();
+        userSessionContext.IsAuthenticated.Returns(false);
+
+        var testSession = new UserSession(
+            UserAccountId: Guid.NewGuid(),
+            AccessToken: "accessToken",
+            ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
+
+        userTokenParser.ParseUserToken("accessToken").Returns(testSession);
+
+        // Act
+        await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
+
+        // Assert
+        await messageBus.Received(1).PublishAsync(
+            Arg.Is<UserLoggedInEvent>(msg =>
+                msg.UserAccountId == testSession.UserAccountId &&
+                msg.AccessToken == testSession.AccessToken),
+            Arg.Any<PublishOptions>(),
+            Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
@@ -116,12 +154,11 @@ internal sealed class UserAccountServiceTests
         userSessionContext.IsAuthenticated.Returns(false);
 
         // Act
-        await userAccountService.LoginAsync(userSession.Username, "password").ConfigureAwait(false);
+        await userAccountService.LoginAsync("user", "password").ConfigureAwait(false);
 
         // Assert
         userSessionManager.Received(1).EstablishUserSession(
             Arg.Is<UserSession>(x =>
-                x.Username == userSession.Username &&
                 x.UserAccountId == userSession.UserAccountId &&
                 x.AccessToken == userSession.AccessToken &&
                 x.ExpiresAt == userSession.ExpiresAt));
@@ -134,7 +171,7 @@ internal sealed class UserAccountServiceTests
         userSessionContext.IsAuthenticated.Returns(false);
 
         // Act
-        await userAccountService.LoginAsync(userSession.Username, "password").ConfigureAwait(false);
+        await userAccountService.LoginAsync("user", "password").ConfigureAwait(false);
 
         // Assert
         userTokenParser.Received(1).ParseUserToken("accessToken");
@@ -144,7 +181,7 @@ internal sealed class UserAccountServiceTests
     public async Task LoginAsyncShouldReturnRefreshTokenWhenParametersAreNotNullEmptyOrWhiteSpace()
     {
         // Arrange
-        const string username = "test-user";
+        const string username = "user";
         const string password = "MyCoolPassword";
 
         userAccountClient.LoginUserAsync(Arg.Is<LoginUserRequestDto>(
@@ -165,12 +202,12 @@ internal sealed class UserAccountServiceTests
     [Test]
     public void LoginAsyncShouldThrowArgumentExceptionWhenPasswordIsEmpty() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("username", string.Empty));
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("user", string.Empty));
 
     [Test]
     public void LoginAsyncShouldThrowArgumentExceptionWhenPasswordIsWhiteSpace() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("username", "\r\t\n "));
+        Assert.ThrowsAsync<ArgumentException>(() => userAccountService.LoginAsync("user", "\r\t\n "));
 
     [Test]
     public void LoginAsyncShouldThrowArgumentExceptionWhenUsernameIsEmpty() =>
@@ -185,7 +222,7 @@ internal sealed class UserAccountServiceTests
     [Test]
     public void LoginAsyncShouldThrowArgumentNullExceptionWhenPasswordIsNull() =>
         // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => userAccountService.LoginAsync("username", null));
+        Assert.ThrowsAsync<ArgumentNullException>(() => userAccountService.LoginAsync("user", null));
 
     [Test]
     public void LoginAsyncShouldThrowArgumentNullExceptionWhenUsernameIsNull() =>
@@ -199,7 +236,7 @@ internal sealed class UserAccountServiceTests
         userSessionContext.IsAuthenticated.Returns(true);
 
         // Act and assert
-        Assert.ThrowsAsync<AuthorizationException>(() => userAccountService.LoginAsync("username", "password"));
+        Assert.ThrowsAsync<AuthorizationException>(() => userAccountService.LoginAsync("user", "password"));
     }
 
     [Test]
@@ -213,6 +250,40 @@ internal sealed class UserAccountServiceTests
 
         // Assert
         userSessionManager.Received(1).InvalidateUserSession();
+    }
+
+    [Test]
+    public async Task LogoutAsyncShouldInvokeMessageBusPublishAsyncWhenUserLoggedOut()
+    {
+        // Arrange
+        const string username = "user";
+        const string password = "MyCoolPassword";
+
+        userSessionManager.InvalidateUserSession();
+        userSessionContext.IsAuthenticated.Returns(false);
+
+        var testSession = new UserSession(
+            UserAccountId: Guid.NewGuid(),
+            AccessToken: "accessToken",
+            ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
+
+        userTokenParser.ParseUserToken("accessToken").Returns(testSession);
+
+        await userAccountService.LoginAsync(username, password).ConfigureAwait(false);
+
+        userSessionContext.IsAuthenticated.Returns(true);
+        userSessionContext.UserSession.Returns(testSession);
+
+        // Act
+        await userAccountService.LogoutAsync().ConfigureAwait(false);
+
+        // Assert
+        await messageBus.Received(1).PublishAsync(
+            Arg.Is<UserLoggedOutEvent>(msg =>
+                msg.UserAccountId == testSession.UserAccountId &&
+                msg.AccessToken == "accessToken"),
+            Arg.Any<PublishOptions>(),
+            Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
@@ -326,7 +397,6 @@ internal sealed class UserAccountServiceTests
 
         var newSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
-            Username: "cooluser",
             AccessToken: "newAccessToken",
             ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 
@@ -344,7 +414,6 @@ internal sealed class UserAccountServiceTests
         // Assert
         userSessionManager.Received(1).RefreshUserSession(
             Arg.Is<UserSession>(x =>
-                x.Username == newSession.Username &&
                 x.UserAccountId == newSession.UserAccountId &&
                 x.AccessToken == newSession.AccessToken &&
                 x.ExpiresAt == newSession.ExpiresAt));
@@ -520,6 +589,7 @@ internal sealed class UserAccountServiceTests
         userSessionManager = Substitute.For<IUserSessionManager>();
         userSessionContext = Substitute.For<IUserSessionContext>();
         userTokenParser = Substitute.For<IUserTokenParser>();
+        messageBus = Substitute.For<IMessageBus>();
 
         userAccountClient.LoginUserAsync(Arg.Any<LoginUserRequestDto>()).Returns(Task.FromResult(new LoginUserResponseDto(
             AccessToken: "accessToken",
@@ -531,7 +601,6 @@ internal sealed class UserAccountServiceTests
 
         userSession = new UserSession(
             UserAccountId: Guid.NewGuid(),
-            Username: "cooluser",
             AccessToken: "accessToken",
             ExpiresAt: DateTimeOffset.UtcNow.AddMinutes(15));
 
@@ -540,7 +609,7 @@ internal sealed class UserAccountServiceTests
         userSessionContext.IsAuthenticated.Returns(false);
         userSessionContext.UserSession.Returns(userSession);
 
-        userAccountService = new UserAccountService(logger, userAccountClient, userSessionManager, userSessionContext, userTokenParser);
+        userAccountService = new UserAccountService(logger, userAccountClient, userSessionManager, userSessionContext, userTokenParser, messageBus);
     }
 
     [TearDown]

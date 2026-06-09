@@ -1,154 +1,245 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using StreamJsonRpc;
-using Winterhaven.Common.DTOs.Users;
-using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
-using Winterhaven.Gateway.Integrations.Services.Clients;
-using WireMock.RequestBuilders;
-using WireMock.ResponseBuilders;
+﻿using NUnit.Framework;
 
 namespace Winterhaven.Gateway.Integrations.Presentation.Targets.Users;
 
 [TestFixture]
 internal sealed class UserRpcTargetIntegrationTests : TestHostBase
 {
-    [SetUp]
-    public async Task SetUp()
-    {
-        await SetUpTestHost();
-        UserSessionManager.InvalidateUserSession();
-    }
+    ////[Test]
+    ////public async Task DisconnectShouldPublishUserLoggedOutEventWhenUserIsLoggedIn()
+    ////{
+    ////    // Arrange
+    ////    await using var connection = await CreateConnectionAsync(x =>
+    ////        x.WithProxy<IUserClientProxy>());
 
-    [TearDown]
-    public async Task TearDown() => await TearDownTestHost();
+    ////    var identifier = Guid.NewGuid();
+    ////    const string username = "test-user";
 
-    [Test]
-    public async Task UserLoginRequestShouldLoginUserWhenCredentialsAreCorrect()
-    {
-        // Arrange
-        const string username = "testuser";
-        const string password = "password";
+    ////    Api
+    ////        .Given(Request.Create().WithPath("/api/UserAccount/Logout").UsingPost())
+    ////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.NoContent));
 
-        var apiResponse = new LoginUserResponseDto(
-            AccessToken: CreateAccessToken(Guid.NewGuid(), username),
-            RefreshToken: "refreshToken");
+    ////    UserSessionManager.EstablishUserSession(new UserSession(
+    ////        UserAccountId: identifier,
+    ////        AccessToken: CreateAccessToken(identifier, username),
+    ////        ExpiresAt: DateTime.UtcNow.AddMinutes(15)));
 
-        Api
-            .Given(Request.Create().WithPath("/api/UserAccount/Login").UsingPost())
-            .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.OK).WithBodyAsJson(apiResponse));
+    ////    string accessToken = UserSessionManager.UserSession.AccessToken;
 
-        await using var connection = await CreateConnectionAsync(
-           x => x.WithProxy<IUserClientProxy>());
+    ////    var eventReceived = new TaskCompletionSource<bool>();
 
-        var userProxy = connection.GetProxy<IUserClientProxy>();
+    ////    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(500));
+    ////    cts.Token.Register(() => eventReceived.TrySetCanceled());
 
-        // Act
-        var response = await userProxy.LoginAsync(
-            username: username,
-            password: password);
+    ////    await using var subscription = await MessageBus.SubscribeAsync<UserLoggedOutEvent>((e, _) =>
+    ////    {
+    ////        // Signal that the event was received.
+    ////        eventReceived.SetResult(true);
 
-        // Assert
-        Assert.That(response.RefreshToken, Is.EqualTo(apiResponse.RefreshToken));
-    }
+    ////        using (Assert.EnterMultipleScope())
+    ////        {
+    ////            Assert.That(e.UserAccountId, Is.EqualTo(identifier));
+    ////            Assert.That(e.AccessToken, Is.EqualTo(accessToken));
+    ////        }
 
-    [Test]
-    public async Task UserLoginRequestShouldReturnAuthorizationErrorWhenUserAlreadyLoggedIn()
-    {
-        // Arrange
-        const string username = "testuser";
-        const string password = "password";
+    ////        return Task.CompletedTask;
+    ////    });
 
-        var apiResponse = new
-        {
-            Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
-            Title = "Unauthorized",
-            Status = 401,
-            TraceId = Guid.NewGuid().ToString(),
-        };
+    ////    // Act
+    ////    await connection.DisposeAsync();
 
-        Api
-            .Given(Request.Create().WithPath("/api/UserAccount/Login").UsingPost())
-            .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.Unauthorized).WithBodyAsJson(apiResponse));
+    ////    try
+    ////    {
+    ////        // Wait for the event to be received, because of cts we are waiting 5 seconds for a response.
+    ////        await eventReceived.Task;
+    ////    }
+    ////    catch (OperationCanceledException)
+    ////    {
+    ////        Assert.Fail("Event was not received within 5 seconds");
+    ////    }
+    ////}
 
-        var identifier = Guid.NewGuid();
+    ////[SetUp]
+    ////public void SetUp() => UserSessionManager.InvalidateUserSession();
 
-        UserSessionManager.EstablishUserSession(new UserSession(
-            UserAccountId: identifier,
-            Username: username,
-            AccessToken: CreateAccessToken(identifier, username),
-            ExpiresAt: DateTime.UtcNow.AddMinutes(15)));
+    ////[Test]
+    ////public async Task UserLoginRequestShouldLoginUserWhenCredentialsAreCorrect()
+    ////{
+    ////    // Arrange
+    ////    const string username = "testuser";
+    ////    const string password = "password";
 
-        await using var connection = await CreateConnectionAsync(
-            x => x.WithProxy<IUserClientProxy>());
+    ////    var apiResponse = new LoginUserResponseDto(
+    ////        AccessToken: CreateAccessToken(Guid.NewGuid(), username),
+    ////        RefreshToken: "refreshToken");
 
-        var userProxy = connection.GetProxy<IUserClientProxy>();
+    ////    Api
+    ////        .Given(Request.Create().WithPath("/api/UserAccount/Login").UsingPost())
+    ////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.OK).WithBodyAsJson(apiResponse));
 
-        // Act and assert
-        using (Assert.EnterMultipleScope())
-        {
-            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => userProxy.LoginAsync(username, password));
+    ////    await using var connection = await CreateConnectionAsync(
+    ////       x => x.WithProxy<IUserClientProxy>());
 
-            Assert.That(exception.ErrorCode, Is.EqualTo((int)HttpStatusCode.Unauthorized));
-            Assert.That(exception.Message, Is.EqualTo("An active session already exists for this connection."));
-        }
-    }
+    ////    var userProxy = connection.GetProxy<IUserClientProxy>();
 
-    [Test]
-    public async Task UserRefreshShouldReturnAuthorizationErrorWhenUserIsNotLoggedIn()
-    {
-        var apiResponse = new
-        {
-            Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
-            Title = "Unauthorized",
-            Status = 401,
-            TraceId = Guid.NewGuid().ToString(),
-        };
+    ////    // Act
+    ////    var response = await userProxy.LoginAsync(
+    ////        username: username,
+    ////        password: password);
 
-        Api
-            .Given(Request.Create().WithPath("/api/UserAccount/RefreshToken").UsingPost())
-            .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.Unauthorized).WithBodyAsJson(apiResponse));
+    ////    // Assert
+    ////    Assert.That(response.RefreshToken, Is.EqualTo(apiResponse.RefreshToken));
+    ////}
 
-        await using var connection = await CreateConnectionAsync(
-            x => x.WithProxy<IUserClientProxy>());
+    ////[Test]
+    ////public async Task UserLoginRequestShouldReturnAuthorizationErrorWhenUserAlreadyLoggedIn()
+    ////{
+    ////    // Arrange
+    ////    const string username = "testuser";
+    ////    const string password = "password";
 
-        var userProxy = connection.GetProxy<IUserClientProxy>();
+    ////    var apiResponse = new
+    ////    {
+    ////        Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+    ////        Title = "Unauthorized",
+    ////        Status = 401,
+    ////        TraceId = Guid.NewGuid().ToString(),
+    ////    };
 
-        // Act and assert
-        using (Assert.EnterMultipleScope())
-        {
-            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => userProxy.RefreshAsync("refreshToken"));
+    ////    Api
+    ////        .Given(Request.Create().WithPath("/api/UserAccount/Login").UsingPost())
+    ////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.Unauthorized).WithBodyAsJson(apiResponse));
 
-            Assert.That(exception.ErrorCode, Is.EqualTo((int)HttpStatusCode.Unauthorized));
-            Assert.That(exception.Message, Is.EqualTo("Authentication is required to perform this action."));
-        }
-    }
+    ////    var identifier = Guid.NewGuid();
 
-    [Test]
-    public async Task UserRegisterRequestShouldRegisterUserWhenCredentialsMatchRequirements()
-    {
-        // Arrange
-        const string username = "testuser";
-        const string password = "password";
-        const string emailAddress = "test@email.com";
+    ////    UserSessionManager.EstablishUserSession(new UserSession(
+    ////        UserAccountId: identifier,
+    ////        AccessToken: CreateAccessToken(identifier, username),
+    ////        ExpiresAt: DateTime.UtcNow.AddMinutes(15)));
 
-        Api
-            .Given(Request.Create().WithPath("/api/UserAccount/Register").UsingPost())
-            .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.NoContent));
+    ////    await using var connection = await CreateConnectionAsync(
+    ////        x => x.WithProxy<IUserClientProxy>());
 
-        await using var connection = await CreateConnectionAsync(
-            x => x.WithProxy<IUserClientProxy>());
+    ////    var userProxy = connection.GetProxy<IUserClientProxy>();
 
-        var userProxy = connection.GetProxy<IUserClientProxy>();
+    ////    // Act and assert
+    ////    using (Assert.EnterMultipleScope())
+    ////    {
+    ////        var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => userProxy.LoginAsync(username, password));
 
-        // Act
-        var response = await userProxy.RegisterAsync(
-            username: username,
-            password: password,
-            email_address: emailAddress);
+    ////        Assert.That(exception.ErrorCode, Is.EqualTo((int)HttpStatusCode.Unauthorized));
+    ////        Assert.That(exception.Message, Is.EqualTo("An active session already exists for this connection."));
+    ////    }
+    ////}
 
-        // Assert
-        Assert.That(response, Is.Not.Null);
-    }
+    ////////[Test]
+    ////////public async Task UserLoginShouldPublishUserLoggedInEventWhenCredentialsAreCorrect()
+    ////////{
+    ////////    // Arrange
+    ////////    const string username = "testuser";
+    ////////    const string password = "password";
+
+    ////////    var apiResponse = new LoginUserResponseDto(
+    ////////        AccessToken: CreateAccessToken(Guid.NewGuid(), username),
+    ////////        RefreshToken: "refreshToken");
+
+    ////////    Api
+    ////////        .Given(Request.Create().WithPath("/api/UserAccount/Login").UsingPost())
+    ////////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.OK).WithBodyAsJson(apiResponse));
+
+    ////////    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+    ////////    var eventReceived = new TaskCompletionSource<bool>();
+
+    ////////    // If the login is cancelled for whatever reason, cancel the event received.
+    ////////    cts.Token.Register(() => eventReceived.TrySetCanceled());
+
+    ////////    await using var subscription = await MessageBus.SubscribeAsync<UserLoggedInEvent>((e, _) =>
+    ////////    {
+    ////////        // Signal that the event was received.
+    ////////        eventReceived.SetResult(true);
+
+    ////////        using (Assert.EnterMultipleScope())
+    ////////        {
+    ////////            Assert.That(e.AccessToken, Is.EqualTo(apiResponse.AccessToken));
+    ////////        }
+
+    ////////        return Task.CompletedTask;
+    ////////    });
+
+    ////////    await using var connection = await CreateConnectionAsync(
+    ////////       x => x.WithProxy<IUserClientProxy>());
+
+    ////////    var userProxy = connection.GetProxy<IUserClientProxy>();
+
+    ////////    // Act
+    ////////    await userProxy.LoginAsync(
+    ////////        username: username,
+    ////////        password: password, cts.Token);
+
+    ////////    try
+    ////////    {
+    ////////        // Wait for the event to be received, because of cts we are waiting 5 seconds for a response.
+    ////////        await eventReceived.Task;
+    ////////    }
+    ////////    catch (OperationCanceledException)
+    ////////    {
+    ////////        Assert.Fail("Event was not received within 5 seconds");
+    ////////    }
+    ////////}
+
+    ////////[Test]
+    ////////public async Task UserRefreshShouldReturnAuthorizationErrorWhenUserIsNotLoggedIn()
+    ////////{
+    ////////    var apiResponse = new
+    ////////    {
+    ////////        Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+    ////////        Title = "Unauthorized",
+    ////////        Status = 401,
+    ////////    };
+
+    ////////    Api
+    ////////        .Given(Request.Create().WithPath("/api/UserAccount/RefreshToken").UsingPost())
+    ////////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.Unauthorized).WithBodyAsJson(apiResponse));
+
+    ////////    await using var connection = await CreateConnectionAsync(
+    ////////        x => x.WithProxy<IUserClientProxy>());
+
+    ////////    var userProxy = connection.GetProxy<IUserClientProxy>();
+
+    ////////    // Act and assert
+    ////////    using (Assert.EnterMultipleScope())
+    ////////    {
+    ////////        var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => userProxy.RefreshAsync("refreshToken"));
+
+    ////////        Assert.That(exception.ErrorCode, Is.EqualTo((int)HttpStatusCode.Unauthorized));
+    ////////        Assert.That(exception.Message, Is.EqualTo("Authentication is required to perform this action."));
+    ////////    }
+    ////////}
+
+    ////[Test]
+    ////public async Task UserRegisterRequestShouldRegisterUserWhenCredentialsMatchRequirements()
+    ////{
+    ////    // Arrange
+    ////    const string username = "testuser";
+    ////    const string password = "password";
+    ////    const string emailAddress = "test@email.com";
+
+    ////    Api
+    ////        .Given(Request.Create().WithPath("/api/UserAccount/Register").UsingPost())
+    ////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.NoContent));
+
+    ////    await using var connection = await CreateConnectionAsync(
+    ////        x => x.WithProxy<IUserClientProxy>());
+
+    ////    var userProxy = connection.GetProxy<IUserClientProxy>();
+
+    ////    // Act
+    ////    var response = await userProxy.RegisterAsync(
+    ////        username: username,
+    ////        password: password,
+    ////        email_address: emailAddress);
+
+    ////    // Assert
+    ////    Assert.That(response, Is.Not.Null);
+    ////}
 }

@@ -27,16 +27,18 @@
     </Project>
   </Folder>
   <Folder Name="/Common/">
-    <Project Path="Common/Winterhaven.Common.DTOs/Winterhaven.Common.DTOs.csproj" Id="3e5adda7-18aa-4e6b-9ce9-c7fb7a4198fe">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Common/Winterhaven.Common.Extensions/Winterhaven.Common.Extensions.csproj" Id="20cb5f40-08c9-424c-80aa-d6974ce4b194">
-      <Platform Project="x64" />
-    </Project>
     <Project Path="Common/Winterhaven.Common.Tests/Winterhaven.Common.Tests.csproj">
       <Platform Project="x64" />
     </Project>
     <Project Path="Common/Winterhaven.Common/Winterhaven.Common.csproj" Id="eb80781c-be20-45b9-a6a6-709cb22890fc">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Events/">
+    <Project Path="Events/Winterhaven.Events.Tests/Winterhaven.Events.Tests.csproj" Id="50f3bff9-87c7-443d-b36e-4952055fed13">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="Events/Winterhaven.Events/Winterhaven.Events.csproj" Id="2ac5b5ed-ef3f-4ae8-a09d-b8bc792ef62b">
       <Platform Project="x64" />
     </Project>
   </Folder>
@@ -63,7 +65,7 @@
     <Project Path="Gateway/Winterhaven.Gateway.Integrations/Winterhaven.Gateway.Integrations.csproj" Id="67673e84-12a7-407f-a325-7ead20a199c8">
       <Platform Project="x64" />
     </Project>
-    <Project Path="Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj" Id="7e3c7b0d-6607-485a-b6b3-604cc66c8cce">
+    <Project Path="Gateway/Winterhaven.Gateway.Tests/Winterhaven.Gateway.Tests.csproj" Id="8d3ba67b-d5ae-4b3d-afdf-73c5228d4a78">
       <Platform Project="x64" />
     </Project>
   </Folder>

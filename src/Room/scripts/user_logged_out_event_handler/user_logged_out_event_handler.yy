@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"user_logged_out_event_handler",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"user_logged_out_event_handler",
+  "parent":{
+    "name":"Users",
+    "path":"folders/Scripts/Events/Users.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

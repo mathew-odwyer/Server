@@ -59,9 +59,11 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
             return;
         }
 
+        logger.LogDebug("Establishing session for user with ID: '{UserAccountId}'", userSession.UserAccountId);
+
         if (userSession.ExpiresAt <= timeProvider.GetUtcNow())
         {
-            logger.LogWarning("Attempted to establish an already-expired session for '{Username}'", userSession.Username);
+            logger.LogWarning("Attempting to refresh user session for user with ID: '{UserAccountId}'", userSession.UserAccountId);
             return;
         }
 
@@ -69,7 +71,7 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         StartExpiryTimer();
 
         Established?.Invoke(this, EventArgs.Empty);
-        logger.LogDebug("Session authenticated: '{Username}'", UserSession.Username);
+        logger.LogInformation("User session established for user with ID: '{UserAccountId}'", UserSession.UserAccountId);
     }
 
     public void InvalidateUserSession()
@@ -81,14 +83,16 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
             return;
         }
 
-        string username = UserSession!.Username;
+        var userAccountId = UserSession!.UserAccountId;
+
+        logger.LogDebug("Invalidating user session for user with ID: '{UserAccountId}'", userAccountId);
 
         StopExpiryTimer();
         UserSession = null;
 
         Invalidated?.Invoke(this, EventArgs.Empty);
 
-        logger.LogInformation("Session invalidated: '{Username}'", username);
+        logger.LogInformation("User session invalidated for user with ID: '{UserAccountId}'", userAccountId);
     }
 
     public void RefreshUserSession(UserSession userSession)
@@ -101,9 +105,13 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
             return;
         }
 
+        var userAccountId = userSession!.UserAccountId;
+
+        logger.LogDebug("Refresh user session for user with ID: '{UserAccountId}'", userAccountId);
+
         if (userSession.ExpiresAt <= timeProvider.GetUtcNow())
         {
-            logger.LogWarning("Attempted to refresh with an already-expired session for '{Username}'", userSession.Username);
+            logger.LogWarning("Attempted to refresh with an already-expired session for user with ID: '{UserAccountId}'", userAccountId);
             return;
         }
 
@@ -111,7 +119,7 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
         ResetExpiryTimer();
         Refreshed?.Invoke(this, EventArgs.Empty);
 
-        logger.LogInformation("Session refreshed: '{Username}'", UserSession.Username);
+        logger.LogInformation("User session refreshed for user with ID: '{UserAccountId}'", userAccountId);
     }
 
     private void Dispose(bool disposing)
@@ -138,13 +146,9 @@ internal sealed class UserSessionManager : IUserSessionManager, IUserSessionCont
     private void StartExpiryTimer()
     {
         var delay = UserSession!.ExpiresAt - timeProvider.GetUtcNow();
-
         timer.Change(delay, Timeout.InfiniteTimeSpan);
 
-        logger.LogDebug(
-            "User session for '{Username}' expires in {Seconds}s",
-            UserSession.Username,
-            delay.TotalSeconds);
+        logger.LogInformation("User session for user with ID '{UserAccountId}' expires in {Seconds}s", UserSession.UserAccountId, delay.TotalSeconds);
     }
 
     private void StopExpiryTimer()

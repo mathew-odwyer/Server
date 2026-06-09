@@ -2,12 +2,12 @@
 
 if (!ds_queue_empty(_action_queue))
 {
-    var action = ds_queue_dequeue(_action_queue);   
+    var action = ds_queue_dequeue(_action_queue);
 
     if (!is_undefined(action) && is_struct(action))
     {
-        var type = action[$ "type"];
-        var identifier = action[$ "identifier"];
+        var type = action[$ "Type"];
+        var identifier = action[$ "Identifier"];
 
         if (!is_undefined(type) && !is_undefined(identifier))
         {
@@ -15,8 +15,8 @@ if (!ds_queue_empty(_action_queue))
             {
                 case "move":
                     // Clamp movement to stop speed hacks.
-                    _move_x = clamp(action[$ "move_x"] ?? 0, -1, 1);
-                    _move_y = clamp(action[$ "move_y"] ?? 0, -1 , 1);
+                    _move_x = clamp(action[$ "MoveX"] ?? 0, -1, 1);
+                    _move_y = clamp(action[$ "MoveY"] ?? 0, -1 , 1);
                     break;
 
                 default:
