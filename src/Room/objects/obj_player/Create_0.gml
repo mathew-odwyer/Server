@@ -28,15 +28,23 @@ enqueue_actions = function(actions)
     });
 }
 
-/// @description Sends a JSON-RPC 2.0 notification to the `player`.
-/// @param {String} procedure The procedure to send to the `player`.
-/// @param {Any} params The parameters of the procedure to send to the `player`
+/// @description Forwards a JSON-RPC 2.0 notification to the player.
+/// @param {String} procedure The procedure (or method) to be invoked on the client.
+/// @param {Struct} params The parameters for the procedure to be invoked on the client.
 notify = function(procedure, params)
 {
     event_publish($"player.{identifier}.notify", {
-        method: procedure,
-        params: params,
+        Method: procedure,
+        Params: params,
     });
 }
 
 alarm[0] = tick_rate;
+
+call_later(1, time_source_units_frames, function()
+{
+    event_subscribe($"player.{identifier}.action", function(event)
+    {
+        enqueue_actions(event[$ "ActionQueue"]);
+    });
+});

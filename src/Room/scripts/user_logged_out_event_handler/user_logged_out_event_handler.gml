@@ -1,33 +1,21 @@
+// TODO: Unit tests
 function user_logged_out_event_handler(event)
 {
-    /// @type {String}
-    /// @description The name of the event that triggers the handler.
-    static EventName = "UserLoggedOutEvent";
-
     /// @type {Struct.Logger}
     /// @description The logger.
     static _logger = new Logger(nameof(user_logged_out_event_handler));
+    
+    /// @type {Struct}
+    /// @description The schema of the event.
+    static _schema = {
+        UserAccountId: t_string,
+        AccessToken: t_string,
+    };
 
-    if (!is_struct(event))
-    {
-        _logger.log(log_type.error, $"{EventName} must be a struct.");
-        return;
-    }
+    assert_type(event, nameof(event), _schema);
 
-    var identifier = event[$ "Identifier"];
-    var access_token = event[$ "AccessToken"];
-
-    if (!is_string(identifier))
-    {
-        _logger.log(log_type.error, $"Identifier field is required.");
-        return;
-    }
-
-    if (!is_string(access_token))
-    {
-        _logger.log(log_type.error, $"AccessToken field is required.");
-        return;
-    }
+    var identifier = event.UserAccountId;
+    var access_token = event.AccessToken;
 
     var player = player_get_by_identifier(identifier);
 

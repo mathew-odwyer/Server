@@ -8,12 +8,15 @@ using StreamJsonRpc;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Presentation.Handlers;
+using Winterhaven.Gateway.Presentation.Services.Events;
 using Winterhaven.Gateway.Presentation.Services.Targets;
 
 namespace Winterhaven.Gateway.Presentation.Services.Sessions;
 
 internal sealed class WebSocketRpcSession : IWebSocketRpcSession
 {
+    private readonly IEventForwarderCoordinator eventForwarderCoordinator;
+
     private readonly ILogger<WebSocketRpcSession> logger;
 
     private readonly ILoggerFactory loggerFactory;
@@ -29,13 +32,15 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
         ILoggerFactory loggerFactory,
         IJsonRpcTargetRegistrar targetRegistrar,
         IUserAccountService userAccountService,
-        IUserSessionContext userSessionContext)
+        IUserSessionContext userSessionContext,
+        IEventForwarderCoordinator eventForwarderCoordinator)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         this.targetRegistrar = targetRegistrar ?? throw new ArgumentNullException(nameof(targetRegistrar));
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
         this.userSessionContext = userSessionContext ?? throw new ArgumentNullException(nameof(userSessionContext));
+        this.eventForwarderCoordinator = eventForwarderCoordinator ?? throw new ArgumentNullException(nameof(eventForwarderCoordinator));
     }
 
     public async Task RunAsync(WebSocket socket, CancellationToken cancellationToken = default)
@@ -64,7 +69,20 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
             }
         }
 
+        void OnSessionEstablished(object? sender, EventArgs e)
+        {
+            if (rpc.IsDisposed)
+            {
+                return;
+            }
+
+            //// Fire and forget, we're registering Services -> NATS -> Gateway -> Client forwarders.
+            //// No manual call to DisposeAsync is required thanks to services being scoped.
+            eventForwarderCoordinator.StartAllForwardersAsync(rpc, cancellationToken);
+        }
+
         userSessionContext.Invalidated += OnSessionInvalidated;
+        userSessionContext.Established += OnSessionEstablished;
 
         try
         {
@@ -92,6 +110,7 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
         }
         finally
         {
+            userSessionContext.Established -= OnSessionEstablished;
             userSessionContext.Invalidated -= OnSessionInvalidated;
 
             try

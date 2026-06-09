@@ -1,6 +1,6 @@
 /// @description Reconcile player actions.
 
-notify("player.reconcile", {
+notify("room.player.reconcile", {
     x: x,
     y: y,
     last_identifier: _last_action_identifier,
@@ -8,13 +8,13 @@ notify("player.reconcile", {
 
 with (obj_player)
 {
-    if (self.id == other.id)
+    if (self.identifier == other.identifier)
     {
         continue;
     }
 
-    notify("player.move_remote", {
-        name: other.name,
+    self.notify("room.player.move", {
+        identifier: other.identifier,
         actions: other._actions_performed,
     });
 }
