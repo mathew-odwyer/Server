@@ -7,9 +7,10 @@ using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
 using NSubstitute;
 using NUnit.Framework;
-using Winterhaven.Brokering.Events.Users;
+using Winterhaven.Common.Events;
+using Winterhaven.Common.Events.Users;
 
-namespace Winterhaven.Brokering.NATS.Tests;
+namespace Winterhaven.Events.Tests;
 
 [TestFixture]
 internal sealed class NatsMessageBusTests

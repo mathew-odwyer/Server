@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Winterhaven.Brokering.Events.Players;
+namespace Winterhaven.Common.Events.Players;
 
 /// <summary>
 /// </summary>

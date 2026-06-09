@@ -1,7 +1,7 @@
 ﻿using System;
 using Winterhaven.Common.DTOs.Players;
 
-namespace Winterhaven.Brokering.Events.Players;
+namespace Winterhaven.Common.Events.Players;
 
 /// <summary>
 /// </summary>
@@ -11,6 +11,7 @@ public sealed record PlayerActionEvent : IEvent
 
     /// <summary>
     /// </summary>
+    /// <param name="actionQueue"></param>
     public PlayerActionEvent(PlayerActionDto[] actionQueue) =>
         ActionQueue = actionQueue ?? throw new ArgumentNullException(nameof(actionQueue));
 

@@ -10,6 +10,7 @@ using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
 using Winterhaven.API.Core.Domain.Exceptions;
 using Winterhaven.API.Core.Domain.ValueObjects.Users;
+using Winterhaven.Common.Exceptions;
 
 namespace Winterhaven.API.Core.Application.Requests.Users.RefreshToken;
 

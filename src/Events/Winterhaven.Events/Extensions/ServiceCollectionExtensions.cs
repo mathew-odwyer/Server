@@ -4,8 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NATS.Client.Hosting;
 using NATS.Client.Serializers.Json;
-using Winterhaven.Brokering;
-using Winterhaven.Brokering.NATS;
+using Winterhaven.Common.Events;
 
 namespace Winterhaven.Events.Extensions;
 

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Core.Domain.Entities.Users;
-using Winterhaven.API.Core.Domain.Exceptions;
+using Winterhaven.Common.Exceptions;
 
 namespace Winterhaven.API.Infrastructure.Services.Users;
 

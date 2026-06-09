@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Winterhaven.Brokering;
+namespace Winterhaven.Common.Events;
 
 /// <summary>
 /// </summary>
@@ -31,9 +31,7 @@ public sealed class SubscribeOptions
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
 
         if (routeKeys.ContainsKey(key))
-        {
             throw new ArgumentException($"The route key '{key}' has already been provided.", nameof(key));
-        }
 
         routeKeys.Add(key, value);
         return this;

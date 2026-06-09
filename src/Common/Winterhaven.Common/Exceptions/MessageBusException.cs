@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Winterhaven.Brokering.Exceptions;
+namespace Winterhaven.Common.Exceptions;
 
 /// <summary>
 /// </summary>

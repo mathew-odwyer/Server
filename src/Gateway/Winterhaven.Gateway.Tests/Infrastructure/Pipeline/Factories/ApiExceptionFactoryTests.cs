@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
-using Winterhaven.Gateway.Core.Domain.Exceptions;
+using Winterhaven.Common.Exceptions;
 using Winterhaven.Gateway.Infrastructure.Pipeline.Factories;
 
 namespace Winterhaven.Gateway.Tests.Infrastructure.Pipeline.Factories;
