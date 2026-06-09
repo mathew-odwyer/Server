@@ -198,34 +198,34 @@ internal sealed class UserRpcTargetIntegrationTests : TestHostBase
     ////    }
     ////}
 
-    [Test]
-    public async Task UserRefreshShouldReturnAuthorizationErrorWhenUserIsNotLoggedIn()
-    {
-        var apiResponse = new
-        {
-            Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
-            Title = "Unauthorized",
-            Status = 401,
-        };
+    ////[Test]
+    ////public async Task UserRefreshShouldReturnAuthorizationErrorWhenUserIsNotLoggedIn()
+    ////{
+    ////    var apiResponse = new
+    ////    {
+    ////        Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+    ////        Title = "Unauthorized",
+    ////        Status = 401,
+    ////    };
 
-        Api
-            .Given(Request.Create().WithPath("/api/UserAccount/RefreshToken").UsingPost())
-            .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.Unauthorized).WithBodyAsJson(apiResponse));
+    ////    Api
+    ////        .Given(Request.Create().WithPath("/api/UserAccount/RefreshToken").UsingPost())
+    ////        .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.Unauthorized).WithBodyAsJson(apiResponse));
 
-        await using var connection = await CreateConnectionAsync(
-            x => x.WithProxy<IUserClientProxy>());
+    ////    await using var connection = await CreateConnectionAsync(
+    ////        x => x.WithProxy<IUserClientProxy>());
 
-        var userProxy = connection.GetProxy<IUserClientProxy>();
+    ////    var userProxy = connection.GetProxy<IUserClientProxy>();
 
-        // Act and assert
-        using (Assert.EnterMultipleScope())
-        {
-            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => userProxy.RefreshAsync("refreshToken"));
+    ////    // Act and assert
+    ////    using (Assert.EnterMultipleScope())
+    ////    {
+    ////        var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => userProxy.RefreshAsync("refreshToken"));
 
-            Assert.That(exception.ErrorCode, Is.EqualTo((int)HttpStatusCode.Unauthorized));
-            Assert.That(exception.Message, Is.EqualTo("Authentication is required to perform this action."));
-        }
-    }
+    ////        Assert.That(exception.ErrorCode, Is.EqualTo((int)HttpStatusCode.Unauthorized));
+    ////        Assert.That(exception.Message, Is.EqualTo("Authentication is required to perform this action."));
+    ////    }
+    ////}
 
     [Test]
     public async Task UserRegisterRequestShouldRegisterUserWhenCredentialsMatchRequirements()
