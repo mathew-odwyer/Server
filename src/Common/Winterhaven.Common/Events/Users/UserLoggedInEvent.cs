@@ -17,8 +17,8 @@ public sealed record UserLoggedInEvent : IEvent
 
         ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
 
-        UserAccountId = userAccountId;
-        AccessToken = accessToken;
+        this.UserAccountId = userAccountId;
+        this.AccessToken = accessToken;
     }
 
     /// <summary>
@@ -30,8 +30,14 @@ public sealed record UserLoggedInEvent : IEvent
     public Guid UserAccountId { get; init; }
 
     /// <inheritdoc/>
-    public static string GetPublishEventRoute(PublishOptions options) => EventRoute;
+    public static string GetPublishEventRoute(PublishOptions options)
+    {
+        return EventRoute;
+    }
 
     /// <inheritdoc/>
-    public static string GetSubscribeEventRoute(SubscribeOptions options) => EventRoute;
+    public static string GetSubscribeEventRoute(SubscribeOptions options)
+    {
+        return EventRoute;
+    }
 }

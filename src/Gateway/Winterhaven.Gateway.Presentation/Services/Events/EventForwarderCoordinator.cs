@@ -30,7 +30,7 @@ internal sealed class EventForwarderCoordinator : IEventForwarderCoordinator
 
         try
         {
-            foreach (var eventForwarder in eventForwarders)
+            foreach (var eventForwarder in this.eventForwarders)
             {
                 await eventForwarder.StartAsync(rpc, cancellationToken).ConfigureAwait(false);
             }
@@ -38,7 +38,7 @@ internal sealed class EventForwarderCoordinator : IEventForwarderCoordinator
         catch (Exception ex)
         {
             // Ensure exceptions from the fire-and-forget task are observed and logged.
-            logger.LogError(ex, "Failed to start one or more event forwarders after session establishment.");
+            this.logger.LogError(ex, "Failed to start one or more event forwarders after session establishment.");
         }
     }
 }

@@ -57,8 +57,8 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
             }
         };
 
-        using var handler = new GatewayWebSocketMessageHandler(loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
-        using var rpc = new GatewayJsonRpc(loggerFactory.CreateLogger<GatewayJsonRpc>(), userSessionContext, handler);
+        using var handler = new GatewayWebSocketMessageHandler(this.loggerFactory.CreateLogger<GatewayWebSocketMessageHandler>(), socket, formatter);
+        using var rpc = new GatewayJsonRpc(this.loggerFactory.CreateLogger<GatewayJsonRpc>(), this.userSessionContext, handler);
 
         // Ensure that the connection will be closed if the user session is invalidated.
         void OnSessionInvalidated(object? sender, EventArgs e)
@@ -78,15 +78,15 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
 
             //// Fire and forget, we're registering Services -> NATS -> Gateway -> Client forwarders.
             //// No manual call to DisposeAsync is required thanks to services being scoped.
-            eventForwarderCoordinator.StartAllForwardersAsync(rpc, cancellationToken);
+            this.eventForwarderCoordinator.StartAllForwardersAsync(rpc, cancellationToken);
         }
 
-        userSessionContext.Invalidated += OnSessionInvalidated;
-        userSessionContext.Established += OnSessionEstablished;
+        this.userSessionContext.Invalidated += OnSessionInvalidated;
+        this.userSessionContext.Established += OnSessionEstablished;
 
         try
         {
-            targetRegistrar.RegisterTargets(rpc);
+            this.targetRegistrar.RegisterTargets(rpc);
             rpc.StartListening();
 
             // Finally, start the session, and only complete once the socket has disconnected.
@@ -99,31 +99,31 @@ internal sealed class WebSocketRpcSession : IWebSocketRpcSession
             //// and ensures it won't crash if someone attempts to connect and play the game with an older client.
             //// Also, this is handled in the GatewayWebSocketMessageHandler, but broken messages may still surface here
             //// and logging in debug because bad or old clients could make this noisy.
-            logger.LogDebug(ex, "Client sent malformed JSON.");
+            this.logger.LogDebug(ex, "Client sent malformed JSON.");
         }
         catch (InvalidOperationException ex) when (ex.Source == "StreamJsonRpc")
         {
             //// Client sent structurally invalid JSON-RPC (e.g. wrong argument kind)
             //// This is good to log for debugging purposes but would be noisy in production.
             //// It's also good for the reasons mentioned in the catch above.
-            logger.LogDebug(ex, "Client sent invalid JSON-RPC payload.");
+            this.logger.LogDebug(ex, "Client sent invalid JSON-RPC payload.");
         }
         finally
         {
-            userSessionContext.Established -= OnSessionEstablished;
-            userSessionContext.Invalidated -= OnSessionInvalidated;
+            this.userSessionContext.Established -= OnSessionEstablished;
+            this.userSessionContext.Invalidated -= OnSessionInvalidated;
 
             try
             {
-                await userAccountService.LogoutAsync(CancellationToken.None).ConfigureAwait(false);
+                await this.userAccountService.LogoutAsync(CancellationToken.None).ConfigureAwait(false);
             }
             catch (AuthorizationException ex)
             {
                 //// A 401 here is expected when the session was already invalidated server-side,
                 //// For exampale, after a failed token refresh.
-                if (userSessionContext.UserSession != null)
+                if (this.userSessionContext.UserSession != null)
                 {
-                    logger.LogWarning(ex, "Logout request for user with ID '{Username}' was rejected (session likely not refreshed).", userSessionContext.UserSession.UserAccountId);
+                    this.logger.LogWarning(ex, "Logout request for user with ID '{Username}' was rejected (session likely not refreshed).", this.userSessionContext.UserSession.UserAccountId);
                 }
             }
         }

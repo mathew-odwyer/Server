@@ -11,14 +11,25 @@ public sealed class PublishOptions
 
     /// <summary>
     /// </summary>
-    public PublishOptions() => routeKeys = [];
+    public PublishOptions()
+    {
+        this.routeKeys = [];
+    }
 
     /// <summary>
     /// </summary>
-    public IReadOnlyDictionary<string, string> RouteKeys => routeKeys;
+    public IReadOnlyDictionary<string, string> RouteKeys
+    {
+        get
+        {
+            return this.routeKeys;
+        }
+    }
 
     /// <summary>
     /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
     /// <exception cref="ArgumentException">
     /// </exception>
     public PublishOptions WithRouteKey(string key, string value)
@@ -26,10 +37,10 @@ public sealed class PublishOptions
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
 
-        if (routeKeys.ContainsKey(key))
+        if (this.routeKeys.ContainsKey(key))
             throw new ArgumentException($"The route key '{key}' has already been provided.", nameof(key));
 
-        routeKeys.Add(key, value);
+        this.routeKeys.Add(key, value);
         return this;
     }
 }

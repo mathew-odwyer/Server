@@ -20,50 +20,59 @@ internal abstract class EventForwarderBase : IAsyncDisposable
     protected EventForwarderBase(IMessageBus messageBus)
     {
         this.messageBus = messageBus ?? throw new ArgumentNullException(nameof(messageBus));
-        subscriptions = [];
+        this.subscriptions = [];
     }
 
-    protected virtual bool IsDisposed => isDisposed != 0;
+    protected virtual bool IsDisposed
+    {
+        get
+        {
+            return this.isDisposed != 0;
+        }
+    }
 
     public async ValueTask DisposeAsync()
     {
-        if (!TryMarkDisposed())
+        if (!this.TryMarkDisposed())
         {
             return;
         }
 
-        await DisposeAsyncCore().ConfigureAwait(false);
+        await this.DisposeAsyncCore().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 
     public async Task StartAsync(JsonRpc rpc, CancellationToken cancellationToken = default)
     {
-        ObjectDisposedException.ThrowIf(IsDisposed, this);
+        ObjectDisposedException.ThrowIf(this.IsDisposed, this);
         ArgumentNullException.ThrowIfNull(rpc);
 
         this.rpc = rpc;
 
         // Register all subscriptions right away.
-        await RegisterSubscriptionsAsync(cancellationToken).ConfigureAwait(false);
+        await this.RegisterSubscriptionsAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    protected virtual bool CanForward() => !IsDisposed && rpc is { IsDisposed: false };
+    protected virtual bool CanForward()
+    {
+        return !this.IsDisposed && this.rpc is { IsDisposed: false };
+    }
 
     protected virtual async ValueTask DisposeAsyncCore()
     {
-        foreach (var subscription in subscriptions)
+        foreach (var subscription in this.subscriptions)
         {
             await subscription.DisposeAsync().ConfigureAwait(false);
         }
 
-        subscriptions.Clear();
+        this.subscriptions.Clear();
     }
 
     protected async Task ForwardAsync(string procedure, object? data, CancellationToken cancellationToken)
     {
-        ObjectDisposedException.ThrowIf(IsDisposed, this);
+        ObjectDisposedException.ThrowIf(this.IsDisposed, this);
 
-        if (!CanForward())
+        if (!this.CanForward())
         {
             // If we can't forward the request, assume the task has completed.
             return;
@@ -71,7 +80,7 @@ internal abstract class EventForwarderBase : IAsyncDisposable
 
         //// Forward the message and complete either when the message has been sent
         //// or when the caller has requested a cancellation.
-        await rpc!
+        await this.rpc!
             .NotifyWithParameterObjectAsync(procedure, data)
             .WaitAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -85,27 +94,29 @@ internal abstract class EventForwarderBase : IAsyncDisposable
         CancellationToken cancellationToken = default)
             where TData : IEvent
     {
-        ObjectDisposedException.ThrowIf(IsDisposed, this);
+        ObjectDisposedException.ThrowIf(this.IsDisposed, this);
         ArgumentNullException.ThrowIfNull(consumer);
 
-        var subscription = await messageBus.SubscribeAsync(
+        var subscription = await this.messageBus.SubscribeAsync(
             consumer: consumer,
             options: options,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        if (IsDisposed)
+        if (this.IsDisposed)
         {
             // If by the time we've subscribed we're disposed, just dispose of the subscription.
             await subscription.DisposeAsync().ConfigureAwait(false);
             return;
         }
 
-        subscriptions.Add(subscription);
+        this.subscriptions.Add(subscription);
     }
 
-    private bool TryMarkDisposed() =>
+    private bool TryMarkDisposed()
+    {
         //// Interlocked.Exchange atomically sets disposed to 1
         //// and returns the previous value; returning true means this caller "won" the race.
-        Interlocked.Exchange(ref isDisposed, 1) == 0;
+        return Interlocked.Exchange(ref this.isDisposed, 1) == 0;
+    }
 }

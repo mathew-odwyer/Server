@@ -36,33 +36,33 @@ internal sealed class UserAuthenticator : IUserAuthenticator
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
-        logger.LogDebug("User attempting to authenticate with username: '{Username}'", username);
+        this.logger.LogDebug("User attempting to authenticate with username: '{Username}'", username);
 
-        var identityUser = await userManager.FindByNameAsync(username).ConfigureAwait(false);
+        var identityUser = await this.userManager.FindByNameAsync(username).ConfigureAwait(false);
 
         if (identityUser == null)
         {
-            logger.LogWarning("Authentication failed: user not found for user: '{Username}'", username);
+            this.logger.LogWarning("Authentication failed: user not found for user: '{Username}'", username);
             throw new AuthorizationException("Invalid credentials. Please check your details and try again.");
         }
 
-        var result = await signInManager.CheckPasswordSignInAsync(identityUser, password, false).ConfigureAwait(false);
+        var result = await this.signInManager.CheckPasswordSignInAsync(identityUser, password, false).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
-            logger.LogWarning("Authentication failed: invalid password for user: '{Username}'", username);
+            this.logger.LogWarning("Authentication failed: invalid password for user: '{Username}'", username);
             throw new AuthorizationException("Invalid credentials. Please check your details and try again.");
         }
 
-        var userAccount = await userAccountRepository.GetByIdAsync(identityUser.Id).ConfigureAwait(false);
+        var userAccount = await this.userAccountRepository.GetByIdAsync(identityUser.Id).ConfigureAwait(false);
 
         if (userAccount == null)
         {
-            logger.LogError("Failed to locate {UserAccount} with ID: '{UserAccountId}'", nameof(UserAccount), identityUser.Id);
+            this.logger.LogError("Failed to locate {UserAccount} with ID: '{UserAccountId}'", nameof(UserAccount), identityUser.Id);
             throw new AuthorizationException("Invalid Credentials. Please check your details and try again.");
         }
 
-        logger.LogDebug("Authentication succeeded for user: '{Username}'", username);
+        this.logger.LogDebug("Authentication succeeded for user: '{Username}'", username);
 
         return userAccount;
     }

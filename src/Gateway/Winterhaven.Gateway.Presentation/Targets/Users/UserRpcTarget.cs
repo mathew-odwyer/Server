@@ -42,8 +42,10 @@ internal sealed class UserRpcTarget : IRpcTarget
 {
     private readonly IUserAccountService userAccountService;
 
-    public UserRpcTarget(IUserAccountService userAccountService) =>
+    public UserRpcTarget(IUserAccountService userAccountService)
+    {
         this.userAccountService = userAccountService ?? throw new ArgumentNullException(nameof(userAccountService));
+    }
 
     [JsonRpcMethod("user.login", UseSingleObjectParameterDeserialization = true)]
     public async Task<UserLoginRpcResult> LoginAsync(UserLoginRpcParameters parameters, CancellationToken cancellationToken = default)

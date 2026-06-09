@@ -26,7 +26,7 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
         this.webSocket = webSocket ?? throw new ArgumentNullException(nameof(webSocket));
         ArgumentNullException.ThrowIfNull(proxyTypes);
 
-        formatter = new SystemTextJsonFormatter()
+        this.formatter = new SystemTextJsonFormatter()
         {
             JsonSerializerOptions = new JsonSerializerOptions()
             {
@@ -35,10 +35,10 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
             }
         };
 
-        messageHandler = new WebSocketMessageHandler(this.webSocket, formatter);
-        jsonRpc = new JsonRpc(messageHandler);
+        this.messageHandler = new WebSocketMessageHandler(this.webSocket, this.formatter);
+        this.jsonRpc = new JsonRpc(this.messageHandler);
 
-        typeToProxyMap = [];
+        this.typeToProxyMap = [];
 
         var proxyOptions = new JsonRpcProxyOptions()
         {
@@ -47,70 +47,70 @@ internal sealed class WebSocketRpcConnection : IAsyncDisposable
 
         foreach (var type in proxyTypes)
         {
-            typeToProxyMap[type] = jsonRpc.Attach(type, proxyOptions);
+            this.typeToProxyMap[type] = this.jsonRpc.Attach(type, proxyOptions);
         }
 
-        jsonRpc.StartListening();
+        this.jsonRpc.StartListening();
     }
 
     public WebSocketState State
     {
         get
         {
-            ObjectDisposedException.ThrowIf(isDisposed, nameof(WebSocketRpcConnection));
-            return webSocket.State;
+            ObjectDisposedException.ThrowIf(this.isDisposed, nameof(WebSocketRpcConnection));
+            return this.webSocket.State;
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (isDisposed)
+        if (this.isDisposed)
         {
             return;
         }
 
-        if (jsonRpc != null)
+        if (this.jsonRpc != null)
         {
-            jsonRpc.Dispose();
-            jsonRpc = null;
+            this.jsonRpc.Dispose();
+            this.jsonRpc = null;
         }
 
-        if (messageHandler != null)
+        if (this.messageHandler != null)
         {
-            await messageHandler.DisposeAsync().ConfigureAwait(false);
-            messageHandler = null;
+            await this.messageHandler.DisposeAsync().ConfigureAwait(false);
+            this.messageHandler = null;
         }
 
-        if (formatter != null)
+        if (this.formatter != null)
         {
-            formatter.Dispose();
-            formatter = null;
+            this.formatter.Dispose();
+            this.formatter = null;
         }
 
-        if (typeToProxyMap != null)
+        if (this.typeToProxyMap != null)
         {
-            typeToProxyMap.Clear();
-            typeToProxyMap = null;
+            this.typeToProxyMap.Clear();
+            this.typeToProxyMap = null;
         }
 
-        if (webSocket != null)
+        if (this.webSocket != null)
         {
-            webSocket.Dispose();
-            webSocket = null;
+            this.webSocket.Dispose();
+            this.webSocket = null;
         }
 
-        isDisposed = true;
+        this.isDisposed = true;
         GC.SuppressFinalize(this);
     }
 
     public TProxy GetProxy<TProxy>()
                 where TProxy : class
     {
-        ObjectDisposedException.ThrowIf(isDisposed, nameof(WebSocketRpcConnection));
+        ObjectDisposedException.ThrowIf(this.isDisposed, nameof(WebSocketRpcConnection));
 
         var type = typeof(TProxy);
 
-        return !typeToProxyMap.TryGetValue(type, out object proxy)
+        return !this.typeToProxyMap.TryGetValue(type, out object proxy)
             ? throw new ArgumentException($"Failed to fetch proxy for type: {type.FullName}")
             : (TProxy)proxy;
     }

@@ -13,13 +13,16 @@ internal sealed class UnitOfWork : IUnitOfWork
 {
     private readonly DbContext context;
 
-    public UnitOfWork(DbContext context) => this.context = context ?? throw new ArgumentNullException(nameof(context));
+    public UnitOfWork(DbContext context)
+    {
+        this.context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await this.context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (DbUpdateException ex)
         {

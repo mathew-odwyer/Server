@@ -26,13 +26,16 @@ public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesIntercept
     /// <param name="serviceProvider">
     ///   Specifies a <see cref="IServiceProvider"/> that is used to resolve the <see cref="IActorContext"/> upon updating entities.
     /// </param>
-    public AuditableEntitySaveChangesInterceptor(IServiceProvider serviceProvider) => this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    public AuditableEntitySaveChangesInterceptor(IServiceProvider serviceProvider)
+    {
+        this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    }
 
     /// <inheritdoc/>
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         ArgumentNullException.ThrowIfNull(eventData);
-        UpdateEntities(eventData.Context);
+        this.UpdateEntities(eventData.Context);
         return base.SavingChanges(eventData, result);
     }
 
@@ -40,7 +43,7 @@ public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesIntercept
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(eventData);
-        UpdateEntities(eventData.Context);
+        this.UpdateEntities(eventData.Context);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
@@ -53,7 +56,10 @@ public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesIntercept
     /// <returns>
     ///   Returns <c>true</c> if any owned entities have changed; otherwise, <c>false</c>.
     /// </returns>
-    private static bool HasChangedOwnedEntities(EntityEntry entry) => entry.References.Any(x => x.TargetEntry?.Metadata.IsOwned() == true && (x.TargetEntry.State == EntityState.Added || x.TargetEntry.State == EntityState.Modified));
+    private static bool HasChangedOwnedEntities(EntityEntry entry)
+    {
+        return entry.References.Any(x => x.TargetEntry?.Metadata.IsOwned() == true && (x.TargetEntry.State == EntityState.Added || x.TargetEntry.State == EntityState.Modified));
+    }
 
     /// <summary>
     ///   Updates the auditing fields of entities in the given <see cref="DbContext"/>.
@@ -69,7 +75,7 @@ public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesIntercept
         }
 
         // Resolve at save time, not construction time, to break the circular dependency.
-        var actorContext = serviceProvider.GetRequiredService<IActorContext>();
+        var actorContext = this.serviceProvider.GetRequiredService<IActorContext>();
         var identifier = actorContext.Actor.Id;
 
         foreach (var entry in context.ChangeTracker.Entries<AuditableEntityBase>())

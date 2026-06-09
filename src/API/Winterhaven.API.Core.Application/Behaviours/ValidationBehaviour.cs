@@ -20,8 +20,10 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
 
     /// <summary>
     /// </summary>
-    /// <param name="validators"></param>
-    public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators) => this.validators = validators ?? throw new ArgumentNullException(nameof(validators));
+    public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
+    {
+        this.validators = validators ?? throw new ArgumentNullException(nameof(validators));
+    }
 
     /// <summary>
     /// </summary>
@@ -34,11 +36,11 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     {
         ArgumentNullException.ThrowIfNull(next);
 
-        if (validators.Any())
+        if (this.validators.Any())
         {
             var context = new ValidationContext<TRequest>(request);
 
-            var validationResults = await Task.WhenAll(validators.Select(x => x.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
+            var validationResults = await Task.WhenAll(this.validators.Select(x => x.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
 
             var errors = validationResults
                 .Where(x => x.Errors.Count != 0)

@@ -15,5 +15,8 @@ internal sealed class ActorRepository : RepositoryBase<Actor>, IActorRepository
     {
     }
 
-    public Actor? GetById(Guid id) => Query().FirstOrDefault(x => x.Id == id);
+    public Actor? GetById(Guid id)
+    {
+        return this.Query().FirstOrDefault(x => x.Id == id);
+    }
 }

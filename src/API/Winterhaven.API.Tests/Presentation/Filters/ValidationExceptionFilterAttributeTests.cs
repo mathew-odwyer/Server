@@ -45,34 +45,36 @@ internal sealed class ValidationExceptionFilterAttributeTests
     }
 
     [Test]
-    public void ConstructorShouldNotThrowExceptionWhenInvoked() =>
+    public void ConstructorShouldNotThrowExceptionWhenInvoked()
+    {
         // Act and assert
         Assert.DoesNotThrow(() => new ValidationExceptionFilterAttribute());
+    }
 
     [Test]
     public void OnExceptionShouldNotReturnNotFoundObjectResultWhenExceptionHandled()
     {
         // Arrange
-        exceptionContext.ExceptionHandled = true;
+        this.exceptionContext.ExceptionHandled = true;
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.Result, Is.Null);
+        Assert.That(this.exceptionContext.Result, Is.Null);
     }
 
     [Test]
     public void OnExceptionShouldNotReturnNotFoundObjectResultWhenExceptionIsNotNotFoundException()
     {
         // Arrange
-        exceptionContext.Exception = new InvalidOperationException();
+        this.exceptionContext.Exception = new InvalidOperationException();
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.Result, Is.Not.TypeOf<ValidationException>());
+        Assert.That(this.exceptionContext.Result, Is.Not.TypeOf<ValidationException>());
     }
 
     [Test]
@@ -80,13 +82,13 @@ internal sealed class ValidationExceptionFilterAttributeTests
     {
         // Arrange
         const string message = "This is the message.";
-        exceptionContext.Exception = new ValidationException(message);
+        this.exceptionContext.Exception = new ValidationException(message);
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.Exception, Is.TypeOf<ValidationException>());
+        Assert.That(this.exceptionContext.Exception, Is.TypeOf<ValidationException>());
     }
 
     [Test]
@@ -100,20 +102,20 @@ internal sealed class ValidationExceptionFilterAttributeTests
             ["Property2"] = ["Error message 2."]
         };
 
-        exceptionContext.Exception = new ValidationException(message)
+        this.exceptionContext.Exception = new ValidationException(message)
         {
             Errors = errors,
         };
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(exceptionContext.Result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(this.exceptionContext.Result, Is.TypeOf<BadRequestObjectResult>());
 
-            var badRequestResult = exceptionContext.Result as BadRequestObjectResult;
+            var badRequestResult = this.exceptionContext.Result as BadRequestObjectResult;
             var problemDetails = badRequestResult.Value as ValidationProblemDetails;
 
             Assert.That(problemDetails.Type, Is.EqualTo("https://tools.ietf.org/html/rfc7231#section-6.5.1"));
@@ -128,29 +130,31 @@ internal sealed class ValidationExceptionFilterAttributeTests
     public void OnExceptionShouldSetExceptionHandledToTrueWhenExceptionIsNotFoundException()
     {
         // Arrange
-        exceptionContext.Exception = new ValidationException();
+        this.exceptionContext.Exception = new ValidationException();
 
         // Act
-        filterAttribute.OnException(exceptionContext);
+        this.filterAttribute.OnException(this.exceptionContext);
 
         // Assert
-        Assert.That(exceptionContext.ExceptionHandled, Is.True);
+        Assert.That(this.exceptionContext.ExceptionHandled, Is.True);
     }
 
     [Test]
-    public void OnExceptionShouldThrowArgumentNullExceptionWhenContextIsNull() =>
+    public void OnExceptionShouldThrowArgumentNullExceptionWhenContextIsNull()
+    {
         // Act and assert
-        Assert.Throws<ArgumentNullException>(() => filterAttribute.OnException(null));
+        Assert.Throws<ArgumentNullException>(() => this.filterAttribute.OnException(null));
+    }
 
     [SetUp]
     public void SetUp()
     {
-        httpContext = new DefaultHttpContext();
-        routeData = new RouteData();
-        actionDescriptor = Substitute.For<ActionDescriptor>();
-        actionContext = new ActionContext(httpContext, routeData, actionDescriptor);
-        exceptionContext = new ExceptionContext(actionContext, Array.Empty<IFilterMetadata>());
+        this.httpContext = new DefaultHttpContext();
+        this.routeData = new RouteData();
+        this.actionDescriptor = Substitute.For<ActionDescriptor>();
+        this.actionContext = new ActionContext(this.httpContext, this.routeData, this.actionDescriptor);
+        this.exceptionContext = new ExceptionContext(this.actionContext, Array.Empty<IFilterMetadata>());
 
-        filterAttribute = new ValidationExceptionFilterAttribute();
+        this.filterAttribute = new ValidationExceptionFilterAttribute();
     }
 }

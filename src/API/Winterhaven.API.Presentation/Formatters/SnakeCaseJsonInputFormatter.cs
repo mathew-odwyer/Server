@@ -18,9 +18,9 @@ internal sealed class SnakeCaseJsonInputFormatter : TextInputFormatter
 
     public SnakeCaseJsonInputFormatter()
     {
-        SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/json"));
-        SupportedEncodings.Add(Encoding.UTF8);
-        SupportedEncodings.Add(Encoding.Unicode);
+        this.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/json"));
+        this.SupportedEncodings.Add(Encoding.UTF8);
+        this.SupportedEncodings.Add(Encoding.Unicode);
     }
 
     public override bool CanRead(InputFormatterContext context)
