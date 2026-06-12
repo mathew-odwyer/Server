@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 <details open>
-<summary>[#91] - Gateway Server</summary>
+<summary>Epic: Gateway Server</summary>
 
 - [#91] - Gateway Server (_by [@mathew-odwyer]_).
   - [#72] - GML NATS Client (_by [@mathew-odwyer]_).
@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
 
 </details>
-
 <details open>
 <summary>Epic: Player Sessions</summary>
 
