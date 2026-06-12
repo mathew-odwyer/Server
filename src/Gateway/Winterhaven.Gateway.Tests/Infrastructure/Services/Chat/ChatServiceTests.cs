@@ -49,10 +49,10 @@ internal sealed class ChatServiceTests
         Assert.Throws<ArgumentNullException>(() => new ChatService(this.logger, null, this.messageBus));
     }
 
-    [TestCase("/shake", "hello [shake] world")]
-    [TestCase("/wobble", "hello [wobble] world")]
-    [TestCase("/blink", "hello [blink] world")]
-    [TestCase("/rainbow", "hello [rainbow] world")]
+    [TestCase("/shake", "[shake]hello world")]
+    [TestCase("/wobble", "[wobble]hello world")]
+    [TestCase("/blink", "[blink]hello world")]
+    [TestCase("/rainbow", "[rainbow]hello world")]
     public async Task SendMessageAsyncShouldConvertWhitelistEffectToScribbleFormatInBody(string effect, string expectedBody)
     {
         // Arrange
@@ -130,7 +130,7 @@ internal sealed class ChatServiceTests
         using (Assert.EnterMultipleScope())
         {
             Assert.That(chatEvent.Message, Is.Empty);
-            Assert.That(chatEvent.EmoteType, Is.EqualTo(ChatEmoteType.Exclaim));
+            Assert.That(chatEvent.EmoteType, Is.EqualTo(ChatEmoteType.Heart));
         }
     }
 
@@ -156,7 +156,7 @@ internal sealed class ChatServiceTests
         // Assert
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(chatEvent.Message, Is.EqualTo("hello [shake] world"));
+            Assert.That(chatEvent.Message, Is.EqualTo("[shake]hello world"));
             Assert.That(chatEvent.EmoteType, Is.EqualTo(ChatEmoteType.Heart));
         }
     }
@@ -251,7 +251,7 @@ internal sealed class ChatServiceTests
         using (Assert.EnterMultipleScope())
         {
             Assert.That(chatEvent.Message, Is.EqualTo("hello"));
-            Assert.That(chatEvent.EmoteType, Is.EqualTo(ChatEmoteType.Exclaim));
+            Assert.That(chatEvent.EmoteType, Is.EqualTo(ChatEmoteType.Heart));
         }
     }
 

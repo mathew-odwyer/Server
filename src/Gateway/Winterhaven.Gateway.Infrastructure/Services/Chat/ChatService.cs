@@ -94,37 +94,44 @@ internal sealed class ChatService : IChatService
 
         var emoteType = ChatEmoteType.None;
 
-        string body = string.Join(' ', tokens.Select(token =>
+        var effects = new List<string>();
+        var bodyTokens = new List<string>();
+
+        foreach (string token in tokens)
         {
             if (token.StartsWith('/'))
             {
-                //// Remove all occurances of emote commands from the body.
-                //// Only use the last emote that is found.
                 if (CommandToChatEmoteTypeMap.TryGetValue(token, out var chatEmoteType))
                 {
-                    emoteType = chatEmoteType;
-                    return null;
+                    // Only use the first emote we find.
+                    if (emoteType == ChatEmoteType.None)
+                    {
+                        emoteType = chatEmoteType;
+                    }
+
+                    continue;
                 }
 
-                // Convert effects to Scribble effects.
                 if (WhiteListEffects.Contains(token))
                 {
-                    return $"[{token[1..]}]";
+                    // Add the effect as a Scribble effect to be prepended.
+                    effects.Add($"[{token[1..]}]");
+                    continue;
                 }
             }
 
-            return token;
-        })
-        .Where(token => token != null))
-        .Trim();
+            bodyTokens.Add(token);
+        }
 
+        // Preprend all effects to the body.
+        string body = string.Concat(effects) + string.Join(' ', bodyTokens);
         this.logger.LogTrace("Parsed Incoming Message: '{Message}'", body);
 
         return new ChatEvent()
         {
             EmoteType = emoteType,
             SenderId = this.userSessionContext.UserSession!.UserAccountId,
-            Message = body,
+            Message = body.Trim(),
         };
     }
 }
