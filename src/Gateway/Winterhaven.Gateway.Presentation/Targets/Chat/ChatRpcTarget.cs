@@ -45,7 +45,7 @@ internal sealed class ChatRpcTarget : IRpcTarget
         var userAccountId = userSession.UserAccountId;
         string message = parameters.Message;
 
-        this.logger.LogTrace("Sending chat message for with player with ID: '{PlayerId}': {Message}", userAccountId, message);
+        this.logger.LogTrace("Sending chat message for player with ID: '{PlayerId}': {Message}", userAccountId, message);
 
         await this.chatService.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
     }
