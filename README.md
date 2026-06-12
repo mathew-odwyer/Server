@@ -9,7 +9,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mathew-odwyer_Server&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mathew-odwyer_Server)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mathew-odwyer_Server&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mathew-odwyer_Server)
 
-[![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server)](https://github.com/mathew-odwyer/Server/releases)
+[![Release](https://img.shields.io/github/v/release/mathew-odwyer/Server?include_prereleases)](https://github.com/mathew-odwyer/Server/releases)
 ![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)
 
 </div>
