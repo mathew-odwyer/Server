@@ -52,7 +52,7 @@ internal sealed class UserRpcTarget : IRpcTarget
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        var response = await userAccountService.LoginAsync(
+        var response = await this.userAccountService.LoginAsync(
             username: parameters.Username,
             password: parameters.Password,
             cancellationToken: cancellationToken)
@@ -68,7 +68,7 @@ internal sealed class UserRpcTarget : IRpcTarget
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        var response = await userAccountService.RefreshTokenAsync(
+        var response = await this.userAccountService.RefreshTokenAsync(
             refreshToken: parameters.RefreshToken,
             cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -82,7 +82,7 @@ internal sealed class UserRpcTarget : IRpcTarget
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        await userAccountService.RegisterAsync(
+        await this.userAccountService.RegisterAsync(
             username: parameters.Username,
             password: parameters.Password,
             emailAddress: parameters.EmailAddress,

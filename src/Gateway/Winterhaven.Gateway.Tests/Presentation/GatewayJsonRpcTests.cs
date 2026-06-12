@@ -20,34 +20,40 @@ internal sealed class GatewayJsonRpcTests
     private IUserSessionContext userSessionContext;
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenAuthenticatorIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenAuthenticatorIsNull()
+    {
         // Act and Assert
-        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(logger, null, messageHandler));
+        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(this.logger, null, this.messageHandler));
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
+    {
         // Act and Assert
-        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(null, userSessionContext, messageHandler));
+        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(null, this.userSessionContext, this.messageHandler));
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenMessageHandlerIsNull() =>
+    public void ConstructorShouldThrowArgumentNullExceptionWhenMessageHandlerIsNull()
+    {
         // Act and Assert
-        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(logger, userSessionContext, null));
+        Assert.Throws<ArgumentNullException>(() => new GatewayJsonRpc(this.logger, this.userSessionContext, null));
+    }
 
     [SetUp]
     public void Setup()
     {
-        logger = Substitute.For<ILogger<GatewayJsonRpc>>();
-        messageHandler = Substitute.For<IJsonRpcMessageHandler>();
-        userSessionContext = Substitute.For<IUserSessionContext>();
+        this.logger = Substitute.For<ILogger<GatewayJsonRpc>>();
+        this.messageHandler = Substitute.For<IJsonRpcMessageHandler>();
+        this.userSessionContext = Substitute.For<IUserSessionContext>();
 
-        rpc = new GatewayJsonRpc(logger, userSessionContext, messageHandler);
+        this.rpc = new GatewayJsonRpc(this.logger, this.userSessionContext, this.messageHandler);
     }
 
     [TearDown]
     public void TearDown()
     {
-        userSessionContext.Dispose();
-        rpc.Dispose();
+        this.userSessionContext.Dispose();
+        this.rpc.Dispose();
     }
 }

@@ -5,6 +5,7 @@ using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
 using Winterhaven.Gateway.Integrations.Services.Clients;
 using Winterhaven.Gateway.Integrations.Services.Users;
+using Winterhaven.Gateway.Presentation;
 
 namespace Winterhaven.Gateway.Integrations.Presentation;
 
@@ -18,7 +19,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
         const int expectedErrorCode = 401;
         const string expectedMessage = "Authentication is required to perform this action.";
 
-        await using var connection = await CreateConnectionAsync(x => x
+        await using var connection = await this.CreateConnectionAsync(x => x
             .WithProxy<IAuthClientProxy>());
 
         var authProxy = connection.GetProxy<IAuthClientProxy>();
@@ -40,7 +41,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
         const int expectedErrorCode = 401;
         const string expectedMessage = "Authentication is required to perform the request.";
 
-        await using var connection = await CreateConnectionAsync(x => x
+        await using var connection = await this.CreateConnectionAsync(x => x
             .WithProxy<IErrorClientProxy>());
 
         var errorProxy = connection.GetProxy<IErrorClientProxy>();
@@ -51,6 +52,28 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
             var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => errorProxy.GenerateUnauthorizedError());
 
             Assert.That(exception.ErrorCode, Is.EqualTo(expectedErrorCode));
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+        }
+    }
+
+    [Test]
+    public async Task GatewayShouldReturnChatMessageErrorWhenChatMessageExceptionIsThrownInRpc()
+    {
+        // Arrange
+        const GatewayErrorCode expectedErrorCode = GatewayErrorCode.ChatError;
+        const string expectedMessage = "This is the message lol.";
+
+        await using var connection = await this.CreateConnectionAsync(x => x
+            .WithProxy<IErrorClientProxy>());
+
+        var errorProxy = connection.GetProxy<IErrorClientProxy>();
+
+        // Act and assert
+        using (Assert.EnterMultipleScope())
+        {
+            var exception = Assert.ThrowsAsync<RemoteInvocationException>(() => errorProxy.GenerateChatError());
+
+            Assert.That(exception.ErrorCode, Is.EqualTo((int)expectedErrorCode));
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
     }
@@ -67,7 +90,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
             { "General", ["One or more validation errors occurred."] }
         };
 
-        await using var connection = await CreateConnectionAsync(x => x
+        await using var connection = await this.CreateConnectionAsync(x => x
             .WithProxy<IErrorClientProxy>());
 
         var errorProxy = connection.GetProxy<IErrorClientProxy>();
@@ -89,7 +112,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
         const int expectedErrorCode = (int)JsonRpcErrorCode.InternalError;
         const string expectedMessage = "An unexpected error occurred. Please try again later.";
 
-        await using var connection = await CreateConnectionAsync(x => x
+        await using var connection = await this.CreateConnectionAsync(x => x
             .WithProxy<IErrorClientProxy>());
 
         var errorProxy = connection.GetProxy<IErrorClientProxy>();
@@ -110,12 +133,12 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
         // Arrange
         const string expectedSecret = "secret";
 
-        await using var connection = await CreateConnectionAsync(x => x
+        await using var connection = await this.CreateConnectionAsync(x => x
             .WithProxy<IAuthClientProxy>());
 
         var authProxy = connection.GetProxy<IAuthClientProxy>();
 
-        UserSessionManager.EstablishUserSession(MockUserSessionManager.DummySession);
+        this.UserSessionManager.EstablishUserSession(MockUserSessionManager.DummySession);
 
         // Act
         string actual = await authProxy.GetUserSecret();
@@ -137,7 +160,7 @@ internal sealed class GatewayJsonRpcIntegrationTests : TestHostBase
             { "Other", ["This is a cool test lol", "seriously cool"] }
         };
 
-        await using var connection = await CreateConnectionAsync(x => x
+        await using var connection = await this.CreateConnectionAsync(x => x
             .WithProxy<IErrorClientProxy>());
 
         var errorProxy = connection.GetProxy<IErrorClientProxy>();

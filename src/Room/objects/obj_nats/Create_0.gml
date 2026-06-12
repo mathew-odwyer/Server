@@ -35,3 +35,4 @@ if (!_client.connect(nats_host, nats_port))
 
 event_subscribe("user.logged_in", user_logged_in_event_handler);
 event_subscribe("user.logged_out", user_logged_out_event_handler);
+event_subscribe("chat.message", chat_message_event_handler);

@@ -14,6 +14,7 @@ using Winterhaven.Gateway.Presentation.Services.Events;
 using Winterhaven.Gateway.Presentation.Services.Events.Players;
 using Winterhaven.Gateway.Presentation.Services.Sessions;
 using Winterhaven.Gateway.Presentation.Services.Targets;
+using Winterhaven.Gateway.Presentation.Targets.Chat;
 using Winterhaven.Gateway.Presentation.Targets.Health;
 using Winterhaven.Gateway.Presentation.Targets.Players;
 using Winterhaven.Gateway.Presentation.Targets.Users;
@@ -84,6 +85,7 @@ internal sealed class Startup
         services.AddRpcSessionTarget<HealthRpcTarget>();
         services.AddRpcSessionTarget<UserRpcTarget>();
         services.AddRpcSessionTarget<PlayerRpcTarget>();
+        services.AddRpcSessionTarget<ChatRpcTarget>();
 
         services.AddEventForwarder<PlayerEventForwarder>();
 

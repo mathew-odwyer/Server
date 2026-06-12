@@ -9,6 +9,9 @@ namespace Winterhaven.Gateway.Integrations.Services.Clients;
 [GenerateShape(IncludeMethods = MethodShapeFlags.PublicInstance)]
 internal partial interface IErrorClientProxy
 {
+    [JsonRpcMethod("error.chat", UseSingleObjectParameterDeserialization = true)]
+    public Task GenerateChatError(CancellationToken cancellationToken = default);
+
     [JsonRpcMethod("error.unauthorized", UseSingleObjectParameterDeserialization = true)]
     public Task GenerateUnauthorizedError(CancellationToken cancellationToken = default);
 

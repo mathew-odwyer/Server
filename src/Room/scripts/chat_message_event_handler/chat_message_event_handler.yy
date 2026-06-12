@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chat_message_event_handler",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chat_message_event_handler",
+  "parent":{
+    "name":"Chat",
+    "path":"folders/Scripts/Events/Chat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

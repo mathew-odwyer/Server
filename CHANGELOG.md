@@ -22,17 +22,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#107] - Room Service Event Consumers and Publishing (_by [@mathew-odwyer]_).
   - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
   - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
+  - [#122] - Player Chat via Core NATS (_by [@mathew-odwyer]_).
+- [#189] - Send Chat Failure Message when Sending Message Fails (_by [@mathew-odwyer]_).
 
 ### Fixed
 
 - [#59] - Server Sends Error Messages to Client (_by [@mathew-odwyer]_).
 - [#191] - Fix GitHub Release Action (_by [@mathew-odwyer]_).
-- [#236] - Client causes Visible Hard Snapping during Normal Movement (_by [@mathew-odwyer]_)
+- [#236] - Client causes Visible Hard Snapping during Normal Movement (_by [@mathew-odwyer]_).
 
 ### Changed
 
 - [#174] - Consolidate Version Numbering Logic (_by [@mathew-odwyer]_).
 - [#111] - Remove JSON-RPC Transport Layer Concerns from `obj_http` (_by [@mathew-odwyer]_).
+- [#180] - SonarQube Cloud Configuration (_by [@mathew-odwyer]_).
+- [#79] - Gracefully Handle Timeout Errors (_by [@mathew-odwyer]_).
+
 
 ## [v0.3.0] - 27-05-2026
 
@@ -88,6 +93,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#180]: https://github.com/mathew-odwyer/Server/issues/180
+[#79]: https://github.com/mathew-odwyer/Server/issues/79
+[#189]: https://github.com/mathew-odwyer/Server/issues/189
+[#122]: https://github.com/mathew-odwyer/Server/issues/122
 [#236]: https://github.com/mathew-odwyer/Server/issues/236
 [#123]: https://github.com/mathew-odwyer/Server/issues/123
 [#108]: https://github.com/mathew-odwyer/Server/issues/108

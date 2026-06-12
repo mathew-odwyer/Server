@@ -9,10 +9,12 @@ using Refit;
 using Winterhaven.Common;
 using Winterhaven.Common.Extensions;
 using Winterhaven.Gateway.Core.Application.Clients.Users;
+using Winterhaven.Gateway.Core.Application.Services.Chat;
 using Winterhaven.Gateway.Core.Application.Services.Users;
 using Winterhaven.Gateway.Infrastructure.Options.Client;
 using Winterhaven.Gateway.Infrastructure.Pipeline.Factories;
 using Winterhaven.Gateway.Infrastructure.Pipeline.Handlers;
+using Winterhaven.Gateway.Infrastructure.Services.Chat;
 using Winterhaven.Gateway.Infrastructure.Services.Users;
 
 namespace Winterhaven.Gateway.Infrastructure.Extensions;
@@ -56,6 +58,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IUserTokenParser, UserTokenParser>();
         services.AddScoped<IUserAccountService, UserAccountService>();
+        services.AddScoped<IChatService, ChatService>();
 
         services.AddGatewayClient<IUserAccountClient>("api/UserAccount");
 
