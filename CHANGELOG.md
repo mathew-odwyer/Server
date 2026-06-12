@@ -9,9 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-<details open>
-<summary>Epic: Gateway Server</summary>
-
 - [#91] - Gateway Server (_by [@mathew-odwyer]_).
   - [#72] - GML NATS Client (_by [@mathew-odwyer]_).
   - [#97] - Gateway Infrastructure Setup (_by [@mathew-odwyer]_).
@@ -19,11 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#93] - Gateway Login Flow (_by [@mathew-odwyer]_).
   - [#96] - Gateway Logout Flow (_by [@mathew-odwyer]_).
   - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
-
-</details>
-<details open>
-<summary>Epic: Player Sessions</summary>
-
 - [#103] - Player Sessions via NATS (_by [@mathew-odwyer]_).
   - [#105] - Event Contracts and Application Interfaces (_by [@mathew-odwyer]_).
   - [#104] - NATS Infrastructure Foundation (_by [@mathew-odwyer]_).
@@ -31,9 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
   - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
   - [#122] - PLayer Chat via Core NATS (_by [@mathew-odwyer]_).
-
-</details>
-
 - [#189] - Send Chat Failure Message when Sending Message Fails (_by [@mathew-odwyer]_).
 
 ### Fixed
@@ -46,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#174] - Consolidate Version Numbering Logic (_by [@mathew-odwyer]_).
 - [#111] - Remove JSON-RPC Transport Layer Concerns from `obj_http` (_by [@mathew-odwyer]_).
+- [#180] - SonarQube Cloud Configuration (_by [@mathew-odwyer]_).
+- [#79] - Gracefully Handle Timeout Errors (_by [@mathew-odwyer]_).
+
 
 ## [v0.3.0] - 27-05-2026
 
@@ -101,6 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#180]: https://github.com/mathew-odwyer/Server/issues/180
+[#179]: https://github.com/mathew-odwyer/Server/issues/79
 [#189]: https://github.com/mathew-odwyer/Server/issues/189
 [#122]: https://github.com/mathew-odwyer/Server/issues/122
 [#236]: https://github.com/mathew-odwyer/Server/issues/236
