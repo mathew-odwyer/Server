@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#107] - Room Service Event Consumers and Publishing (_by [@mathew-odwyer]_).
   - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
   - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
-  - [#122] - PLayer Chat via Core NATS (_by [@mathew-odwyer]_).
+  - [#122] - Player Chat via Core NATS (_by [@mathew-odwyer]_).
 - [#189] - Send Chat Failure Message when Sending Message Fails (_by [@mathew-odwyer]_).
 
 ### Fixed
