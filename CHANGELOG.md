@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#59] - Server Sends Error Messages to Client (_by [@mathew-odwyer]_).
 - [#191] - Fix GitHub Release Action (_by [@mathew-odwyer]_).
-- [#236] - Client causes Visible Hard Snapping during Normal Movement (_by [@mathew-odwyer]_)
+- [#236] - Client causes Visible Hard Snapping during Normal Movement (_by [@mathew-odwyer]_).
 
 ### Changed
 
