@@ -8,9 +8,15 @@ using StreamJsonRpc;
 using StreamJsonRpc.Protocol;
 using Winterhaven.Common.Exceptions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Presentation.Attributes;
 
 namespace Winterhaven.Gateway.Presentation;
+
+internal enum GatewayErrorCode
+{
+    ChatError = 1,
+}
 
 internal sealed class GatewayJsonRpc : JsonRpc
 {
@@ -53,6 +59,13 @@ internal sealed class GatewayJsonRpc : JsonRpc
                 {
                     Code = (JsonRpcErrorCode)401,
                     Message = authorizationException.Message,
+                };
+
+            case ChatMessageException chatMessageException:
+                return new JsonRpcError.ErrorDetail()
+                {
+                    Code = (JsonRpcErrorCode)GatewayErrorCode.ChatError,
+                    Message = chatMessageException.Message,
                 };
 
             //// For everything else, log it and send nothing useful to the client.
