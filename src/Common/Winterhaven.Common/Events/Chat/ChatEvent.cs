@@ -22,7 +22,9 @@ public enum ChatEmoteType
     /// </summary>
     Exclaim = 2,
 
-    /// <summary> The heart emote (<3). </summary>
+    /// <summary>
+    ///   The heart emote
+    /// </summary>
     Heart = 3,
 
     /// <summary>
@@ -30,13 +32,6 @@ public enum ChatEmoteType
     /// </summary>
     Question = 4,
 }
-
-/*
-    - EmoteType
-    - Message
-    - SenderId
-    -
-*/
 
 /// <summary>
 ///   Represents an event that is published when a player sends a chat message.
