@@ -74,14 +74,14 @@ internal sealed class ChatServiceTests
         // Act
         var chatEvent = await this.GetPublishedChatEventAsync(message).ConfigureAwait(false);
 
-        // Assert Scribble only requires '[' to be escaped; ']' is left as-is.
+        // Assert
         Assert.That(chatEvent.Message, Is.EqualTo("hello [[player]"));
     }
 
     [Test]
     public async Task SendMessageAsyncShouldLeavePartialCommandInBodyWhenTruncationSplitsACommand()
     {
-        // Arrange 76 'a's (0-75) + ' ' (76) + '/wave' (77-81) = 82 chars. Truncated at 80 leaves '/wa' as the final token — not a valid command, so it passes through to the body verbatim.
+        // Arrange
         string message = new string('a', 76) + " /wave";
 
         // Act
