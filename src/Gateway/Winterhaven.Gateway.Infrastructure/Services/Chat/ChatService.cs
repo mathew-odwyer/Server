@@ -13,7 +13,6 @@ using Winterhaven.Gateway.Core.Domain.Exceptions;
 
 namespace Winterhaven.Gateway.Infrastructure.Services.Chat;
 
-//// TODO: This should likely be a singleton and take in UserSession or userAccountId as a parameter.
 internal sealed class ChatService : IChatService
 {
     private static readonly Dictionary<string, ChatEmoteType> CommandToChatEmoteTypeMap = new(StringComparer.OrdinalIgnoreCase)

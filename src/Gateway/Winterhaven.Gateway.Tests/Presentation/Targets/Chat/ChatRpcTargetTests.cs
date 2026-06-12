@@ -97,6 +97,13 @@ internal sealed class ChatRpcTargetTests
     }
 
     [Test]
+    public void SendMessageAsyncShouldThrowArgumentNullExceptionWhenParameterIsNull()
+    {
+        // Act and assert
+        Assert.ThrowsAsync<ArgumentNullException>(() => this.target.SendMessageAsync(null, CancellationToken.None));
+    }
+
+    [Test]
     public void SendMessageAsyncShouldThrowAuthorizationExceptionWhenUserSessionIsNotAuthenticated()
     {
         // Arrange

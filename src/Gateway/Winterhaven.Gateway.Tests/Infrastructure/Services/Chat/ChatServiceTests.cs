@@ -3,11 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Winterhaven.Common.Events;
 using Winterhaven.Common.Events.Chat;
 using Winterhaven.Common.Exceptions;
 using Winterhaven.Gateway.Core.Application.Services.Users;
+using Winterhaven.Gateway.Core.Domain.Exceptions;
 using Winterhaven.Gateway.Core.Domain.ValueObjects.Users;
 using Winterhaven.Gateway.Infrastructure.Services.Chat;
 
@@ -211,6 +213,16 @@ internal sealed class ChatServiceTests
 
         // Act and assert
         Assert.ThrowsAsync<AuthorizationException>(() => this.chatService.SendMessageAsync("hello"));
+    }
+
+    [Test]
+    public void SendMessageAsyncShouldThrowChatMessageExceptionWhenMessageBusExceptionIsThrownFromPublish()
+    {
+        // Arrange
+        this.messageBus.PublishAsync(Arg.Any<ChatEvent>(), Arg.Any<PublishOptions>(), Arg.Any<CancellationToken>()).Throws(new MessageBusException());
+
+        // Act and assert
+        Assert.ThrowsAsync<ChatMessageException>(() => this.chatService.SendMessageAsync("my message", CancellationToken.None));
     }
 
     [Test]

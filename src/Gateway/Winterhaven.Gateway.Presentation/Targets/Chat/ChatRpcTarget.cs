@@ -34,11 +34,6 @@ internal sealed class ChatRpcTarget : IRpcTarget
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
-        if (string.IsNullOrWhiteSpace(parameters.Message))
-        {
-            return;
-        }
-
         var userSession = this.userSessionContext.UserSession;
 
         if (!this.userSessionContext.IsAuthenticated || userSession == null)

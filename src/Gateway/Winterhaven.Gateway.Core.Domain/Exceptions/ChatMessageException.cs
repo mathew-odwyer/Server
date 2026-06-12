@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Winterhaven.Gateway.Core.Domain.Exceptions;
 
 /// <summary>
 ///   Represents an exception that is thrown when an issue occurrs when processing a chat message.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed class ChatMessageException : Exception
 {
     /// <summary>
