@@ -36,8 +36,8 @@ internal sealed class PlayerRpcTarget : IRpcTarget
         var notification = new PlayerActionEvent(parameters.ActionQueue);
 
         var options = new PublishOptions()
-            .WithRouteKey("playerId", userSessionContext.UserSession!.UserAccountId.ToString());
+            .WithRouteKey("playerId", this.userSessionContext.UserSession!.UserAccountId.ToString());
 
-        await messageBus.PublishAsync(notification, options, cancellationToken).ConfigureAwait(false);
+        await this.messageBus.PublishAsync(notification, options, cancellationToken).ConfigureAwait(false);
     }
 }
