@@ -1,0 +1,13 @@
+- Combat
+	- XP counter/show how much XP you gain per tick in combat
+- Gear
+- Faster Grind, quicker for exp players to get higher levels for dungeons, etc
+- Examine/Description on hover for exterior items (like the bookshelf, etc)
+- Music settings (volume for: music, sound effects, etc)
+- Truly resizable client
+- Currency
+- Automate CI/CD more - we should be able to do a release and then automatically release to the cloud
+- NPCs
+- Setting to enable/disabling lighting, shadows, etc
+- Shadows would be dope, too
+- Membership
