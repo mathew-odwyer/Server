@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  labels:
+    app: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: winterhaven-database:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: SA_PASSWORD
+            - name: ACCEPT_EULA
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: ACCEPT_EULA
+          ports:
+            - name: mssql
+              containerPort: 1433
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/opt/mssql
+          readinessProbe:
+            tcpSocket:
+              port: 1433
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 1433
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: database-data-pvc
