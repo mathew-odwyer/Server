@@ -5,6 +5,8 @@ metadata:
   labels:
     app: room
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -38,4 +40,7 @@ spec:
       containers:
         - name: room
           image: winterhaven-room:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: room-secret

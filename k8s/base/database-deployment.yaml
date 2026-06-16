@@ -5,6 +5,8 @@ metadata:
   labels:
     app: database
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -13,7 +15,7 @@ spec:
     metadata:
       labels:
         app: database
-    spec:
+    spec:      
       containers:
         - name: database
           image: winterhaven-database:latest

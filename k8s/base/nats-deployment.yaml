@@ -5,6 +5,8 @@ metadata:
   labels:
     app: nats
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
