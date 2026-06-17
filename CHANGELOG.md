@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#59] - Server Sends Error Messages to Client (_by [@mathew-odwyer]_).
 - [#191] - Fix GitHub Release Action (_by [@mathew-odwyer]_).
 - [#236] - Client causes Visible Hard Snapping during Normal Movement (_by [@mathew-odwyer]_).
+- [#162] - Chat Emotes Appear Below Entities (_by [@mathew-odwyer]_).
 
 ### Changed
 
@@ -95,6 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#162]: https://github.com/mathew-odwyer/Server/issues/162
 [#245]: https://github.com/mathew-odwyer/Server/issues/245
 [#244]: https://github.com/mathew-odwyer/Server/issues/244
 [#180]: https://github.com/mathew-odwyer/Server/issues/180
