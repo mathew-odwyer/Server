@@ -398,3 +398,6 @@ docker-compose.override.yml
 cache/
 output/
 options.ini
+
+# Kubernetes secrets directory
+/k8s/secrets/

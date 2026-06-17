@@ -46,7 +46,7 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
   - SSL/TLS encryption via Caddy reverse proxy.
 
 - **Technical Architecture**
-  - Containerized microservices using Docker.
+  - Containerized microservices on Kubernetes.
   - MSSQL database with Entity Framework Core.
   - Real-time WebSocket communication.
   - Clean architecture by design.
@@ -68,7 +68,7 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
 | Web API | ASP.NET Core, C# | Authentication, user management, data persistence |
 | Database | MSSQL + EF Core | Player data, accounts, persistent storage |
 | Reverse Proxy | Caddy | SSL/TLS termination, routing |
-| Orchestration | Docker Compose | Container management, service coordination |
+| Orchestration | Kubernetes | Cluster orchestration, service coordination |
 
 ## 🚀 Getting Started
 
@@ -78,30 +78,22 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
 ### Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Kubernetes](https://kubernetes.io/releases/download/)
 - [GameMaker](https://gamemaker.io/en/download) (Latest Stable, not LTS)
 
-### Installation
+### Getting Started
 
 1. Download the latest release for the client.
    - Get the latest release from [GitHub Releases](https://github.com/mathew-odwyer/Server/releases).
    - Please note that due to licensing requirements the client cannot be open-source.
-
-2. Configure environment
-   - There's a fair bit to get setup and running locally, feel free to message me directly if you're looking to get started quickly (_@softwareantics_ on Discord).
-   - I have plans in the future to automate through process through a CLI tool if my project gains enough traction.
-
-3. Build and run services
-   ```bash
-   docker-compose up --build
+2. Follow the Kubernetes setup guide [here](https://github.com/mathew-odwyer/Server/k8s/README.md).
+3. Extract the Caddy root certificate and trust it:
+   ```powershell
+   $pod = kubectl get pod -l app=caddy -o jsonpath='{.items[0].metadata.name}'
+   kubectl exec $pod -- cat /data/root.pem > "$env:APPDATA\Winterhaven\Caddy\root.pem"
+   certutil -addstore "Root" "$env:APPDATA\Winterhaven\Caddy\root.pem"
    ```
-
-4. Set up SSL certificate
-   ```bash
-   certutil -addstore "Root" "%APPDATA%\Caddy\root.pem"
-   ```
-
-5. Launch the client through GameMaker IDE or Stitch, create an account and have fun!
+4. Launch the client through GameMaker IDE or Stitch, create an account and have fun!
 
 ## 📝 Changelog
 
