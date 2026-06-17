@@ -3,13 +3,27 @@
 namespace Winterhaven.Common.Events.Users;
 
 /// <summary>
+///   Represents an event that is published when a user has logged in.
 /// </summary>
 public sealed record UserLoggedInEvent : IEvent
 {
     private const string EventRoute = "user.logged_in";
 
     /// <summary>
+    ///   Initializes a new instance of the <see cref="UserLoggedInEvent"/> class.
     /// </summary>
+    /// <param name="userAccountId">
+    ///   The user account identifier of the user who has logged in.
+    /// </param>
+    /// <param name="accessToken">
+    ///   The access token of the user who has logged in.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    ///   Thrown if <paramref name="accessToken"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    ///   Thrown if <paramref name="accessToken"/> is empty or consists of white space or <paramref name="userAccountId"/> is <see cref="Guid.Empty"/>.
+    /// </exception>
     public UserLoggedInEvent(Guid userAccountId, string accessToken)
     {
         if (userAccountId == Guid.Empty)
@@ -22,11 +36,19 @@ public sealed record UserLoggedInEvent : IEvent
     }
 
     /// <summary>
+    ///   Gets the access token of the user who has logged in.
     /// </summary>
+    /// <value>
+    ///   The access token of the user who has logged in.
+    /// </value>
     public string AccessToken { get; init; }
 
     /// <summary>
+    ///   Gets the user account identifier of the user who has logged in.
     /// </summary>
+    /// <value>
+    ///   The user account identifier of the user who has logged in.
+    /// </value>
     public Guid UserAccountId { get; init; }
 
     /// <inheritdoc/>
