@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
   - [#122] - Player Chat via Core NATS (_by [@mathew-odwyer]_).
 - [#189] - Send Chat Failure Message when Sending Message Fails (_by [@mathew-odwyer]_).
+- [#244] - Kubernetes Integration (_by [@mathew-odwyer]_).
+- [#245] - Add Loading Screen during Login (_by [@mathew-odwyer]_).
 
 ### Fixed
 
@@ -93,6 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#245]: https://github.com/mathew-odwyer/Server/issues/245
+[#244]: https://github.com/mathew-odwyer/Server/issues/244
 [#180]: https://github.com/mathew-odwyer/Server/issues/180
 [#79]: https://github.com/mathew-odwyer/Server/issues/79
 [#189]: https://github.com/mathew-odwyer/Server/issues/189
