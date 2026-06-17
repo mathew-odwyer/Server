@@ -9,5 +9,3 @@ with (obj_player)
 
     notify("room.player.leave", { identifier: other.identifier });
 }
-
-ds_queue_destroy(_action_queue);

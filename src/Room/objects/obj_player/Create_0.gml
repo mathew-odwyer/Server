@@ -6,9 +6,9 @@ event_inherited();
 /// @description The player identifier.
 identifier = "";
 
-/// @type {Id.DsQueue}
+/// @type {Array}
 /// @description The actions to be performed on the server.
-_action_queue = ds_queue_create();
+_action_queue = [];
 
 /// @type {Array}
 /// @description The actions performed this tick.
@@ -22,10 +22,14 @@ _last_action_identifier = 0;
 /// @param {Array} actions The collection of actions to be performed.
 enqueue_actions = function(actions)
 {
-    array_foreach(actions, function(action)
-    {
-        ds_queue_enqueue(_action_queue, action);
-    });
+	// Prefer for loop over array_foreach/array_concat for speed,
+	// this is because queues can grow large depending on server load.
+	var length = array_length(actions);
+	
+	for (var i = 0; i < length; i++)
+	{
+		array_push(_action_queue, actions[i]);
+	}
 }
 
 /// @description Forwards a JSON-RPC 2.0 notification to the player.
