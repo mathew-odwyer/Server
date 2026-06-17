@@ -16,16 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#93] - Gateway Login Flow (_by [@mathew-odwyer]_).
   - [#96] - Gateway Logout Flow (_by [@mathew-odwyer]_).
   - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
-- [#103] - Player Sessions via NATS (_by [@mathew-odwyer]_).
-  - [#105] - Event Contracts and Application Interfaces (_by [@mathew-odwyer]_).
-  - [#104] - NATS Infrastructure Foundation (_by [@mathew-odwyer]_).
-  - [#107] - Room Service Event Consumers and Publishing (_by [@mathew-odwyer]_).
-  - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
-  - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
-  - [#122] - Player Chat via Core NATS (_by [@mathew-odwyer]_).
 - [#189] - Send Chat Failure Message when Sending Message Fails (_by [@mathew-odwyer]_).
 - [#244] - Kubernetes Integration (_by [@mathew-odwyer]_).
 - [#245] - Add Loading Screen during Login (_by [@mathew-odwyer]_).
+
+### Removed
+
+- [#111] - Remove JSON-RPC Transport Layer Concerns from `obj_http` (_by [@mathew-odwyer]_).
 
 ### Fixed
 
@@ -37,10 +34,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#174] - Consolidate Version Numbering Logic (_by [@mathew-odwyer]_).
-- [#111] - Remove JSON-RPC Transport Layer Concerns from `obj_http` (_by [@mathew-odwyer]_).
 - [#180] - SonarQube Cloud Configuration (_by [@mathew-odwyer]_).
 - [#79] - Gracefully Handle Timeout Errors (_by [@mathew-odwyer]_).
-
+- [#103] - Player Sessions via NATS (_by [@mathew-odwyer]_).
+  - [#105] - Event Contracts and Application Interfaces (_by [@mathew-odwyer]_).
+  - [#104] - NATS Infrastructure Foundation (_by [@mathew-odwyer]_).
+  - [#107] - Room Service Event Consumers and Publishing (_by [@mathew-odwyer]_).
+  - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
+  - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
+  - [#122] - Player Chat via Core NATS (_by [@mathew-odwyer]_).
 
 ## [v0.3.0] - 27-05-2026
 
@@ -48,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#158] - Player Name Tags (_by [@mathew-odwyer]_).
 - [#19] - Server CI/CD Pipeline (_by [@mathew-odwyer]_).
+- [#64] - Add Sprite to `obj_entity_clock` (_by [@mathew-odwyer]_).
 
 ### Fixed
 
@@ -57,7 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#64] - Add Sprite to `obj_entity_clock` (_by [@mathew-odwyer]_).
 - [#35] - Improve Performance of Remote Player Actions (_by [@mathew-odwyer]_).
 - [#88] - Improve Performance of `obj_depth_sorter` (_by [@mathew-odwyer]_).
 
@@ -68,11 +70,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#11] - Global Web API Rate Limiting (_by [@mathew-odwyer]_).
 - [#50] - Hole Punch Light Engine (_by [@mathew-odwyer]_).
 - [#36] - Chat UI and Emotes (_by [@mathew-odwyer]_).
+- [#25] - Added Multiple Validation Error Support and updated UI (_by [@mathew-odwyer]_).
 
 ### Changed
 
 - [#34] - Maps are Loaded from Web API end-point (_by [@mathew-odwyer]_).
-- [#25] - Added Multiple Validation Error Support and updated UI (_by [@mathew-odwyer]_).
 
 ### Fixed
 
