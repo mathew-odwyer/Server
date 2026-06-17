@@ -43,6 +43,6 @@ internal sealed class PlayerEventForwarder : EventForwarderBase
 
     private async Task OnPlayerNotified(PlayerNotifiedEvent data, CancellationToken cancellationToken)
     {
-        await this.ForwardAsync(data.Method, data.Params, cancellationToken).ConfigureAwait(false);
+        await this.ForwardAsync(data.Method, data.Parameters, cancellationToken).ConfigureAwait(false);
     }
 }
