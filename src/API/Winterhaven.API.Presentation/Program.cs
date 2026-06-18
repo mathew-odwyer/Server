@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Winterhaven.API.Infrastructure;
+using Winterhaven.API.Infrastructure.Services.Seeds.Rooms;
 
 namespace Winterhaven.API.Presentation;
 
@@ -19,9 +21,11 @@ internal static class Program
         using (var scope = application.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+
+            var strategy = db.Database.CreateExecutionStrategy();
+            strategy.Execute(() => RoomSeedService.Seed(db));
         }
 
         application.Run();
