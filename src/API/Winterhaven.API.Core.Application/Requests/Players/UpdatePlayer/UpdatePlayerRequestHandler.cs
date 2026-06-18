@@ -5,7 +5,9 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Players;
+using Winterhaven.API.Core.Application.Work.Rooms;
 using Winterhaven.API.Core.Domain.Entities.Players;
+using Winterhaven.API.Core.Domain.Entities.Rooms;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
@@ -31,6 +33,11 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
     /// <summary>
+    ///   The room repository, used to update the room information for the player.
+    /// </summary>
+    private readonly IRoomRepository roomRepository;
+
+    /// <summary>
     ///   Initializes a new instance of the <see cref="UpdatePlayerRequestHandler"/> class.
     /// </summary>
     /// <param name="logger">
@@ -41,6 +48,9 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     /// </param>
     /// <param name="playerRepository">
     ///   The player repository, used to fetch the player to update.
+    /// </param>
+    /// <param name="roomRepository">
+    ///   The room repository, used to update the room information for the player.
     /// </param>
     /// <exception cref="ArgumentNullException">
     ///   Thrown when one of the following parameters is <c>null</c>:
@@ -54,16 +64,21 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
     ///     <item>
     ///       <description><paramref name="playerRepository"/></description>
     ///     </item>
+    ///     <item>
+    ///       <description><paramref name="roomRepository"/></description>
+    ///     </item>
     ///   </list>
     /// </exception>
     public UpdatePlayerRequestHandler(
         ILogger<UpdatePlayerRequestHandler> logger,
         IUnitOfWorkFactory unitOfWorkFactory,
-        IPlayerRepository playerRepository)
+        IPlayerRepository playerRepository,
+        IRoomRepository roomRepository)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
         this.playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
+        this.roomRepository = roomRepository ?? throw new ArgumentNullException(nameof(roomRepository));
     }
 
     /// <inheritdoc/>
@@ -74,12 +89,16 @@ public sealed class UpdatePlayerRequestHandler : IRequestHandler<UpdatePlayerReq
         var player = await this.playerRepository.GetByIdAsync(request.PlayerId, cancellationToken).ConfigureAwait(false)
             ?? throw new ResourceNotFoundException(nameof(Player), request.PlayerId);
 
+        var room = await this.roomRepository.GetByIdAsync(request.RoomId, cancellationToken).ConfigureAwait(false)
+            ?? throw new ResourceNotFoundException(nameof(Room), request.RoomId);
+
         this.logger.LogDebug("Updating player with ID: '{PlayerId}'", player.Id);
 
         var work = this.unitOfWorkFactory.CreateUnitOfWork();
 
         player.X = request.X ?? player.X;
         player.Y = request.Y ?? player.Y;
+        player.LastKnownRoom = room;
 
         await work.SaveAsync(cancellationToken).ConfigureAwait(false);
 

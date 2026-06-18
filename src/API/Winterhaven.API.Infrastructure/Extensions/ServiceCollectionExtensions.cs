@@ -16,6 +16,7 @@ using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Players;
+using Winterhaven.API.Core.Application.Work.Rooms;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Infrastructure.Contexts;
 using Winterhaven.API.Infrastructure.Interceptors;
@@ -26,6 +27,7 @@ using Winterhaven.API.Infrastructure.Services.Security;
 using Winterhaven.API.Infrastructure.Services.Users;
 using Winterhaven.API.Infrastructure.Work;
 using Winterhaven.API.Infrastructure.Work.Players;
+using Winterhaven.API.Infrastructure.Work.Rooms;
 using Winterhaven.API.Infrastructure.Work.Users;
 using Winterhaven.Common.Extensions;
 
@@ -95,6 +97,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserSessionTokenRepository, UserSessionTokenRepository>();
         services.AddScoped<IActorRepository, ActorRepository>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
 
         services.AddScoped<IUserRegistrar, UserRegistrar>();
         services.AddScoped<IUserAuthenticator, UserAuthenticator>();

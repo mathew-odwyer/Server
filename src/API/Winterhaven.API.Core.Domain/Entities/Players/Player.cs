@@ -11,8 +11,12 @@ namespace Winterhaven.API.Core.Domain.Entities.Players;
 public class Player : AuditableEntityBase
 {
     /// <summary>
+    ///   Gets or sets a <see cref="Room"/> that represents the last known room the player was in.
     /// </summary>
-    public virtual Room? LastKnownRoom { get; init; }
+    /// <value>
+    ///   The <see cref="Room"/> that represents the last known room the player was in.
+    /// </value>
+    public virtual Room? LastKnownRoom { get; set; }
 
     /// <summary>
     ///   Gets or sets a <see cref="string"/> that represents the name of the player.

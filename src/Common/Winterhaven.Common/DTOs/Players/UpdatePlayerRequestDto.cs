@@ -15,8 +15,12 @@ namespace Winterhaven.Common.DTOs.Players;
 /// <param name="Y">
 ///   The current Y-coordinate of the player.
 /// </param>
+/// <param name="RoomId">
+///   The identifier of the room the player is in.
+/// </param>
 [ExcludeFromCodeCoverage]
 public sealed record UpdatePlayerRequestDto(
     Guid PlayerId,
     double? X,
-    double? Y);
+    double? Y,
+    Guid RoomId);
