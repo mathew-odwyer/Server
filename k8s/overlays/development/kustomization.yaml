@@ -11,3 +11,7 @@ configMapGenerator:
 
 generatorOptions:
   disableNameSuffixHash: true
+
+patches:
+  - path: database-service-patch.yaml
+  - path: api-service-patch.yaml

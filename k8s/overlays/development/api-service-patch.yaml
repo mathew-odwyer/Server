@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  # This is required to ensure we can access the API from the localhost with Docker Desktop
+  # If I was using some other local tool for k8s such as minikube this would likely work differently.
+  # For whatever reason, docker desktop forwards ports to the local host when the type is a load balancer lol.
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
