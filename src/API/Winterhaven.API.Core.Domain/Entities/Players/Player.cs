@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Winterhaven.API.Core.Domain.Entities.Rooms;
 
 namespace Winterhaven.API.Core.Domain.Entities.Players;
 
@@ -9,6 +10,10 @@ namespace Winterhaven.API.Core.Domain.Entities.Players;
 [ExcludeFromCodeCoverage]
 public class Player : AuditableEntityBase
 {
+    /// <summary>
+    /// </summary>
+    public virtual Room? LastKnownRoom { get; init; }
+
     /// <summary>
     ///   Gets or sets a <see cref="string"/> that represents the name of the player.
     /// </summary>
