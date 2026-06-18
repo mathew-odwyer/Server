@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
-using System.Runtime.InteropServices;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -39,28 +38,26 @@ public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// </summary>
+    /// <param name="services">
+    /// </param>
+    /// <param name="configuration">
+    /// </param>
     public static IServiceCollection AddApiInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        string connectionName = "Docker";
-
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            connectionName = "Local";
-        }
-
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
         services.AddDbContext<DbContext, DatabaseContext>((provider, options) =>
         {
-            options.UseSqlServer(configuration.GetConnectionString(connectionName), o => o.EnableRetryOnFailure(
+            options.UseSqlServer(configuration.GetConnectionString("Docker"), o => o.EnableRetryOnFailure(
                     maxRetryCount: 5,
                     maxRetryDelay: TimeSpan.FromSeconds(10),
                     errorNumbersToAdd: null));
 
-            options.UseLazyLoadingProxies()
+            options
+                .UseLazyLoadingProxies()
                 .AddInterceptors(provider.GetRequiredService<AuditableEntitySaveChangesInterceptor>());
         }, ServiceLifetime.Scoped);
 
