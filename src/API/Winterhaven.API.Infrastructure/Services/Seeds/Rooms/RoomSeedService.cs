@@ -7,7 +7,7 @@ using Winterhaven.API.Core.Domain.Entities.Rooms;
 
 namespace Winterhaven.API.Infrastructure.Services.Seeds.Rooms;
 
-internal sealed class RoomSeedService
+internal static class RoomSeedService
 {
     public static async Task SeedAsync(IUnitOfWorkFactory unitOfWorkFactory, IRoomRepository roomRepository)
     {
