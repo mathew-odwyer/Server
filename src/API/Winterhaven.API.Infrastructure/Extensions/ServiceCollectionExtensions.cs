@@ -34,15 +34,19 @@ using Winterhaven.Common.Extensions;
 namespace Winterhaven.API.Infrastructure.Extensions;
 
 /// <summary>
+///   Provides extension methods for the API infrastructure services.
 /// </summary>
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     /// <summary>
+    ///   Adds the API infrastructure services to the specified <see cref="IServiceProvider"/>.
     /// </summary>
     /// <param name="services">
+    ///   The <see cref="IServiceProvider"/> that represents the service provide to register the API infrastructure to.
     /// </param>
     /// <param name="configuration">
+    ///   The <see cref="IConfiguration"/> used to configure the API infrastructure services.
     /// </param>
     public static IServiceCollection AddApiInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
