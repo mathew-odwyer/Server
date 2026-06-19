@@ -1,7 +1,7 @@
 name: 🧹 Tech Debt
 description: Tasks related to codebase cleanup, refactoring, or internal improvements.
 title: "🧹 Tech Debt"
-labels: ["🧹 Tech Debt"]
+labels: ["tech debt"]
 projects: ["mathew-odwyer/7"]
 assignees:
   - mathew-odwyer

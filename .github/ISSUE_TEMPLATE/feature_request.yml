@@ -1,8 +1,8 @@
 name: ✨ Feature Request
 description: Suggest an idea for a new project feature
 title: "✨ New Feature"
-labels: ["✨ Feature"]
-projects: ["mathew-odwyer/2"]
+labels: ["feature"]
+projects: ["mathew-odwyer/7"]
 assignees:
   - mathew-odwyer
   
