@@ -42,6 +42,11 @@ internal abstract class RepositoryBase<TEntity> : IRepository<TEntity>
         this.context.Set<TEntity>().RemoveRange(entities);
     }
 
+    public void DeleteAll()
+    {
+        this.context.Set<TEntity>().RemoveRange(this.context.Set<TEntity>());
+    }
+
     public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await this.context.Set<TEntity>().Where(predicate).ToListAsync(cancellationToken).ConfigureAwait(false);

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Winterhaven.API.Core.Domain.Entities.Players;
@@ -28,6 +29,14 @@ internal sealed class PlayerEntityTypeConfiguration : EntityTypeConfigurationBas
             .Property(x => x.Y)
             .IsRequired()
             .HasDefaultValue(128);
+
+        builder
+            .Property<Guid?>("LastKnownRoomId");
+
+        builder
+            .HasOne(p => p.LastKnownRoom) // Player has one last known room.
+            .WithMany() // Room can have many Players referencing it
+            .HasForeignKey("LastKnownRoomId"); // Use shadow key as we're not adding IDs to Player model.
 
         base.Configure(builder);
     }

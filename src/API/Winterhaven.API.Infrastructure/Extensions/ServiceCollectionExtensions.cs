@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
-using System.Runtime.InteropServices;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +16,7 @@ using Winterhaven.API.Core.Application.Services.Security;
 using Winterhaven.API.Core.Application.Services.Users;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Players;
+using Winterhaven.API.Core.Application.Work.Rooms;
 using Winterhaven.API.Core.Application.Work.Users;
 using Winterhaven.API.Infrastructure.Contexts;
 using Winterhaven.API.Infrastructure.Interceptors;
@@ -27,40 +27,43 @@ using Winterhaven.API.Infrastructure.Services.Security;
 using Winterhaven.API.Infrastructure.Services.Users;
 using Winterhaven.API.Infrastructure.Work;
 using Winterhaven.API.Infrastructure.Work.Players;
+using Winterhaven.API.Infrastructure.Work.Rooms;
 using Winterhaven.API.Infrastructure.Work.Users;
 using Winterhaven.Common.Extensions;
 
 namespace Winterhaven.API.Infrastructure.Extensions;
 
 /// <summary>
+///   Provides extension methods for the API infrastructure services.
 /// </summary>
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     /// <summary>
+    ///   Adds the API infrastructure services to the specified <see cref="IServiceProvider"/>.
     /// </summary>
+    /// <param name="services">
+    ///   The <see cref="IServiceProvider"/> that represents the service provide to register the API infrastructure to.
+    /// </param>
+    /// <param name="configuration">
+    ///   The <see cref="IConfiguration"/> used to configure the API infrastructure services.
+    /// </param>
     public static IServiceCollection AddApiInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        string connectionName = "Docker";
-
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            connectionName = "Local";
-        }
-
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
         services.AddDbContext<DbContext, DatabaseContext>((provider, options) =>
         {
-            options.UseSqlServer(configuration.GetConnectionString(connectionName), o => o.EnableRetryOnFailure(
+            options.UseSqlServer(configuration.GetConnectionString("Docker"), o => o.EnableRetryOnFailure(
                     maxRetryCount: 5,
                     maxRetryDelay: TimeSpan.FromSeconds(10),
                     errorNumbersToAdd: null));
 
-            options.UseLazyLoadingProxies()
+            options
+                .UseLazyLoadingProxies()
                 .AddInterceptors(provider.GetRequiredService<AuditableEntitySaveChangesInterceptor>());
         }, ServiceLifetime.Scoped);
 
@@ -98,6 +101,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserSessionTokenRepository, UserSessionTokenRepository>();
         services.AddScoped<IActorRepository, ActorRepository>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
 
         services.AddScoped<IUserRegistrar, UserRegistrar>();
         services.AddScoped<IUserAuthenticator, UserAuthenticator>();

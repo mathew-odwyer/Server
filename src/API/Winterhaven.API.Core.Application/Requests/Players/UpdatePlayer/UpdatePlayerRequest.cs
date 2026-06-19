@@ -17,9 +17,13 @@ namespace Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 /// <param name="Y">
 ///   The optional Y-coordinate of the player.
 /// </param>
+/// <param name="RoomId">
+///   The identifier of the room the player is in.
+/// </param>
 [Authorize]
 public sealed record UpdatePlayerRequest(
     Guid PlayerId,
     double? X,
-    double? Y)
+    double? Y,
+    Guid RoomId)
     : IRequest;
