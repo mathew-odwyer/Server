@@ -60,6 +60,11 @@ public interface IRepository<TEntity>
     public void DeleteRange(IEnumerable<TEntity> entities);
 
     /// <summary>
+    ///   Deletes all entities from the repository.
+    /// </summary>
+    public void DeleteAll();
+
+    /// <summary>
     ///   Gets all entities from the repository.
     /// </summary>
     /// <returns>
