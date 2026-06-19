@@ -9,7 +9,9 @@ using NUnit.Framework;
 using Winterhaven.API.Core.Application.Requests.Players.UpdatePlayer;
 using Winterhaven.API.Core.Application.Work;
 using Winterhaven.API.Core.Application.Work.Players;
+using Winterhaven.API.Core.Application.Work.Rooms;
 using Winterhaven.API.Core.Domain.Entities.Players;
+using Winterhaven.API.Core.Domain.Entities.Rooms;
 using Winterhaven.API.Core.Domain.Exceptions;
 
 namespace Winterhaven.API.Tests.Core.Application.Requests.Players.UpdatePlayer;
@@ -29,39 +31,94 @@ internal sealed class UpdatePlayerRequestHandlerTests
 
     private IUnitOfWorkFactory unitOfWorkFactory;
 
-    [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull() =>
-        // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(null, unitOfWorkFactory, playerRepository));
+    private IRoomRepository roomRepository;
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountContextIsNull() =>
-        // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, null));
+    public async Task HandleShouldPassCancellationTokenToRoomRepositoryWhenInvoked()
+    {
+        // Arrange
+        var request = new UpdatePlayerRequest(
+            PlayerId: this.player.Id,
+            X: 0,
+            Y: 0,
+            RoomId: this.room.Id);
+
+        var cancellationToken = new CancellationToken(false);
+
+        // Act
+        await this.handler.Handle(request, default).ConfigureAwait(false);
+
+        // Assert
+        await this.roomRepository.Received(1).GetByIdAsync(request.RoomId, cancellationToken).ConfigureAwait(false);
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull() =>
-        // Act and assert
-        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, null, playerRepository));
+    public async Task HandleShouldPassCancellationTokenToPlayerRepositoryWhenInvoked()
+    {
+        // Arrange
+        var request = new UpdatePlayerRequest(
+            PlayerId: this.player.Id,
+            X: 0,
+            Y: 0,
+            RoomId: this.room.Id);
+
+        var cancellationToken = new CancellationToken(false);
+
+        // Act
+        await this.handler.Handle(request, cancellationToken).ConfigureAwait(false);
+
+        // Assert
+        await this.playerRepository.Received(1).GetByIdAsync(request.PlayerId, cancellationToken).ConfigureAwait(false);
+    }
 
     [Test]
-    public void ConstructorShouldThrowArgumentNullExceptionWhenPlayerRepositoryIsNull() => Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, null));
+    public void ConstructorShouldThrowArgumentNullExceptionWhenLoggerIsNull()
+    {
+        // Act and assert
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(null, this.unitOfWorkFactory, this.playerRepository, this.roomRepository));
+    }
+
+    [Test]
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUserAccountContextIsNull()
+    {
+        // Act and assert
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(this.logger, this.unitOfWorkFactory, null, this.roomRepository));
+    }
+
+    [Test]
+    public void ConstructorShouldThrowArgumentNullExceptionWhenUnitOfWorkFactoryIsNull()
+    {
+        // Act and assert
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(this.logger, null, this.playerRepository, this.roomRepository));
+    }
+
+    [Test]
+    public void ConstructorShouldThrowArgumentNullExceptionWhenPlayerRepositoryIsNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(this.logger, this.unitOfWorkFactory, null, this.roomRepository));
+    }
+
+    [Test]
+    public void ConstructorShouldThrowArgumentNullExceptionWhenRoomRepositoryIsNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => new UpdatePlayerRequestHandler(this.logger, this.unitOfWorkFactory, this.playerRepository, null));
+    }
 
     [Test]
     public async Task HandleShouldOnlyUpdateProvidedCoordinatesWhenPartialRequestIsGiven()
     {
         // Arrange
-        double originalY = player.Y;
+        double originalY = this.player.Y;
 
-        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: 99, Y: null);
+        var request = new UpdatePlayerRequest(PlayerId: this.player.Id, X: 99, Y: null, RoomId: this.room.Id);
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(player.X, Is.EqualTo(99));
-            Assert.That(player.Y, Is.EqualTo(originalY));
+            Assert.That(this.player.X, Is.EqualTo(99));
+            Assert.That(this.player.Y, Is.EqualTo(originalY));
         }
     }
 
@@ -69,46 +126,49 @@ internal sealed class UpdatePlayerRequestHandlerTests
     public async Task HandleShouldInvokeGetByIdAsyncWithActorIdWhenRequestIsNotNull()
     {
         // Arrange
-        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: 0, Y: 0);
+        var request = new UpdatePlayerRequest(PlayerId: this.player.Id, X: 0, Y: 0, RoomId: this.room.Id);
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        await playerRepository.Received(1).GetByIdAsync(player.Id, Arg.Any<CancellationToken>()).ConfigureAwait(false);
+        await this.playerRepository.Received(1).GetByIdAsync(this.player.Id, Arg.Any<CancellationToken>()).ConfigureAwait(false);
     }
 
     [Test]
     public void HandleShouldThrowResourceNotFoundExceptionWhenPlayerRepositoryyReturnsNull()
     {
         // Arrange
-        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: 0, Y: 0);
+        var request = new UpdatePlayerRequest(PlayerId: this.player.Id, X: 0, Y: 0, RoomId: this.room.Id);
 
-        playerRepository.GetByIdAsync(player.Id).ReturnsNull();
+        this.playerRepository.GetByIdAsync(this.player.Id).ReturnsNull();
 
         // Act and assert
-        Assert.ThrowsAsync<ResourceNotFoundException>(() => handler.Handle(request, default));
+        Assert.ThrowsAsync<ResourceNotFoundException>(() => this.handler.Handle(request, default));
     }
 
     [Test]
-    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull() =>
+    public void HandleShouldThrowArgumentNullExceptionWhenRequestIsNull()
+    {
         // Act and assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(null, default));
+        Assert.ThrowsAsync<ArgumentNullException>(() => this.handler.Handle(null, default));
+    }
 
     [Test]
     public async Task HandleShouldInvokeCreateUnitOfWorkWhenPlayerIsFound()
     {
         // Arrange
         var request = new UpdatePlayerRequest(
-            PlayerId: player.Id,
+            PlayerId: this.player.Id,
             X: 0,
-            Y: 0);
+            Y: 0,
+            RoomId: this.room.Id);
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         // Assert
-        unitOfWorkFactory.Received(1).CreateUnitOfWork();
+        this.unitOfWorkFactory.Received(1).CreateUnitOfWork();
     }
 
     [Test]
@@ -116,32 +176,64 @@ internal sealed class UpdatePlayerRequestHandlerTests
     {
         // Arrange
         var request = new UpdatePlayerRequest(
-            PlayerId: player.Id,
+            PlayerId: this.player.Id,
             X: 0,
-            Y: 0);
+            Y: 0,
+            RoomId: this.room.Id);
 
-        unitOfWork.SaveAsync(default).ThrowsAsync<EntityPersistenceException>();
+        this.unitOfWork.SaveAsync(default).ThrowsAsync<EntityPersistenceException>();
 
         // Act and assert
-        Assert.ThrowsAsync<EntityPersistenceException>(() => handler.Handle(request, default));
+        Assert.ThrowsAsync<EntityPersistenceException>(() => this.handler.Handle(request, default));
     }
 
     [Test]
     public async Task HandleShouldRetainPlayerCoordinatesWhenCoordinatesAreNull()
     {
         // Arrange
-        double originalX = player.X;
-        double originalY = player.Y;
+        double originalX = this.player.X;
+        double originalY = this.player.Y;
 
-        var request = new UpdatePlayerRequest(PlayerId: player.Id, X: null, Y: null);
+        var request = new UpdatePlayerRequest(PlayerId: this.player.Id, X: null, Y: null, RoomId: this.room.Id);
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(player.X, Is.EqualTo(originalX));
-            Assert.That(player.Y, Is.EqualTo(originalY));
+            Assert.That(this.player.X, Is.EqualTo(originalX));
+            Assert.That(this.player.Y, Is.EqualTo(originalY));
+        }
+    }
+
+    [Test]
+    public async Task HandleShouldSetPlayerLastKnownRoomWhenRoomIsNotNull()
+    {
+        // Arrange
+        var newRoom = new Room()
+        {
+            Id = Guid.NewGuid(),
+            MapFilePath = "map/to/new/ROOM",
+            MapName = "NEW ROOM",
+        };
+
+        var request = new UpdatePlayerRequest(
+            this.player.Id,
+            X: null,
+            Y: null,
+            RoomId: newRoom.Id);
+
+        this.roomRepository.GetByIdAsync(newRoom.Id, Arg.Any<CancellationToken>()).Returns(newRoom);
+
+        // Act
+        await this.handler.Handle(request, CancellationToken.None).ConfigureAwait(false);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(this.player.LastKnownRoom, Is.EqualTo(newRoom));
+            Assert.That(this.player.LastKnownRoom.Id, Is.EqualTo(newRoom.Id));
+            Assert.That(this.player.LastKnownRoom.MapName, Is.EqualTo(newRoom.MapName));
+            Assert.That(this.player.LastKnownRoom.MapFilePath, Is.EqualTo(newRoom.MapFilePath));
         }
     }
 
@@ -150,19 +242,36 @@ internal sealed class UpdatePlayerRequestHandlerTests
     {
         // Arrange
         var request = new UpdatePlayerRequest(
-            player.Id,
+            this.player.Id,
             X: 1,
-            Y: 2);
+            Y: 2,
+            RoomId: this.room.Id);
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(player.X, Is.EqualTo(request.X));
-            Assert.That(player.Y, Is.EqualTo(request.Y));
+            Assert.That(this.player.X, Is.EqualTo(request.X));
+            Assert.That(this.player.Y, Is.EqualTo(request.Y));
         }
+    }
+
+    [Test]
+    public void HandleShouldThrowResourceNotFoundExceptionWhenRoomIsNotFound()
+    {
+        // Arrange
+        var request = new UpdatePlayerRequest(
+            PlayerId: this.player.Id,
+            X: 0,
+            Y: 0,
+            RoomId: Guid.NewGuid());
+
+        this.roomRepository.GetByIdAsync(request.PlayerId, Arg.Any<CancellationToken>()).ReturnsNull();
+
+        // Act and assert
+        Assert.ThrowsAsync<ResourceNotFoundException>(() => this.handler.Handle(request, default));
     }
 
     [Test]
@@ -170,39 +279,51 @@ internal sealed class UpdatePlayerRequestHandlerTests
     {
         // Arrange
         var request = new UpdatePlayerRequest(
-            PlayerId: player.Id,
+            PlayerId: this.player.Id,
             X: 0,
-            Y: 0);
+            Y: 0,
+            RoomId: this.room.Id);
 
         // Act
-        await handler.Handle(request, default).ConfigureAwait(false);
+        await this.handler.Handle(request, default).ConfigureAwait(false);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         // Assert
-        unitOfWork.Received(1).SaveAsync(default);
+        this.unitOfWork.Received(1).SaveAsync(default);
 
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 
+    private Room room;
+
     [SetUp]
     public void Setup()
     {
-        logger = Substitute.For<ILogger<UpdatePlayerRequestHandler>>();
-        unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
-        unitOfWork = Substitute.For<IUnitOfWork>();
-        playerRepository = Substitute.For<IPlayerRepository>();
+        this.logger = Substitute.For<ILogger<UpdatePlayerRequestHandler>>();
+        this.unitOfWorkFactory = Substitute.For<IUnitOfWorkFactory>();
+        this.unitOfWork = Substitute.For<IUnitOfWork>();
+        this.playerRepository = Substitute.For<IPlayerRepository>();
+        this.roomRepository = Substitute.For<IRoomRepository>();
 
-        unitOfWorkFactory.CreateUnitOfWork().Returns(unitOfWork);
+        this.unitOfWorkFactory.CreateUnitOfWork().Returns(this.unitOfWork);
 
-        player = new Player()
+        this.player = new Player()
         {
             Id = Guid.NewGuid(),
             Name = "Player",
         };
 
-        playerRepository.GetByIdAsync(player.Id).Returns(player);
+        this.room = new Room()
+        {
+            Id = Guid.NewGuid(),
+            MapName = "ROOM",
+            MapFilePath = "some/path/ROOM",
+        };
 
-        handler = new UpdatePlayerRequestHandler(logger, unitOfWorkFactory, playerRepository);
+        this.playerRepository.GetByIdAsync(this.player.Id).Returns(this.player);
+        this.roomRepository.GetByIdAsync(this.room.Id).Returns(this.room);
+
+        this.handler = new UpdatePlayerRequestHandler(this.logger, this.unitOfWorkFactory, this.playerRepository, this.roomRepository);
     }
 }
