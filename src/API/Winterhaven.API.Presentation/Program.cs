@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Winterhaven.API.Core.Application.Work;
@@ -8,6 +9,7 @@ using Winterhaven.API.Infrastructure.Services.Seeds.Rooms;
 
 namespace Winterhaven.API.Presentation;
 
+[ExcludeFromCodeCoverage]
 internal static class Program
 {
     internal static async Task Main(string[] args)
