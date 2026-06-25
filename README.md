@@ -21,8 +21,6 @@ Winterhaven is a work-in-progress 2D top-down online role-playing game set in a 
 
 This project showcases full-stack game server development capabilities, demonstrating expertise in distributed systems, real-time networking, and secure architecture.
 
-<img width="1280" height="720" alt="Sample Screenshot" src="https://github.com/user-attachments/assets/9972b17d-3824-41f4-8a6b-95f71f9524c8" />
-
 ## 🎮 Play The Demo
 
 We have a simple MVP demo environment setup for people to test out Winterhaven in it's early stages. Below you'll find instructions to play:
