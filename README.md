@@ -78,21 +78,30 @@ We have a simple MVP demo environment setup for people to test out Winterhaven i
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-- [GameMaker](https://gamemaker.io/en/download) (Latest Stable, not LTS)
+- [GameMaker](https://gamemaker.io/en/download) (LTS 2026)
 
-### Installation
+### Development
 
 1. Download the latest release for the client.
    - Get the latest release from [GitHub Releases](https://github.com/mathew-odwyer/Server/releases).
    - Please note that due to licensing requirements the client cannot be open-source.
 
 2. Configure environment
-   - There's a fair bit to get setup and running locally, feel free to message me directly if you're looking to get started quickly (_@softwareantics_ on Discord).
-   - I have plans in the future to automate through process through a CLI tool if my project gains enough traction.
+  - See `docker-compose.yml` for required environment variables to be set.
+  - Contact me on Discord (@softwareantics) for collaborators access to Doppler.
+  - For development, create an override for the `caddy` service to simplify trusting the root certificate:
+
+  ```yaml
+  services:
+    caddy:
+      volumes:
+        - "${APPDATA}/Caddy/data:/data"
+        - "${APPDATA}/Caddy/config:/config"
+  ```
 
 3. Build and run services
    ```bash
-   docker-compose up --build
+   doppler run -- docker-compose up --build
    ```
 
 4. Set up SSL certificate
