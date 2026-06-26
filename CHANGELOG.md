@@ -17,7 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#96] - Gateway Logout Flow (_by [@mathew-odwyer]_).
   - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
 - [#189] - Send Chat Failure Message when Sending Message Fails (_by [@mathew-odwyer]_).
-- [#244] - Kubernetes Integration (_by [@mathew-odwyer]_).
 - [#245] - Add Loading Screen during Login (_by [@mathew-odwyer]_).
 
 ### Removed
