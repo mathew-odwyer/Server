@@ -1,42 +1,130 @@
 ﻿name: winterhaven
 
 services:
+  caddy:
+    container_name: caddy
+    image: winterhaven-caddy
+    build:
+      context: ./Configuration/Caddy
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+    volumes:
+      - "caddy_data:/data"
+      - "caddy_config:/config"
+      - ./Configuration/Caddy/Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-k", "http://localhost/"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+      timeout: 5s
+    restart: unless-stopped
+    tty: true
+
+  nats:
+    container_name: nats
+    image: nats
+    networks:
+      - network
+    expose:
+      - "8222"
+      - "9222"
+    healthcheck:
+      test: ["CMD", "nats-server", "--healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - ./Configuration/NATS/nats-${APPLICATION_ENVIRONMENT}.conf:/etc/nats/nats.conf:ro
+    command: ["-c", "/etc/nats/nats.conf"]
+    tty: true
+
   api:
+    container_name: api
     image: winterhaven-api
     build:
       context: ./
       dockerfile: API/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - data-protection-keys:/root/.aspnet/DataProtection-Keys
+    networks:
+      - network
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+    restart: unless-stopped
 
   gateway:
+    container_name: gateway
     image: winterhaven-gateway
     build:
       context: ./
       dockerfile: Gateway/Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    networks:
+      - network
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
+      interval: 5s
+      retries: 10
+      start_period: 45s
+      timeout: 5s
+    restart: unless-stopped
 
   database:
+    container_name: database
     image: winterhaven-database
     build:
       context: ./Configuration/Database
       dockerfile: Dockerfile
+    volumes:
+      - db_data:/var/opt/mssql
+    networks:
+      - network
+    expose:
+      - "1433"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/1433'"] # TODO: Replace with sqlcmd query instead.
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 5s
+    restart: unless-stopped
+    tty: true
 
   room:
+    container_name: room
     image: winterhaven-room
     build:
       context: ./Room
       dockerfile: Dockerfile
-    
-  builder:
-    image: winterhaven-builder
-    ports:
-        - "22:22"
-    build:
-        context: ./Configuration/GMBuilder
-        dockerfile: Dockerfile
-    cap_add:
-        - SYS_ADMIN
-        - MKNOD
-    security_opt:
-        - seccomp:unconfined
+    depends_on:
+      api:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    networks:
+      - network
+    restart: unless-stopped
+    tty: true
 
 networks:
   network:
@@ -44,3 +132,10 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/16
+
+volumes:
+  caddy_data:
+  caddy_config:
+  data-protection-keys:
+  db_data:
+    driver: local
