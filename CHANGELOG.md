@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#180] - SonarQube Cloud Configuration (_by [@mathew-odwyer]_).
 - [#79] - Gracefully Handle Timeout Errors (_by [@mathew-odwyer]_).
 - [#103] - Player Sessions via NATS (_by [@mathew-odwyer]_).
+- [#167] - Upgrade Server and Client to GameMaker LTS 2026 (_by [@mathew-odwyer]_).
 
 ## [v0.3.0] - 27-05-2026
 
@@ -85,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/mathew-odwyer/Server/releases/tag/v0.0.1
 
+[#167]: https://github.com/mathew-odwyer/Server/issues/167
 [#231]: https://github.com/mathew-odwyer/Server/issues/231
 [#162]: https://github.com/mathew-odwyer/Server/issues/162
 [#245]: https://github.com/mathew-odwyer/Server/issues/245
