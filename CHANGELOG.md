@@ -10,12 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#91] - Gateway Server (_by [@mathew-odwyer]_).
-  - [#72] - GML NATS Client (_by [@mathew-odwyer]_).
-  - [#97] - Gateway Infrastructure Setup (_by [@mathew-odwyer]_).
-  - [#94] - Gateway Registration Flow (_by [@mathew-odwyer]_).
-  - [#93] - Gateway Login Flow (_by [@mathew-odwyer]_).
-  - [#96] - Gateway Logout Flow (_by [@mathew-odwyer]_).
-  - [#95] - Gateway Refresh Token Flow (_by [@mathew-odwyer]_).
 - [#189] - Send Chat Failure Message when Sending Message Fails (_by [@mathew-odwyer]_).
 - [#245] - Add Loading Screen during Login (_by [@mathew-odwyer]_).
 
@@ -36,12 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#180] - SonarQube Cloud Configuration (_by [@mathew-odwyer]_).
 - [#79] - Gracefully Handle Timeout Errors (_by [@mathew-odwyer]_).
 - [#103] - Player Sessions via NATS (_by [@mathew-odwyer]_).
-  - [#105] - Event Contracts and Application Interfaces (_by [@mathew-odwyer]_).
-  - [#104] - NATS Infrastructure Foundation (_by [@mathew-odwyer]_).
-  - [#107] - Room Service Event Consumers and Publishing (_by [@mathew-odwyer]_).
-  - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
-  - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
-  - [#122] - Player Chat via Core NATS (_by [@mathew-odwyer]_).
 
 ## [v0.3.0] - 27-05-2026
 
