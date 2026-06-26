@@ -42,7 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [#108] - Gateway Event Consumers and WebSocket Fan-out (_by [@mathew-odwyer]_).
   - [#123] - Player Movement via Core NATS (_by [@mathew-odwyer]_).
   - [#122] - Player Chat via Core NATS (_by [@mathew-odwyer]_).
-- [#231] - Improve Performance of player actions in Room Service (_by [@mathew-odwyer]_).
 
 ## [v0.3.0] - 27-05-2026
 
