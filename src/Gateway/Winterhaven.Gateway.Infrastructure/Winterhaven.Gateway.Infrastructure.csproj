@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Winterhaven.Common\Winterhaven.Common.csproj" />
     <ProjectReference Include="..\Winterhaven.Gateway.Core.Application\Winterhaven.Gateway.Core.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -19,8 +23,7 @@
       <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
+  <ItemGroup> 
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
     <PackageReference Include="Refit.HttpClientFactory" />
     <PackageReference Include="NATS.Net" />

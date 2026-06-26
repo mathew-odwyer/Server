@@ -8,13 +8,13 @@
     - Architecture: Loose but structured (no definitive model).
 - **Gateway:**
     - Type: Backend
-    - Technology: ASP.NET Core, .NET 9.0.x, WebSockets, NATS Client.
+    - Technology: ASP.NET Core, .NET 10.0.x, WebSockets, NATS Client.
     - Language: Modern, C# 13.
     - Purpose: Relay server (via NATS and API), user session management, client connection lifecycle management.
     - Architecture: Clean Architecture (Domain, Application, Infrastructure, Presentation).
 - **API:**
     - Type: Backend
-    - Technology: ASP.NET Core, .NET 9.0.x, HTTP, JWT (not stateless).
+    - Technology: ASP.NET Core, .NET 10.0.x, HTTP, JWT (not stateless).
     - Langauge: Modern, C# 13.
     - Purpose: Authentication & user management, data persistence.
     - Architecture: Clean Architecture (Domain, Application, Infrastructure, Presentation).

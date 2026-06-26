@@ -1,5 +1,5 @@
 ﻿# Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
 WORKDIR /app
 
@@ -37,7 +37,7 @@ COPY Common/ Common/
 RUN dotnet publish API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj -c Release -o /out
 
 # Runtime Stage
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
 
 # Install ICU libraries for globalization support
 # This is because azure SQL edge ships with globalization-invariant enabled, meaning only invariant culture is supported.

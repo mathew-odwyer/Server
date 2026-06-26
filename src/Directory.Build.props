@@ -1,11 +1,12 @@
 ﻿<Project>
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<Platforms>x64</Platforms>
 		<LangVersion>latest</LangVersion>
 		<AnalysisMode>All</AnalysisMode>
 		<WarningLevel>9999</WarningLevel>
+		<AnalysisLevel>latest</AnalysisLevel>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
@@ -19,12 +20,4 @@
 		<AssemblyConfiguration Condition="'$(Configuration)' == 'Debug'">Debug</AssemblyConfiguration>
 		<AssemblyConfiguration Condition="'$(Configuration)' != 'Debug'">Release</AssemblyConfiguration>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Roslynator.Analyzers" />
-	</ItemGroup>
 </Project>
