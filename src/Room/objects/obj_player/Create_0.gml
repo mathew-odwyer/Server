@@ -6,9 +6,9 @@ event_inherited();
 /// @description The player identifier.
 identifier = "";
 
-/// @type {Array}
+/// @type {Id.DsQueue}
 /// @description The actions to be performed on the server.
-_action_queue = [];
+_action_queue = ds_queue_create();
 
 /// @type {Array}
 /// @description The actions performed this tick.
@@ -22,14 +22,10 @@ _last_action_identifier = 0;
 /// @param {Array} actions The collection of actions to be performed.
 enqueue_actions = function(actions)
 {
-	// Prefer for loop over array_foreach/array_concat for speed,
-	// this is because queues can grow large depending on server load.
-	var length = array_length(actions);
-	
-	for (var i = 0; i < length; i++)
-	{
-		array_push(_action_queue, actions[i]);
-	}
+    array_foreach(actions, function(action)
+    {
+        ds_queue_enqueue(_action_queue, action);
+    });
 }
 
 /// @description Forwards a JSON-RPC 2.0 notification to the player.
@@ -39,7 +35,7 @@ notify = function(procedure, params)
 {
     event_publish($"player.{identifier}.notify", {
         Method: procedure,
-        Params: params,
+        Parameters: params,
     });
 }
 
