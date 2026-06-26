@@ -381,7 +381,6 @@ test-results/
 # Vim temporary swap files
 *.swp
 # Application configuration files
-appsettings.json
 appsettings.*.json
 # Bin and obj folders
 bin/

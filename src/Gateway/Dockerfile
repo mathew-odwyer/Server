@@ -30,7 +30,7 @@ COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
 COPY Events/Winterhaven.Events/Winterhaven.Events.csproj \
     Events/Winterhaven.Events/
 
-COPY appsettings.json Gateway/Winterhaven.Gateway.Presentation/
+COPY Gateway/Winterhaven.Gateway.Presentation/appsettings.json Gateway/Winterhaven.Gateway.Presentation/
 
 RUN dotnet restore Gateway/Winterhaven.Gateway.Presentation/Winterhaven.Gateway.Presentation.csproj
 

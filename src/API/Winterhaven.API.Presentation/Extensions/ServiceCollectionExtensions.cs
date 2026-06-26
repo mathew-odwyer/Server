@@ -15,9 +15,6 @@ using Winterhaven.API.Presentation.Formatters;
 using Winterhaven.API.Presentation.Mappings.Maps;
 using Winterhaven.API.Presentation.Mappings.Players;
 using Winterhaven.API.Presentation.Mappings.Users;
-using Winterhaven.API.Presentation.Transformers;
-using Winterhaven.API.Presentation.Transformers.Security;
-using Winterhaven.Common;
 
 namespace Winterhaven.API.Presentation.Extensions;
 
@@ -104,19 +101,6 @@ internal static class ServiceCollectionExtensions
             x.AddProfile<PlayerMapper>();
             x.AddProfile<MapMapper>();
         });
-
-        return services;
-    }
-
-    internal static IServiceCollection AddApiServices(this IServiceCollection services)
-    {
-        services.AddHealthChecks();
-        services.AddEndpointsApiExplorer();
-
-        services.AddOpenApi($"v{BuildInformation.Version}", x => x
-                .AddDocumentTransformer<WinterhavenTransformer>()
-                .AddDocumentTransformer<BearerSecuritySchemeTransformer>()
-                .AddDocumentTransformer<ApiKeySecuritySchemeTransformer>());
 
         return services;
     }

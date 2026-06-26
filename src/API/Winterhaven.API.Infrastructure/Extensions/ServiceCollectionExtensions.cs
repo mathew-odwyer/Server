@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
-using System.Runtime.InteropServices;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,30 +32,24 @@ using Winterhaven.Common.Extensions;
 
 namespace Winterhaven.API.Infrastructure.Extensions;
 
-/// <summary>
-/// </summary>
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
-    /// <summary>
-    /// </summary>
     public static IServiceCollection AddApiInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        string connectionName = "Docker";
-
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            connectionName = "Local";
-        }
-
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+
+        var builder = new SqlConnectionStringBuilder(configuration.GetConnectionString("Docker"))
+        {
+            Password = configuration["MSSQL_SA_PASSWORD"],
+        };
 
         services.AddDbContext<DbContext, DatabaseContext>((provider, options) =>
         {
-            options.UseSqlServer(configuration.GetConnectionString(connectionName), o => o.EnableRetryOnFailure(
+            options.UseSqlServer(builder.ConnectionString, o => o.EnableRetryOnFailure(
                     maxRetryCount: 5,
                     maxRetryDelay: TimeSpan.FromSeconds(10),
                     errorNumbersToAdd: null));

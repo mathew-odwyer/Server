@@ -1,0 +1,103 @@
+# Credits: Meseta, and shamelessly; Claude.
+
+# TODO: Seperate Build and Run steps to speed up workflows.
+
+# Replaces the old two-image (SSH build container + minimal run container)
+# setup. gm-cli runs natively inside this Linux container, so there's no
+# need for an SSH bridge between a Windows IDE and a remote Linux builder.
+# This container *is* the builder and the runner.
+
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Compile + run dependencies for the GameMaker Linux export
+# Same native libs the old build/run images needed: a compiler, the X11/
+# OpenGL/audio/curl headers the exported binary links against, and a few
+# CLI tools the asset pipeline shells out to (ffmpeg, zip, git, rsync...).
+# mono-complete is carried over from the old setup — it MAY no longer be
+# needed now that gm-cli manages its own toolchain. Worth trying without it.
+RUN apt-get update && apt-get install --no-install-recommends --yes \
+	curl \
+	wget \
+	gnupg \
+	gpg-agent \
+	dirmngr \
+	ca-certificates \
+	build-essential \
+	clang \
+	mono-complete \
+	libssl-dev \
+	libxrandr-dev \
+	libxxf86vm-dev \
+	libopenal-dev \
+	libgl1-mesa-dev \
+	libglu1-mesa-dev \
+	zlib1g-dev \
+	libcurl4-openssl-dev \
+	libcurl3-gnutls \
+	libpulse0 \
+	lsb-release \
+	zip \
+	unzip \
+	ffmpeg \
+	rsync \
+	git \
+	file \
+	xvfb \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Legacy OpenSSL 1.0 runtime lib
+# The GameMaker Linux runner still links against OpenSSL 1.0, which Ubuntu
+# dropped from its normal repos. Pull it from the old 16.04 (xenial)
+# security archive instead, same trick as the old run image.
+RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 40976EAF437D05B5 3B4FE6ACC0B21F32 \
+	&& gpg --export 40976EAF437D05B5 3B4FE6ACC0B21F32 > /etc/apt/trusted.gpg.d/security.ubuntu.com.gpg \
+	&& echo "deb http://security.ubuntu.com/ubuntu xenial-security main" > /etc/apt/sources.list.d/xenial-security.list \
+	&& apt-get update && apt-get install --no-install-recommends --yes \
+	libssl1.0.0 \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Node.js, required to run gm-cli.
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+	&& apt-get install --no-install-recommends --yes nodejs \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Steam runtimes
+RUN mkdir /opt/steam-runtime/ && curl -s https://repo.steampowered.com/steamrt-images-scout/snapshots/latest-steam-client-general-availability/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-scout-sysroot.tar.gz | tar -xzf - -C /opt/steam-runtime/
+
+# Linuxdeploy
+RUN curl -sL https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage \
+	-o linuxdeploy-x86_64.AppImage \
+	# After download, ensure it exists
+    && test -s linuxdeploy-x86_64.AppImage \
+	# Install it at /usr/local/bin/linuxdeploy
+    && install -m 0755 linuxdeploy-x86_64.AppImage /usr/local/bin/linuxdeploy \ 
+	# Remove the downloaded file
+    && rm linuxdeploy-x86_64.AppImage
+
+# AppImage
+RUN curl -sL https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage \
+	-o appimagetool-x86_64.AppImage \
+	# After download, ensure it exists
+	&& test -s appimagetool-x86_64.AppImage \
+	# Install it at /usr/local/bin/linuxdeploy
+	&& install -m 0755 appimagetool-x86_64.AppImage /usr/local/bin/appimagetool \
+	# Remove the downloaded file
+	&& rm appimagetool-x86_64.AppImage 
+
+# GameMaker's Linux runner wants an X display/GL context even when running
+# headless as a server and Xvfb (installed above) provides a fake one.
+ENV DISPLAY=:0
+
+WORKDIR /game
+
+# Copy the GameMaker project itself (the folder containing Room.yyp)
+# build context should be your Room project directory.
+COPY . .
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["npx", "-y", "@gamemaker/gm-cli@latest", "run"]

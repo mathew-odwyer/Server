@@ -27,7 +27,7 @@ COPY API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj \
 COPY Common/Winterhaven.Common/Winterhaven.Common.csproj \
     Common/Winterhaven.Common/
 
-COPY appsettings.json API/Winterhaven.API.Presentation/
+COPY API/Winterhaven.API.Presentation/appsettings.json API/Winterhaven.API.Presentation/
 
 RUN dotnet restore API/Winterhaven.API.Presentation/Winterhaven.API.Presentation.csproj
 

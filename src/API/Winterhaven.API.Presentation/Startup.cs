@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Scalar.AspNetCore;
 using Winterhaven.API.Infrastructure.Extensions;
 using Winterhaven.API.Presentation.Extensions;
 using Winterhaven.API.Presentation.Options.Security;
@@ -28,19 +27,6 @@ internal sealed class Startup
     {
         ArgumentNullException.ThrowIfNull(application);
         ArgumentNullException.ThrowIfNull(environment);
-
-        if (environment.IsDevelopment() || this.Configuration.GetValue<bool>("SCALAR_ENABLED"))
-        {
-            application.MapOpenApi();
-            application.MapScalarApiReference(x =>
-            {
-                x.Title = "Winterhaven API";
-                x.Layout = ScalarLayout.Classic;
-
-                x.ExpandAllResponses = false;
-                x.ExpandAllModelSections = false;
-            });
-        }
 
         if (!environment.IsDevelopment())
         {
@@ -72,6 +58,5 @@ internal sealed class Startup
         services.AddApiControllersWithFilters();
         services.AddApiAuthentication(this.Configuration);
         services.AddApiAuthorization();
-        services.AddApiServices();
     }
 }
