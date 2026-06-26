@@ -1,6 +1,6 @@
-$GMS_RUNTIME_VERSION = "2024.14.4.268"
-$GMS_USER_FOLDER = "$env:APPDATA\GameMakerStudio2\mathew.odwyer_4882385"
-$GMS_RUNTIME_BASE = "$env:PROGRAMDATA\GameMakerStudio2\Cache\runtimes\runtime-$GMS_RUNTIME_VERSION"
+$GMS_RUNTIME_VERSION = "2026.0.0.23"
+$GMS_USER_FOLDER = "$env:APPDATA\GameMakerStudio2-LTS2026\mathew.odwyer_4882385"
+$GMS_RUNTIME_BASE = "$env:PROGRAMDATA\GameMakerStudio2-LTS2026\Cache\runtimes\runtime-$GMS_RUNTIME_VERSION"
 $IGOR = "$GMS_RUNTIME_BASE\bin\igor\windows\x64\igor.exe"
 
 $PROJECT_ROOT = $PSScriptRoot
