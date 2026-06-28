@@ -3,7 +3,7 @@
 services:
   caddy:
     container_name: caddy
-    image: caddy:latest
+    image: caddy:alpine
     ports:
       - "443:443"
     volumes:
