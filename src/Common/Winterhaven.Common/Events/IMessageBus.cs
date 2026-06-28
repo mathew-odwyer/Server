@@ -68,4 +68,32 @@ public interface IMessageBus
         SubscribeOptions? options = null,
         CancellationToken cancellationToken = default)
         where TData : IEvent;
+    
+    /// <summary>
+    /// Sends a request and asynchronously waits for a single reply from a responder.
+    /// </summary>
+    /// <typeparam name="TRequest">
+    /// The request type being sent.
+    /// </typeparam>
+    /// <typeparam name="TReply">
+    /// The expected reply type.
+    /// </typeparam>
+    /// <param name="data">
+    /// The request payload to send.
+    /// </param>
+    /// <param name="options">
+    /// Optional settings controlling how the request is sent.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// The token used to cancel the request operation.
+    /// </param>
+    /// <returns>
+    /// The reply received from the responder.
+    /// </returns>
+    public Task<TReply> RequestAsync<TRequest, TReply>(
+        TRequest data,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TRequest : IRequest<TReply>
+        where TReply : notnull;
 }

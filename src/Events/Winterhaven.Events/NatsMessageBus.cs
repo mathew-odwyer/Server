@@ -49,6 +49,36 @@ internal sealed class NatsMessageBus : IMessageBus
         }
     }
 
+    public async Task<TReply> RequestAsync<TRequest, TReply>(
+        TRequest data,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TRequest : IRequest<TReply>
+        where TReply : notnull
+    {
+        ArgumentNullException.ThrowIfNull(data);
+
+        var requestOptions = options ?? new RequestOptions();
+        string subject = TRequest.GetRequestRoute(requestOptions);
+
+        this.logger.LogTrace("Sending '{RequestType}' on '{Subject}'", typeof(TRequest).FullName, subject);
+
+        try
+        {
+            var reply = await this.connection
+                .RequestAsync<TRequest, TReply>(subject: subject, data: data, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+            return reply.IsEmpty || reply.Data is null
+                ? throw new MessageBusException($"Received empty reply for request: '{subject}'")
+                : reply.Data;
+        }
+        catch (NatsException ex)
+        {
+            throw new MessageBusException($"Failed to complete request: '{subject}'", ex);
+        }
+    }
+
     public async Task<IAsyncDisposable> SubscribeAsync<TData>(
         MessageConsumer<TData> consumer,
         SubscribeOptions? options = null,
