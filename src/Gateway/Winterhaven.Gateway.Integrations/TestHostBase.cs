@@ -75,7 +75,8 @@ internal abstract class TestHostBase
                 //// services require variables to be set during DI registration.
                 config.AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    ["NATS_URL"] = $"ws://localhost:{natsContainer.GetMappedPublicPort(9222)}"
+                    ["NATSOPTIONS__BASEURL"] = "ws://localhost",
+                    ["NATSOPTIONS__PORT"] = natsContainer.GetMappedPublicPort(9222).ToString()
                 });
             });
             x.ConfigureTestServices(services =>
@@ -87,7 +88,6 @@ internal abstract class TestHostBase
                 services.AddSingleton<IUserSessionManager>(UserSessionManager);
 
                 services.PostConfigure<ClientOptions>(x => x.BaseUrl = Api.Url);
-            });
         });
 
         Host = builder.Build();

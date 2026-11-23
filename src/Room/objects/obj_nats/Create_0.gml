@@ -2,11 +2,11 @@
 
 /// @type {String}
 /// @description The NATS host url.
-#macro nats_host environment_get_variable("NATSOPTIONS__BASEURL")
+#macro nats_host "ws://nats"
 
 /// @type {Real}
 /// @description The NATS port number.
-#macro nats_port real(environment_get_variable("NATSOPTIONS__PORT"))
+#macro nats_port 9222
 
 /// @inheritdoc
 #macro event_publish obj_nats._protocol.publish
