@@ -6,7 +6,7 @@
 
 /// @type {Real}
 /// @description The NATS port number.
-#macro nats_port real(environment_get_variable("NATSOPTION__PORT"))
+#macro nats_port real(environment_get_variable("NATSOPTIONS__PORT"))
 
 /// @inheritdoc
 #macro event_publish obj_nats._protocol.publish
