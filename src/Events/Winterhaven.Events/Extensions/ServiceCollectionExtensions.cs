@@ -8,13 +8,9 @@ using Winterhaven.Common.Events;
 
 namespace Winterhaven.Events.Extensions;
 
-/// <summary>
-/// </summary>
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
-    /// <summary>
-    /// </summary>
     public static IServiceCollection AddEventServices(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -23,7 +19,7 @@ public static class ServiceCollectionExtensions
         services.AddNats(1, x => x with
         {
             Name = "winterhaven-nats",
-            Url = configuration["NATS_URL"] ?? "ws://nats:9222",
+            Url = configuration["NATSOPTIONS__BASEURL"] + configuration["NATSOPTIONS__PORT"],
             SerializerRegistry = NatsJsonSerializerRegistry.Default,
         });
 

@@ -47,7 +47,7 @@ public static class ServiceCollectionExtensions
         services.AddNats(1, x => x with
         {
             Name = "winterhaven-nats",
-            Url = configuration["NATS_URL"] ?? "ws://nats:9222",
+            Url = configuration["NATSOPTIONS__BASEURL"] + configuration["NATSOPTIONS__PORT"],
             SerializerRegistry = NatsJsonSerializerRegistry.Default,
         });
 
