@@ -67,6 +67,8 @@ services:
       - JWTOPTIONS__ISSUER
       - JWTOPTIONS__SECRET
       - MSSQL_SA_PASSWORD
+      - NATSOPTIONS__BASEURL
+      - NATSOPTIONS__PORT
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
       interval: 5s
@@ -94,6 +96,8 @@ services:
       - CLIENTOPTIONS__BASEURL
       - CLIENTOPTIONS__APIKEY
       - ASPNETCORE_ENVIRONMENT
+      - NATSOPTIONS__BASEURL
+      - NATSOPTIONS__PORT      
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/api/Health/Get"]
       interval: 5s
@@ -139,6 +143,8 @@ services:
     environment:
       - CLIENTOPTIONS__BASEURL
       - CLIENTOPTIONS__APIKEY
+      - NATSOPTIONS__BASEURL
+      - NATSOPTIONS__PORT      
     networks:
       - network
     restart: unless-stopped
