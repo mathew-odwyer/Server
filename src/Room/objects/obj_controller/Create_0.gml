@@ -16,3 +16,5 @@ instance_create_layer(0, 0, "Instances", obj_nats);
 instance_create_layer(0, 0, "Instances", obj_map_loader);
 
 draw_enable_drawevent(os_type != os_linux);
+
+show_debug_message($"runtime={GM_runtime_version} yyc={code_is_compiled()}");
