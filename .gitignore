@@ -397,3 +397,4 @@ docker-compose.override.yml
 cache/
 output/
 options.ini
+src/docker-compose-override.yml

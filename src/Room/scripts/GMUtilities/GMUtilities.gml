@@ -61,7 +61,7 @@
 /// @description Throws an exception if `parameter` is not of the specified type.
 /// @param {Any} parameter The value to validate.
 /// @param {String} name The parameter name used in exception messages.
-/// @param {String} expected A type identifier describing the required type.
+/// @param {Any} expected A type identifier describing the required type.
 /// @returns {Bool} Returns `true` if the value matches the expected type.
 function assert_type(parameter, name, expected)
 {
